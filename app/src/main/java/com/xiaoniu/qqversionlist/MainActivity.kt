@@ -71,11 +71,18 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        val memVersionSmall = getSharedPreferences("data", MODE_PRIVATE).getInt("versionSmall", -1)
+        if (memVersionSmall != -1) {
+            binding.etVersionSmall.setText(memVersionSmall.toString())
+        }
         binding.btnGuessStart.setOnClickListener {
             try {
                 val versionBig = binding.etVersionBig.text.toString()
                 val versionSmall = binding.etVersionSmall.text.toString().toInt()
                 if (versionSmall % 5 != 0) throw Exception("小版本确定不填5的倍数？")
+                getSharedPreferences("data", MODE_PRIVATE).edit()
+                    .putInt("versionSmall", versionSmall)
+                    .apply()
                 guessUrl(versionBig, versionSmall)
             } catch (e: Exception) {
                 e.printStackTrace()

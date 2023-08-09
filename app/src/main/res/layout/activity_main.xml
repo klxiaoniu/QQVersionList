@@ -24,12 +24,12 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
+        android:id="@+id/btn_about"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/btn_about"
         android:text="关于"
         app:layout_constraintStart_toEndOf="@id/btn_guess"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:id="@+id/ll_guess"
@@ -50,7 +50,8 @@
             android:id="@+id/et_version_small"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="起始猜测小版本号，每次+5" />
+            android:hint="起始猜测小版本号，每次+5"
+            android:inputType="number" />
 
         <Button
             android:id="@+id/btn_guess_start"
