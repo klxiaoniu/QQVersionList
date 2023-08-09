@@ -4,7 +4,6 @@ import android.app.ProgressDialog
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.os.Bundle
-import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -14,6 +13,7 @@ import com.google.gson.Gson
 import com.xiaoniu.qqversionlist.Util.Companion.getVersionBig
 import com.xiaoniu.qqversionlist.databinding.ActivityMainBinding
 import okhttp3.OkHttpClient
+import java.lang.Thread.sleep
 import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
@@ -131,41 +131,68 @@ class MainActivity : AppCompatActivity() {
     //https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_8.9.75.XXXXX_64.apk
     fun guessUrl(versionBig: String, versionSmall: Int) {
         lateinit var progressDialog: ProgressDialog
-        var stop = false
+        var status = 0 //0:进行中，1：暂停，2：结束
 
-        var link = ""
+        var link: String
         val thr = Thread {
             var vSmall = versionSmall
-            while (!stop) {
-                link = if (link == "") {
-                    vSmall -= 5
-                    "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}_64.apk"
-                    // 先猜一次正式版
-                } else
-                    "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}_64.apk"
-                progressDialog.setMessage("正在猜测下载地址：$link")
-                val okHttpClient = OkHttpClient()
-                val request = okhttp3.Request.Builder()
-                    .url(link)
-                    .build()
-                val response = okHttpClient.newCall(request).execute()
-                val success = response.isSuccessful
-                if (success) {
-                    copyText(link)
-                    stop = true
+            try {
+                while (true) {
+                    when (status) {
+                        0 -> {
+                            link =
+                                "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}_64.apk"
+                            progressDialog.setMessage("正在猜测下载地址：$link")
+                            val okHttpClient = OkHttpClient()
+                            val request = okhttp3.Request.Builder()
+                                .url(link)
+                                .build()
+                            val response = okHttpClient.newCall(request).execute()
+                            val success = response.isSuccessful
+                            if (success) {
+                                status = 1
+                                runOnUiThread {
+                                    MaterialAlertDialogBuilder(this)
+                                        .setTitle("猜测成功")
+                                        .setMessage("下载地址：$link")
+                                        .setPositiveButton("复制并停止") { _, _ ->
+                                            copyText(link)
+                                            status = 2
+                                        }
+                                        .setNegativeButton("仅停止") { _, _ ->
+                                            status = 2
+                                        }
+                                        .setNeutralButton("继续猜测") { _, _ ->
+                                            status = 0
+                                        }
+                                        .show()
+                                }
+                            }
+                            vSmall += 5
+                        }
+
+                        1 -> {
+                            sleep(500)
+                        }
+
+                        2 -> {
+                            toasts("已停止猜测")
+                            progressDialog.dismiss()
+                            break
+                        }
+                    }
                 }
-                vSmall += 5
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+                dlgErr(e)
             }
-
-            toasts("已停止猜测")
-            progressDialog.dismiss()
-
         }
         progressDialog = ProgressDialog(this).apply {
             setMessage("正在猜测下载地址")
             setCancelable(true)
             setOnCancelListener {
-                stop = true
+                status = 2
             }
             show()
         }
