@@ -9,12 +9,12 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.gson.Gson
 import com.xiaoniu.qqversionlist.Util.Companion.getVersionBig
 import com.xiaoniu.qqversionlist.databinding.ActivityMainBinding
 import okhttp3.OkHttpClient
 import java.lang.Thread.sleep
 import kotlin.concurrent.thread
+
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -34,27 +34,23 @@ class MainActivity : AppCompatActivity() {
                     val response = okHttpClient.newCall(request).execute()
                     val responseData = response.body?.string()
                     if (responseData != null) {
-                        val start = (responseData.indexOf("{\"versions\":"))
+                        val start = (responseData.indexOf("versions64\":["))+12
                         val end = (responseData.indexOf(";\n" + "      typeof"))
                         "start: $start, end: $end".log()
                         val totalJson = responseData.substring(start, end)//.apply { log() }
-//                        val reader = JsonReader(StringReader(totalJson))
-//                        reader.isLenient = true
-//                        reader.beginObject()
-//                        reader.nextName()
-                        val qqVersion = Gson().fromJson<QQVersion>(totalJson, QQVersion::class.java)
-//                        val qqVersion = JSON.parseObject(totalJson, QQVersion::class.java)
-                        //qqVersion.versions.first().dataMap.log()
+                        val qqVersion = totalJson.split("},{").reversed().map {
+                            val start = it.indexOf("{\"versions")
+                            val end = it.indexOf(",\"length")
+                            it.substring(start, end)
+                        }
                         runOnUiThread {
-//                            binding.tvContent.setText(
-//                                responseData.substring(start, end))
                             adapter = MyAdapter()
                             binding.rvContent.adapter = adapter
                             binding.rvContent.layoutManager =
                                 androidx.recyclerview.widget.LinearLayoutManager(this@MainActivity)
-                            adapter.setData(qqVersion.versions64.toList().reversed())
+                            adapter.setData(qqVersion)
                             binding.etVersionBig.setText(
-                                qqVersion.versions64.last().toString().getVersionBig()
+                                qqVersion.first().toString().getVersionBig()
                             )
                         }
 
@@ -104,29 +100,6 @@ class MainActivity : AppCompatActivity() {
         return this
     }
 
-    //    data class QQVersion(
-//        val versions: List<DataMap>,
-//        val versions64: List<DataMap>,
-//    )
-    data class QQVersion(
-        val versions: Array<Object>,
-        val versions64: Array<Object>,
-    )
-
-//    data class VersionInfo(
-//        val versions: String,
-//        val versionNumber: String,
-//        val size: Int,
-//        val featureTitle: String,
-//        val imgs: List<String>,
-//        val summary: List<String>,
-//    )
-
-//    data class DataMap(
-//        val dataMap: Map<String, VersionInfo>,
-//        val length: Int,
-//    )
-
 
     //https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_8.9.75.XXXXX_64.apk
     fun guessUrl(versionBig: String, versionSmall: Int) {
@@ -165,6 +138,7 @@ class MainActivity : AppCompatActivity() {
                                         .setNeutralButton("继续猜测") { _, _ ->
                                             status = 0
                                         }
+                                        .setCancelable(false)
                                         .show()
                                 }
                             }
