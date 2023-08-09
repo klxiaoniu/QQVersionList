@@ -185,10 +185,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun dlgErr(e: Exception) {
-        MaterialAlertDialogBuilder(this@MainActivity)
-            .setTitle("程序出错，联系小牛")
-            .setMessage(e.toString())
-            .setPositiveButton("确定", null)
-            .show()
+        runOnUiThread {
+            MaterialAlertDialogBuilder(this@MainActivity)
+                .setTitle("程序出错，联系小牛")
+                .setMessage(e.toString())
+                .setPositiveButton("确定", null)
+                .setNeutralButton("复制") { _, _ ->
+                    copyText(e.toString())
+                }
+                .show()
+        }
     }
 }
