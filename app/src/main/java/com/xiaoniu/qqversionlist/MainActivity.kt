@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity() {
                     val response = okHttpClient.newCall(request).execute()
                     val responseData = response.body?.string()
                     if (responseData != null) {
-                        val start = (responseData.indexOf("versions64\":["))+12
+                        val start = (responseData.indexOf("versions64\":[")) + 12
                         val end = (responseData.indexOf(";\n" + "      typeof"))
                         "start: $start, end: $end".log()
                         val totalJson = responseData.substring(start, end)//.apply { log() }
@@ -62,6 +62,31 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        val memVersion = getSharedPreferences("data", MODE_PRIVATE).getInt("version", -1)
+        if (memVersion != -1) {
+            binding.spinnerVersion.setSelection(memVersion)
+        }
+        binding.spinnerVersion.onItemSelectedListener = object :
+            android.widget.AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: android.widget.AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                if (position == 0) {
+                    binding.etVersionSmall.visibility = View.VISIBLE
+                } else {
+                    binding.etVersionSmall.visibility = View.GONE
+                }
+                getSharedPreferences("data", MODE_PRIVATE).edit()
+                    .putInt("version", position)
+                    .apply()
+            }
+
+            override fun onNothingSelected(parent: android.widget.AdapterView<*>?) {
+            }
+        }
 
         binding.btnGuess.setOnClickListener {
             binding.llGuess.visibility = if (binding.llGuess.visibility == View.VISIBLE) {
@@ -83,7 +108,8 @@ class MainActivity : AppCompatActivity() {
                 getSharedPreferences("data", MODE_PRIVATE).edit()
                     .putInt("versionSmall", versionSmall)
                     .apply()
-                guessUrl(versionBig, versionSmall)
+                val mode = binding.spinnerVersion.selectedItemPosition
+                guessUrl(versionBig, versionSmall, mode)
             } catch (e: Exception) {
                 e.printStackTrace()
                 dlgErr(e)
@@ -109,19 +135,32 @@ class MainActivity : AppCompatActivity() {
 
 
     //https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_8.9.75.XXXXX_64.apk
-    fun guessUrl(versionBig: String, versionSmall: Int) {
+    fun guessUrl(versionBig: String, versionSmall: Int, mode: Int) {
         lateinit var progressDialog: ProgressDialog
         var status = 0 //0:进行中，1：暂停，2：结束
 
-        var link: String
+        var link: String = ""
         val thr = Thread {
             var vSmall = versionSmall
             try {
                 while (true) {
                     when (status) {
                         0 -> {
-                            link =
-                                "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}_64.apk"
+                            if (mode == 0) {
+                                link =
+                                    "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}_64.apk"
+                            } else {
+                                if (link == "") {
+                                    link =
+                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}_64.apk"
+                                } else if (link.endsWith("HB.apk")) {
+                                    status = 2
+                                    continue
+                                } else {
+                                    link =
+                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}_64_HB.apk"
+                                }
+                            }
                             progressDialog.setMessage("正在猜测下载地址：$link")
                             val okHttpClient = OkHttpClient()
                             val request = okhttp3.Request.Builder()
@@ -150,6 +189,7 @@ class MainActivity : AppCompatActivity() {
                                 }
                             }
                             vSmall += 5
+
                         }
 
                         1 -> {
