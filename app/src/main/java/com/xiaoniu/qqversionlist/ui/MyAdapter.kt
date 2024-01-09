@@ -1,4 +1,4 @@
-package com.xiaoniu.qqversionlist
+package com.xiaoniu.qqversionlist.ui
 
 import android.annotation.SuppressLint
 import android.view.View
@@ -7,9 +7,10 @@ import android.widget.TextView
 import androidx.core.view.setPadding
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.xiaoniu.qqversionlist.Util.Companion.getSize
-import com.xiaoniu.qqversionlist.Util.Companion.getVersionBig
-import com.xiaoniu.qqversionlist.Util.Companion.toPrettyFormat
+import com.xiaoniu.qqversionlist.R
+import com.xiaoniu.qqversionlist.util.StringUtil.getSize
+import com.xiaoniu.qqversionlist.util.StringUtil.getVersionBig
+import com.xiaoniu.qqversionlist.util.StringUtil.toPrettyFormat
 
 class MyAdapter : RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
 
