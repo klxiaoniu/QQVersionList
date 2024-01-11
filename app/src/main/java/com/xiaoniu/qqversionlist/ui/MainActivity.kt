@@ -1,8 +1,11 @@
 package com.xiaoniu.qqversionlist.ui
 
-import android.app.ProgressDialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.View
+import android.widget.ProgressBar
+import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -31,6 +34,7 @@ class MainActivity : AppCompatActivity() {
         initSpinner()
         initData()
 
+
         binding.btnGet.performClick()
     }
 
@@ -39,9 +43,9 @@ class MainActivity : AppCompatActivity() {
             thread {
                 try {
                     val okHttpClient = OkHttpClient()
-                    val request = Request.Builder()
-                        .url("https://im.qq.com/rainbow/androidQQVersionList")
-                        .build()
+                    val request =
+                        Request.Builder().url("https://im.qq.com/rainbow/androidQQVersionList")
+                            .build()
                     val response = okHttpClient.newCall(request).execute()
                     val responseData = response.body?.string()
                     if (responseData != null) {
@@ -57,10 +61,9 @@ class MainActivity : AppCompatActivity() {
                         runOnUiThread {
                             adapter = MyAdapter()
                             binding.rvContent.adapter = adapter
-                            binding.rvContent.layoutManager =
-                                LinearLayoutManager(this@MainActivity)
+                            binding.rvContent.layoutManager = LinearLayoutManager(this@MainActivity)
                             adapter.setData(qqVersion)
-                            binding.etVersionBig.setText(
+                            binding.etVersionBig.editText?.setText(
                                 qqVersion.first().toString().getVersionBig()
                             )
                         }
@@ -83,8 +86,9 @@ class MainActivity : AppCompatActivity() {
 
         binding.btnGuessStart.setOnClickListener {
             try {
-                val versionBig = binding.etVersionBig.text.toString()
-                val versionSmall = binding.etVersionSmall.text.toString().toInt()
+                val versionBig = binding.etVersionBig.editText?.text.toString()
+                //text.toString()
+                val versionSmall = binding.etVersionSmall.editText?.text.toString().toInt()
                 if (versionSmall % 5 != 0) throw Exception("小版本确定不填5的倍数？")
                 SpUtil.putInt(this, "versionSmall", versionSmall)
                 val mode = binding.spinnerVersion.selectedItemPosition
@@ -96,11 +100,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.btnAbout.setOnClickListener {
-            MaterialAlertDialogBuilder(this)
-                .setTitle("关于")
+            MaterialAlertDialogBuilder(this).setTitle("关于")
                 .setMessage("QQ版本列表\n\n作者：快乐小牛\n\n内部使用，禁止外传\n\n2023.8.9")
-                .setPositiveButton("确定", null)
-                .show()
+                .setPositiveButton("确定", null).show()
         }
 
     }
@@ -112,37 +114,52 @@ class MainActivity : AppCompatActivity() {
         }
         val memVersionSmall = SpUtil.getInt(this, "versionSmall", -1)
         if (memVersionSmall != -1) {
-            binding.etVersionSmall.setText(memVersionSmall.toString())
+            binding.etVersionSmall.editText?.setText(memVersionSmall.toString())
         }
     }
 
     private fun initSpinner() {
-        binding.spinnerVersion.onItemSelectedListener = object :
-            android.widget.AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: android.widget.AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                if (position == 0) {
-                    binding.etVersionSmall.visibility = View.VISIBLE
-                } else {
-                    binding.etVersionSmall.visibility = View.GONE
+        binding.spinnerVersion.onItemSelectedListener =
+            object : android.widget.AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: android.widget.AdapterView<*>?, view: View?, position: Int, id: Long
+                ) {
+                    if (position == 0) {
+                        binding.etVersionSmall.visibility = View.VISIBLE
+                    } else {
+                        binding.etVersionSmall.visibility = View.GONE
+                    }
+                    SpUtil.putInt(this@MainActivity, "version", position)
                 }
-                SpUtil.putInt(this@MainActivity, "version", position)
-            }
 
-            override fun onNothingSelected(parent: android.widget.AdapterView<*>?) {
+                override fun onNothingSelected(parent: android.widget.AdapterView<*>?) {
+                }
             }
-        }
     }
 
 
     //https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_8.9.75.XXXXX_64.apk
     private fun guessUrl(versionBig: String, versionSmall: Int, mode: Int) {
-        lateinit var progressDialog: ProgressDialog
+        // 绑定 AlertDialog 加载对话框布局
+        val inflater = layoutInflater
+        val dialogView = inflater.inflate(com.xiaoniu.qqversionlist.R.layout.dialog_loading, null)
+        val progressSpinner =
+            dialogView.findViewById<ProgressBar>(com.xiaoniu.qqversionlist.R.id.progress_spinner)
+        val loadingMessage =
+            dialogView.findViewById<TextView>(com.xiaoniu.qqversionlist.R.id.loading_message)
+
+        lateinit var progressDialog: AlertDialog
         var status = STATUS_ONGOING
+
+        fun updateProgressDialogMessage(newMessage: String) {
+            if (progressDialog.isShowing) {
+                val loadingMessage =
+                    progressDialog.findViewById<TextView>(com.xiaoniu.qqversionlist.R.id.loading_message)
+                if (loadingMessage != null) {
+                    loadingMessage.text = newMessage
+                }
+            }
+        }
 
         var link = ""
         val thr = Thread {
@@ -166,31 +183,25 @@ class MainActivity : AppCompatActivity() {
                                         "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}_64_HB.apk"
                                 }
                             }
-                            progressDialog.setMessage("正在猜测下载地址：$link")
+                            // 弃用 progressDialog.setMessage("正在猜测下载地址：$link")
+                            updateProgressDialogMessage("正在猜测下载地址：$link")
                             val okHttpClient = OkHttpClient()
-                            val request = Request.Builder()
-                                .url(link)
-                                .build()
+                            val request = Request.Builder().url(link).build()
                             val response = okHttpClient.newCall(request).execute()
                             val success = response.isSuccessful
                             if (success) {
                                 status = STATUS_PAUSE
                                 runOnUiThread {
-                                    MaterialAlertDialogBuilder(this)
-                                        .setTitle("猜测成功")
+                                    MaterialAlertDialogBuilder(this).setTitle("猜测成功")
                                         .setMessage("下载地址：$link")
                                         .setPositiveButton("复制并停止") { _, _ ->
                                             copyText(link)
                                             status = STATUS_END
-                                        }
-                                        .setNegativeButton("仅停止") { _, _ ->
+                                        }.setNegativeButton("仅停止") { _, _ ->
                                             status = STATUS_END
-                                        }
-                                        .setNeutralButton("继续猜测") { _, _ ->
+                                        }.setNeutralButton("继续猜测") { _, _ ->
                                             status = STATUS_ONGOING
-                                        }
-                                        .setCancelable(false)
-                                        .show()
+                                        }.setCancelable(false).show()
                                 }
                             }
                             vSmall += 5
@@ -213,14 +224,32 @@ class MainActivity : AppCompatActivity() {
                 dlgErr(e)
             }
         }
-        progressDialog = ProgressDialog(this).apply {
-            setMessage("正在猜测下载地址")
-            setCancelable(true)
-            setOnCancelListener {
-                status = STATUS_END
+        // 弃用 progressDialog
+//        progressDialog = ProgressDialog(this).apply {
+//            setMessage("正在猜测下载地址")
+//            setCancelable(true)
+//            setOnCancelListener {
+//                status = STATUS_END
+//            }
+//            show()
+//        }
+
+        // AlertDialog
+        progressSpinner.visibility = View.VISIBLE
+        loadingMessage.text = "正在猜测下载地址"
+        val dialogClickListener = DialogInterface.OnClickListener { _, which ->
+            when (which) {
+                DialogInterface.BUTTON_NEGATIVE -> {
+                    status = STATUS_END
+                    progressDialog.dismiss()
+                }
             }
-            show()
         }
+
+        progressDialog = MaterialAlertDialogBuilder(this).setView(dialogView).setCancelable(false)
+            .setNegativeButton("取消", dialogClickListener).create()
+
+        progressDialog.show()
         thr.start()
     }
 
