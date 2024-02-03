@@ -45,7 +45,9 @@ class MyAdapter : RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
                 setTextIsSelectable(true)
                 setPadding(100)
             }
-            MaterialAlertDialogBuilder(it.context).setView(tv).show()
+            MaterialAlertDialogBuilder(it.context)
+                .setView(tv)
+                .show()
             true
         }
     }

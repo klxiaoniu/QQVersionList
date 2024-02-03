@@ -4,68 +4,80 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="false"
+    android:padding="10dp"
     tools:context=".ui.MainActivity">
 
+    <Button
+        android:id="@+id/btn_get"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="刷新"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:id="@+id/coordinatorLayout"
+    <Button
+        android:id="@+id/btn_guess"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="猜版"
+        app:layout_constraintStart_toEndOf="@id/btn_get"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btn_about"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="关于"
+        app:layout_constraintStart_toEndOf="@id/btn_guess"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/ll_guess"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fitsSystemWindows="true">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_get">
 
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_content"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clipToPadding="false"
-            android:fillViewport="true"
-            android:paddingLeft="16dp"
-            android:paddingTop="60dp"
-            android:paddingRight="16dp"
-            android:paddingBottom="100dp"
-            app:layout_constrainedHeight="true"
-            app:layout_constraintBottom_toTopOf="@id/bottomAppBar"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/topAppBar"/>
+            android:orientation="horizontal">
 
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/topAppBar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fitsSystemWindows="true"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <com.google.android.material.appbar.MaterialToolbar
-                android:layout_width="match_parent"
+            <EditText
+                android:id="@+id/et_version_big"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:minHeight="?attr/actionBarSize"
-                app:title="QQ 版本列表实用工具" />
-        </com.google.android.material.appbar.AppBarLayout>
+                android:layout_weight="1"
+                android:hint="大版本号" />
 
+            <Spinner
+                android:id="@+id/spinner_version"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:entries="@array/version" />
+        </LinearLayout>
 
-        <com.google.android.material.bottomappbar.BottomAppBar
-            android:id="@+id/bottomAppBar"
-            style="@style/Widget.Material3.BottomAppBar"
+        <EditText
+            android:id="@+id/et_version_small"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:fitsSystemWindows="true"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:menu="@menu/bottom_app_bar" />
+            android:hint="起始猜测小版本号，每次+5"
+            android:inputType="number" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/btn_guess"
-            android:layout_width="wrap_content"
+        <Button
+            android:id="@+id/btn_guess_start"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_anchor="@id/bottomAppBar"
-            app:srcCompat="@drawable/search_line"
-            android:contentDescription="TODO" />
+            android:text="开始" />
+    </LinearLayout>
 
-
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ll_guess" />
 </androidx.constraintlayout.widget.ConstraintLayout>
