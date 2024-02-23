@@ -300,11 +300,9 @@ class MainActivity : AppCompatActivity() {
                             if (success) {
                                 status = STATUS_PAUSE
                                 runOnUiThread {
-
                                     if (successButton.parent != null) {
                                         (successButton.parent as ViewGroup).removeView(successButton)
                                     }
-
 
                                     var successMaterialDialog =
                                         MaterialAlertDialogBuilder(this).setTitle("猜测成功")
@@ -321,6 +319,7 @@ class MainActivity : AppCompatActivity() {
 
                                     // 继续按钮点击事件
                                     continueButton.setOnClickListener {
+                                        vSmall+=5
                                         successMaterialDialog.dismiss()
                                         status = STATUS_ONGOING
                                     }
@@ -367,10 +366,10 @@ class MainActivity : AppCompatActivity() {
                                     }
 
                                 }
-
-
                             }
-                            vSmall += 5
+                            if(!success){
+                                vSmall += 5
+                            }
                         }
 
                         STATUS_PAUSE -> {
