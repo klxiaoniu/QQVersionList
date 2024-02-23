@@ -319,7 +319,7 @@ class MainActivity : AppCompatActivity() {
 
                                     // 继续按钮点击事件
                                     continueButton.setOnClickListener {
-                                        vSmall+=5
+                                        vSmall += 5
                                         successMaterialDialog.dismiss()
                                         status = STATUS_ONGOING
                                     }
@@ -367,7 +367,7 @@ class MainActivity : AppCompatActivity() {
 
                                 }
                             }
-                            if(!success){
+                            if (!success) {
                                 vSmall += 5
                             }
                         }
