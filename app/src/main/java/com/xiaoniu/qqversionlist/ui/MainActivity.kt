@@ -366,8 +366,7 @@ class MainActivity : AppCompatActivity() {
                                     }
 
                                 }
-                            }
-                            if (!success) {
+                            } else if (!success) {
                                 vSmall += 5
                             }
                         }
