@@ -20,4 +20,4 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--keep class com.xiaoniu.qqversionlist.*{*;}
+-keep class com.xiaoniu.qqversionlist.data.* {*;}
