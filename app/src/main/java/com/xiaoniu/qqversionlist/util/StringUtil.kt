@@ -4,16 +4,6 @@ import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
 
 object StringUtil {
-    fun String.getVersionBig(): String {
-        val regex = Regex("\"versionNumber\":\"(.+?)\"")
-        return regex.find(this)!!.groupValues[1]
-    }
-
-    fun String.getSize(): String {
-        val regex = Regex("\"size\":\"(.+?)\"")
-        return regex.find(this)!!.groupValues[1]
-    }
-
     fun String.toPrettyFormat(): String {
         return try {
             val jsonObject = JsonParser.parseString(this).asJsonObject
