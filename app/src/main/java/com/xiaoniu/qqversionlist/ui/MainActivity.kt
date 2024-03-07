@@ -114,7 +114,7 @@ class MainActivity : AppCompatActivity() {
 
                 R.id.btn_about -> {
                     MaterialAlertDialogBuilder(this).setTitle("关于")
-                        .setMessage("QQ版本列表\n\n作者：快乐小牛\n\n内部使用，禁止外传\n\n2023.8.9")
+                        .setMessage("QQ 版本列表实用工具\n\n作者：快乐小牛\n\n内部使用，禁止外传\n\n2023.8.9")
                         .setPositiveButton("确定", null).setIcon(R.drawable.information_line).show()
                     true
                 }
