@@ -61,9 +61,11 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("com.google.code.gson:gson:2.10.1")
 
-    val composeBom = platform("androidx.compose:compose-bom:2023.10.01")
-    implementation("androidx.compose:compose-bom:2024.01.00")
-    androidTestImplementation("androidx.compose:compose-bom:2024.01.00")
+    implementation("io.coil-kt:coil:2.6.0")
+
+//    val composeBom = platform("androidx.compose:compose-bom:2023.10.01")
+//    implementation("androidx.compose:compose-bom:2024.01.00")
+//    androidTestImplementation("androidx.compose:compose-bom:2024.01.00")
 
 //    // Choose one of the following:
 //    // Material Design 3

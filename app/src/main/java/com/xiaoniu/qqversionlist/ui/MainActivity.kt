@@ -15,7 +15,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.gson.Gson
 import com.xiaoniu.qqversionlist.R
+import com.xiaoniu.qqversionlist.data.QQVersionBean
 import com.xiaoniu.qqversionlist.databinding.ActivityMainBinding
 import com.xiaoniu.qqversionlist.databinding.DialogListGuestBinding
 import com.xiaoniu.qqversionlist.databinding.SuccessButtonBinding
@@ -24,7 +26,6 @@ import com.xiaoniu.qqversionlist.util.InfoUtil.dlgErr
 import com.xiaoniu.qqversionlist.util.InfoUtil.toasts
 import com.xiaoniu.qqversionlist.util.LogUtil.log
 import com.xiaoniu.qqversionlist.util.SpUtil
-import com.xiaoniu.qqversionlist.util.StringUtil.getVersionBig
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.lang.Thread.sleep
@@ -54,7 +55,6 @@ class MainActivity : AppCompatActivity() {
 
 
         //binding.bottomAppBar.btn_get.performClick()
-        initButtons()
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
@@ -82,14 +82,17 @@ class MainActivity : AppCompatActivity() {
                         val qqVersion = totalJson.split("},{").reversed().map {
                             val pstart = it.indexOf("{\"versions")
                             val pend = it.indexOf(",\"length")
-                            it.substring(pstart, pend)
+                            val json = it.substring(pstart, pend)
+                            Gson().fromJson(json, QQVersionBean::class.java).apply {
+                                jsonString = json
+                            }
                         }
                         runOnUiThread {
                             adapter = MyAdapter()
                             binding.rvContent.adapter = adapter
                             binding.rvContent.layoutManager = LinearLayoutManager(this@MainActivity)
                             adapter.setData(qqVersion)
-                            qqversionmMulti = qqVersion.first().toString().getVersionBig()
+                            qqversionmMulti = qqVersion.first().versionNumber
 //                            listGuessBinding.etVersionBig.editText?.setText(
 //                                qqVersion.first().toString().getVersionBig()
 //                            )
@@ -388,15 +391,7 @@ class MainActivity : AppCompatActivity() {
                 dlgErr(e)
             }
         }
-        // 弃用 progressDialog
-//        progressDialog = ProgressDialog(this).apply {
-//            setMessage("正在猜测下载地址")
-//            setCancelable(true)
-//            setOnCancelListener {
-//                status = STATUS_END
-//            }
-//            show()
-//        }
+
 
         // AlertDialog
         progressSpinner.visibility = View.VISIBLE

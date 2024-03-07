@@ -16,8 +16,7 @@ object StringUtil {
 
     fun String.toPrettyFormat(): String {
         return try {
-            val jsonParser = JsonParser()
-            val jsonObject = jsonParser.parse(this).asJsonObject
+            val jsonObject = JsonParser.parseString(this).asJsonObject
             val gson = GsonBuilder().setLenient().setPrettyPrinting().create()
             gson.toJson(jsonObject)
         } catch (e: Exception) {
