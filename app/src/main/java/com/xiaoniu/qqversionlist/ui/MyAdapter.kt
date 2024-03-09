@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -32,7 +32,7 @@ class MyAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tv = itemView.findViewById<TextView>(R.id.tv_content)
-        val ib_expand = itemView.findViewById<ImageButton>(R.id.ib_expand)
+        val ib_expand = itemView.findViewById<Button>(R.id.ib_expand)
     }
 
     class ViewHolderDetail(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -41,7 +41,7 @@ class MyAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         val tv_size = itemView.findViewById<TextView>(R.id.tv_size)
         val tv_title = itemView.findViewById<TextView>(R.id.tv_title)
         val tv_desc = itemView.findViewById<TextView>(R.id.tv_desc)
-        val ib_collapse = itemView.findViewById<ImageButton>(R.id.ib_collapse)
+        val ib_collapse = itemView.findViewById<Button>(R.id.ib_collapse)
     }
 
     override fun getItemViewType(position: Int): Int {
