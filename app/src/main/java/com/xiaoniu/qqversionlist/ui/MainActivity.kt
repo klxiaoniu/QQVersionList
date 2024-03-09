@@ -3,6 +3,7 @@ package com.xiaoniu.qqversionlist.ui
 import android.app.DownloadManager
 import android.content.Context
 import android.content.Intent
+import android.graphics.Rect
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -13,7 +14,9 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
 import com.xiaoniu.qqversionlist.R
@@ -43,16 +46,44 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
+
+        setContentView(binding.root)
         adapter = MyAdapter()
         binding.rvContent.adapter = adapter
         binding.rvContent.layoutManager = LinearLayoutManager(this)
+        val recyclerView: RecyclerView = findViewById(R.id.rv_content)
 
-        setContentView(binding.root)
+        recyclerView.addItemDecoration(VerticalSpaceItemDecoration(dpToPx(5)))
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = GridLayoutManager(this, 1, GridLayoutManager.VERTICAL, false)
 
         initButtons()
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
+    }
+
+    fun Context.dpToPx(dp: Int): Int {
+        return (dp * resources.displayMetrics.density).toInt()
+    }
+
+    class VerticalSpaceItemDecoration(private val space: Int) : RecyclerView.ItemDecoration() {
+        override fun getItemOffsets(
+            outRect: Rect,
+            view: View,
+            parent: RecyclerView,
+            state: RecyclerView.State
+        ) {
+            with(outRect) {
+
+                // 对于每一项都添加底部间距
+                bottom = space
+                // 如果不是第一行，则添加顶部间距
+                if (parent.getChildAdapterPosition(view) != 0) {
+                    top = space
+                }
+            }
+        }
     }
 
 
@@ -106,15 +137,12 @@ class MainActivity : AppCompatActivity() {
 
                 R.id.btn_about -> {
                     MaterialAlertDialogBuilder(this).setTitle("关于")
-                        .setMessage(
-                            "QQ 版本列表实用工具\n\n作者：快乐小牛、有鲫雪狐\n\n版本："
-                                    + packageManager.getPackageInfo(packageName, 0).let {
-                                @Suppress("DEPRECATION")
-                                it.versionName + "(" + (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) it.longVersionCode else it.versionCode) + ")"
-                            }
-                                    + "\n\n内部使用，禁止外传\n\n2023.8.9"
-                        )
-                        .setPositiveButton("确定", null).setIcon(R.drawable.information_line).show()
+                        .setMessage("QQ 版本列表实用工具\n\n作者：快乐小牛、有鲫雪狐\n\n版本：" + packageManager.getPackageInfo(
+                            packageName, 0
+                        ).let {
+                            @Suppress("DEPRECATION") it.versionName + "(" + (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) it.longVersionCode else it.versionCode) + ")"
+                        } + "\n\n内部使用，禁止外传\n\n2023.8.9").setPositiveButton("确定", null)
+                        .setIcon(R.drawable.information_line).show()
                     true
                 }
 
@@ -149,12 +177,9 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
 
-            val dialogGuess = MaterialAlertDialogBuilder(this)
-                .setTitle("猜版")
-                .setIcon(R.drawable.search_line)
-                .setView(dialogGuessView)
-                .setCancelable(false)
-                .create()
+            val dialogGuess =
+                MaterialAlertDialogBuilder(this).setTitle("猜版").setIcon(R.drawable.search_line)
+                    .setView(dialogGuessView).setCancelable(false).create()
             dialogGuess.show()
 
 
@@ -240,10 +265,8 @@ class MainActivity : AppCompatActivity() {
 
         var status = STATUS_ONGOING
 
-        val progressDialog = MaterialAlertDialogBuilder(this)
-            .setView(dialogView)
-            .setCancelable(false)
-            .create()
+        val progressDialog =
+            MaterialAlertDialogBuilder(this).setView(dialogView).setCancelable(false).create()
 
         fun updateProgressDialogMessage(newMessage: String) {
             if (progressDialog.isShowing) {
