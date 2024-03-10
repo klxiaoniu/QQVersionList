@@ -62,6 +62,7 @@ class MainActivity : AppCompatActivity() {
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
+
     }
 
     fun Context.dpToPx(dp: Int): Int {
@@ -70,10 +71,7 @@ class MainActivity : AppCompatActivity() {
 
     class VerticalSpaceItemDecoration(private val space: Int) : RecyclerView.ItemDecoration() {
         override fun getItemOffsets(
-            outRect: Rect,
-            view: View,
-            parent: RecyclerView,
-            state: RecyclerView.State
+            outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State
         ) {
             with(outRect) {
 
@@ -90,7 +88,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun initButtons() {
 
-        var currentQQVersion = ""
+        //var currentQQVersion = ""
 
         fun getData() {
             CoroutineScope(Dispatchers.IO).launch {
@@ -116,7 +114,13 @@ class MainActivity : AppCompatActivity() {
                         }
                         withContext(Dispatchers.Main) {
                             adapter.setData(this@MainActivity, qqVersion)
-                            currentQQVersion = qqVersion.first().versionNumber
+                            //currentQQVersion = qqVersion.first().versionNumber
+                            //大版本号也放持久化存储了，否则猜版 Shortcut 因为加载过快而获取不到东西
+                            SpUtil.putString(
+                                this@MainActivity,
+                                "versionBig",
+                                qqVersion.first().versionNumber
+                            )
                         }
 
                     }
@@ -138,7 +142,7 @@ class MainActivity : AppCompatActivity() {
 
                 R.id.btn_about -> {
                     MaterialAlertDialogBuilder(this).setTitle("关于")
-                        .setMessage("QQ 版本列表实用工具\n\n作者：快乐小牛、有鲫雪狐\n\n版本：" + packageManager.getPackageInfo(
+                        .setMessage("QQ 版本列表实用工具 for Android\n\n作者：快乐小牛、有鲫雪狐\n\n版本：" + packageManager.getPackageInfo(
                             packageName, 0
                         ).let {
                             @Suppress("DEPRECATION") it.versionName + "(" + (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) it.longVersionCode else it.versionCode) + ")"
@@ -149,8 +153,9 @@ class MainActivity : AppCompatActivity() {
 
                 R.id.btn_setting -> {
                     val settingView: View = layoutInflater.inflate(R.layout.dialog_setting, null)
-                    val displayFirstSwitch: MaterialSwitch =
-                        settingView.findViewById(R.id.switch_display_first)
+                    val displayFirstSwitch =
+                        settingView.findViewById<MaterialSwitch>(R.id.switch_display_first)
+                    val btnOk = settingView.findViewById<Button>(R.id.btn_setting_ok)
 
                     if (settingView.parent != null) {
                         (settingView.parent as ViewGroup).removeView(settingView)
@@ -161,8 +166,12 @@ class MainActivity : AppCompatActivity() {
 
                     val dialogSetting = MaterialAlertDialogBuilder(this).setTitle("设置")
                         .setIcon(R.drawable.settings_line).setView(settingView).setCancelable(true)
-                        .setPositiveButton("好的", null).create()
+                        .create()
                     dialogSetting.show()
+
+                    btnOk.setOnClickListener {
+                        dialogSetting.dismiss()
+                    }
 
                     displayFirstSwitch.setOnCheckedChangeListener { _, isChecked ->
                         SpUtil.putDisplayFirst(this, "displayFirst", isChecked)
@@ -177,13 +186,14 @@ class MainActivity : AppCompatActivity() {
         }
 
 
+        fun guessVersionDialog() {
 
-        binding.btnGuess.setOnClickListener {
             val dialogGuessView: View = layoutInflater.inflate(R.layout.dialog_guess, null)
 
             val dialogGuessBinding = DialogGuessBinding.bind(dialogGuessView)
+            val verBig = SpUtil.getString(this, "versionBig", "")
             dialogGuessBinding.etVersionBig.editText?.setText(
-                currentQQVersion
+                verBig
             )
 
             dialogGuessBinding.spinnerVersion.onItemSelectedListener =
@@ -203,9 +213,9 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
 
-            val dialogGuess =
-                MaterialAlertDialogBuilder(this).setTitle("猜版").setIcon(R.drawable.search_line)
-                    .setView(dialogGuessView).setCancelable(false).create()
+            val dialogGuess = MaterialAlertDialogBuilder(this).setTitle("猜版 for Android")
+                .setIcon(R.drawable.search_line).setView(dialogGuessView).setCancelable(false)
+                .create()
             dialogGuess.show()
 
 
@@ -221,7 +231,10 @@ class MainActivity : AppCompatActivity() {
                     if (versionSmall % 5 != 0) throw Exception("小版本确定不填5的倍数？")
                     if (versionSmall != 5) {
                         SpUtil.putInt(this, "versionSmall", versionSmall)
-                    }
+                    }/*我偷懒了，因为我上面也有偷懒逻辑，
+                    为了防止 null，我在正式版猜版时默认填入了 5，
+                    但是我没处理下面涉及到持久化存储逻辑的语句，就把 5 存进去了，
+                    覆盖了原来的 15xxx 的持久化存储*/
 
                     guessUrl(versionBig, versionSmall, mode)
 
@@ -230,6 +243,8 @@ class MainActivity : AppCompatActivity() {
                     dialogError(e)
                 }
             }
+
+
 
             dialogGuessBinding.btnGuessCancel.setOnClickListener {
                 dialogGuess.dismiss()
@@ -243,6 +258,15 @@ class MainActivity : AppCompatActivity() {
             if (memVersionSmall != -1) {
                 dialogGuessBinding.etVersionSmall.editText?.setText(memVersionSmall.toString())
             }
+
+        }
+
+        if (intent.action == "android.intent.action.VIEW") {
+            guessVersionDialog()
+        }
+
+        binding.btnGuess.setOnClickListener {
+            guessVersionDialog()
         }
 
     }
