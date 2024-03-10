@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.materialswitch.MaterialSwitch
 import com.google.gson.Gson
 import com.xiaoniu.qqversionlist.R
 import com.xiaoniu.qqversionlist.data.QQVersionBean
@@ -114,7 +115,7 @@ class MainActivity : AppCompatActivity() {
                             }
                         }
                         withContext(Dispatchers.Main) {
-                            adapter.setData(qqVersion)
+                            adapter.setData(this@MainActivity, qqVersion)
                             currentQQVersion = qqVersion.first().versionNumber
                         }
 
@@ -143,6 +144,31 @@ class MainActivity : AppCompatActivity() {
                             @Suppress("DEPRECATION") it.versionName + "(" + (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) it.longVersionCode else it.versionCode) + ")"
                         } + "\n\n内部使用，禁止外传\n\n2023.8.9").setPositiveButton("确定", null)
                         .setIcon(R.drawable.information_line).show()
+                    true
+                }
+
+                R.id.btn_setting -> {
+                    val settingView: View = layoutInflater.inflate(R.layout.dialog_setting, null)
+                    val displayFirstSwitch: MaterialSwitch =
+                        settingView.findViewById(R.id.switch_display_first)
+
+                    if (settingView.parent != null) {
+                        (settingView.parent as ViewGroup).removeView(settingView)
+                    }
+
+                    displayFirstSwitch.isChecked =
+                        SpUtil.getDisplayFirst(this, "displayFirst", true)
+
+                    val dialogSetting = MaterialAlertDialogBuilder(this).setTitle("设置")
+                        .setIcon(R.drawable.settings_line).setView(settingView).setCancelable(true)
+                        .setPositiveButton("好的", null).create()
+                    dialogSetting.show()
+
+                    displayFirstSwitch.setOnCheckedChangeListener { _, isChecked ->
+                        SpUtil.putDisplayFirst(this, "displayFirst", isChecked)
+                    }
+
+
                     true
                 }
 
@@ -193,7 +219,9 @@ class MainActivity : AppCompatActivity() {
                             dialogGuessBinding.etVersionSmall.editText?.text.toString().toInt()
                     }
                     if (versionSmall % 5 != 0) throw Exception("小版本确定不填5的倍数？")
-                    SpUtil.putInt(this, "versionSmall", versionSmall)
+                    if (versionSmall != 5) {
+                        SpUtil.putInt(this, "versionSmall", versionSmall)
+                    }
 
                     guessUrl(versionBig, versionSmall, mode)
 

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_guess"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="30dp"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp">
+
+    <com.google.android.material.materialswitch.MaterialSwitch
+        android:id="@+id/switch_display_first"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="版本列表首项默认展开\n- 下次启动时生效" />
+
+</LinearLayout>

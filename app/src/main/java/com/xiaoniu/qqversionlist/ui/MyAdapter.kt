@@ -14,6 +14,7 @@ import coil.load
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.xiaoniu.qqversionlist.R
 import com.xiaoniu.qqversionlist.data.QQVersionBean
+import com.xiaoniu.qqversionlist.util.SpUtil
 import com.xiaoniu.qqversionlist.util.StringUtil.toPrettyFormat
 
 class MyAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -21,11 +22,15 @@ class MyAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val list = mutableListOf<QQVersionBean>()
 
     @SuppressLint("NotifyDataSetChanged")
-    fun setData(list: List<QQVersionBean>) {
+    fun setData(context: Context,list: List<QQVersionBean>) {
         this.list.apply {
             clear()
             addAll(list)
-            first().displayType = 1 // 第一项默认展开
+            var displayJudge = SpUtil.getDisplayFirst(context, "displayFirst", true)
+            if (displayJudge) {
+                first().displayType = 1 // 第一项默认展开
+            }
+
         }
         notifyDataSetChanged()
     }
