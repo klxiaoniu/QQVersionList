@@ -10,6 +10,12 @@
         app:showAsAction="ifRoom" />
 
     <item
+        android:id="@+id/btn_setting"
+        android:icon="@drawable/settings_line"
+        android:title="设置"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/btn_get"
         android:icon="@drawable/refresh_line"
         android:title="刷新"
