@@ -91,13 +91,9 @@ class MainActivity : AppCompatActivity() {
 
     class VerticalSpaceItemDecoration(private val space: Int) : RecyclerView.ItemDecoration() {
         override fun getItemOffsets(
-            outRect: Rect,
-            view: View,
-            parent: RecyclerView,
-            state: RecyclerView.State
+            outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State
         ) {
             with(outRect) {
-
                 // 对于每一项都添加底部间距
                 bottom = space
                 // 如果不是第一行，则添加顶部间距
