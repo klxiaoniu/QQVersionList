@@ -26,7 +26,7 @@ class MyAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         this.list.apply {
             clear()
             addAll(list)
-            val displayJudge = SpUtil.getDisplayFirst(context, "displayFirst", true)
+            val displayJudge = SpUtil.getBoolean(context, "displayFirst", true)
             if (displayJudge) {
                 first().displayType = 1 // 第一项默认展开
             }
