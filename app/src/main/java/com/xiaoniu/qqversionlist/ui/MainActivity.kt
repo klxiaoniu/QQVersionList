@@ -7,6 +7,8 @@ import android.graphics.Rect
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.style.URLSpan
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
@@ -177,15 +179,32 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.btn_about -> {
-                    MaterialAlertDialogBuilder(this).setTitle("关于")
-                        .setMessage("QQ 版本列表实用工具 for Android\n\n作者：快乐小牛、有鲫雪狐\n\n版本：" + packageManager.getPackageInfo(
+                    val message =
+                        SpannableString("QQ 版本列表实用工具 for Android\n\n作者：快乐小牛、有鲫雪狐\n\n版本：" + packageManager.getPackageInfo(
                             packageName, 0
                         ).let {
-                            @Suppress("DEPRECATION") it.versionName + "(" + (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) it.longVersionCode else it.versionCode) + ")"
-                        } + "\n\n内部使用，禁止外传\n\n2023.8.9").setPositiveButton("确定", null)
+                            @Suppress("DEPRECATION")
+                            it.versionName + "(" + (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) it.longVersionCode else it.versionCode) + ")"
+                        } + "\n\nSince 2023.8.9\n\n" + "开源地址")
+                    val urlSpan = URLSpan("https://github.com/klxiaoniu/QQVersionList")
+                    message.setSpan(
+                        urlSpan,
+                        message.length - 4,
+                        message.length,
+                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
+                    MaterialAlertDialogBuilder(this)
+                        .setTitle("关于")
+                        .setIcon(R.drawable.information_line)
+                        .setMessage(message)
+                        .setPositiveButton("确定", null)
                         .setNeutralButton("撤回同意用户协议") { _, _ ->
                             UADialog(true)
-                        }.setIcon(R.drawable.information_line).show()
+                        }.show()
+                        .apply {
+                            findViewById<TextView>(android.R.id.message)?.movementMethod =
+                                android.text.method.LinkMovementMethod.getInstance()
+                        }
                     true
                 }
 
