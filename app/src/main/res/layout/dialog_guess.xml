@@ -56,6 +56,7 @@
 
     <com.google.android.material.card.MaterialCardView
         style="?attr/materialCardViewOutlinedStyle"
+        android:id="@+id/guess_dialog_warning"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="?android:colorBackground">

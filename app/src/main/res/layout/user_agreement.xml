@@ -55,7 +55,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
-                    android:text="一，协议的范围"
+                    android:text="一、协议的范围"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -71,7 +71,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
-                    android:text="二，关于 QQ 版本列表实用工具提供的服务"
+                    android:text="二、关于 QQ 版本列表实用工具提供的服务"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -87,7 +87,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
-                    android:text="三，软件的获取"
+                    android:text="三、软件的获取"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -103,7 +103,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
-                    android:text="四，软件的更新"
+                    android:text="四、软件的更新"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -119,7 +119,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
-                    android:text="五，用户个人信息保护"
+                    android:text="五、用户个人信息保护"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -135,7 +135,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
-                    android:text="六，主权力义务条款"
+                    android:text="六、主权力义务条款"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -151,7 +151,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
-                    android:text="七，用户行为规范"
+                    android:text="七、用户行为规范"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -167,7 +167,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
-                    android:text="八，软件使用规范"
+                    android:text="八、软件使用规范"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -183,7 +183,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
-                    android:text="九，免责条款"
+                    android:text="九、免责条款"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -199,7 +199,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
-                    android:text="十，其他"
+                    android:text="十、其他"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -236,7 +236,8 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_weight="1"
-            android:text="退出" />
+            android:text="不同意并退出"
+            android:textSize="13dp"/>
 
         <Button
             android:id="@+id/ua_button_agree"
