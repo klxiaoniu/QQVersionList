@@ -97,7 +97,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp"
-                    android:text="您可以直接从 GitHub 获取 QQ 版本列表实用工具本体及其源代码。\n\n如果您从未经 GitHub 及其相关官方平台获取本应用，QQ 版本列表实用工具无法保证该软件能够正常使用，并对因此给您造成的损失不予负责。获取应用后，您需要按照该程序提示的步骤正确使用。\n\n如果您不再需要使用 QQ 版本列表实用工具，可以不再打开应用使用或卸载应用。" />
+                    android:text="您可以直接从官方渠道获取 QQ 版本列表实用工具。\n\n如果您从未经相关官方平台获取本应用，QQ 版本列表实用工具无法保证该应用能够正常使用，并对因此给您造成的损失不予负责。获取应用后，您需要按照该应用提示的步骤正确使用。\n\n如果您不再需要使用 QQ 版本列表实用工具，可以不再打开应用使用或卸载应用。" />
 
                 <TextView
                     android:layout_width="match_parent"
