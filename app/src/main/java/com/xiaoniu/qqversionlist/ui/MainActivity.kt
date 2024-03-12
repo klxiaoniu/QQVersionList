@@ -86,25 +86,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun Context.dpToPx(dp: Int): Int {
-        return (dp * resources.displayMetrics.density).toInt()
-    }
-
-    class VerticalSpaceItemDecoration(private val space: Int) : RecyclerView.ItemDecoration() {
-        override fun getItemOffsets(
-            outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State
-        ) {
-            with(outRect) {
-                // 对于每一项都添加底部间距
-                bottom = space
-                // 如果不是第一行，则添加顶部间距
-                if (parent.getChildAdapterPosition(view) != 0) {
-                    top = space
-                }
-            }
-        }
-    }
-
 
     private fun initButtons() {
         //这里的“getInt: userAgreement”的值代表着用户协议修订版本，后续更新协议版本后也需要在下面一行把“judgeUARead”+1，以此类推
