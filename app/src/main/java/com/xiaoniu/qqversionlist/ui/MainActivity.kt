@@ -38,7 +38,6 @@ import okhttp3.Request
 import java.lang.Thread.sleep
 import java.net.HttpURLConnection
 import java.net.URL
-import kotlin.system.exitProcess
 
 
 class MainActivity : AppCompatActivity() {
@@ -86,34 +85,43 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    fun UADialog(agreed: Boolean) {
+        //用户协议，传参内容表示先前是否同意过协议
+        val UAView: View = layoutInflater.inflate(R.layout.user_agreement, null)
+        val uaAgree = UAView.findViewById<Button>(R.id.ua_button_agree)
+        val uaDisagree = UAView.findViewById<Button>(R.id.ua_button_disagree)
+
+        if (UAView.parent != null) {
+            (UAView.parent as ViewGroup).removeView(UAView)
+        }
+
+        val dialogUA =
+            MaterialAlertDialogBuilder(this).setTitle("用户协议").setIcon(R.drawable.file_user_line)
+                .setView(UAView).setCancelable(false).create()
+
+        uaAgree.setOnClickListener {
+            SpUtil.putInt(this, "userAgreement", 1)
+            dialogUA.dismiss()
+        }
+
+        uaDisagree.setOnClickListener {
+            SpUtil.putInt(this, "userAgreement", 0)
+            //不同意直接退出程序
+            finish()
+        }
+        if (agreed) {
+            uaDisagree.text = "撤回同意并退出"
+        }
+
+        dialogUA.show()
+    }
+
 
     private fun initButtons() {
         //这里的“getInt: userAgreement”的值代表着用户协议修订版本，后续更新协议版本后也需要在下面一行把“judgeUARead”+1，以此类推
         val judgeUARead = 1
         if (SpUtil.getInt(this, "userAgreement", 0) != judgeUARead) {
-
-            val UAView: View = layoutInflater.inflate(R.layout.user_agreement, null)
-            val uaAgree = UAView.findViewById<Button>(R.id.ua_button_agree)
-            val uaDisagree = UAView.findViewById<Button>(R.id.ua_button_disagree)
-
-            if (UAView.parent != null) {
-                (UAView.parent as ViewGroup).removeView(UAView)
-            }
-
-            val dialogUA = MaterialAlertDialogBuilder(this).setTitle("用户协议")
-                .setIcon(R.drawable.file_user_line).setView(UAView).setCancelable(false).create()
-
-            uaAgree.setOnClickListener {
-                SpUtil.putInt(this, "userAgreement", 1)
-                dialogUA.dismiss()
-            }
-
-            uaDisagree.setOnClickListener {
-                dialogUA.dismiss()
-                //退出程序
-                finish()
-            }
-            dialogUA.show()
+            UADialog(false)
         }
 
 
@@ -161,6 +169,7 @@ class MainActivity : AppCompatActivity() {
         getData()
 
         binding.bottomAppBar.setOnMenuItemClickListener { menuItem ->
+            //底部左下角按钮动作
             when (menuItem.itemId) {
                 R.id.btn_get -> {
                     getData()
@@ -174,7 +183,9 @@ class MainActivity : AppCompatActivity() {
                         ).let {
                             @Suppress("DEPRECATION") it.versionName + "(" + (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) it.longVersionCode else it.versionCode) + ")"
                         } + "\n\n内部使用，禁止外传\n\n2023.8.9").setPositiveButton("确定", null)
-                        .setIcon(R.drawable.information_line).show()
+                        .setNeutralButton("撤回同意用户协议") { _, _ ->
+                            UADialog(true)
+                        }.setIcon(R.drawable.information_line).show()
                     true
                 }
 
@@ -229,8 +240,10 @@ class MainActivity : AppCompatActivity() {
                     ) {
                         if (position == 0 || position == 2) {
                             dialogGuessBinding.etVersionSmall.visibility = View.VISIBLE
+                            dialogGuessBinding.guessDialogWarning.visibility = View.VISIBLE
                         } else if (position == 1) {
                             dialogGuessBinding.etVersionSmall.visibility = View.GONE
+                            dialogGuessBinding.guessDialogWarning.visibility = View.GONE
                         }
                         SpUtil.putInt(this@MainActivity, "version", position)
                     }
