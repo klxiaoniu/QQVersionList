@@ -38,6 +38,7 @@ import okhttp3.Request
 import java.lang.Thread.sleep
 import java.net.HttpURLConnection
 import java.net.URL
+import kotlin.system.exitProcess
 
 
 class MainActivity : AppCompatActivity() {
@@ -106,6 +107,34 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun initButtons() {
+        //这里的“getInt: userAgreement”的值代表着用户协议修订版本，后续更新协议版本后也需要在下面一行把“judgeUARead”+1，以此类推
+        val judgeUARead = 1
+        if (SpUtil.getInt(this, "userAgreement", 0) != judgeUARead) {
+
+            val UAView: View = layoutInflater.inflate(R.layout.user_agreement, null)
+            val uaAgree = UAView.findViewById<Button>(R.id.ua_button_agree)
+            val uaDisagree = UAView.findViewById<Button>(R.id.ua_button_disagree)
+
+            if (UAView.parent != null) {
+                (UAView.parent as ViewGroup).removeView(UAView)
+            }
+
+            val dialogUA = MaterialAlertDialogBuilder(this).setTitle("用户协议")
+                .setIcon(R.drawable.file_user_line).setView(UAView).setCancelable(false).create()
+
+            uaAgree.setOnClickListener {
+                SpUtil.putInt(this, "userAgreement", 1)
+                dialogUA.dismiss()
+            }
+
+            uaDisagree.setOnClickListener {
+                dialogUA.dismiss()
+                //退出程序
+                finish()
+            }
+            dialogUA.show()
+        }
+
 
         //var currentQQVersion = ""
 
@@ -136,9 +165,7 @@ class MainActivity : AppCompatActivity() {
                             //currentQQVersion = qqVersion.first().versionNumber
                             //大版本号也放持久化存储了，否则猜版 Shortcut 因为加载过快而获取不到东西
                             SpUtil.putString(
-                                this@MainActivity,
-                                "versionBig",
-                                qqVersion.first().versionNumber
+                                this@MainActivity, "versionBig", qqVersion.first().versionNumber
                             )
                         }
 
@@ -180,8 +207,7 @@ class MainActivity : AppCompatActivity() {
                         (settingView.parent as ViewGroup).removeView(settingView)
                     }
 
-                    displayFirstSwitch.isChecked =
-                        SpUtil.getDisplayFirst(this, "displayFirst", true)
+                    displayFirstSwitch.isChecked = SpUtil.getBoolean(this, "displayFirst", true)
 
                     val dialogSetting = MaterialAlertDialogBuilder(this).setTitle("设置")
                         .setIcon(R.drawable.settings_line).setView(settingView).setCancelable(true)
@@ -193,7 +219,7 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     displayFirstSwitch.setOnCheckedChangeListener { _, isChecked ->
-                        SpUtil.putDisplayFirst(this, "displayFirst", isChecked)
+                        SpUtil.putBoolean(this, "displayFirst", isChecked)
                     }
 
 
@@ -280,7 +306,10 @@ class MainActivity : AppCompatActivity() {
 
         }
 
-        if (intent.action == "android.intent.action.VIEW") {
+        if (intent.action == "android.intent.action.VIEW" && SpUtil.getInt(
+                this, "userAgreement", 0
+            ) == judgeUARead
+        ) {
             guessVersionDialog()
         }
 
