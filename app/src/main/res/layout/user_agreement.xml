@@ -9,8 +9,8 @@
         android:id="@+id/UA_text"
         android:layout_width="match_parent"
         android:layout_height="500dp"
-        android:layout_marginTop="12dp"
         android:layout_marginStart="12dp"
+        android:layout_marginTop="12dp"
         android:layout_marginEnd="12dp"
         app:layout_constraintBottom_toTopOf="@id/UA_button_group"
         app:layout_constraintEnd_toEndOf="parent"
@@ -237,7 +237,7 @@
             android:layout_marginEnd="8dp"
             android:layout_weight="1"
             android:text="不同意并退出"
-            android:textSize="13dp"/>
+            android:textSize="13sp" />
 
         <Button
             android:id="@+id/ua_button_agree"
