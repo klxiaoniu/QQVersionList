@@ -14,7 +14,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintSet.GONE
 import androidx.core.view.WindowCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -132,17 +131,17 @@ class MainActivity : AppCompatActivity() {
 
         //var currentQQVersion = ""
 
-        //进度条动画出问题的地方⬇️
+        //进度条动画
         //https://github.com/material-components/material-components-android/blob/master/docs/components/ProgressIndicator.md
 
-        val progressLine = findViewById<LinearProgressIndicator>(R.id.progress_line)
-        //进度条动画出问题的地方
-        progressLine.hideAnimationBehavior = HIDE_OUTWARD  //Java
-        //progressLine.hideAnimationBehavior = HIDE_OUTWARD        Kotlin
-        progressLine.setVisibilityAfterHide(GONE)
+        binding.progressLine.apply {
+            showAnimationBehavior = LinearProgressIndicator.SHOW_INWARD
+            hideAnimationBehavior = HIDE_OUTWARD
+            setVisibilityAfterHide(View.INVISIBLE)
+        }
 
         fun getData() {
-            progressLine.showAnimationBehavior = LinearProgressIndicator.SHOW_INWARD//Kotlin
+            binding.progressLine.show()
             CoroutineScope(Dispatchers.IO).launch {
                 try {
                     val okHttpClient = OkHttpClient()
@@ -171,18 +170,16 @@ class MainActivity : AppCompatActivity() {
                             SpUtil.putString(
                                 this@MainActivity, "versionBig", qqVersion.first().versionNumber
                             )
-                            //进度条动画出问题的地方
-                            progressLine.hideAnimationBehavior =
-                                LinearProgressIndicator.HIDE_OUTWARD//Kotlin
                         }
 
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
                     dialogError(e)
-                    //进度条动画出问题的地方
-                    progressLine.hideAnimationBehavior =
-                        LinearProgressIndicator.HIDE_OUTWARD//Kotlin
+                } finally {
+                    withContext(Dispatchers.Main) {
+                        binding.progressLine.hide()
+                    }
                 }
             }
         }
