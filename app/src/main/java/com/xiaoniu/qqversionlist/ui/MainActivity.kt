@@ -198,7 +198,7 @@ class MainActivity : AppCompatActivity() {
                         .setIcon(R.drawable.information_line)
                         .setMessage(message)
                         .setPositiveButton("确定", null)
-                        .setNeutralButton("撤回同意用户协议") { _, _ ->
+                        .setNegativeButton("撤回同意用户协议") { _, _ ->
                             UADialog(true)
                         }.show()
                         .apply {
