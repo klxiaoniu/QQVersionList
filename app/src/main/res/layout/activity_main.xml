@@ -19,19 +19,15 @@
             android:id="@+id/rv_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="true"
             android:clipToPadding="false"
             android:fillViewport="true"
-            android:paddingTop="16dp"
+            android:nestedScrollingEnabled="true"
             android:paddingLeft="16dp"
+            android:paddingTop="16dp"
             android:paddingRight="16dp"
             android:paddingBottom="100dp"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            app:layout_constrainedHeight="true"
-            app:layout_constraintBottom_toTopOf="@id/bottomAppBar"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/topAppBar" />
+            app:layout_constrainedHeight="true"/>
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/topAppBar"
@@ -49,12 +45,21 @@
                 <com.google.android.material.appbar.MaterialToolbar
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
-                    app:layout_collapseMode="pin"
                     android:elevation="0dp"
-                    app:title="QQ 版本列表实用工具"/>
+                    app:layout_collapseMode="pin"
+                    app:title="QQ 版本列表实用工具" />
             </com.google.android.material.appbar.CollapsingToolbarLayout>
 
+
         </com.google.android.material.appbar.AppBarLayout>
+
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/progress_line"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            app:layout_anchor="@id/topAppBar"
+            app:layout_anchorGravity="bottom|end"/>
 
 
         <com.google.android.material.bottomappbar.BottomAppBar

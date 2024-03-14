@@ -4,19 +4,33 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="20dp">
+    android:paddingBottom="20dp"
+    android:paddingTop="6dp"
+    android:paddingStart="20dp"
+    android:paddingEnd="20dp">
 
     <com.google.android.material.materialswitch.MaterialSwitch
         android:id="@+id/switch_display_first"
         android:layout_width="match_parent"
+        android:paddingBottom="16dp"
+        android:paddingTop="16dp"
         android:layout_height="wrap_content"
         android:text="版本列表首项默认展开" />
 
+    <com.google.android.material.materialswitch.MaterialSwitch
+        android:id="@+id/long_press_card"
+        android:layout_width="match_parent"
+        android:paddingBottom="16dp"
+        android:paddingTop="16dp"
+        android:layout_height="wrap_content"
+        android:text="长按版本列表文字弹出详细信息" />
+
     <Button
         android:id="@+id/btn_setting_ok"
+        style="@style/Widget.Material3.Button.TonalButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:text="确定" />
 
 </LinearLayout>

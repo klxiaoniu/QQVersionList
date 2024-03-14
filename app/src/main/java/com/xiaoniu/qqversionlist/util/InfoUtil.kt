@@ -15,15 +15,11 @@ object InfoUtil {
 
     fun Activity.dialogError(e: Exception) {
         runOnUiThread {
-            MaterialAlertDialogBuilder(this)
-                .setTitle("程序出错，联系小牛")
-                .setIcon(R.drawable.error_warning_line)
-                .setMessage(e.toString())
-                .setPositiveButton("确定", null)
-                .setNeutralButton("复制") { _, _ ->
+            MaterialAlertDialogBuilder(this).setTitle("程序出错，联系小牛")
+                .setIcon(R.drawable.error_warning_line).setMessage(e.toString())
+                .setPositiveButton("确定", null).setNeutralButton("复制") { _, _ ->
                     copyText(e.toString())
-                }
-                .show()
+                }.show()
         }
     }
 
