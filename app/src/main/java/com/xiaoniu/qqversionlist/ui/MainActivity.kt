@@ -12,15 +12,18 @@ import android.text.style.URLSpan
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintSet.GONE
 import androidx.core.view.WindowCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.materialswitch.MaterialSwitch
+import com.google.android.material.progressindicator.BaseProgressIndicator.HIDE_OUTWARD
+import com.google.android.material.progressindicator.CircularProgressIndicator
+import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.google.gson.Gson
 import com.xiaoniu.qqversionlist.R
 import com.xiaoniu.qqversionlist.data.QQVersionBean
@@ -129,7 +132,17 @@ class MainActivity : AppCompatActivity() {
 
         //var currentQQVersion = ""
 
+        //进度条动画出问题的地方⬇️
+        //https://github.com/material-components/material-components-android/blob/master/docs/components/ProgressIndicator.md
+
+        val progressLine = findViewById<LinearProgressIndicator>(R.id.progress_line)
+        //进度条动画出问题的地方
+        progressLine.hideAnimationBehavior = HIDE_OUTWARD  //Java
+        //progressLine.hideAnimationBehavior = HIDE_OUTWARD        Kotlin
+        progressLine.setVisibilityAfterHide(GONE)
+
         fun getData() {
+            progressLine.showAnimationBehavior = LinearProgressIndicator.SHOW_INWARD//Kotlin
             CoroutineScope(Dispatchers.IO).launch {
                 try {
                     val okHttpClient = OkHttpClient()
@@ -158,12 +171,18 @@ class MainActivity : AppCompatActivity() {
                             SpUtil.putString(
                                 this@MainActivity, "versionBig", qqVersion.first().versionNumber
                             )
+                            //进度条动画出问题的地方
+                            progressLine.hideAnimationBehavior =
+                                LinearProgressIndicator.HIDE_OUTWARD//Kotlin
                         }
 
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
                     dialogError(e)
+                    //进度条动画出问题的地方
+                    progressLine.hideAnimationBehavior =
+                        LinearProgressIndicator.HIDE_OUTWARD//Kotlin
                 }
             }
         }
@@ -183,8 +202,7 @@ class MainActivity : AppCompatActivity() {
                         SpannableString("QQ 版本列表实用工具 for Android\n\n作者：快乐小牛、有鲫雪狐\n\n版本：" + packageManager.getPackageInfo(
                             packageName, 0
                         ).let {
-                            @Suppress("DEPRECATION")
-                            it.versionName + "(" + (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) it.longVersionCode else it.versionCode) + ")"
+                            @Suppress("DEPRECATION") it.versionName + "(" + (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) it.longVersionCode else it.versionCode) + ")"
                         } + "\n\nSince 2023.8.9\n\n" + "开源地址")
                     val urlSpan = URLSpan("https://github.com/klxiaoniu/QQVersionList")
                     message.setSpan(
@@ -193,15 +211,12 @@ class MainActivity : AppCompatActivity() {
                         message.length,
                         SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
                     )
-                    MaterialAlertDialogBuilder(this)
-                        .setTitle("关于")
-                        .setIcon(R.drawable.information_line)
-                        .setMessage(message)
+                    MaterialAlertDialogBuilder(this).setTitle("关于")
+                        .setIcon(R.drawable.information_line).setMessage(message)
                         .setPositiveButton("确定", null)
                         .setNegativeButton("撤回同意用户协议") { _, _ ->
                             UADialog(true)
-                        }.show()
-                        .apply {
+                        }.show().apply {
                             findViewById<TextView>(android.R.id.message)?.movementMethod =
                                 android.text.method.LinkMovementMethod.getInstance()
                         }
@@ -212,6 +227,8 @@ class MainActivity : AppCompatActivity() {
                     val settingView: View = layoutInflater.inflate(R.layout.dialog_setting, null)
                     val displayFirstSwitch =
                         settingView.findViewById<MaterialSwitch>(R.id.switch_display_first)
+                    val longPressCardSwitch =
+                        settingView.findViewById<MaterialSwitch>(R.id.long_press_card)
                     val btnOk = settingView.findViewById<Button>(R.id.btn_setting_ok)
 
                     if (settingView.parent != null) {
@@ -219,6 +236,7 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     displayFirstSwitch.isChecked = SpUtil.getBoolean(this, "displayFirst", true)
+                    longPressCardSwitch.isChecked = SpUtil.getBoolean(this, "longPressCard", true)
 
                     val dialogSetting = MaterialAlertDialogBuilder(this).setTitle("设置")
                         .setIcon(R.drawable.settings_line).setView(settingView).setCancelable(true)
@@ -231,6 +249,9 @@ class MainActivity : AppCompatActivity() {
 
                     displayFirstSwitch.setOnCheckedChangeListener { _, isChecked ->
                         SpUtil.putBoolean(this, "displayFirst", isChecked)
+                    }
+                    longPressCardSwitch.setOnCheckedChangeListener { _, isChecked ->
+                        SpUtil.putBoolean(this, "longPressCard", isChecked)
                     }
 
 
@@ -366,7 +387,8 @@ class MainActivity : AppCompatActivity() {
     private fun guessUrl(versionBig: String, versionSmall: Int, mode: Int) {
         // 绑定 AlertDialog 加载对话框布局
         val dialogView = layoutInflater.inflate(R.layout.dialog_loading, null)
-        val progressSpinner = dialogView.findViewById<ProgressBar>(R.id.progress_spinner)
+        val progressSpinner =
+            dialogView.findViewById<CircularProgressIndicator>(R.id.progress_spinner)
         val loadingMessage = dialogView.findViewById<TextView>(R.id.loading_message)
 
         val successButton = layoutInflater.inflate(R.layout.success_button, null)
