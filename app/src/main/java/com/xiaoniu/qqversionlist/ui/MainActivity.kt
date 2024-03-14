@@ -136,8 +136,8 @@ class MainActivity : AppCompatActivity() {
 
         binding.progressLine.apply {
             showAnimationBehavior = LinearProgressIndicator.SHOW_INWARD
-            hideAnimationBehavior = HIDE_OUTWARD
-            setVisibilityAfterHide(View.INVISIBLE)
+            hideAnimationBehavior = LinearProgressIndicator.HIDE_OUTWARD
+            //setVisibilityAfterHide(View.GONE)
         }
 
         fun getData() {
