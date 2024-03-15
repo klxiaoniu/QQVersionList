@@ -88,7 +88,15 @@ class MyAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                         notifyItemChanged(adapterPosition)
                     }
                     tv_desc.setOnLongClickListener {
+                        if (SpUtil.getBoolean(it.context, "longPressCard", true)) {
                         showDialog(it.context, list[adapterPosition].jsonString.toPrettyFormat())
+                        } else {
+                            Toast.makeText(
+                                it.context,
+                                "未开启长按查看详情功能\n请前往设置开启",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                         true
                     }
                 }
