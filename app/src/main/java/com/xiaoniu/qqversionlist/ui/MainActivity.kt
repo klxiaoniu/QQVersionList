@@ -232,6 +232,7 @@ class MainActivity : AppCompatActivity() {
                         settingView.findViewById<MaterialSwitch>(R.id.switch_display_first)
                     val longPressCardSwitch =
                         settingView.findViewById<MaterialSwitch>(R.id.long_press_card)
+                    val guessNot5Switch = settingView.findViewById<MaterialSwitch>(R.id.guess_not_5)
                     val btnOk = settingView.findViewById<Button>(R.id.btn_setting_ok)
 
                     if (settingView.parent != null) {
@@ -240,6 +241,7 @@ class MainActivity : AppCompatActivity() {
 
                     displayFirstSwitch.isChecked = SpUtil.getBoolean(this, "displayFirst", true)
                     longPressCardSwitch.isChecked = SpUtil.getBoolean(this, "longPressCard", true)
+                    guessNot5Switch.isChecked = SpUtil.getBoolean(this, "guessNot5", false)
 
                     val dialogSetting = MaterialAlertDialogBuilder(this).setTitle("设置")
                         .setIcon(R.drawable.settings_line).setView(settingView).setCancelable(true)
@@ -255,6 +257,9 @@ class MainActivity : AppCompatActivity() {
                     }
                     longPressCardSwitch.setOnCheckedChangeListener { _, isChecked ->
                         SpUtil.putBoolean(this, "longPressCard", isChecked)
+                    }
+                    guessNot5Switch.setOnCheckedChangeListener { _, isChecked ->
+                        SpUtil.putBoolean(this, "guessNot5", isChecked)
                     }
 
 
@@ -357,7 +362,10 @@ class MainActivity : AppCompatActivity() {
                         versionSmall =
                             dialogGuessBinding.etVersionSmall.editText?.text.toString().toInt()
                     }
-                    if (versionSmall % 5 != 0) throw Exception("小版本确定不填5的倍数？")
+                    if (versionSmall % 5 != 0 && !SpUtil.getBoolean(
+                            this@MainActivity, "guessNot5", false
+                        )
+                    ) throw Exception("小版本号需填 5 的倍数。/n如有需求，请前往设置解除此限制。")
                     if (versionSmall != 0) {
                         SpUtil.putInt(this, "versionSmall", versionSmall)
                     }/*我偷懒了，因为我上面也有偷懒逻辑，
@@ -510,7 +518,14 @@ class MainActivity : AppCompatActivity() {
 
                                     // 继续按钮点击事件
                                     continueButton.setOnClickListener {
-                                        vSmall += 5
+                                        vSmall += if (!SpUtil.getBoolean(
+                                                this@MainActivity, "guessNot5", false
+                                            )
+                                        ) {
+                                            5
+                                        } else {
+                                            1
+                                        }
                                         successMaterialDialog.dismiss()
                                         status = STATUS_ONGOING
                                     }
@@ -555,7 +570,14 @@ class MainActivity : AppCompatActivity() {
 
                                 }
                             } else {
-                                vSmall += 5
+                                vSmall += if (!SpUtil.getBoolean(
+                                        this@MainActivity, "guessNot5", false
+                                    )
+                                ) {
+                                    5
+                                } else {
+                                    1
+                                }
                             }
                         }
 
