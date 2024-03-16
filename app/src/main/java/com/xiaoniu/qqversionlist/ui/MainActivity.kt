@@ -7,10 +7,13 @@ import android.graphics.Rect
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.text.Editable
 import android.text.SpannableString
+import android.text.TextWatcher
 import android.text.style.URLSpan
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -20,7 +23,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.materialswitch.MaterialSwitch
-import com.google.android.material.progressindicator.BaseProgressIndicator.HIDE_OUTWARD
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.google.gson.Gson
@@ -122,6 +124,10 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun initButtons() {
+        //删除 version Shared Preferences
+        SpUtil.deleteSp(this, "version")
+
+
         //这里的“getInt: userAgreement”的值代表着用户协议修订版本，后续更新协议版本后也需要在下面一行把“judgeUARead”+1，以此类推
         val judgeUARead = 1
         if (SpUtil.getInt(this, "userAgreement", 0) != judgeUARead) {
@@ -270,24 +276,71 @@ class MainActivity : AppCompatActivity() {
                 verBig
             )
 
-            dialogGuessBinding.spinnerVersion.onItemSelectedListener =
-                object : android.widget.AdapterView.OnItemSelectedListener {
-                    override fun onItemSelected(
-                        parent: android.widget.AdapterView<*>?, view: View?, position: Int, id: Long
-                    ) {
-                        if (position == 0 || position == 2) {
-                            dialogGuessBinding.etVersionSmall.visibility = View.VISIBLE
-                            dialogGuessBinding.guessDialogWarning.visibility = View.VISIBLE
-                        } else if (position == 1) {
-                            dialogGuessBinding.etVersionSmall.visibility = View.GONE
-                            dialogGuessBinding.guessDialogWarning.visibility = View.GONE
-                        }
-                        SpUtil.putInt(this@MainActivity, "version", position)
+            val memVersion = SpUtil.getString(this@MainActivity, "versionSelect", "正式版")
+            if (memVersion == "测试版" || memVersion == "空格版" || memVersion == "正式版") {
+                dialogGuessBinding.spinnerVersion.setText(memVersion, false)
+            }
+            if (dialogGuessBinding.spinnerVersion.text.toString() == "测试版" || dialogGuessBinding.spinnerVersion.text.toString() == "空格版") {
+                dialogGuessBinding.etVersionSmall.isEnabled = true
+                dialogGuessBinding.guessDialogWarning.visibility = View.VISIBLE
+            } else if (dialogGuessBinding.spinnerVersion.text.toString() == "正式版") {
+                dialogGuessBinding.etVersionSmall.isEnabled = false
+                dialogGuessBinding.guessDialogWarning.visibility = View.GONE
+            }
+
+//            dialogGuessBinding.spinnerVersion.setText(SpUtil.getString(this,"version","正式版"))
+//            val verItems = arrayOf("正式版", "测试版", "空格版")
+//            (dialogGuessBinding.spinnerVersion as? MaterialAutoCompleteTextView)?.setSimpleItems(verItems)
+
+//            dialogGuessBinding.spinnerVersion.onItemSelectedListener =
+//                object : android.widget.AdapterView.OnItemSelectedListener {
+//                    override fun onItemSelected(
+//                        parent: android.widget.AdapterView<*>?, view: View?, position: Int, id: Long
+//                    ) {
+//                        if (position == 0 || position == 2) {
+//                            //dialogGuessBinding.etVersionSmall.visibility = View.VISIBLE
+//                            dialogGuessBinding.etVersionSmall.isEnabled = true
+//                            dialogGuessBinding.guessDialogWarning.visibility = View.VISIBLE
+//                        } else if (position == 1) {
+//                            //dialogGuessBinding.etVersionSmall.visibility = View.GONE
+//                            dialogGuessBinding.etVersionSmall.isEnabled = false
+//                            dialogGuessBinding.guessDialogWarning.visibility = View.GONE
+//                        }
+//                        SpUtil.putInt(this@MainActivity, "version", position)
+//                    }
+//
+//                    override fun onNothingSelected(parent: android.widget.AdapterView<*>?) {
+//                    }
+//                }
+
+            dialogGuessBinding.spinnerVersion.addTextChangedListener(object : TextWatcher {
+                override fun afterTextChanged(p0: Editable?) {
+                    val judgeVerSelect = dialogGuessBinding.spinnerVersion.text.toString()
+                    SpUtil.putString(this@MainActivity, "versionSelect", judgeVerSelect.toString())
+                    if (judgeVerSelect == "测试版" || judgeVerSelect == "空格版") {
+                        dialogGuessBinding.etVersionSmall.isEnabled = true
+                        dialogGuessBinding.guessDialogWarning.visibility = View.VISIBLE
+                    } else if (judgeVerSelect == "正式版") {
+                        dialogGuessBinding.etVersionSmall.isEnabled = false
+                        dialogGuessBinding.guessDialogWarning.visibility = View.GONE
                     }
 
-                    override fun onNothingSelected(parent: android.widget.AdapterView<*>?) {
-                    }
                 }
+
+                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                }
+
+                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                }
+            })
+
+            dialogGuessBinding.spinnerVersion.setOnFocusChangeListener { _, hasFocus ->
+                if (hasFocus) {
+                    val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.hideSoftInputFromWindow(dialogGuessBinding.spinnerVersion.windowToken, 0)
+                }
+            }
+
 
             val dialogGuess = MaterialAlertDialogBuilder(this).setTitle("猜版 for Android")
                 .setIcon(R.drawable.search_line).setView(dialogGuessView).setCancelable(false)
@@ -298,18 +351,18 @@ class MainActivity : AppCompatActivity() {
             dialogGuessBinding.btnGuessStart.setOnClickListener {
                 try {
                     val versionBig = dialogGuessBinding.etVersionBig.editText?.text.toString()
-                    val mode = dialogGuessBinding.spinnerVersion.selectedItemPosition
-                    var versionSmall = 5
-                    if (mode == MODE_TEST || mode == MODE_UNOFFICIAL) {
+                    val mode = dialogGuessBinding.spinnerVersion.text.toString()
+                    var versionSmall = 0
+                    if (mode == "测试版" || mode == "空格版") {
                         versionSmall =
                             dialogGuessBinding.etVersionSmall.editText?.text.toString().toInt()
                     }
                     if (versionSmall % 5 != 0) throw Exception("小版本确定不填5的倍数？")
-                    if (versionSmall != 5) {
+                    if (versionSmall != 0) {
                         SpUtil.putInt(this, "versionSmall", versionSmall)
                     }/*我偷懒了，因为我上面也有偷懒逻辑，
-                    为了防止 null，我在正式版猜版时默认填入了 5，
-                    但是我没处理下面涉及到持久化存储逻辑的语句，就把 5 存进去了，
+                    为了防止 null，我在正式版猜版时默认填入了 0，
+                    但是我没处理下面涉及到持久化存储逻辑的语句，就把 0 存进去了，
                     覆盖了原来的 15xxx 的持久化存储*/
 
                     guessUrl(versionBig, versionSmall, mode)
@@ -326,10 +379,7 @@ class MainActivity : AppCompatActivity() {
                 dialogGuess.dismiss()
             }
 
-            val memVersion = SpUtil.getInt(this, "version", -1)
-            if (memVersion != -1) {
-                dialogGuessBinding.spinnerVersion.setSelection(memVersion)
-            }
+
             val memVersionSmall = SpUtil.getInt(this, "versionSmall", -1)
             if (memVersionSmall != -1) {
                 dialogGuessBinding.etVersionSmall.editText?.setText(memVersionSmall.toString())
@@ -381,7 +431,7 @@ class MainActivity : AppCompatActivity() {
 
 
     //https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_8.9.75.XXXXX_64.apk
-    private fun guessUrl(versionBig: String, versionSmall: Int, mode: Int) {
+    private fun guessUrl(versionBig: String, versionSmall: Int, mode: String) {
         // 绑定 AlertDialog 加载对话框布局
         val dialogView = layoutInflater.inflate(R.layout.dialog_loading, null)
         val progressSpinner =
@@ -440,7 +490,9 @@ class MainActivity : AppCompatActivity() {
                                 status = STATUS_PAUSE
                                 runOnUiThread {
                                     if (successButton.parent != null) {
-                                        (successButton.parent as ViewGroup).removeView(successButton)
+                                        (successButton.parent as ViewGroup).removeView(
+                                            successButton
+                                        )
                                     }
 
                                     val successMaterialDialog =
@@ -546,9 +598,9 @@ class MainActivity : AppCompatActivity() {
         const val STATUS_PAUSE = 1
         const val STATUS_END = 2
 
-        const val MODE_TEST = 0
-        const val MODE_OFFICIAL = 1
-        const val MODE_UNOFFICIAL = 2  //空格猜版
+        const val MODE_TEST = "测试版"
+        const val MODE_OFFICIAL = "正式版"
+        const val MODE_UNOFFICIAL = "空格版"  //空格猜版
     }
 
 }
