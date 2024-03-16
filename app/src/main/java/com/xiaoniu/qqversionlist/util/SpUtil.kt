@@ -24,4 +24,8 @@ object SpUtil {
 
     fun putBoolean(context: Context, key: String, value: Boolean) =
         getSp(context).edit().putBoolean(key, value).apply()
+
+    fun deleteSp(context: Context, key: String) =
+        getSp(context).edit().remove(key).apply()
+
 }

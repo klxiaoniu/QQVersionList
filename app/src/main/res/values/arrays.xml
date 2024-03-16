@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="version">
-        <item>测试版</item>
         <item>正式版</item>
+        <item>测试版</item>
         <item>空格版</item>
     </string-array>
 </resources>
