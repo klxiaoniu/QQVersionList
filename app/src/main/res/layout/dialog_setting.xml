@@ -25,6 +25,14 @@
         android:layout_height="wrap_content"
         android:text="长按版本列表文字弹出详细信息" />
 
+    <com.google.android.material.materialswitch.MaterialSwitch
+        android:id="@+id/guess_not_5"
+        android:layout_width="match_parent"
+        android:paddingBottom="16dp"
+        android:paddingTop="16dp"
+        android:layout_height="wrap_content"
+        android:text="解除小版本号及猜版遵循 5 的倍数限制" />
+
     <Button
         android:id="@+id/btn_setting_ok"
         style="@style/Widget.Material3.Button.TonalButton"
