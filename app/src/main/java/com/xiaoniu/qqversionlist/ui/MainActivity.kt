@@ -17,6 +17,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.text.method.LinkMovementMethodCompat
 import androidx.core.view.WindowCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -221,7 +222,7 @@ class MainActivity : AppCompatActivity() {
                             UADialog(true)
                         }.show().apply {
                             findViewById<TextView>(android.R.id.message)?.movementMethod =
-                                android.text.method.LinkMovementMethod.getInstance()
+                                LinkMovementMethodCompat.getInstance()
                         }
                     true
                 }
