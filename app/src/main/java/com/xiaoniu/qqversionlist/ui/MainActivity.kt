@@ -19,7 +19,6 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.method.LinkMovementMethodCompat
 import androidx.core.view.WindowCompat
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -49,27 +48,22 @@ import java.net.URL
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var adapter: MyAdapter
+    private lateinit var versionAdapter: VersionAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
 
         setContentView(binding.root)
-        adapter = MyAdapter()
-        binding.rvContent.adapter = adapter
-        binding.rvContent.layoutManager = LinearLayoutManager(this)
-        val recyclerView: RecyclerView = findViewById(R.id.rv_content)
-
-        recyclerView.addItemDecoration(VerticalSpaceItemDecoration(dpToPx(5)))
-        recyclerView.adapter = adapter
-        recyclerView.layoutManager = GridLayoutManager(this, 1, GridLayoutManager.VERTICAL, false)
-
+        versionAdapter = VersionAdapter()
+        binding.rvContent.apply {
+            adapter = versionAdapter
+            layoutManager = LinearLayoutManager(this@MainActivity)
+            addItemDecoration(VerticalSpaceItemDecoration(dpToPx(5)))
+        }
         initButtons()
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
-
-
     }
 
     fun Context.dpToPx(dp: Int): Int {
@@ -171,7 +165,7 @@ class MainActivity : AppCompatActivity() {
                             }
                         }
                         withContext(Dispatchers.Main) {
-                            adapter.setData(this@MainActivity, qqVersion)
+                            versionAdapter.setData(this@MainActivity, qqVersion)
                             //currentQQVersion = qqVersion.first().versionNumber
                             //大版本号也放持久化存储了，否则猜版 Shortcut 因为加载过快而获取不到东西
                             SpUtil.putString(
