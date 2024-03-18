@@ -137,7 +137,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.progressLine.apply {
             showAnimationBehavior = LinearProgressIndicator.SHOW_INWARD
-            hideAnimationBehavior = LinearProgressIndicator.HIDE_OUTWARD
+            hideAnimationBehavior = LinearProgressIndicator.HIDE_ESCAPE
             //setVisibilityAfterHide(View.GONE)
         }
 
@@ -360,7 +360,7 @@ class MainActivity : AppCompatActivity() {
                     if (versionSmall % 5 != 0 && !SpUtil.getBoolean(
                             this@MainActivity, "guessNot5", false
                         )
-                    ) throw Exception("小版本号需填 5 的倍数。/n如有需求，请前往设置解除此限制。")
+                    ) throw Exception("小版本号需填 5 的倍数。如有需求，请前往设置解除此限制。")
                     if (versionSmall != 0) {
                         SpUtil.putInt(this, "versionSmall", versionSmall)
                     }/*我偷懒了，因为我上面也有偷懒逻辑，
