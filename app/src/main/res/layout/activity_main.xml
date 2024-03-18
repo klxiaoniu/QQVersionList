@@ -45,13 +45,7 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <com.google.android.material.progressindicator.LinearProgressIndicator
-        android:id="@+id/progress_line"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:indeterminate="true"
-        app:layout_anchor="@id/topAppBar"
-        app:layout_anchorGravity="bottom|end" />
+
 
     <com.google.android.material.bottomappbar.BottomAppBar
         android:id="@+id/bottomAppBar"
@@ -60,6 +54,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:fitsSystemWindows="true"
+        app:hideOnScroll="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/bottom_app_bar" />
 
@@ -69,5 +64,16 @@
         android:layout_height="wrap_content"
         app:layout_anchor="@id/bottomAppBar"
         app:srcCompat="@drawable/search_line" />
+
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/progress_line"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:elevation="10dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        app:layout_anchor="@id/topAppBar"
+        app:layout_anchorGravity="bottom" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

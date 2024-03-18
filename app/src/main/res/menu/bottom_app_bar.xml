@@ -19,7 +19,7 @@
         android:id="@+id/btn_get"
         android:icon="@drawable/refresh_line"
         android:title="刷新"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="ifRoom"/>
 
 
 </menu>
