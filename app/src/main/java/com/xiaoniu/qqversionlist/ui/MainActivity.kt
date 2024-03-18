@@ -137,7 +137,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.progressLine.apply {
             showAnimationBehavior = LinearProgressIndicator.SHOW_INWARD
-            hideAnimationBehavior = LinearProgressIndicator.HIDE_ESCAPE
+            hideAnimationBehavior = LinearProgressIndicator.HIDE_OUTWARD
             //setVisibilityAfterHide(View.GONE)
         }
 
