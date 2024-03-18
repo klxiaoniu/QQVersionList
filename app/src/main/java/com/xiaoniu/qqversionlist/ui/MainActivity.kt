@@ -342,7 +342,7 @@ class MainActivity : AppCompatActivity() {
             }
 
 
-            val dialogGuess = MaterialAlertDialogBuilder(this, android.R.style.Theme_Material_Dialog_Presentation).setTitle("猜版 for Android")
+            val dialogGuess = MaterialAlertDialogBuilder(this).setTitle("猜版 for Android")
                 .setIcon(R.drawable.search_line).setView(dialogGuessView).setCancelable(false)
                 .create()
             dialogGuess.show()
