@@ -4,33 +4,33 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingBottom="20dp"
-    android:paddingTop="6dp"
     android:paddingStart="20dp"
-    android:paddingEnd="20dp">
+    android:paddingTop="6dp"
+    android:paddingEnd="20dp"
+    android:paddingBottom="20dp">
 
     <com.google.android.material.materialswitch.MaterialSwitch
         android:id="@+id/switch_display_first"
         android:layout_width="match_parent"
-        android:paddingBottom="16dp"
-        android:paddingTop="16dp"
         android:layout_height="wrap_content"
+        android:paddingTop="16dp"
+        android:paddingBottom="8dp"
         android:text="版本列表首项默认展开" />
 
     <com.google.android.material.materialswitch.MaterialSwitch
         android:id="@+id/long_press_card"
         android:layout_width="match_parent"
-        android:paddingBottom="16dp"
-        android:paddingTop="16dp"
         android:layout_height="wrap_content"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
         android:text="长按版本列表文字弹出详细信息" />
 
     <com.google.android.material.materialswitch.MaterialSwitch
         android:id="@+id/guess_not_5"
         android:layout_width="match_parent"
-        android:paddingBottom="16dp"
-        android:paddingTop="16dp"
         android:layout_height="wrap_content"
+        android:paddingTop="8dp"
+        android:paddingBottom="16dp"
         android:text="解除小版本号及猜版遵循 5 的倍数限制" />
 
     <Button

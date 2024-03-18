@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
     }
 
-    fun Context.dpToPx(dp: Int): Int {
+    private fun Context.dpToPx(dp: Int): Int {
         return (dp * resources.displayMetrics.density).toInt()
     }
 
@@ -75,7 +75,6 @@ class MainActivity : AppCompatActivity() {
             outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State
         ) {
             with(outRect) {
-
                 // 对于每一项都添加底部间距
                 bottom = space
                 // 如果不是第一行，则添加顶部间距
@@ -119,9 +118,8 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun initButtons() {
-        //删除 version Shared Preferences
+        // 删除 version Shared Preferences
         SpUtil.deleteSp(this, "version")
-
 
         //这里的“getInt: userAgreement”的值代表着用户协议修订版本，后续更新协议版本后也需要在下面一行把“judgeUARead”+1，以此类推
         val judgeUARead = 1
@@ -129,15 +127,14 @@ class MainActivity : AppCompatActivity() {
             UADialog(false)
         }
 
+        // var currentQQVersion = ""
 
-        //var currentQQVersion = ""
-
-        //进度条动画
-        //https://github.com/material-components/material-components-android/blob/master/docs/components/ProgressIndicator.md
+        // 进度条动画
+        // https://github.com/material-components/material-components-android/blob/master/docs/components/ProgressIndicator.md
 
         binding.progressLine.apply {
-            showAnimationBehavior = LinearProgressIndicator.SHOW_INWARD
-            hideAnimationBehavior = LinearProgressIndicator.HIDE_OUTWARD
+            showAnimationBehavior = LinearProgressIndicator.SHOW_NONE
+            hideAnimationBehavior = LinearProgressIndicator.HIDE_ESCAPE
             //setVisibilityAfterHide(View.GONE)
         }
 
@@ -316,7 +313,7 @@ class MainActivity : AppCompatActivity() {
             dialogGuessBinding.spinnerVersion.addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(p0: Editable?) {
                     val judgeVerSelect = dialogGuessBinding.spinnerVersion.text.toString()
-                    SpUtil.putString(this@MainActivity, "versionSelect", judgeVerSelect.toString())
+                    SpUtil.putString(this@MainActivity, "versionSelect", judgeVerSelect)
                     if (judgeVerSelect == "测试版" || judgeVerSelect == "空格版") {
                         dialogGuessBinding.etVersionSmall.isEnabled = true
                         dialogGuessBinding.guessDialogWarning.visibility = View.VISIBLE
@@ -324,12 +321,9 @@ class MainActivity : AppCompatActivity() {
                         dialogGuessBinding.etVersionSmall.isEnabled = false
                         dialogGuessBinding.guessDialogWarning.visibility = View.GONE
                     }
-
                 }
-
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 }
-
                 override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 }
             })
