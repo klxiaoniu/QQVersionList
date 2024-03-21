@@ -216,7 +216,7 @@ class MainActivity : AppCompatActivity() {
                             packageName, 0
                         ).let {
                             @Suppress("DEPRECATION") it.versionName + "(" + (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) it.longVersionCode else it.versionCode) + ")"
-                        } + "\n\nSince 2023.8.9\n\n" + "开源地址")
+                        } + "\n\nSince 2023.8.9\n\nLicensed under AGPL v3\n\n" + "开源地址")
                     val urlSpan = URLSpan("https://github.com/klxiaoniu/QQVersionList")
                     message.setSpan(
                         urlSpan,
