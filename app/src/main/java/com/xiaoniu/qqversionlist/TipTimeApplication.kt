@@ -1,5 +1,5 @@
 /*
-    <one line to give the program's name and a brief idea of what it does.>
+    QQ Version Tool for Android™
     Copyright (C) 2023 klxiaoniu
 
     This program is free software: you can redistribute it and/or modify

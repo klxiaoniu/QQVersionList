@@ -2,6 +2,8 @@
 
 ![QQ 版本列表实用工具 Banner](/QQVerToolBanner.png)
 
+Licenced under [GNU AFFERO GENERAL PUBLIC LICENSE Version 3](/LICENSE)
+
 ## 注意事项：使用前须知
 
 - 请确保您在使用前充分审慎阅读了[用户协议](/UserAgreement.md)。鉴于 QQ 测试版可能存在不可预知的稳定性问题，您在下载及使用该测试版本之前，必须明确并确保自身具备足够的风险识别和承受能力。根据相关条款，您使用本软件时应当已了解并同意，因下载或使用 QQ 测试版而可能产生的任何直接或间接损失、损害以及其他不利后果，均由您自行承担全部责任。
