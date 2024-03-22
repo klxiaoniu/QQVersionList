@@ -48,7 +48,7 @@
         android:layout_height="wrap_content"
         android:paddingTop="8dp"
         android:paddingBottom="16dp"
-        android:text="解除小版本号及猜版遵循 5 的倍数限制" />
+        android:text="解除猜版小版本号遵循 5 的倍数限制" />
 
     <Button
         android:id="@+id/btn_setting_ok"
