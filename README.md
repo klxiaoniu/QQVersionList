@@ -2,7 +2,7 @@
 
 ![QQ 版本列表实用工具 Banner](/QQVerToolBanner.png)
 
-Licenced under [GNU AFFERO GENERAL PUBLIC LICENSE Version 3](/LICENSE)
+Licenced under [GNU Affero General Public License Version 3](/LICENSE)
 
 ## 注意事项：使用前须知
 

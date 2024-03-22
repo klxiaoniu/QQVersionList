@@ -603,6 +603,7 @@ class MainActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 e.printStackTrace()
                 dialogError(e)
+                status = STATUS_END
             }
         }
 
