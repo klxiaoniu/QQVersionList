@@ -2,7 +2,7 @@
 
 ![QQ 版本列表实用工具 Banner](/QQVerToolBanner.png)
 
-Licenced under [GNU AFFERO GENERAL PUBLIC LICENSE Version 3](/LICENSE)
+Licenced under [GNU Affero General Public License Version 3](/LICENSE)
 
 ## 注意事项：使用前须知
 
@@ -13,6 +13,30 @@ Licenced under [GNU AFFERO GENERAL PUBLIC LICENSE Version 3](/LICENSE)
 ## 简介
 
 QQ 版本列表实用工具 for Android 是一个提供 QQ 版本列表的查看和对 QQ 下载链接的枚举法猜测的，使用 Material 3 组件库构建的 Android 软件。QQ 版本列表实用工具用户可以通过本应用及时获取到 QQ 版本更新的最新信息。
+
+## 如何使用？
+
+### 版本列表
+
+进入 QQ 版本列表实用工具后，显示“版本：x.y.z 大小：xxx MB”的卡片即为 Android QQ 的版本列表，卡片列表展示了已经或即将发布的 Android QQ 版本。版本信息来源：https://im.qq.com/rainbow/androidQQVersionList
+
+点击卡片右侧箭头可展开卡片以查看更详细信息。
+
+默认情况下，长按卡片文字会弹出展示卡片原始 Json 字符串的对话框，长按对话框文字可选择复制字符串内容。可在设置中关闭此功能。
+
+### 猜版
+
+在 Android QQ - 首页侧滑菜单 - 设置 - 关于QQ与帮助 中可得知，Android QQ 的版本号通常为 `x.y.z.nnnnn`，其中 `x.y.z` 在这里被称为“主版本号”，而 `nnnnn` 被称为“小版本号”。
+
+进入 QQ 版本列表实用工具后，点击右下角放大镜图标按钮即可进入“猜版 for Android”对话框。
+
+对话框含有三个输入框，分别是“主版本号”、“版本”和“小版本号”。“主版本号”已经由软件本体预填入了版本列表显示的最新版本号，也可自行修改。
+
+若选择猜正式版，无需填写小版本号，软件将尝试连接 `https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_<主版本号>_64.apk` 和 `https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_<主版本号>_64_HB.apk` 。
+
+若选择猜测试版，则需要填写起始小版本号，软件将尝试连接 `https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_<主版本号>.<小版本号>_64.apk` ，若失败，默认情况下将小版本号 +5 后再次尝试连接，直到连接成功为止。
+
+连接成功后，软件会弹出成功对话框，对话框下方会有三个按钮，依次是“分享”、“下载”、“停止”、“跳过”和“复制”。
 
 ## 常见问题
 
