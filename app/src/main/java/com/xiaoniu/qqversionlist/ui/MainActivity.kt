@@ -603,7 +603,8 @@ class MainActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 e.printStackTrace()
                 dialogError(e)
-                status = STATUS_END
+                showToast("已停止猜测")
+                progressDialog.dismiss()
             }
         }
 
