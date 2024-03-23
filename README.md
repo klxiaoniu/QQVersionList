@@ -2,8 +2,6 @@
 
 ![QQ 版本列表实用工具 Banner](/QQVerToolBanner.png)
 
-Licenced under [GNU Affero General Public License Version 3](/LICENSE)
-
 ## 注意事项：使用前须知
 
 - 请确保您在使用前充分审慎阅读了[用户协议](/UserAgreement.md)。鉴于 QQ 测试版可能存在不可预知的稳定性问题，您在下载及使用该测试版本之前，必须明确并确保自身具备足够的风险识别和承受能力。根据相关条款，您使用本软件时应当已了解并同意，因下载或使用 QQ 测试版而可能产生的任何直接或间接损失、损害以及其他不利后果，均由您自行承担全部责任。
@@ -42,11 +40,11 @@ QQ 版本列表实用工具 for Android 是一个提供 QQ 版本列表的查看
 
 ### “猜版”里的“空格版”是什么？
 
-- 2023 年 12 月 22 日，腾讯 QQ 官方团队在上传 Android QQ 9.0.8.14600 版本时，不慎将常规链接格式 `https://downv6.qq.com/qqweb/QQ_1/android_apk/Android.9.0.8.14600.64.apk` 错误配置为包含 URL 编码空格形式的链接地址 `https://downv6.qq.com/qqweb/QQ_1/android_apk/Android%209.0.8.14600%2064.apk`。鉴于这一异常现象，QQ 版本列表实用工具增设了“空格版”猜版模式，该功能在原有的“测试版”猜版模式上将版本号中的 `.` 字符替换为 URL 编码的空格符 `%20`，以适应并支持此类非标准但实际存在的直接下载链接。
+2023 年 12 月 22 日，腾讯 QQ 官方团队在上传 Android QQ 9.0.8.14600 版本时，不慎将常规链接格式 `https://downv6.qq.com/qqweb/QQ_1/android_apk/Android.9.0.8.14600.64.apk` 错误配置为包含 URL 编码空格形式的链接地址 `https://downv6.qq.com/qqweb/QQ_1/android_apk/Android%209.0.8.14600%2064.apk`。鉴于这一异常现象，QQ 版本列表实用工具增设了“空格版”猜版模式，该功能在原有的“测试版”猜版模式上将版本号中的 `.` 字符替换为 URL 编码的空格符 `%20`，以适应并支持此类非标准但实际存在的直接下载链接。
 
 ### 为什么默认添加了小版本号必须为 5 的倍数这项限制？
 
-- 基于对 Android QQ 长期以来的版本号发布规律进行深入观察和分析的结果，我们发现 Android QQ 小版本号更新通常遵循每增加一个有效版本即递增 5 的倍数这一特定模式。为了贴近这一潜在实际规范并确保 QQ 版本列表实用工具的快捷性，QQ 版本列表实用工具依据最佳实践原则，默认设置小版本号和猜版必须为 5 的倍数的限制规则。然而，对于用户而言，此项约束并非强制性，如有需要，用户可随时进入设置解除此限制选项，以便更加灵活地匹配各类版本信息。
+基于对 Android QQ 长期以来的版本号发布规律进行深入观察和分析的结果，我们发现 Android QQ 小版本号更新通常遵循每增加一个有效版本即递增 5 的倍数这一特定模式。为了贴近这一潜在实际规范并确保 QQ 版本列表实用工具的快捷性，QQ 版本列表实用工具依据最佳实践原则，默认设置小版本号和猜版必须为 5 的倍数的限制规则。然而，对于用户而言，此项约束并非强制性，如有需要，用户可随时进入设置解除此限制选项，以便更加灵活地匹配各类版本信息。
 
 ## 其他
 
@@ -55,3 +53,23 @@ QQ 版本列表实用工具 for Android 是一个提供 QQ 版本列表的查看
 - “QQ”“腾讯 QQ”“腾讯”是深圳市腾讯计算机系统有限公司和/或其关联公司的商标。本应用对“QQ”“腾讯 QQ”“腾讯”的使用旨在注明和指向对应主体，并非表示对“QQ”、“腾讯 QQ”、“腾讯”商标的注册和拥有。
 
 - Android™ 是 Google LLC 的商标。
+
+## 贡献成员
+
+<a href="https://github.com/klxiaoniu/QQVersionList/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=klxiaoniu/QQVersionList" />
+</a>
+
+## 开源相关
+
+QQ 版本列表实用工具采用 [GNU Affero General Public License Version 3](/LICENSE) 开源许可。
+
+QQ 版本列表实用工具的诞生离不开以下开源项目，感谢以下开源项目的作者和贡献者：
+
+- [Material Components for Android](https://github.com/material-components/material-components-android/)，[Apache License Version 2.0](https://github.com/material-components/material-components-android/blob/master/LICENSE)
+- [Android Jetpack](https://github.com/androidx/androidx/)，[Apache License Version 2.0](https://github.com/androidx/androidx/blob/androidx-main/LICENSE.txt)
+- [Remix Icon（Remix Design）](https://remixicon.com/)，[Apache License Version 2.0](https://remixicon.com/license)
+- [OKHttp（Square）](https://square.github.io/okhttp/)，[Apache License Version 2.0](https://github.com/square/okhttp/blob/master/LICENSE.txt)
+- [Kotlin（JetBrains）](https://kotlinlang.org/)，Apache License Version 2.0
+- [Gson（Google）](https://github.com/google/gson/)，[Apache License Version 2.0](https://github.com/google/gson/blob/master/LICENSE)
+- [Coil](https://coil-kt.github.io/coil/)，[Apache License Version 2.0](https://github.com/coil-kt/coil/blob/main/LICENSE.txt)
