@@ -54,6 +54,12 @@ QQ 版本列表实用工具 for Android 是一个提供 QQ 版本列表的查看
 
 - Android™ 是 Google LLC 的商标。
 
+## 贡献成员
+
+<a href="https://github.com/klxiaoniu/QQVersionList/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=klxiaoniu/QQVersionList" />
+</a>
+
 ## 开源相关
 
 QQ 版本列表实用工具采用 [GNU Affero General Public License Version 3](/LICENSE) 开源许可。
