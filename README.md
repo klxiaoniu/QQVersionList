@@ -2,8 +2,6 @@
 
 ![QQ 版本列表实用工具 Banner](/QQVerToolBanner.png)
 
-Licenced under [GNU Affero General Public License Version 3](/LICENSE)
-
 ## 注意事项：使用前须知
 
 - 请确保您在使用前充分审慎阅读了[用户协议](/UserAgreement.md)。鉴于 QQ 测试版可能存在不可预知的稳定性问题，您在下载及使用该测试版本之前，必须明确并确保自身具备足够的风险识别和承受能力。根据相关条款，您使用本软件时应当已了解并同意，因下载或使用 QQ 测试版而可能产生的任何直接或间接损失、损害以及其他不利后果，均由您自行承担全部责任。
@@ -55,3 +53,17 @@ QQ 版本列表实用工具 for Android 是一个提供 QQ 版本列表的查看
 - “QQ”“腾讯 QQ”“腾讯”是深圳市腾讯计算机系统有限公司和/或其关联公司的商标。本应用对“QQ”“腾讯 QQ”“腾讯”的使用旨在注明和指向对应主体，并非表示对“QQ”、“腾讯 QQ”、“腾讯”商标的注册和拥有。
 
 - Android™ 是 Google LLC 的商标。
+
+## 开源相关
+
+QQ 版本列表实用工具采用 [GNU Affero General Public License Version 3](/LICENSE) 开源许可。
+
+QQ 版本列表实用工具的诞生离不开以下开源项目，感谢以下开源项目的作者和贡献者：
+
+- [Material Components for Android](https://github.com/material-components/material-components-android/)，[Apache License Version 2.0](https://github.com/material-components/material-components-android/blob/master/LICENSE)
+- [Android Jetpack](https://github.com/androidx/androidx/)，[Apache License Version 2.0](https://github.com/androidx/androidx/blob/androidx-main/LICENSE.txt)
+- [Remix Icon（Remix Design）](https://remixicon.com/)，[Apache License Version 2.0](https://remixicon.com/license)
+- [OKHttp（Square）](https://square.github.io/okhttp/)，[Apache License Version 2.0](https://github.com/square/okhttp/blob/master/LICENSE.txt)
+- [Kotlin（JetBrains）](https://kotlinlang.org/), Apache License, Version 2.0
+- [Gson（Google）](https://github.com/google/gson/)，[Apache License Version 2.0](https://github.com/google/gson/blob/master/LICENSE)
+- [Coil](https://coil-kt.github.io/coil/)，[Apache License Version 2.0](https://github.com/coil-kt/coil/blob/main/LICENSE.txt)

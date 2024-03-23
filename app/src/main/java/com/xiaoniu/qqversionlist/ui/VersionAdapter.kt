@@ -129,7 +129,7 @@ class VersionAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val bean = list[position]
         if (holder is ViewHolder) {
-            val result = "版本：" + bean.versionNumber + "\n大小：" + bean.size + "MB"
+            val result = "版本：" + bean.versionNumber + "\n大小：" + bean.size + " MB"
             holder.binding.tvContent.text = result
         } else if (holder is ViewHolderDetail) {
             holder.binding.apply {
@@ -142,7 +142,7 @@ class VersionAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                     iv.load(it)
                 }
                 tvVersion.text = "版本：${bean.versionNumber}"
-                tvSize.text = "大小：${bean.size}MB"
+                tvSize.text = "大小：${bean.size} MB"
                 tvTitle.text = bean.featureTitle
                 tvDesc.text = bean.summary.joinToString(separator = "\n")
             }
