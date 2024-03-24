@@ -73,3 +73,9 @@ QQ 版本列表实用工具的诞生离不开以下开源项目，感谢以下�
 - [Kotlin（JetBrains）](https://kotlinlang.org/)，Apache License Version 2.0
 - [Gson（Google）](https://github.com/google/gson/)，[Apache License Version 2.0](https://github.com/google/gson/blob/master/LICENSE)
 - [Coil](https://coil-kt.github.io/coil/)，[Apache License Version 2.0](https://github.com/coil-kt/coil/blob/main/LICENSE.txt)
+
+## 孪生项目
+
+[QQ 版本列表 Lite for WeChat MiniProgram](https://github.com/ArcticFoxPro/QQVersionListTool-WeChatMiniProgram)，Licenced under [木兰公共许可证, 第2版](https://github.com/ArcticFoxPro/QQVersionListTool-WeChatMiniProgram/blob/main/LICENSE)
+
+[![QQ 版本列表 Lite Banner](/QQVerLiteBanner.png)](https://github.com/ArcticFoxPro/QQVersionListTool-WeChatMiniProgram)

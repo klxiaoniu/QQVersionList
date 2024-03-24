@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
     QQ Version Tool for Android™
     Copyright (C) 2023 klxiaoniu
 
@@ -20,8 +19,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
     android:gravity="center_vertical"
+    android:orientation="horizontal"
     android:padding="16dp">
 
     <com.google.android.material.progressindicator.CircularProgressIndicator
@@ -45,13 +44,12 @@
         android:textAlignment="viewStart"
         android:textSize="13sp" />
 
-    <Button
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <Button xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/dialog_button_cancel"
         style="?attr/materialIconButtonFilledTonalStyle"
-        app:icon="@drawable/stop_line"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="13sp" />
+        android:textSize="13sp"
+        app:icon="@drawable/stop_line" />
 
 </LinearLayout>

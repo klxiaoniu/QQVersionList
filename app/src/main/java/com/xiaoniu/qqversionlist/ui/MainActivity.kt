@@ -103,7 +103,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun UADialog(agreed: Boolean) {
+
+    private fun UADialog(agreed: Boolean) {
         //用户协议，传参内容表示先前是否同意过协议
         val UAView: View = layoutInflater.inflate(R.layout.user_agreement, null)
         val uaAgree = UAView.findViewById<Button>(R.id.ua_button_agree)
@@ -201,6 +202,18 @@ class MainActivity : AppCompatActivity() {
         }
 
         getData()
+
+        binding.rvContent.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (dy > 0) {
+                    binding.btnGuess.shrink()
+                } else {
+                    binding.btnGuess.extend()
+                }
+            }
+        })
+
 
         binding.bottomAppBar.setOnMenuItemClickListener { menuItem ->
             //底部左下角按钮动作
@@ -340,8 +353,10 @@ class MainActivity : AppCompatActivity() {
                         dialogGuessBinding.guessDialogWarning.visibility = View.GONE
                     }
                 }
+
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 }
+
                 override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 }
             })
