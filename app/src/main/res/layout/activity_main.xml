@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
     QQ Version Tool for Android™
     Copyright (C) 2023 klxiaoniu
 
@@ -63,7 +62,6 @@
     </com.google.android.material.appbar.AppBarLayout>
 
 
-
     <com.google.android.material.bottomappbar.BottomAppBar
         android:id="@+id/bottomAppBar"
         style="@style/Widget.Material3.BottomAppBar"
@@ -75,21 +73,23 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/bottom_app_bar" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/btn_guess"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="猜版"
+        app:icon="@drawable/search_line"
         app:layout_anchor="@id/bottomAppBar"
-        app:srcCompat="@drawable/search_line" />
+        app:removeEmbeddedFabElevation="true" />
 
     <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/progress_line"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:indeterminate="true"
-        android:elevation="10dp"
         android:layout_marginStart="4dp"
         android:layout_marginEnd="4dp"
+        android:elevation="10dp"
+        android:indeterminate="true"
         app:layout_anchor="@id/topAppBar"
         app:layout_anchorGravity="bottom" />
 

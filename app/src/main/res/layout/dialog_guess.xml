@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
     QQ Version Tool for Android™
     Copyright (C) 2023 klxiaoniu
 
@@ -35,11 +34,11 @@
             android:id="@+id/et_version_big"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_marginEnd="8dp"
-            app:helperTextEnabled="true"
+            android:layout_weight="1"
+            android:hint="主版本号"
             app:helperText="填写格式为 x.y.z"
-            android:hint="主版本号">
+            app:helperTextEnabled="true">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
@@ -60,11 +59,11 @@
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_marginStart="8dp"
-            app:helperTextEnabled="true"
+            android:layout_weight="1"
+            android:hint="版本"
             app:helperText="指定猜版版本"
-            android:hint="版本">
+            app:helperTextEnabled="true">
 
             <AutoCompleteTextView
                 android:id="@+id/spinner_version"
@@ -81,9 +80,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
-        app:helperTextEnabled="true"
+        android:hint="起始小版本号"
         app:helperText="填写起始猜测小版本号，猜正式版时无需填写"
-        android:hint="起始小版本号">
+        app:helperTextEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"

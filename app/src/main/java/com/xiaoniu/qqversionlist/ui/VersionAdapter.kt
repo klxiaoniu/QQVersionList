@@ -21,6 +21,7 @@ package com.xiaoniu.qqversionlist.ui
 import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
@@ -131,6 +132,14 @@ class VersionAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         if (holder is ViewHolder) {
             val result = "版本：" + bean.versionNumber + "\n大小：" + bean.size + " MB"
             holder.binding.tvContent.text = result
+            if (!SpUtil.getBoolean(holder.itemView.context, "progressSize", false)) {
+                holder.binding.listProgressLine.visibility = View.GONE
+            } else{
+                holder.binding.listProgressLine.visibility = View.VISIBLE
+                holder.binding.listProgressLine.max =
+                    ((list.maxByOrNull { it.size.toFloat() }?.size?.toFloat() ?: 0f) * 10).toInt()
+                holder.binding.listProgressLine.progress = (bean.size.toFloat() * 10).toInt()
+            }
         } else if (holder is ViewHolderDetail) {
             holder.binding.apply {
                 linearImages.removeAllViews()

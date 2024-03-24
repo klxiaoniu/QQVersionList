@@ -103,7 +103,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun UADialog(agreed: Boolean) {
+
+    private fun UADialog(agreed: Boolean) {
         //用户协议，传参内容表示先前是否同意过协议
         val UAView: View = layoutInflater.inflate(R.layout.user_agreement, null)
         val uaAgree = UAView.findViewById<Button>(R.id.ua_button_agree)
@@ -202,6 +203,18 @@ class MainActivity : AppCompatActivity() {
 
         getData()
 
+        binding.rvContent.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (dy > 0) {
+                    binding.btnGuess.shrink()
+                } else if(dy < 0){
+                    binding.btnGuess.extend()
+                }
+            }
+        })
+
+
         binding.bottomAppBar.setOnMenuItemClickListener { menuItem ->
             //底部左下角按钮动作
             when (menuItem.itemId) {
@@ -243,6 +256,7 @@ class MainActivity : AppCompatActivity() {
                     val longPressCardSwitch =
                         settingView.findViewById<MaterialSwitch>(R.id.long_press_card)
                     val guessNot5Switch = settingView.findViewById<MaterialSwitch>(R.id.guess_not_5)
+                    val progressSizeSwitch = settingView.findViewById<MaterialSwitch>(R.id.progress_size)
                     val btnOk = settingView.findViewById<Button>(R.id.btn_setting_ok)
 
                     if (settingView.parent != null) {
@@ -252,6 +266,8 @@ class MainActivity : AppCompatActivity() {
                     displayFirstSwitch.isChecked = SpUtil.getBoolean(this, "displayFirst", true)
                     longPressCardSwitch.isChecked = SpUtil.getBoolean(this, "longPressCard", true)
                     guessNot5Switch.isChecked = SpUtil.getBoolean(this, "guessNot5", false)
+                    progressSizeSwitch.isChecked = SpUtil.getBoolean(this, "progressSize", false)
+
 
                     val dialogSetting = MaterialAlertDialogBuilder(this).setTitle("设置")
                         .setIcon(R.drawable.settings_line).setView(settingView).setCancelable(true)
@@ -264,12 +280,17 @@ class MainActivity : AppCompatActivity() {
 
                     displayFirstSwitch.setOnCheckedChangeListener { _, isChecked ->
                         SpUtil.putBoolean(this, "displayFirst", isChecked)
+                        getData()
                     }
                     longPressCardSwitch.setOnCheckedChangeListener { _, isChecked ->
                         SpUtil.putBoolean(this, "longPressCard", isChecked)
                     }
                     guessNot5Switch.setOnCheckedChangeListener { _, isChecked ->
                         SpUtil.putBoolean(this, "guessNot5", isChecked)
+                    }
+                    progressSizeSwitch.setOnCheckedChangeListener { _, isChecked ->
+                        SpUtil.putBoolean(this, "progressSize", isChecked)
+                        getData()
                     }
 
 
@@ -340,8 +361,10 @@ class MainActivity : AppCompatActivity() {
                         dialogGuessBinding.guessDialogWarning.visibility = View.GONE
                     }
                 }
+
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 }
+
                 override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 }
             })

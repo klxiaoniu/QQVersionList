@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
     QQ Version Tool for Android™
     Copyright (C) 2023 klxiaoniu
 
@@ -36,7 +35,7 @@
         android:id="@+id/btn_get"
         android:icon="@drawable/refresh_line"
         android:title="刷新"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="ifRoom" />
 
 
 </menu>

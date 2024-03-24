@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
     QQ Version Tool for Android™
     Copyright (C) 2023 klxiaoniu
 
@@ -41,6 +40,14 @@
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
         android:text="长按版本列表文字弹出详细信息" />
+
+    <com.google.android.material.materialswitch.MaterialSwitch
+        android:id="@+id/progress_size"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:text="版本列表折叠态展示当前包大小占比最大包指示条" />
 
     <com.google.android.material.materialswitch.MaterialSwitch
         android:id="@+id/guess_not_5"
