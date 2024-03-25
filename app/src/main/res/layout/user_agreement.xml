@@ -256,8 +256,7 @@
             style="@style/Widget.Material3.Button.TonalButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="不同意并退出"
-            android:textSize="13sp" />
+            android:text="不同意并退出" />
 
 
 
