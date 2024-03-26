@@ -59,7 +59,9 @@ import com.xiaoniu.qqversionlist.util.InfoUtil.showToast
 import com.xiaoniu.qqversionlist.util.LogUtil.log
 import com.xiaoniu.qqversionlist.util.SpUtil
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
@@ -415,6 +417,11 @@ class MainActivity : AppCompatActivity() {
 
 
             dialogGuessBinding.btnGuessStart.setOnClickListener {
+
+                dialogGuessBinding.etVersionBig.clearFocus()
+                dialogGuessBinding.spinnerVersion.clearFocus()
+                dialogGuessBinding.etVersionSmall.clearFocus()
+
                 try {
                     val versionBig = dialogGuessBinding.etVersionBig.editText?.text.toString()
                     val mode = dialogGuessBinding.spinnerVersion.text.toString()
@@ -500,6 +507,7 @@ class MainActivity : AppCompatActivity() {
 
 
     //https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_8.9.75.XXXXX_64.apk
+    @OptIn(DelicateCoroutinesApi::class)
     private fun guessUrl(versionBig: String, versionSmall: Int, mode: String) {
         // 绑定 AlertDialog 加载对话框布局
         val dialogView = layoutInflater.inflate(R.layout.dialog_loading, null)
@@ -520,8 +528,9 @@ class MainActivity : AppCompatActivity() {
             MaterialAlertDialogBuilder(this).setView(dialogView).setCancelable(false).create()
 
         fun updateProgressDialogMessage(newMessage: String) {
-            if (progressDialog.isShowing) {
-                loadingMessage.text = newMessage
+            loadingMessage.text = newMessage
+            if (!progressDialog.isShowing) {
+                progressDialog.show()//更新文本后才显示对话框
             }
         }
 
@@ -550,7 +559,9 @@ class MainActivity : AppCompatActivity() {
                                         "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}_64_HB.apk"
                                 }
                             }
-                            updateProgressDialogMessage("正在猜测下载地址：$link")
+                            GlobalScope.launch(Dispatchers.Main) {
+                                updateProgressDialogMessage("正在猜测下载地址：$link")
+                            }
                             val okHttpClient = OkHttpClient()
                             val request = Request.Builder().url(link).build()
                             val response = okHttpClient.newCall(request).execute()
@@ -621,10 +632,10 @@ class MainActivity : AppCompatActivity() {
 
                                     // 下载按钮点击事件
                                     downloadButton.setOnClickListener {
-                                        val request = DownloadManager.Request(Uri.parse(link))
+                                        val request1 = DownloadManager.Request(Uri.parse(link))
                                         val downloadManager =
                                             getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-                                        downloadManager.enqueue(request)
+                                        downloadManager.enqueue(request1)
                                         successMaterialDialog.dismiss()
                                         status = STATUS_END
                                     }
@@ -666,15 +677,16 @@ class MainActivity : AppCompatActivity() {
         // AlertDialog
         progressSpinner.visibility = View.VISIBLE
         val buttonCancel = dialogView.findViewById<Button>(R.id.dialog_button_cancel)
-        loadingMessage.text = "正在猜测下载地址"
+        //loadingMessage.text = "正在猜测下载地址"
 
         buttonCancel.setOnClickListener {
             status = STATUS_END
             progressDialog.dismiss()
         }
 
-        progressDialog.show()
         thread.start()
+
+
     }
 
 
