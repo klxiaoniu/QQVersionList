@@ -18,9 +18,12 @@
 
 package com.xiaoniu.qqversionlist.ui
 
+
 import android.app.DownloadManager
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
+import android.content.res.Resources
 import android.graphics.Rect
 import android.net.Uri
 import android.os.Build
@@ -35,6 +38,8 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.text.method.LinkMovementMethodCompat
 import androidx.core.view.WindowCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -82,11 +87,18 @@ class MainActivity : AppCompatActivity() {
         initButtons()
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
+
+
     }
 
     private fun Context.dpToPx(dp: Int): Int {
         return (dp * resources.displayMetrics.density).toInt()
     }
+
+//    private fun Context.pxToDp(px: Int): Int {
+//        return (px / resources.displayMetrics.density).toInt()
+//    }
+
 
     class VerticalSpaceItemDecoration(private val space: Int) : RecyclerView.ItemDecoration() {
         override fun getItemOffsets(
@@ -105,8 +117,12 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun UADialog(agreed: Boolean) {
+
+        val screenHeight = Resources.getSystem().displayMetrics.heightPixels
+
         //用户协议，传参内容表示先前是否同意过协议
         val UAView: View = layoutInflater.inflate(R.layout.user_agreement, null)
+        val constraintLayout = UAView.findViewById<ConstraintLayout>(R.id.user_agreement)
         val uaAgree = UAView.findViewById<Button>(R.id.ua_button_agree)
         val uaDisagree = UAView.findViewById<Button>(R.id.ua_button_disagree)
 
@@ -114,9 +130,23 @@ class MainActivity : AppCompatActivity() {
             (UAView.parent as ViewGroup).removeView(UAView)
         }
 
+
         val dialogUA =
             MaterialAlertDialogBuilder(this).setTitle("用户协议").setIcon(R.drawable.file_user_line)
                 .setView(UAView).setCancelable(false).create()
+
+
+        val constraintSet = ConstraintSet()
+        constraintSet.clone(constraintLayout)
+
+        val currentConfig = resources.configuration
+        if (currentConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            constraintSet.constrainHeight(R.id.UA_text, screenHeight / 6)
+        } else if (currentConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            constraintSet.constrainHeight(R.id.UA_text, screenHeight / 2)
+        }
+
+        constraintSet.applyTo(constraintLayout)
 
         uaAgree.setOnClickListener {
             SpUtil.putInt(this, "userAgreement", 1)
@@ -208,7 +238,7 @@ class MainActivity : AppCompatActivity() {
                 super.onScrolled(recyclerView, dx, dy)
                 if (dy > 0) {
                     binding.btnGuess.shrink()
-                } else if(dy < 0){
+                } else if (dy < 0) {
                     binding.btnGuess.extend()
                 }
             }
@@ -256,7 +286,8 @@ class MainActivity : AppCompatActivity() {
                     val longPressCardSwitch =
                         settingView.findViewById<MaterialSwitch>(R.id.long_press_card)
                     val guessNot5Switch = settingView.findViewById<MaterialSwitch>(R.id.guess_not_5)
-                    val progressSizeSwitch = settingView.findViewById<MaterialSwitch>(R.id.progress_size)
+                    val progressSizeSwitch =
+                        settingView.findViewById<MaterialSwitch>(R.id.progress_size)
                     val btnOk = settingView.findViewById<Button>(R.id.btn_setting_ok)
 
                     if (settingView.parent != null) {
