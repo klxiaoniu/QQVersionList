@@ -58,18 +58,38 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
+            android:id="@+id/tv_per_size"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            tools:text="占比历史最大包（）："
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/item_old" />
+
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/list_detail_progress_line"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="10dp"
+            app:layout_anchorGravity="bottom"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_per_size"
+            android:paddingTop="3dp"
+            android:paddingBottom="6dp"/>
+
+        <TextView
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             tools:text="体验说明："
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/item_old" />
+            app:layout_constraintTop_toBottomOf="@id/list_detail_progress_line" />
 
         <TextView
             android:id="@+id/tv_desc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingBottom="4dp"
+            android:paddingBottom="6dp"
             tools:text="新年新“状态”"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_title" />

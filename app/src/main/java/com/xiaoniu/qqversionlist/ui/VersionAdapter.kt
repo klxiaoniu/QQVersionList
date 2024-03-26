@@ -35,6 +35,7 @@ import com.xiaoniu.qqversionlist.databinding.ItemVersionBinding
 import com.xiaoniu.qqversionlist.databinding.ItemVersionDetailBinding
 import com.xiaoniu.qqversionlist.util.SpUtil
 import com.xiaoniu.qqversionlist.util.StringUtil.toPrettyFormat
+import okhttp3.internal.format
 
 class VersionAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -68,9 +69,7 @@ class VersionAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             0 -> {
                 ViewHolder(
                     ItemVersionBinding.inflate(
-                        LayoutInflater.from(parent.context),
-                        parent,
-                        false
+                        LayoutInflater.from(parent.context), parent, false
                     )
                 ).apply {
                     binding.ibExpand.setOnClickListener {
@@ -97,9 +96,7 @@ class VersionAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             else -> {
                 ViewHolderDetail(
                     ItemVersionDetailBinding.inflate(
-                        LayoutInflater.from(parent.context),
-                        parent,
-                        false
+                        LayoutInflater.from(parent.context), parent, false
                     )
                 ).apply {
                     binding.ibCollapse.setOnClickListener {
@@ -109,8 +106,7 @@ class VersionAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                     binding.tvDesc.setOnLongClickListener {
                         if (SpUtil.getBoolean(it.context, "longPressCard", true)) {
                             showDialog(
-                                it.context,
-                                list[adapterPosition].jsonString.toPrettyFormat()
+                                it.context, list[adapterPosition].jsonString.toPrettyFormat()
                             )
                         } else {
                             Toast.makeText(
@@ -134,7 +130,7 @@ class VersionAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             holder.binding.tvContent.text = result
             if (!SpUtil.getBoolean(holder.itemView.context, "progressSize", false)) {
                 holder.binding.listProgressLine.visibility = View.GONE
-            } else{
+            } else {
                 holder.binding.listProgressLine.visibility = View.VISIBLE
                 holder.binding.listProgressLine.max =
                     ((list.maxByOrNull { it.size.toFloat() }?.size?.toFloat() ?: 0f) * 10).toInt()
@@ -153,7 +149,29 @@ class VersionAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 tvVersion.text = "版本：${bean.versionNumber}"
                 tvSize.text = "大小：${bean.size} MB"
                 tvTitle.text = bean.featureTitle
-                tvDesc.text = bean.summary.joinToString(separator = "\n")
+                tvDesc.text = bean.summary.joinToString(separator = "\n- ", prefix = "- ")
+                tvPerSize.text =
+                    "占比历史最大包（${(list.maxByOrNull { it.size.toFloat() }?.size?.toFloat() ?: 0f)} MB）：${"%.2f".format(bean.size.toFloat() / (list.maxByOrNull { it.size.toFloat() }?.size?.toFloat() ?: 0f) * 100)}%"
+
+                if (!SpUtil.getBoolean(holder.itemView.context, "progressSize", false)) {
+                    holder.binding.listDetailProgressLine.visibility = View.GONE
+                    holder.binding.tvPerSize.visibility = View.GONE
+                } else {
+                    holder.binding.listDetailProgressLine.visibility = View.VISIBLE
+                    holder.binding.tvPerSize.visibility = View.VISIBLE
+                    holder.binding.listDetailProgressLine.max =
+                        ((list.maxByOrNull { it.size.toFloat() }?.size?.toFloat()
+                            ?: 0f) * 10).toInt()
+                    holder.binding.listDetailProgressLine.progress =
+                        (bean.size.toFloat() * 10).toInt()
+                }
+
+                if (tvTitle.text==""){
+                    holder.binding.tvTitle.visibility = View.GONE
+                } else {
+                    holder.binding.tvTitle.visibility = View.VISIBLE
+                }
+
             }
         }
     }

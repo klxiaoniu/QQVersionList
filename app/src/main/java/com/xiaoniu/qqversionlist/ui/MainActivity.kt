@@ -59,7 +59,6 @@ import com.xiaoniu.qqversionlist.util.InfoUtil.showToast
 import com.xiaoniu.qqversionlist.util.LogUtil.log
 import com.xiaoniu.qqversionlist.util.SpUtil
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -506,7 +505,6 @@ class MainActivity : AppCompatActivity() {
 
 
     //https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_8.9.75.XXXXX_64.apk
-    @OptIn(DelicateCoroutinesApi::class)
     private fun guessUrl(versionBig: String, versionSmall: Int, mode: String) {
         // 绑定 AlertDialog 加载对话框布局
         val dialogView = layoutInflater.inflate(R.layout.dialog_loading, null)
