@@ -61,7 +61,6 @@ import com.xiaoniu.qqversionlist.util.SpUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
@@ -559,7 +558,7 @@ class MainActivity : AppCompatActivity() {
                                         "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}_64_HB.apk"
                                 }
                             }
-                            GlobalScope.launch(Dispatchers.Main) {
+                            runOnUiThread {
                                 updateProgressDialogMessage("正在猜测下载地址：$link")
                             }
                             val okHttpClient = OkHttpClient()
