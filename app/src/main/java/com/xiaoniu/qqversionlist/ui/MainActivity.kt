@@ -78,7 +78,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         binding = ActivityMainBinding.inflate(layoutInflater)
 
         setContentView(binding.root)
@@ -412,7 +411,7 @@ class MainActivity : AppCompatActivity() {
             val dialogGuess = MaterialAlertDialogBuilder(this).setTitle("猜版 for Android")
                 .setIcon(R.drawable.search_line).setView(dialogGuessView).setCancelable(false)
                 .create()
-            
+
             dialogGuess.show()
 
             dialogGuessBinding.btnGuessStart.setOnClickListener {
