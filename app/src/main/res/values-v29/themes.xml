@@ -6,7 +6,5 @@
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
 
         <item name="android:windowLightStatusBar">true</item>
-        <item name="android:windowTranslucentNavigation">true</item>
-        <item name="android:windowTranslucentStatus">true</item>
     </style>
 </resources>
