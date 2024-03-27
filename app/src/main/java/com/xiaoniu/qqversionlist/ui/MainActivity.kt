@@ -548,6 +548,7 @@ class MainActivity : AppCompatActivity() {
                                         "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}_64.apk"
                                 } else if (link.endsWith("HB.apk")) {
                                     status = STATUS_END
+                                    showToast("未猜测到包")
                                     continue
                                 } else {
                                     link =
@@ -653,7 +654,9 @@ class MainActivity : AppCompatActivity() {
                         }
 
                         STATUS_END -> {
-                            showToast("已停止猜测")
+                            if (mode != MODE_OFFICIAL) {
+                                showToast("已停止猜测")
+                            }
                             progressDialog.dismiss()
                             break
                         }
