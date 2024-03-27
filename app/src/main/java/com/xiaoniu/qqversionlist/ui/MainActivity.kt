@@ -38,11 +38,11 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.text.method.LinkMovementMethodCompat
-import androidx.core.view.WindowCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -74,9 +74,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var versionAdapter: VersionAdapter
 
+    @RequiresApi(Build.VERSION_CODES.P)
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
 
         setContentView(binding.root)
@@ -87,9 +88,6 @@ class MainActivity : AppCompatActivity() {
             addItemDecoration(VerticalSpaceItemDecoration(dpToPx(5)))
         }
         initButtons()
-
-        WindowCompat.setDecorFitsSystemWindows(window, false)
-
 
     }
 
@@ -413,8 +411,8 @@ class MainActivity : AppCompatActivity() {
             val dialogGuess = MaterialAlertDialogBuilder(this).setTitle("猜版 for Android")
                 .setIcon(R.drawable.search_line).setView(dialogGuessView).setCancelable(false)
                 .create()
-            dialogGuess.show()
 
+            dialogGuess.show()
 
             dialogGuessBinding.btnGuessStart.setOnClickListener {
 
