@@ -38,6 +38,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
@@ -73,9 +74,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var versionAdapter: VersionAdapter
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+        window.isNavigationBarContrastEnforced= false
+        window.isStatusBarContrastEnforced=false
         binding = ActivityMainBinding.inflate(layoutInflater)
 
         setContentView(binding.root)
@@ -548,6 +552,7 @@ class MainActivity : AppCompatActivity() {
                                         "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}_64.apk"
                                 } else if (link.endsWith("HB.apk")) {
                                     status = STATUS_END
+                                    showToast("未猜测到包")
                                     continue
                                 } else {
                                     link =
@@ -653,7 +658,9 @@ class MainActivity : AppCompatActivity() {
                         }
 
                         STATUS_END -> {
-                            showToast("已停止猜测")
+                            if (mode != MODE_OFFICIAL) {
+                                showToast("已停止猜测")
+                            }
                             progressDialog.dismiss()
                             break
                         }
