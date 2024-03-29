@@ -35,7 +35,6 @@ import com.xiaoniu.qqversionlist.databinding.ItemVersionBinding
 import com.xiaoniu.qqversionlist.databinding.ItemVersionDetailBinding
 import com.xiaoniu.qqversionlist.util.SpUtil
 import com.xiaoniu.qqversionlist.util.StringUtil.toPrettyFormat
-import okhttp3.internal.format
 
 class VersionAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -144,14 +143,20 @@ class VersionAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                         setPadding(0, 0, 10, 0)
                     }
                     linearImages.addView(iv)
-                    iv.load(it)
+                    iv.load(it) {
+                        crossfade(200)
+                    }
                 }
                 tvVersion.text = "版本：${bean.versionNumber}"
                 tvSize.text = "大小：${bean.size} MB"
                 tvTitle.text = bean.featureTitle
                 tvDesc.text = bean.summary.joinToString(separator = "\n- ", prefix = "- ")
                 tvPerSize.text =
-                    "占比历史最大包（${(list.maxByOrNull { it.size.toFloat() }?.size?.toFloat() ?: 0f)} MB）：${"%.2f".format(bean.size.toFloat() / (list.maxByOrNull { it.size.toFloat() }?.size?.toFloat() ?: 0f) * 100)}%"
+                    "占比历史最大包（${(list.maxByOrNull { it.size.toFloat() }?.size?.toFloat() ?: 0f)} MB）：${
+                        "%.2f".format(
+                            bean.size.toFloat() / (list.maxByOrNull { it.size.toFloat() }?.size?.toFloat() ?: 0f) * 100
+                        )
+                    }%"
 
                 if (!SpUtil.getBoolean(holder.itemView.context, "progressSize", false)) {
                     holder.binding.listDetailProgressLine.visibility = View.GONE
@@ -166,7 +171,7 @@ class VersionAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                         (bean.size.toFloat() * 10).toInt()
                 }
 
-                if (tvTitle.text==""){
+                if (tvTitle.text == "") {
                     holder.binding.tvTitle.visibility = View.GONE
                 } else {
                     holder.binding.tvTitle.visibility = View.VISIBLE
