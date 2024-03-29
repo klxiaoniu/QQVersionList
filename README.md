@@ -12,7 +12,7 @@ QQ 版本列表实用工具严格遵守中华人民共和国相关法律法规�
 
 ### 2. 开源许可证声明
 
-QQ 版本列表实用工具的源代码依据经过开源促进会认证的 GNU Affero General Public License Version 3（AGPLv3）协议开放源代码，用户可以依照协议条款自由查看、审计和使用源代码。
+QQ 版本列表实用工具的源代码依据经过开源促进会（Open Source Initiative，https://opensource.org）认证的 GNU Affero General Public License Version 3（AGPL v3）协议开放源代码，用户可以依照协议条款自由查看、审计和使用源代码。
 
 ### 3. 法律责任
 
@@ -20,7 +20,7 @@ QQ 版本列表实用工具的源代码依据经过开源促进会认证的 GNU 
 
 特此声明！
 
-附 VirusTotal 对 QQ 版本列表使用工具 v1.2.2-3b425fc 的扫描结果：https://www.virustotal.com/gui/file/865f30709812664937192d55c64568f7c8df3406f0dda3faf5534e64eef756c2
+附 VirusTotal 对 QQ 版本列表实用工具 v1.2.2-3b425fc 的扫描结果：https://www.virustotal.com/gui/file/865f30709812664937192d55c64568f7c8df3406f0dda3faf5534e64eef756c2
 
 ## 注意事项：使用前须知
 
