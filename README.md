@@ -12,7 +12,7 @@ QQ 版本列表实用工具严格遵守中华人民共和国相关法律法规�
 
 ### 2. 开源许可证声明
 
-QQ 版本列表实用工具的源代码依据经过开源促进会（(Open Source Initiative)[https://opensource.org]）认证的 GNU Affero General Public License Version 3（AGPL v3）协议开放源代码，用户可以依照协议条款自由查看、审计和使用源代码。
+QQ 版本列表实用工具的源代码依据经过开源促进会（[Open Source Initiative](https://opensource.org)）认证的 GNU Affero General Public License Version 3（AGPL v3）协议开放源代码，用户可以依照协议条款自由查看、审计和使用源代码。
 
 ### 3. 法律责任
 
