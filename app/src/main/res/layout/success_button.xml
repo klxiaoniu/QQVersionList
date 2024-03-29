@@ -15,7 +15,7 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
@@ -24,44 +24,63 @@
     android:paddingEnd="20dp"
     android:paddingBottom="20dp">
 
-    <Button
-        android:id="@+id/dialog_share_line"
-        style="?attr/materialIconButtonFilledTonalStyle"
-        android:layout_width="wrap_content"
+    <HorizontalScrollView
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:icon="@drawable/share_line" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/dialog_copy"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:scrollbars="none">
 
-    <Button
-        android:id="@+id/dialog_download_line_2"
-        style="?attr/materialIconButtonFilledTonalStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/dialog_share_line"
-        app:icon="@drawable/download_line_2" />
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
-    <Button
-        android:id="@+id/dialog_stop_line"
-        style="?attr/materialIconButtonFilledTonalStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/dialog_download_line_2"
-        app:icon="@drawable/stop_line" />
+            <Button
+                android:id="@+id/dialog_share_line"
+                style="?attr/materialIconButtonFilledTonalStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:icon="@drawable/share_line" />
 
-    <Button
-        android:id="@+id/dialog_play_line"
-        style="?attr/materialIconButtonFilledTonalStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/dialog_stop_line"
-        app:icon="@drawable/skip_forward_line" />
+            <Button
+                android:id="@+id/dialog_download_line_2"
+                style="?attr/materialIconButtonFilledTonalStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/dialog_share_line"
+                app:icon="@drawable/download_line_2" />
+
+            <Button
+                android:id="@+id/dialog_stop_line"
+                style="?attr/materialIconButtonFilledTonalStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/dialog_download_line_2"
+                app:icon="@drawable/stop_line" />
+
+            <Button
+                android:id="@+id/dialog_play_line"
+                style="?attr/materialIconButtonFilledTonalStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/dialog_stop_line"
+                app:icon="@drawable/skip_forward_line" />
+
+        </RelativeLayout>
+
+    </HorizontalScrollView>
 
     <Button
         android:id="@+id/dialog_copy"
         style="@style/Widget.Material3.Button.Icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
         android:text="复制"
-        app:icon="@drawable/file_copy_2_line" />
+        app:icon="@drawable/file_copy_2_line"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
