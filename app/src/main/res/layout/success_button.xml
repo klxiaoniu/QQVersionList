@@ -37,28 +37,28 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/dialog_share_line"
+                android:id="@+id/btn_share"
                 style="?attr/materialIconButtonFilledTonalStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:icon="@drawable/share_line" />
 
             <Button
-                android:id="@+id/dialog_download_line_2"
+                android:id="@+id/btn_download"
                 style="?attr/materialIconButtonFilledTonalStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:icon="@drawable/download_line_2" />
 
             <Button
-                android:id="@+id/dialog_stop_line"
+                android:id="@+id/btn_stop"
                 style="?attr/materialIconButtonFilledTonalStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:icon="@drawable/stop_line" />
 
             <Button
-                android:id="@+id/dialog_play_line"
+                android:id="@+id/btn_continue"
                 style="?attr/materialIconButtonFilledTonalStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -69,7 +69,7 @@
     </HorizontalScrollView>
 
     <Button
-        android:id="@+id/dialog_copy"
+        android:id="@+id/btn_copy"
         style="@style/Widget.Material3.Button.Icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

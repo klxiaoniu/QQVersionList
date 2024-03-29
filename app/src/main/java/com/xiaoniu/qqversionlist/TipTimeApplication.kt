@@ -19,13 +19,17 @@
 package com.xiaoniu.qqversionlist
 
 import android.app.Application
-import androidx.core.provider.FontRequest
-import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.color.DynamicColors
 
 class TipTimeApplication : Application() {
+    companion object {
+        lateinit var instance: TipTimeApplication
+    }
+
     override fun onCreate() {
         super.onCreate()
+        instance = this
+
         // Android 12+ 动态颜色
         DynamicColors.applyToActivitiesIfAvailable(this)
     }

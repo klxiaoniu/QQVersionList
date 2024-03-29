@@ -45,7 +45,7 @@ class VersionAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         this.list.apply {
             clear()
             addAll(list)
-            val displayJudge = SpUtil.getBoolean(context, "displayFirst", true)
+            val displayJudge = SpUtil.getBoolean("displayFirst", true)
             if (displayJudge) {
                 first().displayType = 1 // 第一项默认展开
             }
@@ -76,7 +76,7 @@ class VersionAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                         notifyItemChanged(adapterPosition)
                     }
                     binding.tvContent.setOnLongClickListener {
-                        if (SpUtil.getBoolean(it.context, "longPressCard", true)) {
+                        if (SpUtil.getBoolean("longPressCard", true)) {
                             showDialog(
                                 it.context, list[adapterPosition].jsonString.toPrettyFormat()
                             )
@@ -103,7 +103,7 @@ class VersionAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                         notifyItemChanged(adapterPosition)
                     }
                     binding.tvDesc.setOnLongClickListener {
-                        if (SpUtil.getBoolean(it.context, "longPressCard", true)) {
+                        if (SpUtil.getBoolean("longPressCard", true)) {
                             showDialog(
                                 it.context, list[adapterPosition].jsonString.toPrettyFormat()
                             )
@@ -127,7 +127,7 @@ class VersionAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         if (holder is ViewHolder) {
             val result = "版本：" + bean.versionNumber + "\n大小：" + bean.size + " MB"
             holder.binding.tvContent.text = result
-            if (!SpUtil.getBoolean(holder.itemView.context, "progressSize", false)) {
+            if (!SpUtil.getBoolean("progressSize", false)) {
                 holder.binding.listProgressLine.visibility = View.GONE
             } else {
                 holder.binding.listProgressLine.visibility = View.VISIBLE
@@ -158,7 +158,7 @@ class VersionAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                         )
                     }%"
 
-                if (!SpUtil.getBoolean(holder.itemView.context, "progressSize", false)) {
+                if (!SpUtil.getBoolean("progressSize", false)) {
                     holder.binding.listDetailProgressLine.visibility = View.GONE
                     holder.binding.tvPerSize.visibility = View.GONE
                 } else {

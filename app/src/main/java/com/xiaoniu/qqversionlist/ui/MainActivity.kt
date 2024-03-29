@@ -33,31 +33,28 @@ import android.text.SpannableString
 import android.text.TextWatcher
 import android.text.style.URLSpan
 import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.text.method.LinkMovementMethodCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.materialswitch.MaterialSwitch
-import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.google.gson.Gson
 import com.xiaoniu.qqversionlist.R
 import com.xiaoniu.qqversionlist.data.QQVersionBean
 import com.xiaoniu.qqversionlist.databinding.ActivityMainBinding
 import com.xiaoniu.qqversionlist.databinding.DialogGuessBinding
+import com.xiaoniu.qqversionlist.databinding.DialogLoadingBinding
+import com.xiaoniu.qqversionlist.databinding.DialogSettingBinding
+import com.xiaoniu.qqversionlist.databinding.SuccessButtonBinding
+import com.xiaoniu.qqversionlist.databinding.UserAgreementBinding
 import com.xiaoniu.qqversionlist.util.ClipboardUtil.copyText
 import com.xiaoniu.qqversionlist.util.InfoUtil.dialogError
 import com.xiaoniu.qqversionlist.util.InfoUtil.showToast
-import com.xiaoniu.qqversionlist.util.LogUtil.log
 import com.xiaoniu.qqversionlist.util.SpUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -74,12 +71,13 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var versionAdapter: VersionAdapter
 
-    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
-        window.isNavigationBarContrastEnforced = false
-        window.isStatusBarContrastEnforced = false
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            window.isNavigationBarContrastEnforced = false
+            window.isStatusBarContrastEnforced = false
+        }
         binding = ActivityMainBinding.inflate(layoutInflater)
 
         setContentView(binding.root)
@@ -123,23 +121,17 @@ class MainActivity : AppCompatActivity() {
         val screenHeight = Resources.getSystem().displayMetrics.heightPixels
 
         //用户协议，传参内容表示先前是否同意过协议
-        val uaView: View = layoutInflater.inflate(R.layout.user_agreement, null)
-        val constraintLayout = uaView.findViewById<ConstraintLayout>(R.id.user_agreement)
-        val uaAgree = uaView.findViewById<Button>(R.id.ua_button_agree)
-        val uaDisagree = uaView.findViewById<Button>(R.id.ua_button_disagree)
+        val userAgreementBinding = UserAgreementBinding.inflate(layoutInflater)
 
-        if (uaView.parent != null) {
-            (uaView.parent as ViewGroup).removeView(uaView)
-        }
-
-
-        val dialogUA =
-            MaterialAlertDialogBuilder(this).setTitle("用户协议").setIcon(R.drawable.file_user_line)
-                .setView(uaView).setCancelable(false).create()
-
+        val dialogUA = MaterialAlertDialogBuilder(this)
+            .setTitle("用户协议")
+            .setIcon(R.drawable.file_user_line)
+            .setView(userAgreementBinding.root)
+            .setCancelable(false)
+            .create()
 
         val constraintSet = ConstraintSet()
-        constraintSet.clone(constraintLayout)
+        constraintSet.clone(userAgreementBinding.userAgreement)
 
         val currentConfig = resources.configuration
         if (currentConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -148,20 +140,20 @@ class MainActivity : AppCompatActivity() {
             constraintSet.constrainHeight(R.id.UA_text, screenHeight / 2)
         }
 
-        constraintSet.applyTo(constraintLayout)
+        constraintSet.applyTo(userAgreementBinding.userAgreement)
 
-        uaAgree.setOnClickListener {
-            SpUtil.putInt(this, "userAgreement", 1)
+        userAgreementBinding.uaButtonAgree.setOnClickListener {
+            SpUtil.putInt("userAgreement", 1)
             dialogUA.dismiss()
         }
 
-        uaDisagree.setOnClickListener {
-            SpUtil.putInt(this, "userAgreement", 0)
+        userAgreementBinding.uaButtonDisagree.setOnClickListener {
+            SpUtil.putInt("userAgreement", 0)
             //不同意直接退出程序
             finish()
         }
         if (agreed) {
-            uaDisagree.text = "撤回同意并退出"
+            userAgreementBinding.uaButtonDisagree.text = "撤回同意并退出"
         }
 
         dialogUA.show()
@@ -170,15 +162,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun initButtons() {
         // 删除 version Shared Preferences
-        SpUtil.deleteSp(this, "version")
+        SpUtil.deleteSp("version")
 
         //这里的“getInt: userAgreement”的值代表着用户协议修订版本，后续更新协议版本后也需要在下面一行把“judgeUARead”+1，以此类推
         val judgeUARead = 1
-        if (SpUtil.getInt(this, "userAgreement", 0) != judgeUARead) {
+        if (SpUtil.getInt("userAgreement", 0) != judgeUARead) {
             showUADialog(false)
         }
-
-        // var currentQQVersion = ""
 
         // 进度条动画
         // https://github.com/material-components/material-components-android/blob/master/docs/components/ProgressIndicator.md
@@ -186,7 +176,6 @@ class MainActivity : AppCompatActivity() {
         binding.progressLine.apply {
             showAnimationBehavior = LinearProgressIndicator.SHOW_NONE
             hideAnimationBehavior = LinearProgressIndicator.HIDE_ESCAPE
-            //setVisibilityAfterHide(View.GONE)
         }
 
         fun getData() {
@@ -202,8 +191,7 @@ class MainActivity : AppCompatActivity() {
                     if (responseData != null) {
                         val start = (responseData.indexOf("versions64\":[")) + 12
                         val end = (responseData.indexOf(";\n" + "      typeof"))
-                        "start: $start, end: $end".log()
-                        val totalJson = responseData.substring(start, end)//.apply { log() }
+                        val totalJson = responseData.substring(start, end)
                         val qqVersion = totalJson.split("},{").reversed().map {
                             val pstart = it.indexOf("{\"versions")
                             val pend = it.indexOf(",\"length")
@@ -217,7 +205,7 @@ class MainActivity : AppCompatActivity() {
                             //currentQQVersion = qqVersion.first().versionNumber
                             //大版本号也放持久化存储了，否则猜版 Shortcut 因为加载过快而获取不到东西
                             SpUtil.putString(
-                                this@MainActivity, "versionBig", qqVersion.first().versionNumber
+                                "versionBig", qqVersion.first().versionNumber
                             )
                         }
 
@@ -284,50 +272,41 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.btn_setting -> {
-                    val settingView: View = layoutInflater.inflate(R.layout.dialog_setting, null)
-                    val displayFirstSwitch =
-                        settingView.findViewById<MaterialSwitch>(R.id.switch_display_first)
-                    val longPressCardSwitch =
-                        settingView.findViewById<MaterialSwitch>(R.id.long_press_card)
-                    val guessNot5Switch = settingView.findViewById<MaterialSwitch>(R.id.guess_not_5)
-                    val progressSizeSwitch =
-                        settingView.findViewById<MaterialSwitch>(R.id.progress_size)
-                    val btnOk = settingView.findViewById<Button>(R.id.btn_setting_ok)
+                    val dialogSettingBinding = DialogSettingBinding.inflate(layoutInflater)
 
-                    if (settingView.parent != null) {
-                        (settingView.parent as ViewGroup).removeView(settingView)
+                    dialogSettingBinding.apply {
+                        switchDisplayFirst.isChecked = SpUtil.getBoolean("displayFirst", true)
+                        longPressCard.isChecked = SpUtil.getBoolean("longPressCard", true)
+                        guessNot5.isChecked = SpUtil.getBoolean("guessNot5", false)
+                        progressSize.isChecked = SpUtil.getBoolean("progressSize", false)
                     }
 
-                    displayFirstSwitch.isChecked = SpUtil.getBoolean(this, "displayFirst", true)
-                    longPressCardSwitch.isChecked = SpUtil.getBoolean(this, "longPressCard", true)
-                    guessNot5Switch.isChecked = SpUtil.getBoolean(this, "guessNot5", false)
-                    progressSizeSwitch.isChecked = SpUtil.getBoolean(this, "progressSize", false)
-
-
-                    val dialogSetting = MaterialAlertDialogBuilder(this).setTitle("设置")
-                        .setIcon(R.drawable.settings_line).setView(settingView).setCancelable(true)
+                    val dialogSetting = MaterialAlertDialogBuilder(this)
+                        .setTitle("设置")
+                        .setIcon(R.drawable.settings_line)
+                        .setView(dialogSettingBinding.root)
                         .create()
                     dialogSetting.show()
 
-                    btnOk.setOnClickListener {
-                        dialogSetting.dismiss()
+                    dialogSettingBinding.apply {
+                        btnSettingOk.setOnClickListener {
+                            dialogSetting.dismiss()
+                        }
+                        switchDisplayFirst.setOnCheckedChangeListener { _, isChecked ->
+                            SpUtil.putBoolean("displayFirst", isChecked)
+                            getData()
+                        }
+                        longPressCard.setOnCheckedChangeListener { _, isChecked ->
+                            SpUtil.putBoolean("longPressCard", isChecked)
+                        }
+                        guessNot5.setOnCheckedChangeListener { _, isChecked ->
+                            SpUtil.putBoolean("guessNot5", isChecked)
+                        }
+                        progressSize.setOnCheckedChangeListener { _, isChecked ->
+                            SpUtil.putBoolean("progressSize", isChecked)
+                            getData()
+                        }
                     }
-
-                    displayFirstSwitch.setOnCheckedChangeListener { _, isChecked ->
-                        SpUtil.putBoolean(this, "displayFirst", isChecked)
-                        getData()
-                    }
-                    longPressCardSwitch.setOnCheckedChangeListener { _, isChecked ->
-                        SpUtil.putBoolean(this, "longPressCard", isChecked)
-                    }
-                    guessNot5Switch.setOnCheckedChangeListener { _, isChecked ->
-                        SpUtil.putBoolean(this, "guessNot5", isChecked)
-                    }
-                    progressSizeSwitch.setOnCheckedChangeListener { _, isChecked ->
-                        SpUtil.putBoolean(this, "progressSize", isChecked)
-                        getData()
-                    }
-
 
                     true
                 }
@@ -337,17 +316,12 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-        fun guessVersionDialog() {
+        fun showGuessVersionDialog() {
+            val dialogGuessBinding = DialogGuessBinding.inflate(layoutInflater)
+            val verBig = SpUtil.getString("versionBig", "")
+            dialogGuessBinding.etVersionBig.editText?.setText(verBig)
 
-            val dialogGuessView: View = layoutInflater.inflate(R.layout.dialog_guess, null)
-
-            val dialogGuessBinding = DialogGuessBinding.bind(dialogGuessView)
-            val verBig = SpUtil.getString(this, "versionBig", "")
-            dialogGuessBinding.etVersionBig.editText?.setText(
-                verBig
-            )
-
-            val memVersion = SpUtil.getString(this@MainActivity, "versionSelect", "正式版")
+            val memVersion = SpUtil.getString("versionSelect", "正式版")
             if (memVersion == "测试版" || memVersion == "空格版" || memVersion == "正式版") {
                 dialogGuessBinding.spinnerVersion.setText(memVersion, false)
             }
@@ -359,35 +333,10 @@ class MainActivity : AppCompatActivity() {
                 dialogGuessBinding.guessDialogWarning.visibility = View.GONE
             }
 
-//            dialogGuessBinding.spinnerVersion.setText(SpUtil.getString(this,"version","正式版"))
-//            val verItems = arrayOf("正式版", "测试版", "空格版")
-//            (dialogGuessBinding.spinnerVersion as? MaterialAutoCompleteTextView)?.setSimpleItems(verItems)
-
-//            dialogGuessBinding.spinnerVersion.onItemSelectedListener =
-//                object : android.widget.AdapterView.OnItemSelectedListener {
-//                    override fun onItemSelected(
-//                        parent: android.widget.AdapterView<*>?, view: View?, position: Int, id: Long
-//                    ) {
-//                        if (position == 0 || position == 2) {
-//                            //dialogGuessBinding.etVersionSmall.visibility = View.VISIBLE
-//                            dialogGuessBinding.etVersionSmall.isEnabled = true
-//                            dialogGuessBinding.guessDialogWarning.visibility = View.VISIBLE
-//                        } else if (position == 1) {
-//                            //dialogGuessBinding.etVersionSmall.visibility = View.GONE
-//                            dialogGuessBinding.etVersionSmall.isEnabled = false
-//                            dialogGuessBinding.guessDialogWarning.visibility = View.GONE
-//                        }
-//                        SpUtil.putInt(this@MainActivity, "version", position)
-//                    }
-//
-//                    override fun onNothingSelected(parent: android.widget.AdapterView<*>?) {
-//                    }
-//                }
-
             dialogGuessBinding.spinnerVersion.addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(p0: Editable?) {
                     val judgeVerSelect = dialogGuessBinding.spinnerVersion.text.toString()
-                    SpUtil.putString(this@MainActivity, "versionSelect", judgeVerSelect)
+                    SpUtil.putString("versionSelect", judgeVerSelect)
                     if (judgeVerSelect == "测试版" || judgeVerSelect == "空格版") {
                         dialogGuessBinding.etVersionSmall.isEnabled = true
                         dialogGuessBinding.guessDialogWarning.visibility = View.VISIBLE
@@ -412,8 +361,11 @@ class MainActivity : AppCompatActivity() {
             }
 
 
-            val dialogGuess = MaterialAlertDialogBuilder(this).setTitle("猜版 for Android")
-                .setIcon(R.drawable.search_line).setView(dialogGuessView).setCancelable(false)
+            val dialogGuess = MaterialAlertDialogBuilder(this)
+                .setTitle("猜版 for Android")
+                .setIcon(R.drawable.search_line)
+                .setView(dialogGuessBinding.root)
+                .setCancelable(false)
                 .create()
 
             dialogGuess.show()
@@ -433,11 +385,11 @@ class MainActivity : AppCompatActivity() {
                             dialogGuessBinding.etVersionSmall.editText?.text.toString().toInt()
                     }
                     if (versionSmall % 5 != 0 && !SpUtil.getBoolean(
-                            this@MainActivity, "guessNot5", false
+                            "guessNot5", false
                         )
                     ) throw Exception("小版本号需填 5 的倍数。如有需求，请前往设置解除此限制。")
                     if (versionSmall != 0) {
-                        SpUtil.putInt(this, "versionSmall", versionSmall)
+                        SpUtil.putInt("versionSmall", versionSmall)
                     }/*我偷懒了，因为我上面也有偷懒逻辑，
                     为了防止 null，我在正式版猜版时默认填入了 0，
                     但是我没处理下面涉及到持久化存储逻辑的语句，就把 0 存进去了，
@@ -452,13 +404,12 @@ class MainActivity : AppCompatActivity() {
             }
 
 
-
             dialogGuessBinding.btnGuessCancel.setOnClickListener {
                 dialogGuess.dismiss()
             }
 
 
-            val memVersionSmall = SpUtil.getInt(this, "versionSmall", -1)
+            val memVersionSmall = SpUtil.getInt("versionSmall", -1)
             if (memVersionSmall != -1) {
                 dialogGuessBinding.etVersionSmall.editText?.setText(memVersionSmall.toString())
             }
@@ -466,14 +417,14 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (intent.action == "android.intent.action.VIEW" && SpUtil.getInt(
-                this, "userAgreement", 0
+                "userAgreement", 0
             ) == judgeUARead
         ) {
-            guessVersionDialog()
+            showGuessVersionDialog()
         }
 
         binding.btnGuess.setOnClickListener {
-            guessVersionDialog()
+            showGuessVersionDialog()
         }
 
     }
@@ -511,25 +462,18 @@ class MainActivity : AppCompatActivity() {
     //https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_8.9.75.XXXXX_64.apk
     private fun guessUrl(versionBig: String, versionSmall: Int, mode: String) {
         // 绑定 AlertDialog 加载对话框布局
-        val dialogView = layoutInflater.inflate(R.layout.dialog_loading, null)
-        val progressSpinner =
-            dialogView.findViewById<CircularProgressIndicator>(R.id.progress_spinner)
-        val loadingMessage = dialogView.findViewById<TextView>(R.id.loading_message)
-
-        val successButton = layoutInflater.inflate(R.layout.success_button, null)
-        val shareButton = successButton.findViewById<Button>(R.id.dialog_share_line)
-        val downloadButton = successButton.findViewById<Button>(R.id.dialog_download_line_2)
-        val stopButton = successButton.findViewById<Button>(R.id.dialog_stop_line)
-        val continueButton = successButton.findViewById<Button>(R.id.dialog_play_line)
-        val copyAndStopButton = successButton.findViewById<Button>(R.id.dialog_copy)
+        val dialogLoadingBinding = DialogLoadingBinding.inflate(layoutInflater)
+        val successButtonBinding = SuccessButtonBinding.inflate(layoutInflater)
 
         var status = STATUS_ONGOING
 
-        val progressDialog =
-            MaterialAlertDialogBuilder(this).setView(dialogView).setCancelable(false).create()
+        val progressDialog = MaterialAlertDialogBuilder(this)
+            .setView(dialogLoadingBinding.root)
+            .setCancelable(false)
+            .create()
 
         fun updateProgressDialogMessage(newMessage: String) {
-            loadingMessage.text = newMessage
+            dialogLoadingBinding.loadingMessage.text = newMessage
             if (!progressDialog.isShowing) {
                 progressDialog.show()//更新文本后才显示对话框
             }
@@ -571,29 +515,26 @@ class MainActivity : AppCompatActivity() {
                             if (success) {
                                 status = STATUS_PAUSE
                                 runOnUiThread {
-                                    if (successButton.parent != null) {
-                                        (successButton.parent as ViewGroup).removeView(
-                                            successButton
-                                        )
-                                    }
-
                                     val successMaterialDialog =
-                                        MaterialAlertDialogBuilder(this).setTitle("猜测成功")
+                                        MaterialAlertDialogBuilder(this)
+                                            .setTitle("猜测成功")
                                             .setMessage("下载地址：$link")
-                                            .setIcon(R.drawable.check_circle).setView(successButton)
-                                            .setCancelable(false).show()
+                                            .setIcon(R.drawable.check_circle)
+                                            .setView(successButtonBinding.root)
+                                            .setCancelable(false)
+                                            .show()
 
                                     // 复制并停止按钮点击事件
-                                    copyAndStopButton.setOnClickListener {
+                                    successButtonBinding.btnCopy.setOnClickListener {
                                         copyText(link)
                                         successMaterialDialog.dismiss()
                                         status = STATUS_END
                                     }
 
                                     // 继续按钮点击事件
-                                    continueButton.setOnClickListener {
+                                    successButtonBinding.btnContinue.setOnClickListener {
                                         vSmall += if (!SpUtil.getBoolean(
-                                                this@MainActivity, "guessNot5", false
+                                                "guessNot5", false
                                             )
                                         ) {
                                             5
@@ -605,13 +546,13 @@ class MainActivity : AppCompatActivity() {
                                     }
 
                                     // 停止按钮点击事件
-                                    stopButton.setOnClickListener {
+                                    successButtonBinding.btnStop.setOnClickListener {
                                         successMaterialDialog.dismiss()
                                         status = STATUS_END
                                     }
 
                                     // 分享按钮点击事件
-                                    shareButton.setOnClickListener {
+                                    successButtonBinding.btnShare.setOnClickListener {
                                         successMaterialDialog.dismiss()
 
                                         getFileSizeInMB(link) { appSize ->
@@ -633,7 +574,7 @@ class MainActivity : AppCompatActivity() {
                                     }
 
                                     // 下载按钮点击事件
-                                    downloadButton.setOnClickListener {
+                                    successButtonBinding.btnDownload.setOnClickListener {
                                         val request1 = DownloadManager.Request(Uri.parse(link))
                                         val downloadManager =
                                             getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
@@ -645,7 +586,7 @@ class MainActivity : AppCompatActivity() {
                                 }
                             } else {
                                 vSmall += if (!SpUtil.getBoolean(
-                                        this@MainActivity, "guessNot5", false
+                                        "guessNot5", false
                                     )
                                 ) {
                                     5
@@ -677,20 +618,12 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-
-        // AlertDialog
-        progressSpinner.visibility = View.VISIBLE
-        val buttonCancel = dialogView.findViewById<Button>(R.id.dialog_button_cancel)
-        //loadingMessage.text = "正在猜测下载地址"
-
-        buttonCancel.setOnClickListener {
+        dialogLoadingBinding.btnCancel.setOnClickListener {
             status = STATUS_END
             progressDialog.dismiss()
         }
 
         thread.start()
-
-
     }
 
 
