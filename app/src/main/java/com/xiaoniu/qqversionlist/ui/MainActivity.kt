@@ -78,8 +78,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
-        window.isNavigationBarContrastEnforced= false
-        window.isStatusBarContrastEnforced=false
+        window.isNavigationBarContrastEnforced = false
+        window.isStatusBarContrastEnforced = false
         binding = ActivityMainBinding.inflate(layoutInflater)
 
         setContentView(binding.root)
@@ -118,24 +118,24 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun UADialog(agreed: Boolean) {
+    private fun showUADialog(agreed: Boolean) {
 
         val screenHeight = Resources.getSystem().displayMetrics.heightPixels
 
         //用户协议，传参内容表示先前是否同意过协议
-        val UAView: View = layoutInflater.inflate(R.layout.user_agreement, null)
-        val constraintLayout = UAView.findViewById<ConstraintLayout>(R.id.user_agreement)
-        val uaAgree = UAView.findViewById<Button>(R.id.ua_button_agree)
-        val uaDisagree = UAView.findViewById<Button>(R.id.ua_button_disagree)
+        val uaView: View = layoutInflater.inflate(R.layout.user_agreement, null)
+        val constraintLayout = uaView.findViewById<ConstraintLayout>(R.id.user_agreement)
+        val uaAgree = uaView.findViewById<Button>(R.id.ua_button_agree)
+        val uaDisagree = uaView.findViewById<Button>(R.id.ua_button_disagree)
 
-        if (UAView.parent != null) {
-            (UAView.parent as ViewGroup).removeView(UAView)
+        if (uaView.parent != null) {
+            (uaView.parent as ViewGroup).removeView(uaView)
         }
 
 
         val dialogUA =
             MaterialAlertDialogBuilder(this).setTitle("用户协议").setIcon(R.drawable.file_user_line)
-                .setView(UAView).setCancelable(false).create()
+                .setView(uaView).setCancelable(false).create()
 
 
         val constraintSet = ConstraintSet()
@@ -175,7 +175,7 @@ class MainActivity : AppCompatActivity() {
         //这里的“getInt: userAgreement”的值代表着用户协议修订版本，后续更新协议版本后也需要在下面一行把“judgeUARead”+1，以此类推
         val judgeUARead = 1
         if (SpUtil.getInt(this, "userAgreement", 0) != judgeUARead) {
-            UADialog(false)
+            showUADialog(false)
         }
 
         // var currentQQVersion = ""
@@ -260,7 +260,9 @@ class MainActivity : AppCompatActivity() {
                         SpannableString("QQ 版本列表实用工具 for Android\n\n作者：快乐小牛、有鲫雪狐\n\n版本：" + packageManager.getPackageInfo(
                             packageName, 0
                         ).let {
-                            @Suppress("DEPRECATION") it.versionName + "(" + (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) it.longVersionCode else it.versionCode) + ")"
+                            @Suppress("DEPRECATION")
+                            it.versionName + "(" + (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+                                it.longVersionCode else it.versionCode) + ")"
                         } + "\n\nSince 2023.8.9\n\nLicensed under AGPL v3\n\n" + "开源地址")
                     val urlSpan = URLSpan("https://github.com/klxiaoniu/QQVersionList")
                     message.setSpan(
@@ -273,7 +275,7 @@ class MainActivity : AppCompatActivity() {
                         .setIcon(R.drawable.information_line).setMessage(message)
                         .setPositiveButton("确定", null)
                         .setNegativeButton("撤回同意用户协议") { _, _ ->
-                            UADialog(true)
+                            showUADialog(true)
                         }.show().apply {
                             findViewById<TextView>(android.R.id.message)?.movementMethod =
                                 LinkMovementMethodCompat.getInstance()
