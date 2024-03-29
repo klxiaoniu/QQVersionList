@@ -41,7 +41,7 @@ class VersionAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val list = mutableListOf<QQVersionBean>()
 
     @SuppressLint("NotifyDataSetChanged")
-    fun setData(context: Context, list: List<QQVersionBean>) {
+    fun setData(list: List<QQVersionBean>) {
         this.list.apply {
             clear()
             addAll(list)

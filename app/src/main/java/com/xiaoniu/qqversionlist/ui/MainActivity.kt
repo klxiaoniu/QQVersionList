@@ -74,10 +74,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            window.isNavigationBarContrastEnforced = false
-            window.isStatusBarContrastEnforced = false
-        }
         binding = ActivityMainBinding.inflate(layoutInflater)
 
         setContentView(binding.root)
@@ -201,7 +197,7 @@ class MainActivity : AppCompatActivity() {
                             }
                         }
                         withContext(Dispatchers.Main) {
-                            versionAdapter.setData(this@MainActivity, qqVersion)
+                            versionAdapter.setData(qqVersion)
                             //currentQQVersion = qqVersion.first().versionNumber
                             //大版本号也放持久化存储了，否则猜版 Shortcut 因为加载过快而获取不到东西
                             SpUtil.putString(
