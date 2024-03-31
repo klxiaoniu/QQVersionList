@@ -33,15 +33,11 @@ import android.text.SpannableString
 import android.text.TextWatcher
 import android.text.style.URLSpan
 import android.view.View
-import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.text.method.LinkMovementMethodCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsAnimationCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -246,10 +242,11 @@ class MainActivity : AppCompatActivity() {
 
                 R.id.btn_about -> {
                     val message =
-                        SpannableString("QQ 版本列表实用工具 for Android\n\n作者：快乐小牛、有鲫雪狐\n\n版本：" + packageManager.getPackageInfo(
+                        SpannableString("QQ 版本列表实用工具 for Android\n\n作者：快乐小牛、有鲫雪狐和其他贡献者\n\n版本：" + packageManager.getPackageInfo(
                             packageName, 0
                         ).let {
-                            @Suppress("DEPRECATION") it.versionName + "(" + (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) it.longVersionCode else it.versionCode) + ")"
+                            @Suppress("DEPRECATION")
+                            it.versionName + "(" + (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) it.longVersionCode else it.versionCode) + ")"
                         } + "\n\nSince 2023.8.9\n\nLicensed under AGPL v3\n\n" + "开源地址")
                     val urlSpan = URLSpan("https://github.com/klxiaoniu/QQVersionList")
                     message.setSpan(
@@ -350,12 +347,12 @@ class MainActivity : AppCompatActivity() {
                 }
             })
 
-            dialogGuessBinding.spinnerVersion.setOnFocusChangeListener { _, hasFocus ->
-                if (hasFocus) {
-                    val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                    imm.hideSoftInputFromWindow(dialogGuessBinding.spinnerVersion.windowToken, 0)
-                }
-            }
+//            dialogGuessBinding.spinnerVersion.setOnFocusChangeListener { _, hasFocus ->
+//                if (hasFocus) {
+//                    val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+//                    imm.hideSoftInputFromWindow(dialogGuessBinding.spinnerVersion.windowToken, 0)
+//                }
+//            }
 
 
             val dialogGuess = MaterialAlertDialogBuilder(this).setTitle("猜版 for Android")
