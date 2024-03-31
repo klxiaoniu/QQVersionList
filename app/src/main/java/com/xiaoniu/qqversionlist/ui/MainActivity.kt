@@ -39,6 +39,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.text.method.LinkMovementMethodCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsAnimationCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -74,6 +77,12 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+
+        // 不加这段代码的话 Google 可能会在系统栏加遮罩
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            window.isNavigationBarContrastEnforced = false
+            window.isStatusBarContrastEnforced = false
+        }
         binding = ActivityMainBinding.inflate(layoutInflater)
 
         setContentView(binding.root)
@@ -84,7 +93,6 @@ class MainActivity : AppCompatActivity() {
             addItemDecoration(VerticalSpaceItemDecoration(dpToPx(5)))
         }
         initButtons()
-
     }
 
     private fun Context.dpToPx(dp: Int): Int {
@@ -119,12 +127,9 @@ class MainActivity : AppCompatActivity() {
         //用户协议，传参内容表示先前是否同意过协议
         val userAgreementBinding = UserAgreementBinding.inflate(layoutInflater)
 
-        val dialogUA = MaterialAlertDialogBuilder(this)
-            .setTitle("用户协议")
-            .setIcon(R.drawable.file_user_line)
-            .setView(userAgreementBinding.root)
-            .setCancelable(false)
-            .create()
+        val dialogUA =
+            MaterialAlertDialogBuilder(this).setTitle("用户协议").setIcon(R.drawable.file_user_line)
+                .setView(userAgreementBinding.root).setCancelable(false).create()
 
         val constraintSet = ConstraintSet()
         constraintSet.clone(userAgreementBinding.userAgreement)
@@ -244,9 +249,7 @@ class MainActivity : AppCompatActivity() {
                         SpannableString("QQ 版本列表实用工具 for Android\n\n作者：快乐小牛、有鲫雪狐\n\n版本：" + packageManager.getPackageInfo(
                             packageName, 0
                         ).let {
-                            @Suppress("DEPRECATION")
-                            it.versionName + "(" + (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
-                                it.longVersionCode else it.versionCode) + ")"
+                            @Suppress("DEPRECATION") it.versionName + "(" + (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) it.longVersionCode else it.versionCode) + ")"
                         } + "\n\nSince 2023.8.9\n\nLicensed under AGPL v3\n\n" + "开源地址")
                     val urlSpan = URLSpan("https://github.com/klxiaoniu/QQVersionList")
                     message.setSpan(
@@ -277,10 +280,8 @@ class MainActivity : AppCompatActivity() {
                         progressSize.isChecked = SpUtil.getBoolean("progressSize", false)
                     }
 
-                    val dialogSetting = MaterialAlertDialogBuilder(this)
-                        .setTitle("设置")
-                        .setIcon(R.drawable.settings_line)
-                        .setView(dialogSettingBinding.root)
+                    val dialogSetting = MaterialAlertDialogBuilder(this).setTitle("设置")
+                        .setIcon(R.drawable.settings_line).setView(dialogSettingBinding.root)
                         .create()
                     dialogSetting.show()
 
@@ -357,12 +358,9 @@ class MainActivity : AppCompatActivity() {
             }
 
 
-            val dialogGuess = MaterialAlertDialogBuilder(this)
-                .setTitle("猜版 for Android")
-                .setIcon(R.drawable.search_line)
-                .setView(dialogGuessBinding.root)
-                .setCancelable(false)
-                .create()
+            val dialogGuess = MaterialAlertDialogBuilder(this).setTitle("猜版 for Android")
+                .setIcon(R.drawable.search_line).setView(dialogGuessBinding.root)
+                .setCancelable(false).create()
 
             dialogGuess.show()
 
@@ -463,10 +461,9 @@ class MainActivity : AppCompatActivity() {
 
         var status = STATUS_ONGOING
 
-        val progressDialog = MaterialAlertDialogBuilder(this)
-            .setView(dialogLoadingBinding.root)
-            .setCancelable(false)
-            .create()
+        val progressDialog =
+            MaterialAlertDialogBuilder(this).setView(dialogLoadingBinding.root).setCancelable(false)
+                .create()
 
         fun updateProgressDialogMessage(newMessage: String) {
             dialogLoadingBinding.loadingMessage.text = newMessage
@@ -512,12 +509,10 @@ class MainActivity : AppCompatActivity() {
                                 status = STATUS_PAUSE
                                 runOnUiThread {
                                     val successMaterialDialog =
-                                        MaterialAlertDialogBuilder(this)
-                                            .setTitle("猜测成功")
+                                        MaterialAlertDialogBuilder(this).setTitle("猜测成功")
                                             .setMessage("下载地址：$link")
                                             .setIcon(R.drawable.check_circle)
-                                            .setView(successButtonBinding.root)
-                                            .setCancelable(false)
+                                            .setView(successButtonBinding.root).setCancelable(false)
                                             .show()
 
                                     // 复制并停止按钮点击事件
