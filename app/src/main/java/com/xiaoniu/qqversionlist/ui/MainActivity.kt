@@ -245,8 +245,7 @@ class MainActivity : AppCompatActivity() {
                         SpannableString("QQ 版本列表实用工具 for Android\n\n作者：快乐小牛、有鲫雪狐和其他贡献者\n\n版本：" + packageManager.getPackageInfo(
                             packageName, 0
                         ).let {
-                            @Suppress("DEPRECATION")
-                            it.versionName + "(" + (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) it.longVersionCode else it.versionCode) + ")"
+                            @Suppress("DEPRECATION") it.versionName + "(" + (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) it.longVersionCode else it.versionCode) + ")"
                         } + "\n\nSince 2023.8.9\n\nLicensed under AGPL v3\n\n" + "开源地址")
                     val urlSpan = URLSpan("https://github.com/klxiaoniu/QQVersionList")
                     message.setSpan(
@@ -277,8 +276,10 @@ class MainActivity : AppCompatActivity() {
                         progressSize.isChecked = SpUtil.getBoolean("progressSize", false)
                     }
 
-                    val dialogSetting = MaterialAlertDialogBuilder(this).setTitle("设置")
-                        .setIcon(R.drawable.settings_line).setView(dialogSettingBinding.root)
+                    val dialogSetting = MaterialAlertDialogBuilder(this)
+                        .setTitle("设置")
+                        .setIcon(R.drawable.settings_line)
+                        .setView(dialogSettingBinding.root)
                         .create()
                     dialogSetting.show()
 
