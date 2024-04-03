@@ -83,7 +83,7 @@ QQ 版本列表实用工具 for Android 是一个提供 QQ 版本列表的查看
 ## 贡献成员
 
 <a href="https://github.com/klxiaoniu/QQVersionList/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=klxiaoniu/QQVersionList" />
+  <img src="https://contrib.rocks/image?repo=klxiaoniu/QQVersionList"  alt="贡献成员"/>
 </a>
 
 ## 开源相关

@@ -74,6 +74,12 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+
+        // 不加这段代码的话 Google 可能会在系统栏加遮罩
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            window.isNavigationBarContrastEnforced = false
+            window.isStatusBarContrastEnforced = false
+        }
         binding = ActivityMainBinding.inflate(layoutInflater)
 
         setContentView(binding.root)
@@ -84,7 +90,6 @@ class MainActivity : AppCompatActivity() {
             addItemDecoration(VerticalSpaceItemDecoration(dpToPx(5)))
         }
         initButtons()
-
     }
 
     private fun Context.dpToPx(dp: Int): Int {
@@ -119,12 +124,13 @@ class MainActivity : AppCompatActivity() {
         //用户协议，传参内容表示先前是否同意过协议
         val userAgreementBinding = UserAgreementBinding.inflate(layoutInflater)
 
-        val dialogUA = MaterialAlertDialogBuilder(this)
-            .setTitle("用户协议")
-            .setIcon(R.drawable.file_user_line)
-            .setView(userAgreementBinding.root)
-            .setCancelable(false)
-            .create()
+        val dialogUA =
+            MaterialAlertDialogBuilder(this)
+                .setTitle("用户协议")
+                .setIcon(R.drawable.file_user_line)
+                .setView(userAgreementBinding.root)
+                .setCancelable(false)
+                .create()
 
         val constraintSet = ConstraintSet()
         constraintSet.clone(userAgreementBinding.userAgreement)
@@ -241,7 +247,7 @@ class MainActivity : AppCompatActivity() {
 
                 R.id.btn_about -> {
                     val message =
-                        SpannableString("QQ 版本列表实用工具 for Android\n\n作者：快乐小牛、有鲫雪狐\n\n版本：" + packageManager.getPackageInfo(
+                        SpannableString("QQ 版本列表实用工具 for Android\n\n作者：快乐小牛、有鲫雪狐和其他贡献者\n\n版本：" + packageManager.getPackageInfo(
                             packageName, 0
                         ).let {
                             @Suppress("DEPRECATION")
@@ -255,15 +261,19 @@ class MainActivity : AppCompatActivity() {
                         message.length,
                         SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
                     )
-                    MaterialAlertDialogBuilder(this).setTitle("关于")
-                        .setIcon(R.drawable.information_line).setMessage(message)
+                    val aboutDialog = MaterialAlertDialogBuilder(this)
+                        .setTitle("关于")
+                        .setIcon(R.drawable.information_line)
+                        .setMessage(message)
                         .setPositiveButton("确定", null)
                         .setNegativeButton("撤回同意用户协议") { _, _ ->
                             showUADialog(true)
-                        }.show().apply {
+                        }.create().apply {
                             findViewById<TextView>(android.R.id.message)?.movementMethod =
                                 LinkMovementMethodCompat.getInstance()
                         }
+
+                    aboutDialog.show()
                     true
                 }
 
@@ -349,12 +359,12 @@ class MainActivity : AppCompatActivity() {
                 }
             })
 
-            dialogGuessBinding.spinnerVersion.setOnFocusChangeListener { _, hasFocus ->
-                if (hasFocus) {
-                    val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                    imm.hideSoftInputFromWindow(dialogGuessBinding.spinnerVersion.windowToken, 0)
-                }
-            }
+//            dialogGuessBinding.spinnerVersion.setOnFocusChangeListener { _, hasFocus ->
+//                if (hasFocus) {
+//                    val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+//                    imm.hideSoftInputFromWindow(dialogGuessBinding.spinnerVersion.windowToken, 0)
+//                }
+//            }
 
 
             val dialogGuess = MaterialAlertDialogBuilder(this)
@@ -371,6 +381,8 @@ class MainActivity : AppCompatActivity() {
                 dialogGuessBinding.etVersionBig.clearFocus()
                 dialogGuessBinding.spinnerVersion.clearFocus()
                 dialogGuessBinding.etVersionSmall.clearFocus()
+                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(dialogGuessBinding.spinnerVersion.windowToken, 0)
 
                 try {
                     val versionBig = dialogGuessBinding.etVersionBig.editText?.text.toString()
@@ -463,10 +475,11 @@ class MainActivity : AppCompatActivity() {
 
         var status = STATUS_ONGOING
 
-        val progressDialog = MaterialAlertDialogBuilder(this)
-            .setView(dialogLoadingBinding.root)
-            .setCancelable(false)
-            .create()
+        val progressDialog =
+            MaterialAlertDialogBuilder(this)
+                .setView(dialogLoadingBinding.root)
+                .setCancelable(false)
+                .create()
 
         fun updateProgressDialogMessage(newMessage: String) {
             dialogLoadingBinding.loadingMessage.text = newMessage

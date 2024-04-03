@@ -75,7 +75,7 @@ class VersionAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                         list[adapterPosition].displayType = 1
                         notifyItemChanged(adapterPosition)
                     }
-                    binding.tvContent.setOnLongClickListener {
+                    binding.itemAll.setOnLongClickListener {
                         if (SpUtil.getBoolean("longPressCard", true)) {
                             showDialog(
                                 it.context, list[adapterPosition].jsonString.toPrettyFormat()
@@ -102,7 +102,7 @@ class VersionAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                         list[adapterPosition].displayType = 0
                         notifyItemChanged(adapterPosition)
                     }
-                    binding.tvDesc.setOnLongClickListener {
+                    binding.itemAllDetail.setOnLongClickListener {
                         if (SpUtil.getBoolean("longPressCard", true)) {
                             showDialog(
                                 it.context, list[adapterPosition].jsonString.toPrettyFormat()
