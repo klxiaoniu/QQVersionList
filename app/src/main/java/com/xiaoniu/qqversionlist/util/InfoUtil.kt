@@ -19,6 +19,7 @@
 package com.xiaoniu.qqversionlist.util
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.widget.Toast
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.xiaoniu.qqversionlist.R
@@ -33,14 +34,22 @@ object InfoUtil {
 
     fun Activity.dialogError(e: Exception) {
         runOnUiThread {
-            MaterialAlertDialogBuilder(this)
-                .setTitle("程序出错，请前往GitHub反馈")
-                .setIcon(R.drawable.error_warning_line)
-                .setMessage(e.stackTraceToString())
-                .setPositiveButton("确定", null)
-                .setNeutralButton("复制") { _, _ ->
-                    copyText(""+e.stackTraceToString())
-                }.show()
+
+            val errorDialog =
+                MaterialAlertDialogBuilder(this)
+                    .setTitle("程序出错，可前往 GitHub 反馈")
+                    .setIcon(R.drawable.error_warning_line)
+                    .setMessage(e.stackTraceToString())
+                    .setPositiveButton("确定", null)
+                    .setCancelable(false)
+                    .setNeutralButton("复制", null)
+                    .create()
+
+            errorDialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener {
+                copyText("" + e.stackTraceToString())
+            }
+
+            errorDialog.show()
         }
     }
 
