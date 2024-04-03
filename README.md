@@ -2,6 +2,10 @@
 
 ![QQ 版本列表实用工具 Banner](/QQVerToolBanner.png)
 
+<details>
+
+<summary>关于近期多家国内 Android OEM 系统报毒 QQ 版本列表实用工具的声明</summary>
+
 ## 关于近期多家国内 Android OEM 系统报毒 QQ 版本列表实用工具的声明
 
 近期我们发现多家国内 Android OEM 系统（包括但不限于小米 MIUI/HyperOS、荣耀 MagicOS 等）将 QQ 版本列表实用工具列为病毒，特在此发表声明：
@@ -21,6 +25,8 @@ QQ 版本列表实用工具的源代码依据经过开源促进会（[Open Sourc
 特此声明！
 
 附 VirusTotal 对 QQ 版本列表实用工具 v1.2.2-3b425fc 的扫描结果：https://www.virustotal.com/gui/file/865f30709812664937192d55c64568f7c8df3406f0dda3faf5534e64eef756c2
+
+</details>
 
 ## 注意事项：使用前须知
 
