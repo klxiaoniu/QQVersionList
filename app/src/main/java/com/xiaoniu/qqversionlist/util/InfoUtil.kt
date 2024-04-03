@@ -34,22 +34,20 @@ object InfoUtil {
 
     fun Activity.dialogError(e: Exception) {
         runOnUiThread {
-
-            val errorDialog =
-                MaterialAlertDialogBuilder(this)
-                    .setTitle("程序出错，可前往 GitHub 反馈")
-                    .setIcon(R.drawable.error_warning_line)
-                    .setMessage(e.stackTraceToString())
-                    .setPositiveButton("确定", null)
-                    .setCancelable(false)
-                    .setNeutralButton("复制", null)
-                    .create()
-
-            errorDialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener {
-                copyText("" + e.stackTraceToString())
-            }
-
-            errorDialog.show()
+            MaterialAlertDialogBuilder(this)
+                .setTitle("程序出错，可前往 GitHub 反馈")
+                .setIcon(R.drawable.error_warning_line)
+                .setMessage(e.stackTraceToString())
+                .setPositiveButton("确定", null)
+                .setCancelable(false)
+                .setNeutralButton("复制", null)
+                .create()
+                .apply {
+                    show()
+                    getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener {
+                        copyText("" + e.stackTraceToString())
+                    }
+                }
         }
     }
 
