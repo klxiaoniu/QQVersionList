@@ -28,6 +28,7 @@ import android.graphics.Rect
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.text.Editable
 import android.text.SpannableString
 import android.text.TextWatcher
@@ -585,6 +586,17 @@ class MainActivity : AppCompatActivity() {
                                     // 下载按钮点击事件
                                     successButtonBinding.btnDownload.setOnClickListener {
                                         val request1 = DownloadManager.Request(Uri.parse(link))
+                                        if (mode == MODE_TEST || mode == MODE_UNOFFICIAL) {
+                                            request1.setDestinationInExternalPublicDir(
+                                                Environment.DIRECTORY_DOWNLOADS,
+                                                "Android_QQ_${versionBig}.${vSmall}_64.apk"
+                                            )
+                                        } else if (mode == MODE_OFFICIAL){
+                                            request1.setDestinationInExternalPublicDir(
+                                                Environment.DIRECTORY_DOWNLOADS,
+                                                "Android_QQ_${versionBig}_64.apk"
+                                            )
+                                        }
                                         val downloadManager =
                                             getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
                                         downloadManager.enqueue(request1)
