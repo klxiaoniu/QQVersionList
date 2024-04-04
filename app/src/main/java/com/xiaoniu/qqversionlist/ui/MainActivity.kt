@@ -269,12 +269,11 @@ class MainActivity : AppCompatActivity() {
                         .setPositiveButton("确定", null)
                         .setNegativeButton("撤回同意用户协议") { _, _ ->
                             showUADialog(true)
-                        }.create().apply {
+                        }.show().apply {
                             findViewById<TextView>(android.R.id.message)?.movementMethod =
                                 LinkMovementMethodCompat.getInstance()
                         }
 
-                    aboutDialog.show()
                     true
                 }
 
