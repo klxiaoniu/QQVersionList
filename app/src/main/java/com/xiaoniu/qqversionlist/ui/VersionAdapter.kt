@@ -26,10 +26,10 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.view.setPadding
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.xiaoniu.qqversionlist.R
 import com.xiaoniu.qqversionlist.data.QQVersionBean
 import com.xiaoniu.qqversionlist.databinding.ItemVersionBinding
 import com.xiaoniu.qqversionlist.databinding.ItemVersionDetailBinding
@@ -187,8 +187,12 @@ class VersionAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         val tv = TextView(context).apply {
             text = s
             setTextIsSelectable(true)
-            setPadding(100)
+            setPadding(100, 50, 100, 100)
         }
-        MaterialAlertDialogBuilder(context).setView(tv).show()
+        MaterialAlertDialogBuilder(context)
+            .setView(tv)
+            .setTitle("Json 详情")
+            .setIcon(R.drawable.braces_line)
+            .show()
     }
 }

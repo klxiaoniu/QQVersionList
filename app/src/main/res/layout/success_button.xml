@@ -48,7 +48,7 @@
                 style="?attr/materialIconButtonFilledTonalStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:icon="@drawable/download_line_2" />
+                app:icon="@drawable/download_line" />
 
             <Button
                 android:id="@+id/btn_stop"
@@ -74,6 +74,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="复制"
-        app:icon="@drawable/file_copy_2_line" />
+        app:icon="@drawable/file_copy_line" />
 
 </LinearLayout>

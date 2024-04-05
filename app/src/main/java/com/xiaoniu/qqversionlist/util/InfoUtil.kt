@@ -35,9 +35,9 @@ object InfoUtil {
     fun Activity.dialogError(e: Exception) {
         runOnUiThread {
             MaterialAlertDialogBuilder(this)
-                .setTitle("程序出错，可前往 GitHub 反馈")
-                .setIcon(R.drawable.error_warning_line)
-                .setMessage(e.stackTraceToString())
+                .setTitle("程序出错")
+                .setIcon(R.drawable.alert_line)
+                .setMessage("如需反馈，请前往 GitHub 仓库报告 Issue(s) 并随附以下信息：\n\n" + e.stackTraceToString())
                 .setPositiveButton("确定", null)
                 .setCancelable(false)
                 .setNeutralButton("复制", null)
