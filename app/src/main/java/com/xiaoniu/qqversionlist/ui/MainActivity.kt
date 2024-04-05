@@ -97,6 +97,7 @@ class MainActivity : AppCompatActivity() {
         return (dp * resources.displayMetrics.density).toInt()
     }
 
+// 未来可期的 px to dp 函数
 //    private fun Context.pxToDp(px: Int): Int {
 //        return (px / resources.displayMetrics.density).toInt()
 //    }
@@ -110,9 +111,8 @@ class MainActivity : AppCompatActivity() {
                 // 对于每一项都添加底部间距
                 bottom = space
                 // 如果不是第一行，则添加顶部间距
-                if (parent.getChildAdapterPosition(view) != 0) {
-                    top = space
-                }
+                if (parent.getChildAdapterPosition(view) != 0) top = space
+
             }
         }
     }
@@ -120,6 +120,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun showUADialog(agreed: Boolean) {
 
+        // 屏幕高度获取
         val screenHeight = Resources.getSystem().displayMetrics.heightPixels
 
         //用户协议，传参内容表示先前是否同意过协议
@@ -128,7 +129,7 @@ class MainActivity : AppCompatActivity() {
         val dialogUA =
             MaterialAlertDialogBuilder(this)
                 .setTitle("用户协议")
-                .setIcon(R.drawable.file_user_line)
+                .setIcon(R.drawable.file_text_line)
                 .setView(userAgreementBinding.root)
                 .setCancelable(false)
                 .create()
@@ -136,12 +137,17 @@ class MainActivity : AppCompatActivity() {
         val constraintSet = ConstraintSet()
         constraintSet.clone(userAgreementBinding.userAgreement)
 
+        // 屏幕方向判断，不同方向分别设置相应的约束布局用户协议子项高度
         val currentConfig = resources.configuration
-        if (currentConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            constraintSet.constrainHeight(R.id.UA_text, screenHeight / 6)
-        } else if (currentConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            constraintSet.constrainHeight(R.id.UA_text, screenHeight / 2)
-        }
+        if (currentConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) constraintSet.constrainHeight(
+            R.id.UA_text,
+            screenHeight / 6
+        )
+        else if (currentConfig.orientation == Configuration.ORIENTATION_PORTRAIT) constraintSet.constrainHeight(
+            R.id.UA_text,
+            screenHeight / 2
+        )
+
 
         constraintSet.applyTo(userAgreementBinding.userAgreement)
 
@@ -152,12 +158,9 @@ class MainActivity : AppCompatActivity() {
 
         userAgreementBinding.uaButtonDisagree.setOnClickListener {
             SpUtil.putInt("userAgreement", 0)
-            //不同意直接退出程序
-            finish()
+            finish() // 不同意直接退出程序
         }
-        if (agreed) {
-            userAgreementBinding.uaButtonDisagree.text = "撤回同意并退出"
-        }
+        if (agreed) userAgreementBinding.uaButtonDisagree.text = "撤回同意并退出"
 
         dialogUA.show()
     }
@@ -169,13 +172,10 @@ class MainActivity : AppCompatActivity() {
 
         //这里的“getInt: userAgreement”的值代表着用户协议修订版本，后续更新协议版本后也需要在下面一行把“judgeUARead”+1，以此类推
         val judgeUARead = 1
-        if (SpUtil.getInt("userAgreement", 0) != judgeUARead) {
-            showUADialog(false)
-        }
+        if (SpUtil.getInt("userAgreement", 0) != judgeUARead) showUADialog(false)
 
         // 进度条动画
         // https://github.com/material-components/material-components-android/blob/master/docs/components/ProgressIndicator.md
-
         binding.progressLine.apply {
             showAnimationBehavior = LinearProgressIndicator.SHOW_NONE
             hideAnimationBehavior = LinearProgressIndicator.HIDE_ESCAPE
@@ -205,8 +205,8 @@ class MainActivity : AppCompatActivity() {
                         }
                         withContext(Dispatchers.Main) {
                             versionAdapter.setData(qqVersion)
-                            //currentQQVersion = qqVersion.first().versionNumber
-                            //大版本号也放持久化存储了，否则猜版 Shortcut 因为加载过快而获取不到东西
+                            // 舍弃 currentQQVersion = qqVersion.first().versionNumber
+                            // 大版本号也放持久化存储了，否则猜版 Shortcut 因为加载过快而获取不到东西
                             SpUtil.putString(
                                 "versionBig", qqVersion.first().versionNumber
                             )
@@ -229,11 +229,8 @@ class MainActivity : AppCompatActivity() {
         binding.rvContent.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                if (dy > 0) {
-                    binding.btnGuess.shrink()
-                } else if (dy < 0) {
-                    binding.btnGuess.extend()
-                }
+                if (dy > 0) binding.btnGuess.shrink()
+                else if (dy < 0) binding.btnGuess.extend()
             }
         })
 
@@ -262,7 +259,7 @@ class MainActivity : AppCompatActivity() {
                         message.length,
                         SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
                     )
-                    val aboutDialog = MaterialAlertDialogBuilder(this)
+                    MaterialAlertDialogBuilder(this)
                         .setTitle("关于")
                         .setIcon(R.drawable.information_line)
                         .setMessage(message)
@@ -359,6 +356,7 @@ class MainActivity : AppCompatActivity() {
                 }
             })
 
+//            舍弃
 //            dialogGuessBinding.spinnerVersion.setOnFocusChangeListener { _, hasFocus ->
 //                if (hasFocus) {
 //                    val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -399,9 +397,9 @@ class MainActivity : AppCompatActivity() {
                     if (versionSmall != 0) {
                         SpUtil.putInt("versionSmall", versionSmall)
                     }/*我偷懒了，因为我上面也有偷懒逻辑，
-                    为了防止 null，我在正式版猜版时默认填入了 0，
-                    但是我没处理下面涉及到持久化存储逻辑的语句，就把 0 存进去了，
-                    覆盖了原来的 15xxx 的持久化存储*/
+                       为了防止 null，我在正式版猜版时默认填入了 0，
+                       但是我没处理下面涉及到持久化存储逻辑的语句，就把 0 存进去了，
+                       覆盖了原来的 15xxx 的持久化存储*/
 
                     guessUrl(versionBig, versionSmall, mode)
 
@@ -438,12 +436,9 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    /**
-     * 获取文件大小（以MB为单位）
-     *
-     * @param urlString 文件的URL字符串
-     * @param callback 回调函数，接收文件大小（以MB为单位）作为参数
-     */
+    /*获取文件大小（以MB为单位）
+      @param urlString 文件的URL字符串
+      @param callback 回调函数，接收文件大小（以MB为单位）作为参数*/
     private fun getFileSizeInMB(urlString: String, callback: (String) -> Unit) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -461,13 +456,14 @@ class MainActivity : AppCompatActivity() {
                 e.printStackTrace()
                 withContext(Dispatchers.Main) {
                     callback("Error")
+                    dialogError(e)
                 }
             }
         }
     }
 
 
-    //https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_8.9.75.XXXXX_64.apk
+    // https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_8.9.75.XXXXX_64.apk
     private fun guessUrl(versionBig: String, versionSmall: Int, mode: String) {
         // 绑定 AlertDialog 加载对话框布局
         val dialogLoadingBinding = DialogLoadingBinding.inflate(layoutInflater)
@@ -484,7 +480,7 @@ class MainActivity : AppCompatActivity() {
         fun updateProgressDialogMessage(newMessage: String) {
             dialogLoadingBinding.loadingMessage.text = newMessage
             if (!progressDialog.isShowing) {
-                progressDialog.show()//更新文本后才显示对话框
+                progressDialog.show()// 更新文本后才显示对话框
             }
         }
 
@@ -545,11 +541,7 @@ class MainActivity : AppCompatActivity() {
                                         vSmall += if (!SpUtil.getBoolean(
                                                 "guessNot5", false
                                             )
-                                        ) {
-                                            5
-                                        } else {
-                                            1
-                                        }
+                                        ) 5 else 1
                                         successMaterialDialog.dismiss()
                                         status = STATUS_ONGOING
                                     }
@@ -569,8 +561,13 @@ class MainActivity : AppCompatActivity() {
                                                 type = "text/plain"
                                                 putExtra(
                                                     Intent.EXTRA_TEXT,
-                                                    if (mode == MODE_OFFICIAL) "Android QQ $versionBig 正式版（大小：$appSize MB）\n\n下载地址：$link"
-                                                    else "Android QQ $versionBig.$vSmall 测试版（大小：$appSize MB）\n\n下载地址：$link"
+                                                    if (appSize != "Error" && appSize != "-0.00" && appSize != "0.00") {
+                                                        if (mode == MODE_OFFICIAL) "Android QQ $versionBig 正式版（大小：$appSize MB）\n\n下载地址：$link"
+                                                        else "Android QQ $versionBig.$vSmall 测试版（大小：$appSize MB）\n\n下载地址：$link"
+                                                    } else {
+                                                        if (mode == MODE_OFFICIAL) "Android QQ $versionBig 正式版\n\n下载地址：$link"
+                                                        else "Android QQ $versionBig.$vSmall 测试版\n\n下载地址：$link"
+                                                    }
                                                 )
                                             }
                                             startActivity(
@@ -590,7 +587,7 @@ class MainActivity : AppCompatActivity() {
                                                 Environment.DIRECTORY_DOWNLOADS,
                                                 "Android_QQ_${versionBig}.${vSmall}_64.apk"
                                             )
-                                        } else if (mode == MODE_OFFICIAL){
+                                        } else if (mode == MODE_OFFICIAL) {
                                             request1.setDestinationInExternalPublicDir(
                                                 Environment.DIRECTORY_DOWNLOADS,
                                                 "Android_QQ_${versionBig}_64.apk"
@@ -608,11 +605,7 @@ class MainActivity : AppCompatActivity() {
                                 vSmall += if (!SpUtil.getBoolean(
                                         "guessNot5", false
                                     )
-                                ) {
-                                    5
-                                } else {
-                                    1
-                                }
+                                ) 5 else 1
                             }
                         }
 
@@ -621,9 +614,7 @@ class MainActivity : AppCompatActivity() {
                         }
 
                         STATUS_END -> {
-                            if (mode != MODE_OFFICIAL) {
-                                showToast("已停止猜测")
-                            }
+                            if (mode != MODE_OFFICIAL) showToast("已停止猜测")
                             progressDialog.dismiss()
                             break
                         }
