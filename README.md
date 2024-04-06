@@ -36,31 +36,31 @@ QQ 版本列表实用工具的源代码依据经过开源促进会（[Open Sourc
 
 ## 简介
 
-QQ 版本列表实用工具 for Android 是一个提供 QQ 版本列表的查看和对 QQ 下载链接的枚举法猜测的，使用 Material 3 组件库构建的 Android 软件。QQ 版本列表实用工具用户可以通过本应用及时获取到 QQ 版本更新的最新信息。
+QQ 版本列表实用工具 for Android 是一个使用 Material 3 组件库构建，旨在提供 Android QQ 版本列表的查看和对 Android QQ 下载链接的枚举法猜测的 Android 软件。QQ 版本列表实用工具用户可以通过本应用及时获取到 Android QQ 版本更新的最新信息。
 
 ## 如何使用？
 
 ### 版本列表
 
-进入 QQ 版本列表实用工具后，显示“版本：x.y.z 大小：xxx MB”的卡片即为 Android QQ 的版本列表，卡片列表展示了已经或即将发布的 Android QQ 版本。版本信息来源：https://im.qq.com/rainbow/androidQQVersionList
+在进入 QQ 版本列表实用工具时，您首先会看到一系列显示“版本：x.y.z 大小：xxx MB”的卡片，这些卡片组成的列表即为 Android QQ 的版本列表，卡片列表展示了已经或即将发布的 Android QQ 版本。版本信息来源：https://im.qq.com/rainbow/androidQQVersionList
 
-点击卡片右侧箭头可展开卡片以查看更详细信息。
+通过点击卡片右侧箭头按钮，可展开卡片以查阅到更为详尽的信息。
 
 默认情况下，长按卡片文字会弹出展示卡片原始 Json 字符串的对话框，长按对话框文字可选择复制字符串内容。可在设置中关闭此功能。
 
 ### 猜版
 
-在 Android QQ - 首页侧滑菜单 - 设置 - 关于QQ与帮助 中可得知，Android QQ 的版本号通常为 `x.y.z.nnnnn`，其中 `x.y.z` 在这里被称为“主版本号”，而 `nnnnn` 被称为“小版本号”。
+在 Android QQ - 首页侧滑菜单 - 设置 - 关于QQ与帮助 中可得知，Android QQ 的版本号通常为 `x.y.z.nnnnn`。其中 `x.y.z` 在这里被称为“主版本号”，而 `nnnnn` 被称为“小版本号”。
 
-进入 QQ 版本列表实用工具后，点击右下角放大镜图标按钮即可进入“猜版 for Android”对话框。
+在 QQ 版本列表实用工具界面，点击右下角放大镜图标按钮即可进入“猜版 for Android”对话框。
 
-对话框含有三个输入框，分别是“主版本号”、“版本”和“小版本号”。“主版本号”已经由软件本体预填入了版本列表显示的最新版本号，也可自行修改。
+对话框含有三个输入框，分别是“主版本号”、“版本”和“小版本号”。“主版本号”已经预填入了版本列表显示的最新版本号，也可自行修改。
 
-若选择猜正式版，无需填写小版本号，软件将尝试连接 `https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_<主版本号>_64.apk` 和 `https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_<主版本号>_64_HB.apk` 。
+若选择猜正式版，无需填写小版本号，软件将尝试访问 `https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_<主版本号>_64.apk` 和 `https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_<主版本号>_64_HB.apk` 。
 
-若选择猜测试版，则需要填写起始小版本号，软件将尝试连接 `https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_<主版本号>.<小版本号>_64.apk` ，若失败，默认情况下将小版本号 +5 后再次尝试连接，直到连接成功为止。
+若选择猜测试版，则需要填写起始小版本号，软件将尝试访问 `https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_<主版本号>.<小版本号>_64.apk` ，若当次访问未果，默认情况下将按照设置逻辑自动递增小版本号后再次尝试访问，直到访问成功为止。
 
-连接成功后，软件会弹出成功对话框，对话框下方会有三个按钮，依次是“分享”、“下载”、“停止”、“跳过”和“复制”。
+访问成功后，软件会弹出成功对话框，对话框下方提供了一系列动作按钮，依次是“分享”、“下载”、“停止”、“跳过”和“复制”。
 
 ## 常见问题
 
@@ -71,6 +71,10 @@ QQ 版本列表实用工具 for Android 是一个提供 QQ 版本列表的查看
 ### 为什么默认添加了小版本号必须为 5 的倍数这项限制？
 
 基于对 Android QQ 长期以来的版本号发布规律进行深入观察和分析的结果，我们发现 Android QQ 小版本号更新通常遵循每增加一个有效版本即递增 5 的倍数这一特定模式。为了贴近这一潜在实际规范并确保 QQ 版本列表实用工具的快捷性，QQ 版本列表实用工具依据最佳实践原则，默认设置小版本号和猜版必须为 5 的倍数的限制规则。然而，对于用户而言，此项约束并非强制性，如有需要，用户可随时进入设置解除此限制选项，以便更加灵活地匹配各类版本信息。
+
+### 版本列表中已经有新的版本号了，为什么我使用猜版却获取不到下载链接？
+
+即使版本列表已出现了新的版本号，也并不意味着 QQ 团队已经完成了新版本（含测试版）安装包在腾讯公网服务器的部署和发布。一种可能的情况是，QQ 团队正在进行新版本的内部测试阶段，因而尚未对外提供公网下载渠道。
 
 ## 其他
 
@@ -92,13 +96,13 @@ QQ 版本列表实用工具采用 [GNU Affero General Public License Version 3](
 
 QQ 版本列表实用工具的诞生离不开以下开源项目，感谢以下开源项目的作者和贡献者：
 
-- [Material Components for Android](https://github.com/material-components/material-components-android/)，[Apache License Version 2.0](https://github.com/material-components/material-components-android/blob/master/LICENSE)
-- [Android Jetpack](https://github.com/androidx/androidx/)，[Apache License Version 2.0](https://github.com/androidx/androidx/blob/androidx-main/LICENSE.txt)
-- [Remix Icon（Remix Design）](https://remixicon.com/)，[Apache License Version 2.0](https://remixicon.com/license)
-- [OKHttp（Square）](https://square.github.io/okhttp/)，[Apache License Version 2.0](https://github.com/square/okhttp/blob/master/LICENSE.txt)
-- [Kotlin（JetBrains）](https://kotlinlang.org/)，[Apache License Version 2.0](https://github.com/JetBrains/kotlin/blob/master/license%2FREADME.md)
-- [Gson（Google）](https://github.com/google/gson/)，[Apache License Version 2.0](https://github.com/google/gson/blob/master/LICENSE)
-- [Coil](https://coil-kt.github.io/coil/)，[Apache License Version 2.0](https://github.com/coil-kt/coil/blob/main/LICENSE.txt)
+- [Material Components for Android](https://github.com/material-components/material-components-android/)，Licenced under [Apache License Version 2.0](https://github.com/material-components/material-components-android/blob/master/LICENSE)
+- [Android Jetpack](https://github.com/androidx/androidx/)，Licenced under [Apache License Version 2.0](https://github.com/androidx/androidx/blob/androidx-main/LICENSE.txt)
+- [Remix Icon（Remix Design）](https://remixicon.com/)，Licenced under [Apache License Version 2.0](https://remixicon.com/license)
+- [OKHttp（Square）](https://square.github.io/okhttp/)，Licenced under [Apache License Version 2.0](https://github.com/square/okhttp/blob/master/LICENSE.txt)
+- [Kotlin（JetBrains）](https://kotlinlang.org/)，Licenced under [Apache License Version 2.0](https://github.com/JetBrains/kotlin/blob/master/license%2FREADME.md)
+- [Gson（Google）](https://github.com/google/gson/)，Licenced under [Apache License Version 2.0](https://github.com/google/gson/blob/master/LICENSE)
+- [Coil](https://coil-kt.github.io/coil/)，Licenced under [Apache License Version 2.0](https://github.com/coil-kt/coil/blob/main/LICENSE.txt)
 
 ## 孪生项目
 
