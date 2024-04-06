@@ -27,10 +27,9 @@ class TipTimeApplication : Application() {
     }
 
     override fun onCreate() {
-        super.onCreate()
-        instance = this
-
         // Android 12+ 动态颜色
         DynamicColors.applyToActivitiesIfAvailable(this)
+        instance = this
+        super.onCreate()
     }
 }
