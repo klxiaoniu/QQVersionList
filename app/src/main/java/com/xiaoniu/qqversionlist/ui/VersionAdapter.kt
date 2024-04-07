@@ -186,7 +186,7 @@ class VersionAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         val tv = TextView(context).apply {
             text = s
             setTextIsSelectable(true)
-            setPadding(96, 48, 100, 96)
+            setPadding(96, 48, 96, 96)
         }
         MaterialAlertDialogBuilder(context)
             .setView(tv)
