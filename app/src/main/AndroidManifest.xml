@@ -19,6 +19,7 @@
         tools:targetApi="34">
         <activity
             android:name=".ui.MainActivity"
+            android:configChanges="orientation|screenSize"
             android:exported="true"
             android:windowSoftInputMode="adjustNothing">
             <intent-filter>

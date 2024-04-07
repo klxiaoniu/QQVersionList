@@ -147,8 +147,7 @@ class VersionAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                         crossfade(200)
                     }
                 }
-                tvVersion.text = "版本：${bean.versionNumber}"
-                tvSize.text = "大小：${bean.size} MB"
+                tvContentDetail.text = "版本：" + bean.versionNumber + "\n大小：" + bean.size + " MB"
                 tvTitle.text = bean.featureTitle
                 tvDesc.text = bean.summary.joinToString(separator = "\n- ", prefix = "- ")
                 tvPerSize.text =
@@ -187,7 +186,7 @@ class VersionAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         val tv = TextView(context).apply {
             text = s
             setTextIsSelectable(true)
-            setPadding(100, 50, 100, 100)
+            setPadding(96, 48, 96, 96)
         }
         MaterialAlertDialogBuilder(context)
             .setView(tv)

@@ -22,8 +22,5 @@
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
         <item name="android:windowLightStatusBar">false</item>
-        <item name="android:windowSplashScreenBackground">?attr/colorPrimaryContainer</item>
-        <item name="android:windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground_splash</item>
-        <item name="android:windowSplashScreenIconBackgroundColor">?attr/colorPrimaryContainer</item>
     </style>
 </resources>
