@@ -141,12 +141,10 @@ class MainActivity : AppCompatActivity() {
         // 屏幕方向判断，不同方向分别设置相应的约束布局用户协议子项高度
         val currentConfig = resources.configuration
         if (currentConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) constraintSet.constrainHeight(
-            R.id.UA_text,
-            screenHeight / 6
+            R.id.UA_text, screenHeight / 6
         )
         else if (currentConfig.orientation == Configuration.ORIENTATION_PORTRAIT) constraintSet.constrainHeight(
-            R.id.UA_text,
-            screenHeight / 2
+            R.id.UA_text, screenHeight / 2
         )
 
 
@@ -283,6 +281,8 @@ class MainActivity : AppCompatActivity() {
                         longPressCard.isChecked = SpUtil.getBoolean("longPressCard", true)
                         guessNot5.isChecked = SpUtil.getBoolean("guessNot5", false)
                         progressSize.isChecked = SpUtil.getBoolean("progressSize", false)
+                        switchGuessTestExtend.isChecked =
+                            SpUtil.getBoolean("guessTestExtend", false) // 扩展测试版猜版格式
                     }
 
                     val dialogSetting = MaterialAlertDialogBuilder(this)
@@ -309,6 +309,9 @@ class MainActivity : AppCompatActivity() {
                         progressSize.setOnCheckedChangeListener { _, isChecked ->
                             SpUtil.putBoolean("progressSize", isChecked)
                             getData()
+                        }
+                        switchGuessTestExtend.setOnCheckedChangeListener { _, isChecked ->
+                            SpUtil.putBoolean("guessTestExtend", isChecked)
                         }
                     }
 
@@ -493,23 +496,90 @@ class MainActivity : AppCompatActivity() {
                     when (status) {
                         STATUS_ONGOING -> {
                             if (mode == MODE_TEST) {
-                                link =
+                                if (link == "" || !SpUtil.getBoolean(
+                                        "guessTestExtend",
+                                        false
+                                    )
+                                ) link =
                                     "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}_64.apk"
+                                else if (SpUtil.getBoolean("guessTestExtend", false)) {
+                                    if (link.endsWith("_64.apk") && !link.endsWith("_HB_64.apk") && !link.endsWith(
+                                            "_HB1_64.apk"
+                                        ) && !link.endsWith("_HB2_64.apk") && !link.endsWith("_HB3_64.apk") && !link.endsWith(
+                                            "_HD_64.apk"
+                                        ) && !link.endsWith("_HD1_64.apk") && !link.endsWith("_HD2_64.apk") && !link.endsWith(
+                                            "_HD3_64.apk"
+                                        ) && !link.endsWith("_HD1HB_64.apk")
+                                    ) link =
+                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}_64_HB.apk"
+                                    else if (link.endsWith("_64_HB.apk")) link =
+                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}_64_HB1.apk"
+                                    else if (link.endsWith("_64_HB1.apk")) link =
+                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}_64_HB2.apk"
+                                    else if (link.endsWith("_64_HB2.apk")) link =
+                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}_64_HB3.apk"
+                                    else if (link.endsWith("_64_HB3.apk")) link =
+                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}_HB_64.apk"
+                                    else if (link.endsWith("_HB_64.apk")) link =
+                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}_HB1_64.apk"
+                                    else if (link.endsWith("_HB1_64.apk")) link =
+                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}_HB2_64.apk"
+                                    else if (link.endsWith("_HB2_64.apk")) link =
+                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}_HB3_64.apk"
+                                    else if (link.endsWith("_HB3_64.apk")) link =
+                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}_64_HD.apk"
+                                    else if (link.endsWith("_64_HD.apk")) link =
+                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}_64_HD1.apk"
+                                    else if (link.endsWith("_64_HD1.apk")) link =
+                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}_64_HD2.apk"
+                                    else if (link.endsWith("_64_HD2.apk")) link =
+                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}_64_HD3.apk"
+                                    else if (link.endsWith("_64_HD3.apk")) link =
+                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}_64_HD1HB.apk"
+                                    else if (link.endsWith("_64_HD1HB.apk")) link =
+                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}_HD_64.apk"
+                                    else if (link.endsWith("_HD_64.apk")) link =
+                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}_HD1_64.apk"
+                                    else if (link.endsWith("_HD1_64.apk")) link =
+                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}_HD2_64.apk"
+                                    else if (link.endsWith("_HD2_64.apk")) link =
+                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}_HD3_64.apk"
+                                    else if (link.endsWith("_HD3_64.apk")) link =
+                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}_HD1HB_64.apk"
+                                    else if (link.endsWith("_HD1HB_64.apk")) link =
+                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}_64.apk"
+                                }
                             } else if (mode == MODE_UNOFFICIAL) {
                                 link =
                                     "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android%20$versionBig.${vSmall}%2064.apk"
                             } else if (mode == MODE_OFFICIAL) {
-                                if (link == "") {
-                                    link =
-                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}_64.apk"
-                                } else if (link.endsWith("HB.apk")) {
+                                if (link == "") link =
+                                    "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}_64.apk"
+                                else if (link.endsWith("_64.apk") && !link.endsWith("_HB_64.apk") && !link.endsWith(
+                                        "_HB1_64.apk"
+                                    ) && !link.endsWith("_HB2_64.apk") && !link.endsWith("_HB3_64.apk")
+                                ) link =
+                                    "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}_64_HB.apk"
+                                else if (link.endsWith("_64_HB.apk")) link =
+                                    "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}_64_HB1.apk"
+                                else if (link.endsWith("_64_HB1.apk")) link =
+                                    "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}_64_HB2.apk"
+                                else if (link.endsWith("_64_HB2.apk")) link =
+                                    "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}_64_HB3.apk"
+                                else if (link.endsWith("_64_HB3.apk")) link =
+                                    "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}_HB_64.apk"
+                                else if (link.endsWith("_HB_64.apk")) link =
+                                    "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}_HB1_64.apk"
+                                else if (link.endsWith("_HB1_64.apk")) link =
+                                    "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}_HB2_64.apk"
+                                else if (link.endsWith("_HB2_64.apk")) link =
+                                    "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}_HB3_64.apk"
+                                else if (link.endsWith("_HB3_64.apk")) {
                                     status = STATUS_END
                                     showToast("未猜测到包")
                                     continue
-                                } else {
-                                    link =
-                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}_64_HB.apk"
                                 }
+
                             }
                             runOnUiThread {
                                 updateProgressDialogMessage("正在猜测下载地址：$link")
@@ -539,8 +609,19 @@ class MainActivity : AppCompatActivity() {
 
                                     // 继续按钮点击事件
                                     successButtonBinding.btnContinue.setOnClickListener {
-                                        vSmall += if (!SpUtil.getBoolean(
-                                                "guessNot5", false
+                                        // 测试版情况下，未打开扩展猜版或扩展猜版到最后一步时执行小版本号的递增
+                                        if (mode == MODE_TEST && (!SpUtil.getBoolean(
+                                                "guessTestExtend",
+                                                false
+                                            ) || link.endsWith("_HD1HB_64.apk"))
+                                        ) vSmall += if (!SpUtil.getBoolean(
+                                                "guessNot5",
+                                                false
+                                            )
+                                        ) 5 else 1
+                                        else if (mode == MODE_UNOFFICIAL) vSmall += if (!SpUtil.getBoolean(
+                                                "guessNot5",
+                                                false
                                             )
                                         ) 5 else 1
                                         successMaterialDialog.dismiss()
@@ -603,8 +684,14 @@ class MainActivity : AppCompatActivity() {
 
                                 }
                             } else {
-                                vSmall += if (!SpUtil.getBoolean(
-                                        "guessNot5", false
+                                if (mode == MODE_TEST && (!SpUtil.getBoolean(
+                                        "guessTestExtend",
+                                        false
+                                    ) || link.endsWith("_HD1HB_64.apk")) // 测试版情况下，未打开扩展猜版或扩展猜版到最后一步时执行小版本号的递增
+                                ) vSmall += if (!SpUtil.getBoolean("guessNot5", false)) 5 else 1
+                                else if (mode == MODE_UNOFFICIAL) vSmall += if (!SpUtil.getBoolean(
+                                        "guessNot5",
+                                        false
                                     )
                                 ) 5 else 1
                             }

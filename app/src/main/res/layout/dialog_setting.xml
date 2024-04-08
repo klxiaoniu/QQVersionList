@@ -50,6 +50,14 @@
         android:text="版本列表展示当前包大小占比最大包指示条" />
 
     <com.google.android.material.materialswitch.MaterialSwitch
+        android:id="@+id/switch_guess_test_extend"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:text="扩展猜版测试版直链格式" />
+
+    <com.google.android.material.materialswitch.MaterialSwitch
         android:id="@+id/guess_not_5"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
