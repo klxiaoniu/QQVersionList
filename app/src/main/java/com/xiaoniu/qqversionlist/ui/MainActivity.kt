@@ -34,6 +34,7 @@ import android.text.SpannableString
 import android.text.TextWatcher
 import android.text.style.URLSpan
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
@@ -591,14 +592,20 @@ class MainActivity : AppCompatActivity() {
                             if (success) {
                                 status = STATUS_PAUSE
                                 runOnUiThread {
-                                    val successMaterialDialog =
-                                        MaterialAlertDialogBuilder(this)
-                                            .setTitle("猜测成功")
-                                            .setMessage("下载地址：$link")
-                                            .setIcon(R.drawable.check_circle)
-                                            .setView(successButtonBinding.root)
-                                            .setCancelable(false)
-                                            .show()
+                                    successButtonBinding.root.parent?.let { parent ->
+                                        if (parent is ViewGroup) {
+                                            parent.removeView(successButtonBinding.root)
+                                        }
+                                    }
+
+                                    val successMaterialDialog = MaterialAlertDialogBuilder(this)
+                                        .setTitle("猜测成功")
+                                        .setMessage("下载地址：$link")
+                                        .setIcon(R.drawable.check_circle)
+                                        .setView(successButtonBinding.root)
+                                        .setCancelable(false)
+                                        .show()
+
 
                                     // 复制并停止按钮点击事件
                                     successButtonBinding.btnCopy.setOnClickListener {
