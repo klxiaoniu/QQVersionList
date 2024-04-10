@@ -80,7 +80,4 @@ dependencies {
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("io.coil-kt:coil:2.6.0")
     implementation("androidx.datastore:datastore-preferences:1.1.0-rc01")
-    implementation("androidx.datastore:datastore-preferences-rxjava2:1.1.0-rc01")
-    implementation("androidx.datastore:datastore-preferences-rxjava3:1.1.0-rc01")
-    // implementation("com.tencent:mmkv:1.3.4")
 }
