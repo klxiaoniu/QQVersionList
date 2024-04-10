@@ -652,10 +652,10 @@ class MainActivity : AppCompatActivity() {
                                                     Intent.EXTRA_TEXT,
                                                     if (appSize != "Error" && appSize != "-0.00" && appSize != "0.00") {
                                                         if (mode == MODE_OFFICIAL) "Android QQ $versionBig 正式版（大小：$appSize MB）\n\n下载地址：$link"
-                                                        else "Android QQ $versionBig.$vSmall 测试版（大小：$appSize MB）\n\n下载地址：$link"
+                                                        else "Android QQ $versionBig.$vSmall 测试版（大小：$appSize MB）\n\n下载地址：$link\n\n鉴于 QQ 测试版可能存在不可预知的稳定性问题，您在下载及使用该测试版本之前，必须明确并确保自身具备足够的风险识别和承受能力。"
                                                     } else {
                                                         if (mode == MODE_OFFICIAL) "Android QQ $versionBig 正式版\n\n下载地址：$link"
-                                                        else "Android QQ $versionBig.$vSmall 测试版\n\n下载地址：$link"
+                                                        else "Android QQ $versionBig.$vSmall 测试版\n\n下载地址：$link\n\n鉴于 QQ 测试版可能存在不可预知的稳定性问题，您在下载及使用该测试版本之前，必须明确并确保自身具备足够的风险识别和承受能力。"
                                                     }
                                                 )
                                             }
