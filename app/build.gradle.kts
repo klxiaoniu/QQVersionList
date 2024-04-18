@@ -27,7 +27,7 @@ android {
         minSdk = 24
         targetSdk = 34
         versionCode = gitCommitCount
-        versionName = "1.2.4-$gitCommitHash"
+        versionName = "1.2.5-$gitCommitHash"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -69,6 +69,7 @@ android {
 
 dependencies {
     implementation("androidx.core:core-ktx:1.13.0-rc01")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("androidx.core:core-splashscreen:1.0.1")
     implementation("com.google.android.material:material:1.12.0-rc01")

@@ -30,14 +30,34 @@
         android:orientation="vertical"
         android:padding="10dp">
 
-        <TextView
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/tv_content_detail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="@id/ib_collapse"
             app:layout_constraintEnd_toStartOf="@id/ib_collapse"
-            app:layout_constraintTop_toTopOf="@id/ib_collapse"
-            tools:text="版本：9.0.25\n大小：307 MB" />
+            app:layout_constraintTop_toTopOf="@id/ib_collapse">
+
+            <TextView
+                android:id="@+id/tv_detail_version"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:text="版本：9.0.25"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:textSize="16sp"
+                android:textColor="?attr/colorOnSurface"/>
+
+            <TextView
+                android:id="@+id/tv_detail_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="额定大小：307 MB"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_detail_version" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
             android:id="@+id/tv_per_size"
@@ -45,7 +65,7 @@
             android:layout_height="match_parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_content_detail"
-            tools:text="占比历史最大包（）：" />
+            tools:text="占比历史额定最大包（）：" />
 
         <com.google.android.material.progressindicator.LinearProgressIndicator
             android:id="@+id/list_detail_progress_line"

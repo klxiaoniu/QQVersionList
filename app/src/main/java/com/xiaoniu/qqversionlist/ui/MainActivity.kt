@@ -41,6 +41,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.text.method.LinkMovementMethodCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -55,9 +56,9 @@ import com.xiaoniu.qqversionlist.databinding.DialogSettingBinding
 import com.xiaoniu.qqversionlist.databinding.SuccessButtonBinding
 import com.xiaoniu.qqversionlist.databinding.UserAgreementBinding
 import com.xiaoniu.qqversionlist.util.ClipboardUtil.copyText
+import com.xiaoniu.qqversionlist.util.DataStoreUtil
 import com.xiaoniu.qqversionlist.util.InfoUtil.dialogError
 import com.xiaoniu.qqversionlist.util.InfoUtil.showToast
-import com.xiaoniu.qqversionlist.util.SpUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -152,13 +153,17 @@ class MainActivity : AppCompatActivity() {
         constraintSet.applyTo(userAgreementBinding.userAgreement)
 
         userAgreementBinding.uaButtonAgree.setOnClickListener {
-            SpUtil.putInt("userAgreement", 1)
+            lifecycleScope.launch {
+                DataStoreUtil.putIntAsync("userAgreement", 1)
+            }
             dialogUA.dismiss()
         }
 
         userAgreementBinding.uaButtonDisagree.setOnClickListener {
-            SpUtil.putInt("userAgreement", 0)
-            finish() // 不同意直接退出程序
+            lifecycleScope.launch {
+                DataStoreUtil.putIntAsync("userAgreement", 0)
+                finish() // 不同意直接退出程序
+            }
         }
         if (agreed) userAgreementBinding.uaButtonDisagree.text = "撤回同意并退出"
 
@@ -168,11 +173,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun initButtons() {
         // 删除 version Shared Preferences
-        SpUtil.deleteSp("version")
+        lifecycleScope.launch {
+            DataStoreUtil.deletePreferenceAsync("version")
+        }
 
         //这里的“getInt: userAgreement”的值代表着用户协议修订版本，后续更新协议版本后也需要在下面一行把“judgeUARead”+1，以此类推
         val judgeUARead = 1
-        if (SpUtil.getInt("userAgreement", 0) != judgeUARead) showUADialog(false)
+        if (DataStoreUtil.getInt("userAgreement", 0) != judgeUARead) showUADialog(false)
 
         // 进度条动画
         // https://github.com/material-components/material-components-android/blob/master/docs/components/ProgressIndicator.md
@@ -207,9 +214,11 @@ class MainActivity : AppCompatActivity() {
                             versionAdapter.setData(qqVersion)
                             // 舍弃 currentQQVersion = qqVersion.first().versionNumber
                             // 大版本号也放持久化存储了，否则猜版 Shortcut 因为加载过快而获取不到东西
-                            SpUtil.putString(
-                                "versionBig", qqVersion.first().versionNumber
-                            )
+                            lifecycleScope.launch {
+                                DataStoreUtil.putStringAsync(
+                                    "versionBig", qqVersion.first().versionNumber
+                                )
+                            }
                         }
 
                     }
@@ -245,7 +254,7 @@ class MainActivity : AppCompatActivity() {
 
                 R.id.btn_about -> {
                     val message =
-                        SpannableString("QQ 版本列表实用工具 for Android\n\n作者：快乐小牛、有鲫雪狐和其他贡献者\n\n版本：" + packageManager.getPackageInfo(
+                        SpannableString("QQ 版本列表实用工具 for Android\n\n作者：快乐小牛、有鲫雪狐\n\n版本：" + packageManager.getPackageInfo(
                             packageName, 0
                         ).let {
                             @Suppress("DEPRECATION")
@@ -278,12 +287,13 @@ class MainActivity : AppCompatActivity() {
                     val dialogSettingBinding = DialogSettingBinding.inflate(layoutInflater)
 
                     dialogSettingBinding.apply {
-                        switchDisplayFirst.isChecked = SpUtil.getBoolean("displayFirst", true)
-                        longPressCard.isChecked = SpUtil.getBoolean("longPressCard", true)
-                        guessNot5.isChecked = SpUtil.getBoolean("guessNot5", false)
-                        progressSize.isChecked = SpUtil.getBoolean("progressSize", false)
+                        switchDisplayFirst.isChecked =
+                            DataStoreUtil.getBoolean("displayFirst", true)
+                        longPressCard.isChecked = DataStoreUtil.getBoolean("longPressCard", true)
+                        guessNot5.isChecked = DataStoreUtil.getBoolean("guessNot5", false)
+                        progressSize.isChecked = DataStoreUtil.getBoolean("progressSize", false)
                         switchGuessTestExtend.isChecked =
-                            SpUtil.getBoolean("guessTestExtend", false) // 扩展测试版猜版格式
+                            DataStoreUtil.getBoolean("guessTestExtend", false) // 扩展测试版猜版格式
                     }
 
                     val dialogSetting = MaterialAlertDialogBuilder(this)
@@ -298,21 +308,31 @@ class MainActivity : AppCompatActivity() {
                             dialogSetting.dismiss()
                         }
                         switchDisplayFirst.setOnCheckedChangeListener { _, isChecked ->
-                            SpUtil.putBoolean("displayFirst", isChecked)
-                            getData()
+                            lifecycleScope.launch {
+                                DataStoreUtil.putBooleanAsync("displayFirst", isChecked)
+                                getData()
+                            }
                         }
                         longPressCard.setOnCheckedChangeListener { _, isChecked ->
-                            SpUtil.putBoolean("longPressCard", isChecked)
+                            lifecycleScope.launch {
+                                DataStoreUtil.putBooleanAsync("longPressCard", isChecked)
+                            }
                         }
                         guessNot5.setOnCheckedChangeListener { _, isChecked ->
-                            SpUtil.putBoolean("guessNot5", isChecked)
+                            lifecycleScope.launch {
+                                DataStoreUtil.putBooleanAsync("guessNot5", isChecked)
+                            }
                         }
                         progressSize.setOnCheckedChangeListener { _, isChecked ->
-                            SpUtil.putBoolean("progressSize", isChecked)
-                            getData()
+                            lifecycleScope.launch {
+                                DataStoreUtil.putBooleanAsync("progressSize", isChecked)
+                                getData()
+                            }
                         }
                         switchGuessTestExtend.setOnCheckedChangeListener { _, isChecked ->
-                            SpUtil.putBoolean("guessTestExtend", isChecked)
+                            lifecycleScope.launch {
+                                DataStoreUtil.putBooleanAsync("guessTestExtend", isChecked)
+                            }
                         }
                     }
 
@@ -326,10 +346,10 @@ class MainActivity : AppCompatActivity() {
 
         fun showGuessVersionDialog() {
             val dialogGuessBinding = DialogGuessBinding.inflate(layoutInflater)
-            val verBig = SpUtil.getString("versionBig", "")
+            val verBig = DataStoreUtil.getString("versionBig", "")
             dialogGuessBinding.etVersionBig.editText?.setText(verBig)
 
-            val memVersion = SpUtil.getString("versionSelect", "正式版")
+            val memVersion = DataStoreUtil.getString("versionSelect", "正式版")
             if (memVersion == "测试版" || memVersion == "空格版" || memVersion == "正式版") {
                 dialogGuessBinding.spinnerVersion.setText(memVersion, false)
             }
@@ -344,7 +364,9 @@ class MainActivity : AppCompatActivity() {
             dialogGuessBinding.spinnerVersion.addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(p0: Editable?) {
                     val judgeVerSelect = dialogGuessBinding.spinnerVersion.text.toString()
-                    SpUtil.putString("versionSelect", judgeVerSelect)
+                    lifecycleScope.launch {
+                        DataStoreUtil.putStringAsync("versionSelect", judgeVerSelect)
+                    }
                     if (judgeVerSelect == "测试版" || judgeVerSelect == "空格版") {
                         dialogGuessBinding.etVersionSmall.isEnabled = true
                         dialogGuessBinding.guessDialogWarning.visibility = View.VISIBLE
@@ -375,12 +397,9 @@ class MainActivity : AppCompatActivity() {
                 .setIcon(R.drawable.search_line)
                 .setView(dialogGuessBinding.root)
                 .setCancelable(false)
-                .create()
-
-            dialogGuess.show()
+                .show()
 
             dialogGuessBinding.btnGuessStart.setOnClickListener {
-
                 dialogGuessBinding.etVersionBig.clearFocus()
                 dialogGuessBinding.spinnerVersion.clearFocus()
                 dialogGuessBinding.etVersionSmall.clearFocus()
@@ -395,12 +414,14 @@ class MainActivity : AppCompatActivity() {
                         versionSmall =
                             dialogGuessBinding.etVersionSmall.editText?.text.toString().toInt()
                     }
-                    if (versionSmall % 5 != 0 && !SpUtil.getBoolean(
+                    if (versionSmall % 5 != 0 && !DataStoreUtil.getBoolean(
                             "guessNot5", false
                         )
                     ) throw Exception("小版本号需填 5 的倍数。如有需求，请前往设置解除此限制。")
                     if (versionSmall != 0) {
-                        SpUtil.putInt("versionSmall", versionSmall)
+                        lifecycleScope.launch {
+                            DataStoreUtil.putIntAsync("versionSmall", versionSmall)
+                        }
                     }/*我偷懒了，因为我上面也有偷懒逻辑，
                        为了防止 null，我在正式版猜版时默认填入了 0，
                        但是我没处理下面涉及到持久化存储逻辑的语句，就把 0 存进去了，
@@ -420,14 +441,14 @@ class MainActivity : AppCompatActivity() {
             }
 
 
-            val memVersionSmall = SpUtil.getInt("versionSmall", -1)
+            val memVersionSmall = DataStoreUtil.getInt("versionSmall", -1)
             if (memVersionSmall != -1) {
                 dialogGuessBinding.etVersionSmall.editText?.setText(memVersionSmall.toString())
             }
 
         }
 
-        if (intent.action == "android.intent.action.VIEW" && SpUtil.getInt(
+        if (intent.action == "android.intent.action.VIEW" && DataStoreUtil.getInt(
                 "userAgreement", 0
             ) == judgeUARead
         ) {
@@ -497,13 +518,13 @@ class MainActivity : AppCompatActivity() {
                     when (status) {
                         STATUS_ONGOING -> {
                             if (mode == MODE_TEST) {
-                                if (link == "" || !SpUtil.getBoolean(
+                                if (link == "" || !DataStoreUtil.getBoolean(
                                         "guessTestExtend",
                                         false
                                     )
                                 ) link =
                                     "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}_64.apk"
-                                else if (SpUtil.getBoolean("guessTestExtend", false)) {
+                                else if (DataStoreUtil.getBoolean("guessTestExtend", false)) {
                                     if (link.endsWith("_64.apk") && !link.endsWith("_HB_64.apk") && !link.endsWith(
                                             "_HB1_64.apk"
                                         ) && !link.endsWith("_HB2_64.apk") && !link.endsWith("_HB3_64.apk") && !link.endsWith(
@@ -591,61 +612,65 @@ class MainActivity : AppCompatActivity() {
                             val success = response.isSuccessful
                             if (success) {
                                 status = STATUS_PAUSE
-                                runOnUiThread {
-                                    successButtonBinding.root.parent?.let { parent ->
-                                        if (parent is ViewGroup) {
-                                            parent.removeView(successButtonBinding.root)
+                                getFileSizeInMB(link) { appSize ->
+                                    runOnUiThread {
+                                        successButtonBinding.root.parent?.let { parent ->
+                                            if (parent is ViewGroup) {
+                                                parent.removeView(successButtonBinding.root)
+                                            }
                                         }
-                                    }
 
-                                    val successMaterialDialog = MaterialAlertDialogBuilder(this)
-                                        .setTitle("猜测成功")
-                                        .setMessage("下载地址：$link")
-                                        .setIcon(R.drawable.check_circle)
-                                        .setView(successButtonBinding.root)
-                                        .setCancelable(false)
-                                        .show()
+                                        val successMaterialDialog = MaterialAlertDialogBuilder(this)
+                                            .setTitle("猜测成功")
+                                            .setMessage("下载地址：$link")
+                                            .setIcon(R.drawable.check_circle)
+                                            .setView(successButtonBinding.root)
+                                            .setCancelable(false)
+                                            .apply {
+                                                if (appSize != "Error" && appSize != "-0.00" && appSize != "0.00") setMessage(
+                                                    "下载地址：$link\n\n大小：$appSize MB"
+                                                )
+                                                else setMessage("下载地址：$link")
+                                            }.show()
 
 
-                                    // 复制并停止按钮点击事件
-                                    successButtonBinding.btnCopy.setOnClickListener {
-                                        copyText(link)
-                                        successMaterialDialog.dismiss()
-                                        status = STATUS_END
-                                    }
+                                        // 复制并停止按钮点击事件
+                                        successButtonBinding.btnCopy.setOnClickListener {
+                                            copyText(link)
+                                            successMaterialDialog.dismiss()
+                                            status = STATUS_END
+                                        }
 
-                                    // 继续按钮点击事件
-                                    successButtonBinding.btnContinue.setOnClickListener {
-                                        // 测试版情况下，未打开扩展猜版或扩展猜版到最后一步时执行小版本号的递增
-                                        if (mode == MODE_TEST && (!SpUtil.getBoolean(
-                                                "guessTestExtend",
-                                                false
-                                            ) || link.endsWith("_HD1HB_64.apk"))
-                                        ) vSmall += if (!SpUtil.getBoolean(
-                                                "guessNot5",
-                                                false
-                                            )
-                                        ) 5 else 1
-                                        else if (mode == MODE_UNOFFICIAL) vSmall += if (!SpUtil.getBoolean(
-                                                "guessNot5",
-                                                false
-                                            )
-                                        ) 5 else 1
-                                        successMaterialDialog.dismiss()
-                                        status = STATUS_ONGOING
-                                    }
+                                        // 继续按钮点击事件
+                                        successButtonBinding.btnContinue.setOnClickListener {
+                                            // 测试版情况下，未打开扩展猜版或扩展猜版到最后一步时执行小版本号的递增
+                                            if (mode == MODE_TEST && (!DataStoreUtil.getBoolean(
+                                                    "guessTestExtend",
+                                                    false
+                                                ) || link.endsWith("_HD1HB_64.apk"))
+                                            ) vSmall += if (!DataStoreUtil.getBoolean(
+                                                    "guessNot5",
+                                                    false
+                                                )
+                                            ) 5 else 1
+                                            else if (mode == MODE_UNOFFICIAL) vSmall += if (!DataStoreUtil.getBoolean(
+                                                    "guessNot5",
+                                                    false
+                                                )
+                                            ) 5 else 1
+                                            successMaterialDialog.dismiss()
+                                            status = STATUS_ONGOING
+                                        }
 
-                                    // 停止按钮点击事件
-                                    successButtonBinding.btnStop.setOnClickListener {
-                                        successMaterialDialog.dismiss()
-                                        status = STATUS_END
-                                    }
+                                        // 停止按钮点击事件
+                                        successButtonBinding.btnStop.setOnClickListener {
+                                            successMaterialDialog.dismiss()
+                                            status = STATUS_END
+                                        }
 
-                                    // 分享按钮点击事件
-                                    successButtonBinding.btnShare.setOnClickListener {
-                                        successMaterialDialog.dismiss()
-
-                                        getFileSizeInMB(link) { appSize ->
+                                        // 分享按钮点击事件
+                                        successButtonBinding.btnShare.setOnClickListener {
+                                            successMaterialDialog.dismiss()
                                             val shareIntent = Intent(Intent.ACTION_SEND).apply {
                                                 type = "text/plain"
                                                 putExtra(
@@ -666,37 +691,41 @@ class MainActivity : AppCompatActivity() {
                                             )
                                             status = STATUS_END
                                         }
-                                    }
 
-                                    // 下载按钮点击事件
-                                    successButtonBinding.btnDownload.setOnClickListener {
-                                        val request1 = DownloadManager.Request(Uri.parse(link))
-                                        if (mode == MODE_TEST || mode == MODE_UNOFFICIAL) {
-                                            request1.setDestinationInExternalPublicDir(
-                                                Environment.DIRECTORY_DOWNLOADS,
-                                                "Android_QQ_${versionBig}.${vSmall}_64.apk"
-                                            )
-                                        } else if (mode == MODE_OFFICIAL) {
-                                            request1.setDestinationInExternalPublicDir(
-                                                Environment.DIRECTORY_DOWNLOADS,
-                                                "Android_QQ_${versionBig}_64.apk"
-                                            )
+                                        // 下载按钮点击事件
+                                        successButtonBinding.btnDownload.setOnClickListener {
+                                            val requestDownload =
+                                                DownloadManager.Request(Uri.parse(link))
+                                            if (mode == MODE_TEST || mode == MODE_UNOFFICIAL) {
+                                                requestDownload.setDestinationInExternalPublicDir(
+                                                    Environment.DIRECTORY_DOWNLOADS,
+                                                    "Android_QQ_${versionBig}.${vSmall}_64.apk"
+                                                )
+                                            } else if (mode == MODE_OFFICIAL) {
+                                                requestDownload.setDestinationInExternalPublicDir(
+                                                    Environment.DIRECTORY_DOWNLOADS,
+                                                    "Android_QQ_${versionBig}_64.apk"
+                                                )
+                                            }
+                                            val downloadManager =
+                                                getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+                                            downloadManager.enqueue(requestDownload)
+                                            successMaterialDialog.dismiss()
+                                            status = STATUS_END
                                         }
-                                        val downloadManager =
-                                            getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-                                        downloadManager.enqueue(request1)
-                                        successMaterialDialog.dismiss()
-                                        status = STATUS_END
                                     }
-
                                 }
                             } else {
-                                if (mode == MODE_TEST && (!SpUtil.getBoolean(
+                                if (mode == MODE_TEST && (!DataStoreUtil.getBoolean(
                                         "guessTestExtend",
                                         false
                                     ) || link.endsWith("_HD1HB_64.apk")) // 测试版情况下，未打开扩展猜版或扩展猜版到最后一步时执行小版本号的递增
-                                ) vSmall += if (!SpUtil.getBoolean("guessNot5", false)) 5 else 1
-                                else if (mode == MODE_UNOFFICIAL) vSmall += if (!SpUtil.getBoolean(
+                                ) vSmall += if (!DataStoreUtil.getBoolean(
+                                        "guessNot5",
+                                        false
+                                    )
+                                ) 5 else 1
+                                else if (mode == MODE_UNOFFICIAL) vSmall += if (!DataStoreUtil.getBoolean(
                                         "guessNot5",
                                         false
                                     )
