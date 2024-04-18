@@ -214,9 +214,11 @@ class MainActivity : AppCompatActivity() {
                             versionAdapter.setData(qqVersion)
                             // 舍弃 currentQQVersion = qqVersion.first().versionNumber
                             // 大版本号也放持久化存储了，否则猜版 Shortcut 因为加载过快而获取不到东西
-                            DataStoreUtil.putString(
-                                "versionBig", qqVersion.first().versionNumber
-                            )
+                            lifecycleScope.launch {
+                                DataStoreUtil.putStringAsync(
+                                    "versionBig", qqVersion.first().versionNumber
+                                )
+                            }
                         }
 
                     }
@@ -362,7 +364,9 @@ class MainActivity : AppCompatActivity() {
             dialogGuessBinding.spinnerVersion.addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(p0: Editable?) {
                     val judgeVerSelect = dialogGuessBinding.spinnerVersion.text.toString()
-                    DataStoreUtil.putString("versionSelect", judgeVerSelect)
+                    lifecycleScope.launch {
+                        DataStoreUtil.putStringAsync("versionSelect", judgeVerSelect)
+                    }
                     if (judgeVerSelect == "测试版" || judgeVerSelect == "空格版") {
                         dialogGuessBinding.etVersionSmall.isEnabled = true
                         dialogGuessBinding.guessDialogWarning.visibility = View.VISIBLE
