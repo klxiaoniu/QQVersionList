@@ -33,7 +33,7 @@ import com.xiaoniu.qqversionlist.R
 import com.xiaoniu.qqversionlist.data.QQVersionBean
 import com.xiaoniu.qqversionlist.databinding.ItemVersionBinding
 import com.xiaoniu.qqversionlist.databinding.ItemVersionDetailBinding
-import com.xiaoniu.qqversionlist.util.SpUtil
+import com.xiaoniu.qqversionlist.util.DataStoreUtil
 import com.xiaoniu.qqversionlist.util.StringUtil.toPrettyFormat
 
 class VersionAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -45,7 +45,7 @@ class VersionAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         this.list.apply {
             clear()
             addAll(list)
-            val displayJudge = SpUtil.getBoolean("displayFirst", true)
+            val displayJudge = DataStoreUtil.getBoolean("displayFirst", true)
             if (displayJudge) {
                 first().displayType = 1 // 第一项默认展开
             }
@@ -76,7 +76,7 @@ class VersionAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                         notifyItemChanged(adapterPosition)
                     }
                     binding.itemAll.setOnLongClickListener {
-                        if (SpUtil.getBoolean("longPressCard", true)) {
+                        if (DataStoreUtil.getBoolean("longPressCard", true)) {
                             showDialog(
                                 it.context, list[adapterPosition].jsonString.toPrettyFormat()
                             )
@@ -103,7 +103,7 @@ class VersionAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                         notifyItemChanged(adapterPosition)
                     }
                     binding.itemAllDetail.setOnLongClickListener {
-                        if (SpUtil.getBoolean("longPressCard", true)) {
+                        if (DataStoreUtil.getBoolean("longPressCard", true)) {
                             showDialog(
                                 it.context, list[adapterPosition].jsonString.toPrettyFormat()
                             )
@@ -125,9 +125,10 @@ class VersionAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val bean = list[position]
         if (holder is ViewHolder) {
-            val result = "版本：" + bean.versionNumber + "\n大小：" + bean.size + " MB"
-            holder.binding.tvContent.text = result
-            if (!SpUtil.getBoolean("progressSize", false)) {
+            //val result = "版本：" + bean.versionNumber + "\n额定大小：" + bean.size + " MB"
+            holder.binding.tvVersion.text = "版本：" + bean.versionNumber
+            holder.binding.tvSize.text = "额定大小：" + bean.size + " MB"
+            if (!DataStoreUtil.getBoolean("progressSize", false)) {
                 holder.binding.listProgressLine.visibility = View.GONE
             } else {
                 holder.binding.listProgressLine.visibility = View.VISIBLE
@@ -147,7 +148,8 @@ class VersionAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                         crossfade(200)
                     }
                 }
-                tvContentDetail.text = "版本：" + bean.versionNumber + "\n大小：" + bean.size + " MB"
+                tvDetailVersion.text = "版本：" + bean.versionNumber
+                tvDetailSize.text = "额定大小：" + bean.size + " MB"
                 tvTitle.text = bean.featureTitle
                 tvDesc.text = bean.summary.joinToString(separator = "\n- ", prefix = "- ")
                 tvPerSize.text =
@@ -157,7 +159,7 @@ class VersionAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                         )
                     }%"
 
-                if (!SpUtil.getBoolean("progressSize", false)) {
+                if (!DataStoreUtil.getBoolean("progressSize", false)) {
                     holder.binding.listDetailProgressLine.visibility = View.GONE
                     holder.binding.tvPerSize.visibility = View.GONE
                 } else {

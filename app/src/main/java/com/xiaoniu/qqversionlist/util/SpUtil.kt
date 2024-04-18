@@ -18,9 +18,24 @@
 
 package com.xiaoniu.qqversionlist.util
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.core.IOException
+import androidx.datastore.preferences.SharedPreferencesMigration
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.doublePreferencesKey
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.floatPreferencesKey
+import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.longPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.preferencesDataStore
 import com.xiaoniu.qqversionlist.TipTimeApplication
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.runBlocking
 
+/* SharedPreferences
 object SpUtil {
     private fun getSp() =
         TipTimeApplication.instance.getSharedPreferences("data", AppCompatActivity.MODE_PRIVATE)
@@ -46,4 +61,167 @@ object SpUtil {
     fun deleteSp(key: String) =
         getSp().edit().remove(key).apply()
 
+}*/
+
+/*MMKV
+object MMKVUtil {
+    val mmkv by lazy {
+        MMKV.mmkvWithID("data", MMKV.MULTI_PROCESS_MODE)
+    }
+
+    fun importSPToMMKV() {
+        val oldSP =
+            TipTimeApplication.instance.getSharedPreferences("data", AppCompatActivity.MODE_PRIVATE)
+        mmkv.importFromSharedPreferences(oldSP)
+        oldSP.edit().clear().apply()
+    }
+
+    fun getInt(key: String, defValue: Int = 0): Int = mmkv.getInt(key, defValue)
+
+    fun putInt(key: String, value: Int) = mmkv.encode(key, value)
+
+    fun getString(key: String, defValue: String = ""): String? = mmkv.getString(key, defValue)
+
+    fun putString(key: String, value: String) = mmkv.encode(key, value)
+
+    fun getBoolean(key: String, defValue: Boolean): Boolean = mmkv.getBoolean(key, defValue)
+
+    fun putBoolean(key: String, value: Boolean) = mmkv.encode(key, value)
+
+    fun deleteMMKVKey(key: String) = mmkv.removeValueForKey(key)
+}*/
+
+
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
+    name = "data",
+    produceMigrations = { context ->
+        listOf(
+            SharedPreferencesMigration(context, "data")
+        )
+    })
+
+object DataStoreUtil {
+
+    private val dataStore: DataStore<Preferences> by lazy {
+        TipTimeApplication.instance.dataStore
+    }
+
+    @Throws(IOException::class)
+    fun getInt(key: String, defValue: Int): Int {
+        return runBlocking {
+            dataStore.data.firstOrNull()?.let { preferences ->
+                preferences[intPreferencesKey(key)] ?: defValue
+            } ?: defValue
+        }
+    }
+
+    @Throws(IOException::class)
+    fun putInt(key: String, value: Int) {
+        runBlocking {
+            dataStore.edit { preferences ->
+                preferences[intPreferencesKey(key)] = value
+            }
+        }
+    }
+
+    @Throws(IOException::class)
+    fun getString(key: String, defValue: String): String {
+        return runBlocking {
+            dataStore.data.firstOrNull()?.let { preferences ->
+                preferences[stringPreferencesKey(key)] ?: defValue
+            } ?: defValue
+        }
+    }
+
+    @Throws(IOException::class)
+    fun putString(key: String, value: String) {
+        runBlocking {
+            dataStore.edit { preferences ->
+                preferences[stringPreferencesKey(key)] = value
+            }
+        }
+    }
+
+    @Throws(IOException::class)
+    fun getBoolean(key: String, defValue: Boolean): Boolean {
+        return runBlocking {
+            dataStore.data.firstOrNull()?.let { preferences ->
+                preferences[booleanPreferencesKey(key)] ?: defValue
+            } ?: defValue
+        }
+    }
+
+    @Throws(IOException::class)
+    fun putBoolean(key: String, value: Boolean) {
+        runBlocking {
+            dataStore.edit { preferences ->
+                preferences[booleanPreferencesKey(key)] = value
+            }
+        }
+    }
+
+    @Throws(IOException::class)
+    fun deletePreference(key: String) {
+        runBlocking {
+            dataStore.edit { preferences ->
+                preferences.remove(stringPreferencesKey(key))
+                preferences.remove(intPreferencesKey(key))
+                preferences.remove(booleanPreferencesKey(key))
+                preferences.remove(floatPreferencesKey(key))
+                preferences.remove(longPreferencesKey(key))
+                preferences.remove(doublePreferencesKey(key))
+            }
+        }
+    }
+
+    suspend fun getIntAsync(key: String, defValue: Int): Int {
+        return dataStore.data.firstOrNull()?.let { preferences ->
+            preferences[intPreferencesKey(key)] ?: defValue
+        } ?: defValue
+    }
+
+    suspend fun putIntAsync(key: String, value: Int) {
+        dataStore.edit { preferences ->
+            preferences[intPreferencesKey(key)] = value
+        }
+    }
+
+
+    suspend fun getStringAsync(key: String, defValue: String): String {
+        return dataStore.data.firstOrNull()?.let { preferences ->
+            preferences[stringPreferencesKey(key)] ?: defValue
+        } ?: defValue
+    }
+
+    suspend fun putStringAsync(key: String, value: String) {
+        dataStore.edit { preferences ->
+            preferences[stringPreferencesKey(key)] = value
+        }
+    }
+
+    suspend fun getBooleanAsync(key: String, defValue: Boolean): Boolean {
+        return dataStore.data.firstOrNull()?.let { preferences ->
+            preferences[booleanPreferencesKey(key)] ?: defValue
+        } ?: defValue
+    }
+
+
+    suspend fun putBooleanAsync(key: String, value: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[booleanPreferencesKey(key)] = value
+        }
+    }
+
+
+    suspend fun deletePreferenceAsync(key: String) {
+        dataStore.edit { preferences ->
+            preferences.remove(stringPreferencesKey(key))
+            preferences.remove(intPreferencesKey(key))
+            preferences.remove(booleanPreferencesKey(key))
+            preferences.remove(floatPreferencesKey(key))
+            preferences.remove(longPreferencesKey(key))
+            preferences.remove(doublePreferencesKey(key))
+        }
+    }
 }
+
