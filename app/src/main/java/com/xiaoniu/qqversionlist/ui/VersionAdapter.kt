@@ -40,6 +40,10 @@ class VersionAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val list = mutableListOf<QQVersionBean>()
 
+    private fun Context.dpToPx(dp: Int): Int {
+        return (dp * resources.displayMetrics.density).toInt()
+    }
+
     @SuppressLint("NotifyDataSetChanged")
     fun setData(list: List<QQVersionBean>) {
         this.list.apply {
@@ -130,11 +134,25 @@ class VersionAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             holder.binding.tvSize.text = bean.size + " MB"
             if (!DataStoreUtil.getBoolean("progressSize", false)) {
                 holder.binding.listProgressLine.visibility = View.GONE
+                holder.binding.tvPerSizeCard.visibility = View.GONE
+                val layoutParams =
+                    holder.binding.tvSizeCard.layoutParams as? ViewGroup.MarginLayoutParams
+                        ?: return
+                layoutParams.marginEnd = holder.itemView.context.dpToPx(0)
+                holder.binding.tvSizeCard.layoutParams = layoutParams
             } else {
                 holder.binding.listProgressLine.visibility = View.VISIBLE
+                holder.binding.tvPerSizeCard.visibility = View.VISIBLE
+                val layoutParams =
+                    holder.binding.tvSizeCard.layoutParams as? ViewGroup.MarginLayoutParams
+                        ?: return
+                layoutParams.marginEnd = holder.itemView.context.dpToPx(6)
+                holder.binding.tvSizeCard.layoutParams = layoutParams
                 holder.binding.listProgressLine.max =
                     ((list.maxByOrNull { it.size.toFloat() }?.size?.toFloat() ?: 0f) * 10).toInt()
                 holder.binding.listProgressLine.progress = (bean.size.toFloat() * 10).toInt()
+                holder.binding.tvPerSizeText.text =
+                    "${"%.2f".format(bean.size.toFloat() / (list.maxByOrNull { it.size.toFloat() }?.size?.toFloat() ?: 0f) * 100)}%"
             }
         } else if (holder is ViewHolderDetail) {
             holder.binding.apply {
@@ -160,13 +178,27 @@ class VersionAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                             bean.size.toFloat() / (list.maxByOrNull { it.size.toFloat() }?.size?.toFloat() ?: 0f) * 100
                         )
                     }%"
+                tvOldPerSizeText.text =
+                    "${"%.2f".format(bean.size.toFloat() / (list.maxByOrNull { it.size.toFloat() }?.size?.toFloat() ?: 0f) * 100)}%"
 
                 if (!DataStoreUtil.getBoolean("progressSize", false)) {
                     holder.binding.listDetailProgressLine.visibility = View.GONE
                     holder.binding.tvPerSize.visibility = View.GONE
+                    holder.binding.tvOldPerSizeCard.visibility = View.GONE
+                    val layoutParams =
+                        holder.binding.tvOldSizeCard.layoutParams as? ViewGroup.MarginLayoutParams
+                            ?: return
+                    layoutParams.marginEnd = holder.itemView.context.dpToPx(0)
+                    holder.binding.tvOldSizeCard.layoutParams = layoutParams
                 } else {
                     holder.binding.listDetailProgressLine.visibility = View.VISIBLE
                     holder.binding.tvPerSize.visibility = View.VISIBLE
+                    holder.binding.tvOldPerSizeCard.visibility = View.VISIBLE
+                    val layoutParams =
+                        holder.binding.tvOldSizeCard.layoutParams as? ViewGroup.MarginLayoutParams
+                            ?: return
+                    layoutParams.marginEnd = holder.itemView.context.dpToPx(6)
+                    holder.binding.tvOldSizeCard.layoutParams = layoutParams
                     holder.binding.listDetailProgressLine.max =
                         ((list.maxByOrNull { it.size.toFloat() }?.size?.toFloat()
                             ?: 0f) * 10).toInt()

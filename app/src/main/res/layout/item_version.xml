@@ -49,9 +49,9 @@
                     android:id="@+id/tv_version"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginEnd="4dp"
-                    android:textColor="?attr/colorOnSurface"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginEnd="6dp"
+                    android:textColor="?attr/colorOnPrimaryContainer"
                     android:textSize="24sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -59,12 +59,41 @@
 
                 <com.google.android.material.card.MaterialCardView
                     style="?attr/materialCardViewFilledStyle"
+                    android:id="@+id/tv_per_size_card"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:backgroundTint="?attr/colorSecondaryContainer"
                     app:cardCornerRadius="4dp"
                     app:layout_constraintBottom_toBottomOf="@id/tv_version"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/tv_version">
+
+                    <TextView
+                        android:id="@+id/tv_per_size_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="2dp"
+                        android:layout_marginEnd="2dp"
+                        android:padding="4dp"
+                        android:textColor="?attr/colorOnSecondaryContainer"
+                        android:textSize="10sp"
+                        app:layout_constraintBottom_toBottomOf="@id/tv_version"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/tv_version"
+                        tools:text="75.47%" />
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/tv_size_card"
+                    style="?attr/materialCardViewFilledStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="?attr/colorSecondaryContainer"
+                    app:cardCornerRadius="4dp"
+                    android:layout_marginEnd="6dp"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_version"
+                    app:layout_constraintEnd_toStartOf="@id/tv_per_size_card"
                     app:layout_constraintTop_toTopOf="@id/tv_version">
 
                     <TextView

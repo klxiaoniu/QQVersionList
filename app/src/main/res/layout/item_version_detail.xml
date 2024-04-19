@@ -44,9 +44,9 @@
                 android:id="@+id/tv_old_version"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp"
-                android:textColor="?attr/colorOnSurface"
+                android:layout_marginStart="6dp"
+                android:layout_marginEnd="6dp"
+                android:textColor="?attr/colorOnPrimaryContainer"
                 android:textSize="24sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -54,12 +54,41 @@
 
             <com.google.android.material.card.MaterialCardView
                 style="?attr/materialCardViewFilledStyle"
+                android:id="@+id/tv_old_per_size_card"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="?attr/colorSecondaryContainer"
                 app:cardCornerRadius="4dp"
                 app:layout_constraintBottom_toBottomOf="@id/tv_old_version"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/tv_old_version">
+
+                <TextView
+                    android:id="@+id/tv_old_per_size_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:padding="4dp"
+                    android:textColor="?attr/colorOnSecondaryContainer"
+                    android:textSize="10sp"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_old_version"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/tv_old_version"
+                    tools:text="75.47%" />
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/tv_old_size_card"
+                style="?attr/materialCardViewFilledStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="?attr/colorSecondaryContainer"
+                app:cardCornerRadius="4dp"
+                android:layout_marginEnd="6dp"
+                app:layout_constraintBottom_toBottomOf="@id/tv_old_version"
+                app:layout_constraintEnd_toStartOf="@id/tv_old_per_size_card"
                 app:layout_constraintTop_toTopOf="@id/tv_old_version">
 
                 <TextView
@@ -85,6 +114,7 @@
             android:id="@+id/tv_detail_version"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="?attr/colorOnSecondaryContainer"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/ib_collapse"
             tools:text="版本：9.0.25" />
@@ -93,6 +123,7 @@
             android:id="@+id/tv_detail_size"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="?attr/colorOnSecondaryContainer"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_detail_version"
             tools:text="额定大小：307 MB" />
@@ -101,6 +132,7 @@
             android:id="@+id/tv_per_size"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:textColor="?attr/colorOnSecondaryContainer"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_detail_size"
             tools:text="占比历史额定最大包（）：" />
@@ -121,6 +153,7 @@
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:textColor="?attr/colorOnSecondaryContainer"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/list_detail_progress_line"
             tools:text="体验说明：" />
@@ -130,6 +163,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingBottom="6dp"
+            android:textColor="?attr/colorOnSecondaryContainer"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_title"
             tools:text="- 新年新“状态”\n- 文本文本文本" />
