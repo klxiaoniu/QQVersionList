@@ -126,8 +126,8 @@ class VersionAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         val bean = list[position]
         if (holder is ViewHolder) {
             //val result = "版本：" + bean.versionNumber + "\n额定大小：" + bean.size + " MB"
-            holder.binding.tvVersion.text = "版本：" + bean.versionNumber
-            holder.binding.tvSize.text = "额定大小：" + bean.size + " MB"
+            holder.binding.tvVersion.text = bean.versionNumber
+            holder.binding.tvSize.text = bean.size + " MB"
             if (!DataStoreUtil.getBoolean("progressSize", false)) {
                 holder.binding.listProgressLine.visibility = View.GONE
             } else {
@@ -148,6 +148,8 @@ class VersionAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                         crossfade(200)
                     }
                 }
+                tvOldVersion.text = bean.versionNumber
+                tvOldSize.text = bean.size + " MB"
                 tvDetailVersion.text = "版本：" + bean.versionNumber
                 tvDetailSize.text = "额定大小：" + bean.size + " MB"
                 tvTitle.text = bean.featureTitle

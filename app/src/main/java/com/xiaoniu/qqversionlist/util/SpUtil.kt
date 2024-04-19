@@ -32,7 +32,12 @@ import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.xiaoniu.qqversionlist.TipTimeApplication
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 /* SharedPreferences
@@ -101,7 +106,6 @@ val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
     })
 
 object DataStoreUtil {
-
     private val dataStore: DataStore<Preferences> by lazy {
         TipTimeApplication.instance.dataStore
     }
@@ -174,53 +178,69 @@ object DataStoreUtil {
         }
     }
 
-    suspend fun getIntAsync(key: String, defValue: Int): Int {
-        return dataStore.data.firstOrNull()?.let { preferences ->
-            preferences[intPreferencesKey(key)] ?: defValue
-        } ?: defValue
-    }
 
-    suspend fun putIntAsync(key: String, value: Int) {
-        dataStore.edit { preferences ->
-            preferences[intPreferencesKey(key)] = value
+    fun getIntAsync(key: String, defValue: Int): Deferred<Int> {
+        return CoroutineScope(Dispatchers.IO).async {
+            dataStore.data.firstOrNull()?.let { preferences ->
+                preferences[intPreferencesKey(key)] ?: defValue
+            } ?: defValue
         }
     }
 
 
-    suspend fun getStringAsync(key: String, defValue: String): String {
-        return dataStore.data.firstOrNull()?.let { preferences ->
-            preferences[stringPreferencesKey(key)] ?: defValue
-        } ?: defValue
-    }
-
-    suspend fun putStringAsync(key: String, value: String) {
-        dataStore.edit { preferences ->
-            preferences[stringPreferencesKey(key)] = value
-        }
-    }
-
-    suspend fun getBooleanAsync(key: String, defValue: Boolean): Boolean {
-        return dataStore.data.firstOrNull()?.let { preferences ->
-            preferences[booleanPreferencesKey(key)] ?: defValue
-        } ?: defValue
-    }
-
-
-    suspend fun putBooleanAsync(key: String, value: Boolean) {
-        dataStore.edit { preferences ->
-            preferences[booleanPreferencesKey(key)] = value
+    fun putIntAsync(key: String, value: Int) {
+        CoroutineScope(Dispatchers.IO).launch {
+            dataStore.edit { preferences ->
+                preferences[intPreferencesKey(key)] = value
+            }
         }
     }
 
 
-    suspend fun deletePreferenceAsync(key: String) {
-        dataStore.edit { preferences ->
-            preferences.remove(stringPreferencesKey(key))
-            preferences.remove(intPreferencesKey(key))
-            preferences.remove(booleanPreferencesKey(key))
-            preferences.remove(floatPreferencesKey(key))
-            preferences.remove(longPreferencesKey(key))
-            preferences.remove(doublePreferencesKey(key))
+    fun getStringAsync(key: String, defValue: String): Deferred<String> {
+        return CoroutineScope(Dispatchers.IO).async {
+            dataStore.data.firstOrNull()?.let { preferences ->
+                preferences[stringPreferencesKey(key)] ?: defValue
+            } ?: defValue
+        }
+    }
+
+    fun putStringAsync(key: String, value: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            dataStore.edit { preferences ->
+                preferences[stringPreferencesKey(key)] = value
+            }
+        }
+    }
+
+    fun getBooleanAsync(key: String, defValue: Boolean): Deferred<Boolean> {
+        return CoroutineScope(Dispatchers.IO).async {
+            dataStore.data.firstOrNull()?.let { preferences ->
+                preferences[booleanPreferencesKey(key)] ?: defValue
+            } ?: defValue
+        }
+    }
+
+
+    fun putBooleanAsync(key: String, value: Boolean) {
+        CoroutineScope(Dispatchers.IO).launch {
+            dataStore.edit { preferences ->
+                preferences[booleanPreferencesKey(key)] = value
+            }
+        }
+    }
+
+
+    fun deletePreferenceAsync(key: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            dataStore.edit { preferences ->
+                preferences.remove(stringPreferencesKey(key))
+                preferences.remove(intPreferencesKey(key))
+                preferences.remove(booleanPreferencesKey(key))
+                preferences.remove(floatPreferencesKey(key))
+                preferences.remove(longPreferencesKey(key))
+                preferences.remove(doublePreferencesKey(key))
+            }
         }
     }
 }
