@@ -41,7 +41,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.text.method.LinkMovementMethodCompat
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -153,17 +152,13 @@ class MainActivity : AppCompatActivity() {
         constraintSet.applyTo(userAgreementBinding.userAgreement)
 
         userAgreementBinding.uaButtonAgree.setOnClickListener {
-            lifecycleScope.launch {
-                DataStoreUtil.putIntAsync("userAgreement", 1)
-            }
+            DataStoreUtil.putIntAsync("userAgreement", 1)
             dialogUA.dismiss()
         }
 
         userAgreementBinding.uaButtonDisagree.setOnClickListener {
-            lifecycleScope.launch {
-                DataStoreUtil.putIntAsync("userAgreement", 0)
-                finish() // 不同意直接退出程序
-            }
+            DataStoreUtil.putIntAsync("userAgreement", 0)
+            finish()
         }
         if (agreed) userAgreementBinding.uaButtonDisagree.text = "撤回同意并退出"
 
@@ -173,9 +168,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun initButtons() {
         // 删除 version Shared Preferences
-        lifecycleScope.launch {
-            DataStoreUtil.deletePreferenceAsync("version")
-        }
+        DataStoreUtil.deletePreferenceAsync("version")
 
         //这里的“getInt: userAgreement”的值代表着用户协议修订版本，后续更新协议版本后也需要在下面一行把“judgeUARead”+1，以此类推
         val judgeUARead = 1
@@ -214,11 +207,9 @@ class MainActivity : AppCompatActivity() {
                             versionAdapter.setData(qqVersion)
                             // 舍弃 currentQQVersion = qqVersion.first().versionNumber
                             // 大版本号也放持久化存储了，否则猜版 Shortcut 因为加载过快而获取不到东西
-                            lifecycleScope.launch {
-                                DataStoreUtil.putStringAsync(
-                                    "versionBig", qqVersion.first().versionNumber
-                                )
-                            }
+                            DataStoreUtil.putStringAsync(
+                                "versionBig", qqVersion.first().versionNumber
+                            )
                         }
 
                     }
@@ -308,31 +299,21 @@ class MainActivity : AppCompatActivity() {
                             dialogSetting.dismiss()
                         }
                         switchDisplayFirst.setOnCheckedChangeListener { _, isChecked ->
-                            lifecycleScope.launch {
-                                DataStoreUtil.putBooleanAsync("displayFirst", isChecked)
-                                getData()
-                            }
+                            DataStoreUtil.putBooleanAsync("displayFirst", isChecked)
+                            getData()
                         }
                         longPressCard.setOnCheckedChangeListener { _, isChecked ->
-                            lifecycleScope.launch {
-                                DataStoreUtil.putBooleanAsync("longPressCard", isChecked)
-                            }
+                            DataStoreUtil.putBooleanAsync("longPressCard", isChecked)
                         }
                         guessNot5.setOnCheckedChangeListener { _, isChecked ->
-                            lifecycleScope.launch {
-                                DataStoreUtil.putBooleanAsync("guessNot5", isChecked)
-                            }
+                            DataStoreUtil.putBooleanAsync("guessNot5", isChecked)
                         }
                         progressSize.setOnCheckedChangeListener { _, isChecked ->
-                            lifecycleScope.launch {
-                                DataStoreUtil.putBooleanAsync("progressSize", isChecked)
-                                getData()
-                            }
+                            DataStoreUtil.putBooleanAsync("progressSize", isChecked)
+                            getData()
                         }
                         switchGuessTestExtend.setOnCheckedChangeListener { _, isChecked ->
-                            lifecycleScope.launch {
-                                DataStoreUtil.putBooleanAsync("guessTestExtend", isChecked)
-                            }
+                            DataStoreUtil.putBooleanAsync("guessTestExtend", isChecked)
                         }
                     }
 
@@ -348,7 +329,6 @@ class MainActivity : AppCompatActivity() {
             val dialogGuessBinding = DialogGuessBinding.inflate(layoutInflater)
             val verBig = DataStoreUtil.getString("versionBig", "")
             dialogGuessBinding.etVersionBig.editText?.setText(verBig)
-
             val memVersion = DataStoreUtil.getString("versionSelect", "正式版")
             if (memVersion == "测试版" || memVersion == "空格版" || memVersion == "正式版") {
                 dialogGuessBinding.spinnerVersion.setText(memVersion, false)
@@ -364,9 +344,7 @@ class MainActivity : AppCompatActivity() {
             dialogGuessBinding.spinnerVersion.addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(p0: Editable?) {
                     val judgeVerSelect = dialogGuessBinding.spinnerVersion.text.toString()
-                    lifecycleScope.launch {
-                        DataStoreUtil.putStringAsync("versionSelect", judgeVerSelect)
-                    }
+                    DataStoreUtil.putStringAsync("versionSelect", judgeVerSelect)
                     if (judgeVerSelect == "测试版" || judgeVerSelect == "空格版") {
                         dialogGuessBinding.etVersionSmall.isEnabled = true
                         dialogGuessBinding.guessDialogWarning.visibility = View.VISIBLE
@@ -419,9 +397,7 @@ class MainActivity : AppCompatActivity() {
                         )
                     ) throw Exception("小版本号需填 5 的倍数。如有需求，请前往设置解除此限制。")
                     if (versionSmall != 0) {
-                        lifecycleScope.launch {
-                            DataStoreUtil.putIntAsync("versionSmall", versionSmall)
-                        }
+                        DataStoreUtil.putIntAsync("versionSmall", versionSmall)
                     }/*我偷懒了，因为我上面也有偷懒逻辑，
                        为了防止 null，我在正式版猜版时默认填入了 0，
                        但是我没处理下面涉及到持久化存储逻辑的语句，就把 0 存进去了，
@@ -440,21 +416,17 @@ class MainActivity : AppCompatActivity() {
                 dialogGuess.dismiss()
             }
 
-
             val memVersionSmall = DataStoreUtil.getInt("versionSmall", -1)
             if (memVersionSmall != -1) {
                 dialogGuessBinding.etVersionSmall.editText?.setText(memVersionSmall.toString())
             }
-
         }
-
         if (intent.action == "android.intent.action.VIEW" && DataStoreUtil.getInt(
                 "userAgreement", 0
             ) == judgeUARead
         ) {
             showGuessVersionDialog()
         }
-
         binding.btnGuess.setOnClickListener {
             showGuessVersionDialog()
         }
@@ -513,7 +485,29 @@ class MainActivity : AppCompatActivity() {
         var link = ""
         val thread = Thread {
             var vSmall = versionSmall
+            val stList = listOf(
+                "_64",
+                "_64_HB",
+                "_64_HB1",
+                "_64_HB2",
+                "_64_HB3",
+                "_64_HD",
+                "_64_HD1",
+                "_64_HD2",
+                "_64_HD3",
+                "_64_HD1HB",
+                "_HB_64",
+                "_HB1_64",
+                "_HB2_64",
+                "_HB3_64",
+                "_HD_64",
+                "_HD1_64",
+                "_HD2_64",
+                "_HD3_64",
+                "_HD1HB_64"
+            )
             try {
+                var sIndex = 0
                 while (true) {
                     when (status) {
                         STATUS_ONGOING -> {
@@ -523,83 +517,37 @@ class MainActivity : AppCompatActivity() {
                                         false
                                     )
                                 ) link =
-                                    "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}_64.apk"
+                                    "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}${stList[sIndex]}.apk"
                                 else if (DataStoreUtil.getBoolean("guessTestExtend", false)) {
-                                    if (link.endsWith("_64.apk") && !link.endsWith("_HB_64.apk") && !link.endsWith(
-                                            "_HB1_64.apk"
-                                        ) && !link.endsWith("_HB2_64.apk") && !link.endsWith("_HB3_64.apk") && !link.endsWith(
-                                            "_HD_64.apk"
-                                        ) && !link.endsWith("_HD1_64.apk") && !link.endsWith("_HD2_64.apk") && !link.endsWith(
-                                            "_HD3_64.apk"
-                                        ) && !link.endsWith("_HD1HB_64.apk")
-                                    ) link =
-                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}_64_HB.apk"
-                                    else if (link.endsWith("_64_HB.apk")) link =
-                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}_64_HB1.apk"
-                                    else if (link.endsWith("_64_HB1.apk")) link =
-                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}_64_HB2.apk"
-                                    else if (link.endsWith("_64_HB2.apk")) link =
-                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}_64_HB3.apk"
-                                    else if (link.endsWith("_64_HB3.apk")) link =
-                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}_HB_64.apk"
-                                    else if (link.endsWith("_HB_64.apk")) link =
-                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}_HB1_64.apk"
-                                    else if (link.endsWith("_HB1_64.apk")) link =
-                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}_HB2_64.apk"
-                                    else if (link.endsWith("_HB2_64.apk")) link =
-                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}_HB3_64.apk"
-                                    else if (link.endsWith("_HB3_64.apk")) link =
-                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}_64_HD.apk"
-                                    else if (link.endsWith("_64_HD.apk")) link =
-                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}_64_HD1.apk"
-                                    else if (link.endsWith("_64_HD1.apk")) link =
-                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}_64_HD2.apk"
-                                    else if (link.endsWith("_64_HD2.apk")) link =
-                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}_64_HD3.apk"
-                                    else if (link.endsWith("_64_HD3.apk")) link =
-                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}_64_HD1HB.apk"
-                                    else if (link.endsWith("_64_HD1HB.apk")) link =
-                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}_HD_64.apk"
-                                    else if (link.endsWith("_HD_64.apk")) link =
-                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}_HD1_64.apk"
-                                    else if (link.endsWith("_HD1_64.apk")) link =
-                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}_HD2_64.apk"
-                                    else if (link.endsWith("_HD2_64.apk")) link =
-                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}_HD3_64.apk"
-                                    else if (link.endsWith("_HD3_64.apk")) link =
-                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}_HD1HB_64.apk"
-                                    else if (link.endsWith("_HD1HB_64.apk")) link =
-                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}_64.apk"
+                                    sIndex += 1
+                                    link =
+                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}.${vSmall}${stList[sIndex]}.apk"
                                 }
                             } else if (mode == MODE_UNOFFICIAL) {
                                 link =
                                     "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android%20$versionBig.${vSmall}%2064.apk"
                             } else if (mode == MODE_OFFICIAL) {
+                                val soList = listOf(
+                                    "_64",
+                                    "_64_HB",
+                                    "_64_HB1",
+                                    "_64_HB2",
+                                    "_64_HB3",
+                                    "_HB_64",
+                                    "_HB1_64",
+                                    "_HB2_64",
+                                    "_HB3_64"
+                                )
                                 if (link == "") link =
-                                    "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}_64.apk"
-                                else if (link.endsWith("_64.apk") && !link.endsWith("_HB_64.apk") && !link.endsWith(
-                                        "_HB1_64.apk"
-                                    ) && !link.endsWith("_HB2_64.apk") && !link.endsWith("_HB3_64.apk")
-                                ) link =
-                                    "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}_64_HB.apk"
-                                else if (link.endsWith("_64_HB.apk")) link =
-                                    "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}_64_HB1.apk"
-                                else if (link.endsWith("_64_HB1.apk")) link =
-                                    "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}_64_HB2.apk"
-                                else if (link.endsWith("_64_HB2.apk")) link =
-                                    "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}_64_HB3.apk"
-                                else if (link.endsWith("_64_HB3.apk")) link =
-                                    "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}_HB_64.apk"
-                                else if (link.endsWith("_HB_64.apk")) link =
-                                    "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}_HB1_64.apk"
-                                else if (link.endsWith("_HB1_64.apk")) link =
-                                    "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}_HB2_64.apk"
-                                else if (link.endsWith("_HB2_64.apk")) link =
-                                    "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}_HB3_64.apk"
-                                else if (link.endsWith("_HB3_64.apk")) {
+                                    "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}${soList[sIndex]}.apk"
+                                else if (sIndex == (soList.size - 1)) {
                                     status = STATUS_END
                                     showToast("未猜测到包")
                                     continue
+                                } else {
+                                    sIndex += 1
+                                    link =
+                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}${soList[sIndex]}.apk"
                                 }
 
                             }
@@ -647,13 +595,15 @@ class MainActivity : AppCompatActivity() {
                                             if (mode == MODE_TEST && (!DataStoreUtil.getBoolean(
                                                     "guessTestExtend",
                                                     false
-                                                ) || link.endsWith("_HD1HB_64.apk"))
-                                            ) vSmall += if (!DataStoreUtil.getBoolean(
-                                                    "guessNot5",
-                                                    false
-                                                )
-                                            ) 5 else 1
-                                            else if (mode == MODE_UNOFFICIAL) vSmall += if (!DataStoreUtil.getBoolean(
+                                                ) || sIndex == (stList.size - 1))
+                                            ) {
+                                                vSmall += if (!DataStoreUtil.getBoolean(
+                                                        "guessNot5",
+                                                        false
+                                                    )
+                                                ) 5 else 1
+                                                sIndex = 0
+                                            } else if (mode == MODE_UNOFFICIAL) vSmall += if (!DataStoreUtil.getBoolean(
                                                     "guessNot5",
                                                     false
                                                 )
@@ -719,13 +669,15 @@ class MainActivity : AppCompatActivity() {
                                 if (mode == MODE_TEST && (!DataStoreUtil.getBoolean(
                                         "guessTestExtend",
                                         false
-                                    ) || link.endsWith("_HD1HB_64.apk")) // 测试版情况下，未打开扩展猜版或扩展猜版到最后一步时执行小版本号的递增
-                                ) vSmall += if (!DataStoreUtil.getBoolean(
-                                        "guessNot5",
-                                        false
-                                    )
-                                ) 5 else 1
-                                else if (mode == MODE_UNOFFICIAL) vSmall += if (!DataStoreUtil.getBoolean(
+                                    ) || sIndex == (stList.size - 1)) // 测试版情况下，未打开扩展猜版或扩展猜版到最后一步时执行小版本号的递增
+                                ) {
+                                    vSmall += if (!DataStoreUtil.getBoolean(
+                                            "guessNot5",
+                                            false
+                                        )
+                                    ) 5 else 1
+                                    sIndex = 0
+                                } else if (mode == MODE_UNOFFICIAL) vSmall += if (!DataStoreUtil.getBoolean(
                                         "guessNot5",
                                         false
                                     )
@@ -739,6 +691,7 @@ class MainActivity : AppCompatActivity() {
 
                         STATUS_END -> {
                             if (mode != MODE_OFFICIAL) showToast("已停止猜测")
+                            sIndex = 0
                             progressDialog.dismiss()
                             break
                         }
