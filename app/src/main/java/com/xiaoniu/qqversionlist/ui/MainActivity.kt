@@ -46,6 +46,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.google.gson.Gson
+import com.xiaoniu.qqversionlist.BuildConfig
 import com.xiaoniu.qqversionlist.R
 import com.xiaoniu.qqversionlist.data.QQVersionBean
 import com.xiaoniu.qqversionlist.databinding.ActivityMainBinding
@@ -203,13 +204,13 @@ class MainActivity : AppCompatActivity() {
 
                 R.id.btn_about -> {
                     val message =
-                        SpannableString("QQ 版本列表实用工具 for Android\n\n作者：快乐小牛、有鲫雪狐\n\n版本：" + packageManager.getPackageInfo(
-                            packageName, 0
-                        ).let {
-                            @Suppress("DEPRECATION")
-                            it.versionName + "(" + (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
-                                it.longVersionCode else it.versionCode) + ")"
-                        } + "\n\nSince 2023.8.9\n\nLicensed under AGPL v3\n\n" + "开源地址")
+                        SpannableString(
+                            "QQ 版本列表实用工具 for Android\n\n" +
+                                    "作者：快乐小牛、有鲫雪狐\n\n" +
+                                    "版本：${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})\n\n" +
+                                    "Since 2023.8.9\n\nLicensed under AGPL v3\n\n" +
+                                    "开源地址"
+                        )
                     val urlSpan = URLSpan("https://github.com/klxiaoniu/QQVersionList")
                     message.setSpan(
                         urlSpan,
