@@ -2,6 +2,16 @@
 
 ![QQ 版本列表实用工具 Banner](/QQVerToolBanner.png)
 
+<div align="center">
+
+[注意事项](#注意事项：使用前须知) | [简介](#简介) | [如何使用](#如何使用？) | [获取更新](#获取更新（基于-Obtainium-方案）) | [常见问题](#常见问题) | [其它](#其它)
+
+[贡献成员](#贡献成员) | [开源相关](#开源相关) | [孪生项目](#孪生项目)
+
+搜索问题请使用 `Ctrl` + `F`（Windows）或 `Cmd` + `F`（macOS）
+
+</div> 
+
 <details>
 
 <summary>关于近期多家国内 Android OEM 系统报毒 QQ 版本列表实用工具的声明</summary>
