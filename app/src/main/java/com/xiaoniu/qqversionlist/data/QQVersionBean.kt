@@ -27,5 +27,6 @@ data class QQVersionBean(
     val summary: List<String>,
 
     var jsonString: String,
-    var displayType: Int = 0 // 0为收起
+    var displayType: Int = 0, // 0为收起
+    var isShowProgressSize: Boolean = false
 )

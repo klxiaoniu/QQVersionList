@@ -46,6 +46,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.google.gson.Gson
+import com.xiaoniu.qqversionlist.BuildConfig
 import com.xiaoniu.qqversionlist.R
 import com.xiaoniu.qqversionlist.data.QQVersionBean
 import com.xiaoniu.qqversionlist.databinding.ActivityMainBinding
@@ -72,6 +73,7 @@ import java.net.URL
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var versionAdapter: VersionAdapter
+    private lateinit var qqVersion: List<QQVersionBean>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
@@ -148,12 +150,12 @@ class MainActivity : AppCompatActivity() {
             R.id.UA_text, screenHeight / 2
         )
 
-
         constraintSet.applyTo(userAgreementBinding.userAgreement)
 
         userAgreementBinding.uaButtonAgree.setOnClickListener {
             DataStoreUtil.putIntAsync("userAgreement", 1)
             dialogUA.dismiss()
+            getData()
         }
 
         userAgreementBinding.uaButtonDisagree.setOnClickListener {
@@ -172,7 +174,10 @@ class MainActivity : AppCompatActivity() {
 
         //这里的“getInt: userAgreement”的值代表着用户协议修订版本，后续更新协议版本后也需要在下面一行把“judgeUARead”+1，以此类推
         val judgeUARead = 1
-        if (DataStoreUtil.getInt("userAgreement", 0) != judgeUARead) showUADialog(false)
+        if (DataStoreUtil.getInt("userAgreement", 0) != judgeUARead)
+            showUADialog(false)
+        else
+            getData()
 
         // 进度条动画
         // https://github.com/material-components/material-components-android/blob/master/docs/components/ProgressIndicator.md
@@ -180,51 +185,6 @@ class MainActivity : AppCompatActivity() {
             showAnimationBehavior = LinearProgressIndicator.SHOW_NONE
             hideAnimationBehavior = LinearProgressIndicator.HIDE_ESCAPE
         }
-
-        fun getData() {
-            binding.progressLine.show()
-            CoroutineScope(Dispatchers.IO).launch {
-                try {
-                    val okHttpClient = OkHttpClient()
-                    val request =
-                        Request.Builder().url("https://im.qq.com/rainbow/androidQQVersionList")
-                            .build()
-                    val response = okHttpClient.newCall(request).execute()
-                    val responseData = response.body?.string()
-                    if (responseData != null) {
-                        val start = (responseData.indexOf("versions64\":[")) + 12
-                        val end = (responseData.indexOf(";\n" + "      typeof"))
-                        val totalJson = responseData.substring(start, end)
-                        val qqVersion = totalJson.split("},{").reversed().map {
-                            val pstart = it.indexOf("{\"versions")
-                            val pend = it.indexOf(",\"length")
-                            val json = it.substring(pstart, pend)
-                            Gson().fromJson(json, QQVersionBean::class.java).apply {
-                                jsonString = json
-                            }
-                        }
-                        withContext(Dispatchers.Main) {
-                            versionAdapter.setData(qqVersion)
-                            // 舍弃 currentQQVersion = qqVersion.first().versionNumber
-                            // 大版本号也放持久化存储了，否则猜版 Shortcut 因为加载过快而获取不到东西
-                            DataStoreUtil.putStringAsync(
-                                "versionBig", qqVersion.first().versionNumber
-                            )
-                        }
-
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    dialogError(e)
-                } finally {
-                    withContext(Dispatchers.Main) {
-                        binding.progressLine.hide()
-                    }
-                }
-            }
-        }
-
-        getData()
 
         binding.rvContent.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -245,13 +205,13 @@ class MainActivity : AppCompatActivity() {
 
                 R.id.btn_about -> {
                     val message =
-                        SpannableString("QQ 版本列表实用工具 for Android\n\n作者：快乐小牛、有鲫雪狐\n\n版本：" + packageManager.getPackageInfo(
-                            packageName, 0
-                        ).let {
-                            @Suppress("DEPRECATION")
-                            it.versionName + "(" + (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
-                                it.longVersionCode else it.versionCode) + ")"
-                        } + "\n\nSince 2023.8.9\n\nLicensed under AGPL v3\n\n" + "开源地址")
+                        SpannableString(
+                            "QQ 版本列表实用工具 for Android\n\n" +
+                                    "作者：快乐小牛、有鲫雪狐\n\n" +
+                                    "版本：${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})\n\n" +
+                                    "Since 2023.8.9\n\nLicensed under AGPL v3\n\n" +
+                                    "开源地址"
+                        )
                     val urlSpan = URLSpan("https://github.com/klxiaoniu/QQVersionList")
                     message.setSpan(
                         urlSpan,
@@ -300,7 +260,14 @@ class MainActivity : AppCompatActivity() {
                         }
                         switchDisplayFirst.setOnCheckedChangeListener { _, isChecked ->
                             DataStoreUtil.putBooleanAsync("displayFirst", isChecked)
-                            getData()
+                            qqVersion = qqVersion.mapIndexed { index, qqVersionBean ->
+                                if (index == 0)
+                                    qqVersionBean.copy(
+                                        displayType = if (isChecked) 1 else 0
+                                    )
+                                else qqVersionBean
+                            }
+                            versionAdapter.submitList(qqVersion)
                         }
                         longPressCard.setOnCheckedChangeListener { _, isChecked ->
                             DataStoreUtil.putBooleanAsync("longPressCard", isChecked)
@@ -310,7 +277,12 @@ class MainActivity : AppCompatActivity() {
                         }
                         progressSize.setOnCheckedChangeListener { _, isChecked ->
                             DataStoreUtil.putBooleanAsync("progressSize", isChecked)
-                            getData()
+                            qqVersion = qqVersion.map {
+                                it.copy(
+                                    isShowProgressSize = isChecked
+                                )
+                            }
+                            versionAdapter.submitList(qqVersion)
                         }
                         switchGuessTestExtend.setOnCheckedChangeListener { _, isChecked ->
                             DataStoreUtil.putBooleanAsync("guessTestExtend", isChecked)
@@ -324,42 +296,52 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        if (intent.action == "android.intent.action.VIEW"
+            && DataStoreUtil.getInt("userAgreement", 0) == judgeUARead
+        ) {
+            showGuessVersionDialog()
+        }
+        binding.btnGuess.setOnClickListener {
+            showGuessVersionDialog()
+        }
 
-        fun showGuessVersionDialog() {
-            val dialogGuessBinding = DialogGuessBinding.inflate(layoutInflater)
-            val verBig = DataStoreUtil.getString("versionBig", "")
-            dialogGuessBinding.etVersionBig.editText?.setText(verBig)
-            val memVersion = DataStoreUtil.getString("versionSelect", "正式版")
-            if (memVersion == "测试版" || memVersion == "空格版" || memVersion == "正式版") {
-                dialogGuessBinding.spinnerVersion.setText(memVersion, false)
+    }
+
+    private fun showGuessVersionDialog() {
+        val dialogGuessBinding = DialogGuessBinding.inflate(layoutInflater)
+        val verBig = DataStoreUtil.getString("versionBig", "")
+        dialogGuessBinding.etVersionBig.editText?.setText(verBig)
+        val memVersion = DataStoreUtil.getString("versionSelect", "正式版")
+        if (memVersion == "测试版" || memVersion == "空格版" || memVersion == "正式版") {
+            dialogGuessBinding.spinnerVersion.setText(memVersion, false)
+        }
+        if (dialogGuessBinding.spinnerVersion.text.toString() == "测试版" || dialogGuessBinding.spinnerVersion.text.toString() == "空格版") {
+            dialogGuessBinding.etVersionSmall.isEnabled = true
+            dialogGuessBinding.guessDialogWarning.visibility = View.VISIBLE
+        } else if (dialogGuessBinding.spinnerVersion.text.toString() == "正式版") {
+            dialogGuessBinding.etVersionSmall.isEnabled = false
+            dialogGuessBinding.guessDialogWarning.visibility = View.GONE
+        }
+
+        dialogGuessBinding.spinnerVersion.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {
+                val judgeVerSelect = dialogGuessBinding.spinnerVersion.text.toString()
+                DataStoreUtil.putStringAsync("versionSelect", judgeVerSelect)
+                if (judgeVerSelect == "测试版" || judgeVerSelect == "空格版") {
+                    dialogGuessBinding.etVersionSmall.isEnabled = true
+                    dialogGuessBinding.guessDialogWarning.visibility = View.VISIBLE
+                } else if (judgeVerSelect == "正式版") {
+                    dialogGuessBinding.etVersionSmall.isEnabled = false
+                    dialogGuessBinding.guessDialogWarning.visibility = View.GONE
+                }
             }
-            if (dialogGuessBinding.spinnerVersion.text.toString() == "测试版" || dialogGuessBinding.spinnerVersion.text.toString() == "空格版") {
-                dialogGuessBinding.etVersionSmall.isEnabled = true
-                dialogGuessBinding.guessDialogWarning.visibility = View.VISIBLE
-            } else if (dialogGuessBinding.spinnerVersion.text.toString() == "正式版") {
-                dialogGuessBinding.etVersionSmall.isEnabled = false
-                dialogGuessBinding.guessDialogWarning.visibility = View.GONE
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
 
-            dialogGuessBinding.spinnerVersion.addTextChangedListener(object : TextWatcher {
-                override fun afterTextChanged(p0: Editable?) {
-                    val judgeVerSelect = dialogGuessBinding.spinnerVersion.text.toString()
-                    DataStoreUtil.putStringAsync("versionSelect", judgeVerSelect)
-                    if (judgeVerSelect == "测试版" || judgeVerSelect == "空格版") {
-                        dialogGuessBinding.etVersionSmall.isEnabled = true
-                        dialogGuessBinding.guessDialogWarning.visibility = View.VISIBLE
-                    } else if (judgeVerSelect == "正式版") {
-                        dialogGuessBinding.etVersionSmall.isEnabled = false
-                        dialogGuessBinding.guessDialogWarning.visibility = View.GONE
-                    }
-                }
-
-                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                }
-
-                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                }
-            })
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+        })
 
 //            舍弃
 //            dialogGuessBinding.spinnerVersion.setOnFocusChangeListener { _, hasFocus ->
@@ -370,67 +352,103 @@ class MainActivity : AppCompatActivity() {
 //            }
 
 
-            val dialogGuess = MaterialAlertDialogBuilder(this)
-                .setTitle("猜版 for Android")
-                .setIcon(R.drawable.search_line)
-                .setView(dialogGuessBinding.root)
-                .setCancelable(false)
-                .show()
+        val dialogGuess = MaterialAlertDialogBuilder(this)
+            .setTitle("猜版 for Android")
+            .setIcon(R.drawable.search_line)
+            .setView(dialogGuessBinding.root)
+            .setCancelable(false)
+            .show()
 
-            dialogGuessBinding.btnGuessStart.setOnClickListener {
-                dialogGuessBinding.etVersionBig.clearFocus()
-                dialogGuessBinding.spinnerVersion.clearFocus()
-                dialogGuessBinding.etVersionSmall.clearFocus()
-                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                imm.hideSoftInputFromWindow(dialogGuessBinding.spinnerVersion.windowToken, 0)
+        dialogGuessBinding.btnGuessStart.setOnClickListener {
+            dialogGuessBinding.etVersionBig.clearFocus()
+            dialogGuessBinding.spinnerVersion.clearFocus()
+            dialogGuessBinding.etVersionSmall.clearFocus()
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(dialogGuessBinding.spinnerVersion.windowToken, 0)
 
-                try {
-                    val versionBig = dialogGuessBinding.etVersionBig.editText?.text.toString()
-                    val mode = dialogGuessBinding.spinnerVersion.text.toString()
-                    var versionSmall = 0
-                    if (mode == "测试版" || mode == "空格版") {
-                        versionSmall =
-                            dialogGuessBinding.etVersionSmall.editText?.text.toString().toInt()
-                    }
-                    if (versionSmall % 5 != 0 && !DataStoreUtil.getBoolean(
-                            "guessNot5", false
-                        )
-                    ) throw Exception("小版本号需填 5 的倍数。如有需求，请前往设置解除此限制。")
-                    if (versionSmall != 0) {
-                        DataStoreUtil.putIntAsync("versionSmall", versionSmall)
-                    }/*我偷懒了，因为我上面也有偷懒逻辑，
+            try {
+                val versionBig = dialogGuessBinding.etVersionBig.editText?.text.toString()
+                val mode = dialogGuessBinding.spinnerVersion.text.toString()
+                var versionSmall = 0
+                if (mode == "测试版" || mode == "空格版") {
+                    versionSmall =
+                        dialogGuessBinding.etVersionSmall.editText?.text.toString().toInt()
+                }
+                if (versionSmall % 5 != 0 && !DataStoreUtil.getBoolean(
+                        "guessNot5", false
+                    )
+                ) throw Exception("小版本号需填 5 的倍数。如有需求，请前往设置解除此限制。")
+                if (versionSmall != 0) {
+                    DataStoreUtil.putIntAsync("versionSmall", versionSmall)
+                }/*我偷懒了，因为我上面也有偷懒逻辑，
                        为了防止 null，我在正式版猜版时默认填入了 0，
                        但是我没处理下面涉及到持久化存储逻辑的语句，就把 0 存进去了，
                        覆盖了原来的 15xxx 的持久化存储*/
 
-                    guessUrl(versionBig, versionSmall, mode)
+                guessUrl(versionBig, versionSmall, mode)
 
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    dialogError(e)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                dialogError(e)
+            }
+        }
+
+
+        dialogGuessBinding.btnGuessCancel.setOnClickListener {
+            dialogGuess.dismiss()
+        }
+
+        val memVersionSmall = DataStoreUtil.getInt("versionSmall", -1)
+        if (memVersionSmall != -1) {
+            dialogGuessBinding.etVersionSmall.editText?.setText(memVersionSmall.toString())
+        }
+    }
+
+    private fun getData() {
+        binding.progressLine.show()
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val okHttpClient = OkHttpClient()
+                val request =
+                    Request.Builder().url("https://im.qq.com/rainbow/androidQQVersionList")
+                        .build()
+                val response = okHttpClient.newCall(request).execute()
+                val responseData = response.body?.string()
+                if (responseData != null) {
+                    val start = (responseData.indexOf("versions64\":[")) + 12
+                    val end = (responseData.indexOf(";\n" + "      typeof"))
+                    val totalJson = responseData.substring(start, end)
+                    qqVersion = totalJson.split("},{").reversed().map {
+                        val pstart = it.indexOf("{\"versions")
+                        val pend = it.indexOf(",\"length")
+                        val json = it.substring(pstart, pend)
+                        val isShowProgressSize = DataStoreUtil.getBoolean("progressSize", false)
+                        Gson().fromJson(json, QQVersionBean::class.java).apply {
+                            jsonString = json
+                            this.isShowProgressSize = isShowProgressSize
+                        }
+                    }
+                    if (DataStoreUtil.getBoolean("displayFirst", true))
+                        qqVersion[0].displayType = 1
+                    withContext(Dispatchers.Main) {
+                        versionAdapter.submitList(qqVersion)
+                        // 舍弃 currentQQVersion = qqVersion.first().versionNumber
+                        // 大版本号也放持久化存储了，否则猜版 Shortcut 因为加载过快而获取不到东西
+                        DataStoreUtil.putStringAsync(
+                            "versionBig", qqVersion.first().versionNumber
+                        )
+                    }
+
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                dialogError(e)
+            } finally {
+                withContext(Dispatchers.Main) {
+                    binding.progressLine.hide()
                 }
             }
-
-
-            dialogGuessBinding.btnGuessCancel.setOnClickListener {
-                dialogGuess.dismiss()
-            }
-
-            val memVersionSmall = DataStoreUtil.getInt("versionSmall", -1)
-            if (memVersionSmall != -1) {
-                dialogGuessBinding.etVersionSmall.editText?.setText(memVersionSmall.toString())
-            }
         }
-        if (intent.action == "android.intent.action.VIEW" && DataStoreUtil.getInt(
-                "userAgreement", 0
-            ) == judgeUARead
-        ) {
-            showGuessVersionDialog()
-        }
-        binding.btnGuess.setOnClickListener {
-            showGuessVersionDialog()
-        }
-
     }
 
 
