@@ -244,6 +244,12 @@ class MainActivity : AppCompatActivity() {
                         progressSize.isChecked = DataStoreUtil.getBoolean("progressSize", false)
                         switchGuessTestExtend.isChecked =
                             DataStoreUtil.getBoolean("guessTestExtend", false) // 扩展测试版猜版格式
+                        settingSuffixDefine.editText?.setText(
+                            DataStoreUtil.getString(
+                                "suffixDefine",
+                                ""
+                            )
+                        )
                     }
 
                     val dialogSetting = MaterialAlertDialogBuilder(this)
@@ -285,6 +291,11 @@ class MainActivity : AppCompatActivity() {
                         }
                         switchGuessTestExtend.setOnCheckedChangeListener { _, isChecked ->
                             DataStoreUtil.putBooleanAsync("guessTestExtend", isChecked)
+                        }
+                        settingSuffixSave.setOnClickListener { _ ->
+                            val suffixDefine = settingSuffixDefine.editText?.text.toString()
+                            DataStoreUtil.putStringAsync("suffixDefine", suffixDefine)
+                            showToast("已保存")
                         }
                     }
 
@@ -502,7 +513,9 @@ class MainActivity : AppCompatActivity() {
         var link = ""
         val thread = Thread {
             var vSmall = versionSmall
-            val stList = listOf(
+            val defineSuf = DataStoreUtil.getString("suffixDefine", "")
+            val defineSufList = defineSuf.split(", ")
+            val stListPre = listOf(
                 "_64",
                 "_64_HB",
                 "_64_HB1",
@@ -523,6 +536,7 @@ class MainActivity : AppCompatActivity() {
                 "_HD3_64",
                 "_HD1HB_64"
             )
+            val stList = if (defineSufList != listOf("")) stListPre + defineSufList else stListPre
             try {
                 var sIndex = 0
                 while (true) {
@@ -544,7 +558,7 @@ class MainActivity : AppCompatActivity() {
                                 link =
                                     "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android%20$versionBig.${vSmall}%2064.apk"
                             } else if (mode == MODE_OFFICIAL) {
-                                val soList = listOf(
+                                val soListPre = listOf(
                                     "_64",
                                     "_64_HB",
                                     "_64_HB1",
@@ -555,6 +569,8 @@ class MainActivity : AppCompatActivity() {
                                     "_HB2_64",
                                     "_HB3_64"
                                 )
+                                val soList =
+                                    if (defineSufList != listOf("")) soListPre + defineSufList else soListPre
                                 if (link == "") link =
                                     "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}${soList[sIndex]}.apk"
                                 else if (sIndex == (soList.size - 1)) {
