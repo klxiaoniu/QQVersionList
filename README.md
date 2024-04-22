@@ -111,6 +111,11 @@ QQ 版本列表实用工具 for Android 是一个使用 Material 3 组件库构�
     </details>
 
     若当次访问未果，默认情况下将按照设置逻辑自动递增小版本号后再次尝试访问，直到访问成功为止。
+  
+  - 设置自定义猜版后缀后，可以猜测以下直链格式：
+  
+    - `https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_<主版本号><自定义后缀>.apk`
+    - `https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_<主版本号>.<小版本号><自定义后缀>.apk`
 
 访问成功后，软件会弹出成功对话框，对话框下方提供了一系列动作按钮，依次是“分享”、“下载”、“停止”、“跳过”和“复制”。
 
