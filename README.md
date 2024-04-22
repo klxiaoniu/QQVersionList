@@ -36,7 +36,7 @@ QQ 版本列表实用工具的源代码依据经过开源促进会（[Open Sourc
 
 </details>
 
-<span id="注意事项">
+<span id="注意事项"></span>
 
 ## 注意事项：使用前须知
 
@@ -48,7 +48,7 @@ QQ 版本列表实用工具的源代码依据经过开源促进会（[Open Sourc
 
 QQ 版本列表实用工具 for Android 是一个使用 Material 3 组件库构建，旨在提供 Android QQ 版本列表的查看和对 Android QQ 下载链接的枚举法猜测的 Android 软件。QQ 版本列表实用工具用户可以通过本应用及时获取到 Android QQ 版本更新的最新信息。
 
-<span id="如何使用">
+<span id="如何使用"></span>
 
 ## 如何使用？
 
@@ -87,7 +87,7 @@ QQ 版本列表实用工具 for Android 是一个使用 Material 3 组件库构�
 
     <details>
     <summary>点击展开</summary>
-    
+
     - `https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_<主版本号>.<小版本号>_64.apk`
     - `https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_<主版本号>.<小版本号>_64_HB.apk`
     - `https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_<主版本号>.<小版本号>_64_HB1.apk`
@@ -109,12 +109,12 @@ QQ 版本列表实用工具 for Android 是一个使用 Material 3 组件库构�
     - `https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_<主版本号>.<小版本号>_HD1HB_64.apk`
 
     </details>
-      
+
     若当次访问未果，默认情况下将按照设置逻辑自动递增小版本号后再次尝试访问，直到访问成功为止。
 
 访问成功后，软件会弹出成功对话框，对话框下方提供了一系列动作按钮，依次是“分享”、“下载”、“停止”、“跳过”和“复制”。
 
-<span id="获取更新">
+<span id="获取更新"></span>
 
 ## 获取更新（基于 [Obtainium](https://github.com/ImranR98/Obtainium) 方案）
 
