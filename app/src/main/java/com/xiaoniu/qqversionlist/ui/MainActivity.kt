@@ -73,6 +73,7 @@ import java.net.URL
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var versionAdapter: VersionAdapter
+    private lateinit var qqVersion: List<QQVersionBean>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
@@ -259,7 +260,14 @@ class MainActivity : AppCompatActivity() {
                         }
                         switchDisplayFirst.setOnCheckedChangeListener { _, isChecked ->
                             DataStoreUtil.putBooleanAsync("displayFirst", isChecked)
-                            getData()
+                            qqVersion = qqVersion.mapIndexed { index, qqVersionBean ->
+                                if (index == 0)
+                                    qqVersionBean.copy(
+                                        displayType = if (isChecked) 1 else 0
+                                    )
+                                else qqVersionBean
+                            }
+                            versionAdapter.submitList(qqVersion)
                         }
                         longPressCard.setOnCheckedChangeListener { _, isChecked ->
                             DataStoreUtil.putBooleanAsync("longPressCard", isChecked)
@@ -269,7 +277,12 @@ class MainActivity : AppCompatActivity() {
                         }
                         progressSize.setOnCheckedChangeListener { _, isChecked ->
                             DataStoreUtil.putBooleanAsync("progressSize", isChecked)
-                            getData()
+                            qqVersion = qqVersion.map {
+                                it.copy(
+                                    isShowProgressSize = isChecked
+                                )
+                            }
+                            versionAdapter.submitList(qqVersion)
                         }
                         switchGuessTestExtend.setOnCheckedChangeListener { _, isChecked ->
                             DataStoreUtil.putBooleanAsync("guessTestExtend", isChecked)
@@ -405,16 +418,20 @@ class MainActivity : AppCompatActivity() {
                     val start = (responseData.indexOf("versions64\":[")) + 12
                     val end = (responseData.indexOf(";\n" + "      typeof"))
                     val totalJson = responseData.substring(start, end)
-                    val qqVersion = totalJson.split("},{").reversed().map {
+                    qqVersion = totalJson.split("},{").reversed().map {
                         val pstart = it.indexOf("{\"versions")
                         val pend = it.indexOf(",\"length")
                         val json = it.substring(pstart, pend)
+                        val isShowProgressSize = DataStoreUtil.getBoolean("progressSize", false)
                         Gson().fromJson(json, QQVersionBean::class.java).apply {
                             jsonString = json
+                            this.isShowProgressSize = isShowProgressSize
                         }
                     }
+                    if (DataStoreUtil.getBoolean("displayFirst", true))
+                        qqVersion[0].displayType = 1
                     withContext(Dispatchers.Main) {
-                        versionAdapter.setData(qqVersion)
+                        versionAdapter.submitList(qqVersion)
                         // 舍弃 currentQQVersion = qqVersion.first().versionNumber
                         // 大版本号也放持久化存储了，否则猜版 Shortcut 因为加载过快而获取不到东西
                         DataStoreUtil.putStringAsync(

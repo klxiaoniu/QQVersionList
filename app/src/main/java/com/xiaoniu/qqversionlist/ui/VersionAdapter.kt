@@ -21,42 +21,32 @@ package com.xiaoniu.qqversionlist.ui
 import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.view.isVisible
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.google.android.material.card.MaterialCardView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.xiaoniu.qqversionlist.R
 import com.xiaoniu.qqversionlist.data.QQVersionBean
 import com.xiaoniu.qqversionlist.databinding.ItemVersionBinding
 import com.xiaoniu.qqversionlist.databinding.ItemVersionDetailBinding
 import com.xiaoniu.qqversionlist.util.DataStoreUtil
 import com.xiaoniu.qqversionlist.util.StringUtil.toPrettyFormat
+import com.xiaoniu.qqversionlist.util.dp
 
-class VersionAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(VersionDiffCallback()) {
 
-    private val list = mutableListOf<QQVersionBean>()
-
-    private fun Context.dpToPx(dp: Int): Int {
+    // Extensions -> Number.dp
+    /*private fun Context.dpToPx(dp: Int): Int {
         return (dp * resources.displayMetrics.density).toInt()
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    fun setData(list: List<QQVersionBean>) {
-        this.list.apply {
-            clear()
-            addAll(list)
-            val displayJudge = DataStoreUtil.getBoolean("displayFirst", true)
-            if (displayJudge) {
-                first().displayType = 1 // 第一项默认展开
-            }
-
-        }
-        notifyDataSetChanged()
-    }
+    }*/
 
     class ViewHolder(val binding: ItemVersionBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -64,7 +54,7 @@ class VersionAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         RecyclerView.ViewHolder(binding.root)
 
     override fun getItemViewType(position: Int): Int {
-        return list[position].displayType
+        return currentList[position].displayType
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -76,13 +66,13 @@ class VersionAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                     )
                 ).apply {
                     binding.ibExpand.setOnClickListener {
-                        list[adapterPosition].displayType = 1
+                        currentList[adapterPosition].displayType = 1
                         notifyItemChanged(adapterPosition)
                     }
                     binding.itemAll.setOnLongClickListener {
                         if (DataStoreUtil.getBoolean("longPressCard", true)) {
                             showDialog(
-                                it.context, list[adapterPosition].jsonString.toPrettyFormat()
+                                it.context, currentList[adapterPosition].jsonString.toPrettyFormat()
                             )
                         } else {
                             Toast.makeText(
@@ -103,13 +93,13 @@ class VersionAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                     )
                 ).apply {
                     binding.ibCollapse.setOnClickListener {
-                        list[adapterPosition].displayType = 0
+                        currentList[adapterPosition].displayType = 0
                         notifyItemChanged(adapterPosition)
                     }
                     binding.itemAllDetail.setOnLongClickListener {
                         if (DataStoreUtil.getBoolean("longPressCard", true)) {
                             showDialog(
-                                it.context, list[adapterPosition].jsonString.toPrettyFormat()
+                                it.context, currentList[adapterPosition].jsonString.toPrettyFormat()
                             )
                         } else {
                             Toast.makeText(
@@ -127,32 +117,13 @@ class VersionAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val bean = list[position]
+        val bean = currentList[position]
         if (holder is ViewHolder) {
             //val result = "版本：" + bean.versionNumber + "\n额定大小：" + bean.size + " MB"
-            holder.binding.tvVersion.text = bean.versionNumber
-            holder.binding.tvSize.text = bean.size + " MB"
-            if (!DataStoreUtil.getBoolean("progressSize", false)) {
-                holder.binding.listProgressLine.visibility = View.GONE
-                holder.binding.tvPerSizeCard.visibility = View.GONE
-                val layoutParams =
-                    holder.binding.tvSizeCard.layoutParams as? ViewGroup.MarginLayoutParams
-                        ?: return
-                layoutParams.marginEnd = holder.itemView.context.dpToPx(0)
-                holder.binding.tvSizeCard.layoutParams = layoutParams
-            } else {
-                holder.binding.listProgressLine.visibility = View.VISIBLE
-                holder.binding.tvPerSizeCard.visibility = View.VISIBLE
-                val layoutParams =
-                    holder.binding.tvSizeCard.layoutParams as? ViewGroup.MarginLayoutParams
-                        ?: return
-                layoutParams.marginEnd = holder.itemView.context.dpToPx(6)
-                holder.binding.tvSizeCard.layoutParams = layoutParams
-                holder.binding.listProgressLine.max =
-                    ((list.maxByOrNull { it.size.toFloat() }?.size?.toFloat() ?: 0f) * 10).toInt()
-                holder.binding.listProgressLine.progress = (bean.size.toFloat() * 10).toInt()
-                holder.binding.tvPerSizeText.text =
-                    "${"%.2f".format(bean.size.toFloat() / (list.maxByOrNull { it.size.toFloat() }?.size?.toFloat() ?: 0f) * 100)}%"
+            holder.binding.apply {
+                tvVersion.text = bean.versionNumber
+                tvSize.text = bean.size + " MB"
+                bindProgress(listProgressLine, null, tvPerSizeText, tvPerSizeCard, tvSizeCard, bean)
             }
         } else if (holder is ViewHolderDetail) {
             holder.binding.apply {
@@ -172,51 +143,58 @@ class VersionAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 tvDetailSize.text = "额定大小：" + bean.size + " MB"
                 tvTitle.text = bean.featureTitle
                 tvDesc.text = bean.summary.joinToString(separator = "\n- ", prefix = "- ")
-                tvPerSize.text =
-                    "占比历史最大包（${(list.maxByOrNull { it.size.toFloat() }?.size?.toFloat() ?: 0f)} MB）：${
-                        "%.2f".format(
-                            bean.size.toFloat() / (list.maxByOrNull { it.size.toFloat() }?.size?.toFloat() ?: 0f) * 100
-                        )
-                    }%"
-                tvOldPerSizeText.text =
-                    "${"%.2f".format(bean.size.toFloat() / (list.maxByOrNull { it.size.toFloat() }?.size?.toFloat() ?: 0f) * 100)}%"
 
-                if (!DataStoreUtil.getBoolean("progressSize", false)) {
-                    holder.binding.listDetailProgressLine.visibility = View.GONE
-                    holder.binding.tvPerSize.visibility = View.GONE
-                    holder.binding.tvOldPerSizeCard.visibility = View.GONE
-                    val layoutParams =
-                        holder.binding.tvOldSizeCard.layoutParams as? ViewGroup.MarginLayoutParams
-                            ?: return
-                    layoutParams.marginEnd = holder.itemView.context.dpToPx(0)
-                    holder.binding.tvOldSizeCard.layoutParams = layoutParams
-                } else {
-                    holder.binding.listDetailProgressLine.visibility = View.VISIBLE
-                    holder.binding.tvPerSize.visibility = View.VISIBLE
-                    holder.binding.tvOldPerSizeCard.visibility = View.VISIBLE
-                    val layoutParams =
-                        holder.binding.tvOldSizeCard.layoutParams as? ViewGroup.MarginLayoutParams
-                            ?: return
-                    layoutParams.marginEnd = holder.itemView.context.dpToPx(6)
-                    holder.binding.tvOldSizeCard.layoutParams = layoutParams
-                    holder.binding.listDetailProgressLine.max =
-                        ((list.maxByOrNull { it.size.toFloat() }?.size?.toFloat()
-                            ?: 0f) * 10).toInt()
-                    holder.binding.listDetailProgressLine.progress =
-                        (bean.size.toFloat() * 10).toInt()
-                }
+                tvTitle.isVisible = tvTitle.text != ""
 
-                if (tvTitle.text == "") {
-                    holder.binding.tvTitle.visibility = View.GONE
-                } else {
-                    holder.binding.tvTitle.visibility = View.VISIBLE
-                }
-
+                bindProgress(
+                    listDetailProgressLine,
+                    tvPerSize,
+                    tvOldPerSizeText,
+                    tvOldPerSizeCard,
+                    tvOldSizeCard,
+                    bean
+                )
             }
         }
     }
 
-    override fun getItemCount() = list.size
+    @SuppressLint("SetTextI18n")
+    private fun bindProgress(
+        listProgressLine: LinearProgressIndicator,
+        tvPerSize: TextView?,
+        tvPerSizeText: TextView,
+        tvPerSizeCard: MaterialCardView,
+        tvSizeCard: MaterialCardView,
+        bean: QQVersionBean,
+    ) {
+        with(bean.isShowProgressSize) {
+            tvPerSize?.isVisible = this
+            listProgressLine.isVisible = this
+            tvPerSizeCard.isVisible = this
+
+            val layoutParams = tvSizeCard.layoutParams as? ViewGroup.MarginLayoutParams ?: return
+            layoutParams.marginEnd = if (this) 6.dp else 0
+            tvSizeCard.layoutParams = layoutParams
+
+            if (this) {
+                listProgressLine.max =
+                    ((currentList.maxByOrNull { it.size.toFloat() }?.size?.toFloat()
+                        ?: 0f) * 10).toInt()
+                listProgressLine.progress = (bean.size.toFloat() * 10).toInt()
+
+                tvPerSize?.text =
+                    "占比历史最大包（${(currentList.maxByOrNull { it.size.toFloat() }?.size?.toFloat() ?: 0f)} MB）：${
+                        "%.2f".format(
+                            bean.size.toFloat() / (currentList.maxByOrNull { it.size.toFloat() }?.size?.toFloat() ?: 0f) * 100
+                        )
+                    }%"
+
+                tvPerSizeText.text =
+                    "${"%.2f".format(bean.size.toFloat() / (currentList.maxByOrNull { it.size.toFloat() }?.size?.toFloat() ?: 0f) * 100)}%"
+            }
+        }
+
+    }
 
     private fun showDialog(context: Context, s: String) {
         val tv = TextView(context).apply {
@@ -230,4 +208,71 @@ class VersionAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             .setIcon(R.drawable.braces_line)
             .show()
     }
+
+    override fun onBindViewHolder(
+        holder: RecyclerView.ViewHolder,
+        position: Int,
+        payloads: MutableList<Any>
+    ) {
+        if (payloads.isEmpty()) {
+            onBindViewHolder(holder, position)
+        } else {
+            val bean = currentList[position]
+            when (payloads[0]) {
+                "displayType" -> {
+                    onBindViewHolder(holder, position)
+                }
+
+                "isShowProgressSize" -> {
+                    if (holder is ViewHolder) {
+                        bindProgress(
+                            holder.binding.listProgressLine,
+                            null,
+                            holder.binding.tvPerSizeText,
+                            holder.binding.tvPerSizeCard,
+                            holder.binding.tvSizeCard,
+                            bean
+                        )
+                    } else if (holder is ViewHolderDetail) {
+                        bindProgress(
+                            holder.binding.listDetailProgressLine,
+                            holder.binding.tvPerSize,
+                            holder.binding.tvOldPerSizeText,
+                            holder.binding.tvOldPerSizeCard,
+                            holder.binding.tvOldSizeCard,
+                            bean
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+}
+
+class VersionDiffCallback : DiffUtil.ItemCallback<QQVersionBean>() {
+    override fun areItemsTheSame(
+        oldItem: QQVersionBean,
+        newItem: QQVersionBean
+    ): Boolean {
+        return oldItem.versions == newItem.versions
+    }
+
+    override fun areContentsTheSame(
+        oldItem: QQVersionBean,
+        newItem: QQVersionBean
+    ): Boolean {
+        return oldItem.displayType == newItem.displayType
+                && oldItem.isShowProgressSize == newItem.isShowProgressSize
+    }
+
+    override fun getChangePayload(
+        oldItem: QQVersionBean,
+        newItem: QQVersionBean
+    ): Any? {
+        return if (oldItem.displayType != newItem.displayType) "displayType"
+        else if (oldItem.isShowProgressSize != newItem.isShowProgressSize) "isShowProgressSize"
+        else null
+    }
+
 }
