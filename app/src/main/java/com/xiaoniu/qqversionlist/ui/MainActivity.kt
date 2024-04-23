@@ -53,6 +53,7 @@ import com.xiaoniu.qqversionlist.databinding.ActivityMainBinding
 import com.xiaoniu.qqversionlist.databinding.DialogGuessBinding
 import com.xiaoniu.qqversionlist.databinding.DialogLoadingBinding
 import com.xiaoniu.qqversionlist.databinding.DialogSettingBinding
+import com.xiaoniu.qqversionlist.databinding.DialogSuffixDefineBinding
 import com.xiaoniu.qqversionlist.databinding.SuccessButtonBinding
 import com.xiaoniu.qqversionlist.databinding.UserAgreementBinding
 import com.xiaoniu.qqversionlist.util.ClipboardUtil.copyText
@@ -244,20 +245,13 @@ class MainActivity : AppCompatActivity() {
                         progressSize.isChecked = DataStoreUtil.getBoolean("progressSize", false)
                         switchGuessTestExtend.isChecked =
                             DataStoreUtil.getBoolean("guessTestExtend", false) // 扩展测试版猜版格式
-                        settingSuffixDefine.editText?.setText(
-                            DataStoreUtil.getString(
-                                "suffixDefine",
-                                ""
-                            )
-                        )
                     }
 
                     val dialogSetting = MaterialAlertDialogBuilder(this)
                         .setTitle("设置")
                         .setIcon(R.drawable.settings_line)
                         .setView(dialogSettingBinding.root)
-                        .create()
-                    dialogSetting.show()
+                        .show()
 
                     dialogSettingBinding.apply {
                         btnSettingOk.setOnClickListener {
@@ -292,10 +286,42 @@ class MainActivity : AppCompatActivity() {
                         switchGuessTestExtend.setOnCheckedChangeListener { _, isChecked ->
                             DataStoreUtil.putBooleanAsync("guessTestExtend", isChecked)
                         }
-                        settingSuffixSave.setOnClickListener { _ ->
-                            val suffixDefine = settingSuffixDefine.editText?.text.toString()
-                            DataStoreUtil.putStringAsync("suffixDefine", suffixDefine)
-                            showToast("已保存")
+//                        settingSuffixSave.setOnClickListener { _ ->
+//                            val suffixDefine = settingSuffixDefine.editText?.text.toString()
+//                            DataStoreUtil.putStringAsync("suffixDefine", suffixDefine)
+//                            showToast("已保存")
+//                        }
+                        dialogSuffixDefineClick.setOnClickListener {
+                            val dialogSuffixDefine =
+                                DialogSuffixDefineBinding.inflate(layoutInflater)
+
+                            dialogSuffixDefine.root.parent?.let { parent ->
+                                if (parent is ViewGroup) {
+                                    parent.removeView(dialogSuffixDefine.root)
+                                }
+                            }
+
+                            val dialogSuffix = MaterialAlertDialogBuilder(this@MainActivity)
+                                .setTitle("自定义猜版后缀")
+                                .setIcon(R.drawable.settings_line)
+                                .setView(dialogSuffixDefine.root)
+                                .show()
+
+                            dialogSuffixDefine.settingSuffixDefine.editText?.setText(
+                                DataStoreUtil.getString("suffixDefine", "")
+                            )
+
+                            dialogSuffixDefine.btnSuffixSave.setOnClickListener {
+                                val suffixDefine =
+                                    dialogSuffixDefine.settingSuffixDefine.editText?.text.toString()
+                                DataStoreUtil.putStringAsync("suffixDefine", suffixDefine)
+                                showToast("已保存")
+                                dialogSuffix.dismiss()
+                            }
+
+                            dialogSuffixDefine.btnSuffixCancel.setOnClickListener {
+                                dialogSuffix.dismiss()
+                            }
                         }
                     }
 
