@@ -573,12 +573,18 @@ class MainActivity : AppCompatActivity() {
                                         "guessTestExtend",
                                         false
                                     )
-                                ) link =
-                                    "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}${stList[sIndex]}.apk"
-                                else if (DataStoreUtil.getBoolean("guessTestExtend", false)) {
-                                    sIndex += 1
+                                ) {
+                                    link =
+                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}${stList[sIndex]}.apk"
+                                    if (DataStoreUtil.getBoolean(
+                                            "guessTestExtend",
+                                            false
+                                        )
+                                    ) sIndex += 1
+                                } else if (DataStoreUtil.getBoolean("guessTestExtend", false)) {
                                     link =
                                         "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}.${vSmall}${stList[sIndex]}.apk"
+                                    sIndex += 1
                                 }
                             } else if (mode == MODE_UNOFFICIAL) {
                                 link =
@@ -597,16 +603,18 @@ class MainActivity : AppCompatActivity() {
                                 )
                                 val soList =
                                     if (defineSufList != listOf("")) soListPre + defineSufList else soListPre
-                                if (link == "") link =
-                                    "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}${soList[sIndex]}.apk"
-                                else if (sIndex == (soList.size - 1)) {
+                                if (link == "") {
+                                    link =
+                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}${soList[sIndex]}.apk"
+                                    sIndex += 1
+                                } else if (sIndex == (soList.size)) {
                                     status = STATUS_END
                                     showToast("未猜测到包")
                                     continue
                                 } else {
-                                    sIndex += 1
                                     link =
                                         "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}${soList[sIndex]}.apk"
+                                    sIndex += 1
                                 }
 
                             }
@@ -654,7 +662,7 @@ class MainActivity : AppCompatActivity() {
                                             if (mode == MODE_TEST && (!DataStoreUtil.getBoolean(
                                                     "guessTestExtend",
                                                     false
-                                                ) || sIndex == (stList.size - 1))
+                                                ) || sIndex == (stList.size))
                                             ) {
                                                 vSmall += if (!DataStoreUtil.getBoolean(
                                                         "guessNot5",
@@ -728,7 +736,7 @@ class MainActivity : AppCompatActivity() {
                                 if (mode == MODE_TEST && (!DataStoreUtil.getBoolean(
                                         "guessTestExtend",
                                         false
-                                    ) || sIndex == (stList.size - 1)) // 测试版情况下，未打开扩展猜版或扩展猜版到最后一步时执行小版本号的递增
+                                    ) || sIndex == (stList.size)) // 测试版情况下，未打开扩展猜版或扩展猜版到最后一步时执行小版本号的递增
                                 ) {
                                     vSmall += if (!DataStoreUtil.getBoolean(
                                             "guessNot5",
