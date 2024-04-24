@@ -53,6 +53,7 @@ import com.xiaoniu.qqversionlist.databinding.ActivityMainBinding
 import com.xiaoniu.qqversionlist.databinding.DialogGuessBinding
 import com.xiaoniu.qqversionlist.databinding.DialogLoadingBinding
 import com.xiaoniu.qqversionlist.databinding.DialogSettingBinding
+import com.xiaoniu.qqversionlist.databinding.DialogSuffixDefineBinding
 import com.xiaoniu.qqversionlist.databinding.SuccessButtonBinding
 import com.xiaoniu.qqversionlist.databinding.UserAgreementBinding
 import com.xiaoniu.qqversionlist.util.ClipboardUtil.copyText
@@ -68,7 +69,6 @@ import okhttp3.Request
 import java.lang.Thread.sleep
 import java.net.HttpURLConnection
 import java.net.URL
-
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -251,8 +251,7 @@ class MainActivity : AppCompatActivity() {
                         .setTitle("设置")
                         .setIcon(R.drawable.settings_line)
                         .setView(dialogSettingBinding.root)
-                        .create()
-                    dialogSetting.show()
+                        .show()
 
                     dialogSettingBinding.apply {
                         btnSettingOk.setOnClickListener {
@@ -286,6 +285,43 @@ class MainActivity : AppCompatActivity() {
                         }
                         switchGuessTestExtend.setOnCheckedChangeListener { _, isChecked ->
                             DataStoreUtil.putBooleanAsync("guessTestExtend", isChecked)
+                        }
+//                        settingSuffixSave.setOnClickListener { _ ->
+//                            val suffixDefine = settingSuffixDefine.editText?.text.toString()
+//                            DataStoreUtil.putStringAsync("suffixDefine", suffixDefine)
+//                            showToast("已保存")
+//                        }
+                        dialogSuffixDefineClick.setOnClickListener {
+                            val dialogSuffixDefine =
+                                DialogSuffixDefineBinding.inflate(layoutInflater)
+
+                            dialogSuffixDefine.root.parent?.let { parent ->
+                                if (parent is ViewGroup) {
+                                    parent.removeView(dialogSuffixDefine.root)
+                                }
+                            }
+
+                            val dialogSuffix = MaterialAlertDialogBuilder(this@MainActivity)
+                                .setTitle("自定义猜版后缀")
+                                .setIcon(R.drawable.settings_line)
+                                .setView(dialogSuffixDefine.root)
+                                .show()
+
+                            dialogSuffixDefine.settingSuffixDefine.editText?.setText(
+                                DataStoreUtil.getString("suffixDefine", "")
+                            )
+
+                            dialogSuffixDefine.btnSuffixSave.setOnClickListener {
+                                val suffixDefine =
+                                    dialogSuffixDefine.settingSuffixDefine.editText?.text.toString()
+                                DataStoreUtil.putStringAsync("suffixDefine", suffixDefine)
+                                showToast("已保存")
+                                dialogSuffix.dismiss()
+                            }
+
+                            dialogSuffixDefine.btnSuffixCancel.setOnClickListener {
+                                dialogSuffix.dismiss()
+                            }
                         }
                     }
 
@@ -503,7 +539,9 @@ class MainActivity : AppCompatActivity() {
         var link = ""
         val thread = Thread {
             var vSmall = versionSmall
-            val stList = listOf(
+            val defineSuf = DataStoreUtil.getString("suffixDefine", "")
+            val defineSufList = defineSuf.split(", ")
+            val stListPre = listOf(
                 "_64",
                 "_64_HB",
                 "_64_HB1",
@@ -524,6 +562,7 @@ class MainActivity : AppCompatActivity() {
                 "_HD3_64",
                 "_HD1HB_64"
             )
+            val stList = if (defineSufList != listOf("")) stListPre + defineSufList else stListPre
             try {
                 var sIndex = 0
                 while (true) {
@@ -534,18 +573,24 @@ class MainActivity : AppCompatActivity() {
                                         "guessTestExtend",
                                         false
                                     )
-                                ) link =
-                                    "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}${stList[sIndex]}.apk"
-                                else if (DataStoreUtil.getBoolean("guessTestExtend", false)) {
-                                    sIndex += 1
+                                ) {
+                                    link =
+                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}${stList[sIndex]}.apk"
+                                    if (DataStoreUtil.getBoolean(
+                                            "guessTestExtend",
+                                            false
+                                        )
+                                    ) sIndex += 1
+                                } else if (DataStoreUtil.getBoolean("guessTestExtend", false)) {
                                     link =
                                         "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}.${vSmall}${stList[sIndex]}.apk"
+                                    sIndex += 1
                                 }
                             } else if (mode == MODE_UNOFFICIAL) {
                                 link =
                                     "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android%20$versionBig.${vSmall}%2064.apk"
                             } else if (mode == MODE_OFFICIAL) {
-                                val soList = listOf(
+                                val soListPre = listOf(
                                     "_64",
                                     "_64_HB",
                                     "_64_HB1",
@@ -556,16 +601,20 @@ class MainActivity : AppCompatActivity() {
                                     "_HB2_64",
                                     "_HB3_64"
                                 )
-                                if (link == "") link =
-                                    "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}${soList[sIndex]}.apk"
-                                else if (sIndex == (soList.size - 1)) {
+                                val soList =
+                                    if (defineSufList != listOf("")) soListPre + defineSufList else soListPre
+                                if (link == "") {
+                                    link =
+                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}${soList[sIndex]}.apk"
+                                    sIndex += 1
+                                } else if (sIndex == (soList.size)) {
                                     status = STATUS_END
                                     showToast("未猜测到包")
                                     continue
                                 } else {
-                                    sIndex += 1
                                     link =
                                         "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}${soList[sIndex]}.apk"
+                                    sIndex += 1
                                 }
 
                             }
@@ -613,7 +662,7 @@ class MainActivity : AppCompatActivity() {
                                             if (mode == MODE_TEST && (!DataStoreUtil.getBoolean(
                                                     "guessTestExtend",
                                                     false
-                                                ) || sIndex == (stList.size - 1))
+                                                ) || sIndex == (stList.size))
                                             ) {
                                                 vSmall += if (!DataStoreUtil.getBoolean(
                                                         "guessNot5",
@@ -687,7 +736,7 @@ class MainActivity : AppCompatActivity() {
                                 if (mode == MODE_TEST && (!DataStoreUtil.getBoolean(
                                         "guessTestExtend",
                                         false
-                                    ) || sIndex == (stList.size - 1)) // 测试版情况下，未打开扩展猜版或扩展猜版到最后一步时执行小版本号的递增
+                                    ) || sIndex == (stList.size)) // 测试版情况下，未打开扩展猜版或扩展猜版到最后一步时执行小版本号的递增
                                 ) {
                                     vSmall += if (!DataStoreUtil.getBoolean(
                                             "guessNot5",

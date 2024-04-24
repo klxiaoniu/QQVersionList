@@ -16,6 +16,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/ll_guess"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -56,6 +57,18 @@
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
         android:text="扩展猜版测试版直链格式" />
+
+    <TextView
+        android:id="@+id/dialog_suffix_define_click"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:text="自定义猜版后缀"
+        android:textColor="?attr/colorOnSurface"
+        android:drawablePadding="8dp"
+        app:drawableEndCompat="@drawable/arrow_right_s_line"
+        android:gravity="center_vertical"/>
 
     <com.google.android.material.materialswitch.MaterialSwitch
         android:id="@+id/guess_not_5"
