@@ -1,6 +1,6 @@
 # 获取更新——基于 [Obtainium](https://github.com/ImranR98/Obtainium) 方案
 
-您可以使用 [Obtainium](https://github.com/ImranR98/Obtainium) 来接收 QQ 版本列表实用工具的未来更新。Obtainium 可以让您从一个 APP 内直接从其他 APP 的发布源获取安装包和更新应用程序，并在发布新版本时收到通知。
+您可以使用开源软件 [Obtainium](https://github.com/ImranR98/Obtainium) 来接收 QQ 版本列表实用工具的未来更新。Obtainium 可以让您从一个 APP 内直接从其他 APP 的发布源获取安装包和更新应用程序，并在发布新版本时收到通知。
 
 ## 一键导入
 
