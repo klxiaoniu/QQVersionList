@@ -64,7 +64,7 @@
         android:layout_height="wrap_content"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
-        android:text="测试版猜版后缀设置"
+        android:text="猜版后缀设置"
         android:textColor="?attr/colorOnSurface"
         android:drawablePadding="8dp"
         app:drawableEndCompat="@drawable/arrow_right_s_line"
