@@ -174,10 +174,8 @@ class MainActivity : AppCompatActivity() {
 
         //这里的“getInt: userAgreement”的值代表着用户协议修订版本，后续更新协议版本后也需要在下面一行把“judgeUARead”+1，以此类推
         val judgeUARead = 1
-        if (DataStoreUtil.getInt("userAgreement", 0) != judgeUARead)
-            showUADialog(false)
-        else
-            getData()
+        if (DataStoreUtil.getInt("userAgreement", 0) != judgeUARead) showUADialog(false)
+        else getData()
 
         // 进度条动画
         // https://github.com/material-components/material-components-android/blob/master/docs/components/ProgressIndicator.md
@@ -204,14 +202,13 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.btn_about -> {
-                    val message =
-                        SpannableString(
-                            "QQ 版本列表实用工具 for Android\n\n" +
-                                    "作者：快乐小牛、有鲫雪狐\n\n" +
-                                    "版本：${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})\n\n" +
-                                    "Since 2023.8.9\n\nLicensed under AGPL v3\n\n" +
-                                    "开源地址"
-                        )
+                    val message = SpannableString(
+                        "QQ 版本列表实用工具 for Android\n\n" +
+                                "作者：快乐小牛、有鲫雪狐\n\n" +
+                                "版本：${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})\n\n" +
+                                "Since 2023.8.9\n\nLicensed under AGPL v3\n\n" +
+                                "开源地址"
+                    )
                     val urlSpan = URLSpan("https://github.com/klxiaoniu/QQVersionList")
                     message.setSpan(
                         urlSpan,
@@ -226,7 +223,9 @@ class MainActivity : AppCompatActivity() {
                         .setPositiveButton("确定", null)
                         .setNegativeButton("撤回同意用户协议") { _, _ ->
                             showUADialog(true)
-                        }.show().apply {
+                        }
+                        .show()
+                        .apply {
                             findViewById<TextView>(android.R.id.message)?.movementMethod =
                                 LinkMovementMethodCompat.getInstance()
                         }
@@ -260,10 +259,9 @@ class MainActivity : AppCompatActivity() {
                         switchDisplayFirst.setOnCheckedChangeListener { _, isChecked ->
                             DataStoreUtil.putBooleanAsync("displayFirst", isChecked)
                             qqVersion = qqVersion.mapIndexed { index, qqVersionBean ->
-                                if (index == 0)
-                                    qqVersionBean.copy(
-                                        displayType = if (isChecked) 1 else 0
-                                    )
+                                if (index == 0) qqVersionBean.copy(
+                                    displayType = if (isChecked) 1 else 0
+                                )
                                 else qqVersionBean
                             }
                             versionAdapter.submitList(qqVersion)
@@ -301,11 +299,69 @@ class MainActivity : AppCompatActivity() {
                                 }
                             }
 
-                            val dialogSuffix = MaterialAlertDialogBuilder(this@MainActivity)
-                                .setTitle("自定义猜版后缀")
-                                .setIcon(R.drawable.settings_line)
-                                .setView(dialogSuffixDefine.root)
-                                .show()
+                            val dialogSuffix =
+                                MaterialAlertDialogBuilder(this@MainActivity)
+                                    .setTitle("测试版猜版后缀设置")
+                                    .setIcon(R.drawable.settings_line)
+                                    .setView(dialogSuffixDefine.root)
+                                    .create()
+
+                            val screenHeight = Resources.getSystem().displayMetrics.heightPixels
+
+                            val constraintSet = ConstraintSet()
+                            constraintSet.clone(dialogSuffixDefine.dialogSuffixDefineContainer)
+
+                            // 屏幕方向判断，不同方向分别设置相应的约束布局滚动列表子项高度
+                            val currentConfig = resources.configuration
+                            if (currentConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) constraintSet.constrainHeight(
+                                R.id.suffix_define_check_group_all, screenHeight / 6
+                            )
+                            else if (currentConfig.orientation == Configuration.ORIENTATION_PORTRAIT) constraintSet.constrainHeight(
+                                R.id.suffix_define_check_group_all, screenHeight / 3
+                            )
+
+                            constraintSet.applyTo(dialogSuffixDefine.dialogSuffixDefineContainer)
+
+                            dialogSuffixDefine.suffixDefineCheckbox64hb.isChecked =
+                                DataStoreUtil.getBoolean("suffix64HB", true)
+                            dialogSuffixDefine.suffixDefineCheckboxHb64.isChecked =
+                                DataStoreUtil.getBoolean("suffixHB64", true)
+                            dialogSuffixDefine.suffixDefineCheckbox64hb1.isChecked =
+                                DataStoreUtil.getBoolean("suffix64HB1", true)
+                            dialogSuffixDefine.suffixDefineCheckboxHb164.isChecked =
+                                DataStoreUtil.getBoolean("suffixHB164", true)
+                            dialogSuffixDefine.suffixDefineCheckbox64hb2.isChecked =
+                                DataStoreUtil.getBoolean("suffix64HB2", true)
+                            dialogSuffixDefine.suffixDefineCheckboxHb264.isChecked =
+                                DataStoreUtil.getBoolean("suffixHB264", true)
+                            dialogSuffixDefine.suffixDefineCheckbox64hb3.isChecked =
+                                DataStoreUtil.getBoolean("suffix64HB3", true)
+                            dialogSuffixDefine.suffixDefineCheckboxHb364.isChecked =
+                                DataStoreUtil.getBoolean("suffixHB364", true)
+
+                            dialogSuffixDefine.suffixDefineCheckbox64hd.isChecked =
+                                DataStoreUtil.getBoolean("suffix64HD", true)
+                            dialogSuffixDefine.suffixDefineCheckboxHd64.isChecked =
+                                DataStoreUtil.getBoolean("suffixHD64", true)
+                            dialogSuffixDefine.suffixDefineCheckbox64hd1.isChecked =
+                                DataStoreUtil.getBoolean("suffix64HD1", true)
+                            dialogSuffixDefine.suffixDefineCheckboxHd164.isChecked =
+                                DataStoreUtil.getBoolean("suffixHD164", true)
+                            dialogSuffixDefine.suffixDefineCheckbox64hd2.isChecked =
+                                DataStoreUtil.getBoolean("suffix64HD2", true)
+                            dialogSuffixDefine.suffixDefineCheckboxHd264.isChecked =
+                                DataStoreUtil.getBoolean("suffixHD264", true)
+                            dialogSuffixDefine.suffixDefineCheckbox64hd3.isChecked =
+                                DataStoreUtil.getBoolean("suffix64HD3", true)
+                            dialogSuffixDefine.suffixDefineCheckboxHd364.isChecked =
+                                DataStoreUtil.getBoolean("suffixHD364", true)
+
+                            dialogSuffixDefine.suffixDefineCheckbox64hd1hb.isChecked =
+                                DataStoreUtil.getBoolean("suffix64HD1HB", true)
+                            dialogSuffixDefine.suffixDefineCheckboxHd1hb64.isChecked =
+                                DataStoreUtil.getBoolean("suffixHD1HB64", true)
+
+                            dialogSuffix.show()
 
                             dialogSuffixDefine.settingSuffixDefine.editText?.setText(
                                 DataStoreUtil.getString("suffixDefine", "")
@@ -315,6 +371,82 @@ class MainActivity : AppCompatActivity() {
                                 val suffixDefine =
                                     dialogSuffixDefine.settingSuffixDefine.editText?.text.toString()
                                 DataStoreUtil.putStringAsync("suffixDefine", suffixDefine)
+
+                                DataStoreUtil.putBooleanAsync(
+                                    "suffix64HB",
+                                    dialogSuffixDefine.suffixDefineCheckbox64hb.isChecked
+                                )
+                                DataStoreUtil.putBooleanAsync(
+                                    "suffixHB64",
+                                    dialogSuffixDefine.suffixDefineCheckboxHb64.isChecked
+                                )
+                                DataStoreUtil.putBooleanAsync(
+                                    "suffix64HB1",
+                                    dialogSuffixDefine.suffixDefineCheckbox64hb1.isChecked
+                                )
+                                DataStoreUtil.putBooleanAsync(
+                                    "suffixHB164",
+                                    dialogSuffixDefine.suffixDefineCheckboxHb164.isChecked
+                                )
+                                DataStoreUtil.putBooleanAsync(
+                                    "suffix64HB2",
+                                    dialogSuffixDefine.suffixDefineCheckbox64hb2.isChecked
+                                )
+                                DataStoreUtil.putBooleanAsync(
+                                    "suffixHB264",
+                                    dialogSuffixDefine.suffixDefineCheckboxHb264.isChecked
+                                )
+                                DataStoreUtil.putBooleanAsync(
+                                    "suffix64HB3",
+                                    dialogSuffixDefine.suffixDefineCheckbox64hb3.isChecked
+                                )
+                                DataStoreUtil.putBooleanAsync(
+                                    "suffixHB364",
+                                    dialogSuffixDefine.suffixDefineCheckboxHb364.isChecked
+                                )
+
+                                DataStoreUtil.putBooleanAsync(
+                                    "suffix64HD",
+                                    dialogSuffixDefine.suffixDefineCheckbox64hd.isChecked
+                                )
+                                DataStoreUtil.putBooleanAsync(
+                                    "suffixHD64",
+                                    dialogSuffixDefine.suffixDefineCheckboxHd64.isChecked
+                                )
+                                DataStoreUtil.putBooleanAsync(
+                                    "suffix64HD1",
+                                    dialogSuffixDefine.suffixDefineCheckbox64hd1.isChecked
+                                )
+                                DataStoreUtil.putBooleanAsync(
+                                    "suffixHD164",
+                                    dialogSuffixDefine.suffixDefineCheckboxHd164.isChecked
+                                )
+                                DataStoreUtil.putBooleanAsync(
+                                    "suffix64HD2",
+                                    dialogSuffixDefine.suffixDefineCheckbox64hd2.isChecked
+                                )
+                                DataStoreUtil.putBooleanAsync(
+                                    "suffixHD264",
+                                    dialogSuffixDefine.suffixDefineCheckboxHd264.isChecked
+                                )
+                                DataStoreUtil.putBooleanAsync(
+                                    "suffix64HD3",
+                                    dialogSuffixDefine.suffixDefineCheckbox64hd3.isChecked
+                                )
+                                DataStoreUtil.putBooleanAsync(
+                                    "suffixHD364",
+                                    dialogSuffixDefine.suffixDefineCheckboxHd364.isChecked
+                                )
+
+                                DataStoreUtil.putBooleanAsync(
+                                    "suffixHD1HB64",
+                                    dialogSuffixDefine.suffixDefineCheckboxHd1hb64.isChecked
+                                )
+                                DataStoreUtil.putBooleanAsync(
+                                    "suffix64HD1HB",
+                                    dialogSuffixDefine.suffixDefineCheckbox64hd1hb.isChecked
+                                )
+
                                 showToast("已保存")
                                 dialogSuffix.dismiss()
                             }
@@ -332,8 +464,10 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        if (intent.action == "android.intent.action.VIEW"
-            && DataStoreUtil.getInt("userAgreement", 0) == judgeUARead
+        if (intent.action == "android.intent.action.VIEW" && DataStoreUtil.getInt(
+                "userAgreement",
+                0
+            ) == judgeUARead
         ) {
             showGuessVersionDialog()
         }
@@ -446,8 +580,7 @@ class MainActivity : AppCompatActivity() {
             try {
                 val okHttpClient = OkHttpClient()
                 val request =
-                    Request.Builder().url("https://im.qq.com/rainbow/androidQQVersionList")
-                        .build()
+                    Request.Builder().url("https://im.qq.com/rainbow/androidQQVersionList").build()
                 val response = okHttpClient.newCall(request).execute()
                 val responseData = response.body?.string()
                 if (responseData != null) {
@@ -464,8 +597,7 @@ class MainActivity : AppCompatActivity() {
                             this.isShowProgressSize = isShowProgressSize
                         }
                     }
-                    if (DataStoreUtil.getBoolean("displayFirst", true))
-                        qqVersion[0].displayType = 1
+                    if (DataStoreUtil.getBoolean("displayFirst", true)) qqVersion[0].displayType = 1
                     withContext(Dispatchers.Main) {
                         versionAdapter.submitList(qqVersion)
                         // 舍弃 currentQQVersion = qqVersion.first().versionNumber
@@ -541,8 +673,96 @@ class MainActivity : AppCompatActivity() {
             var vSmall = versionSmall
             val defineSuf = DataStoreUtil.getString("suffixDefine", "")
             val defineSufList = defineSuf.split(", ")
-            val stListPre = listOf(
-                "_64",
+            val suf64hb =
+                if (DataStoreUtil.getBoolean("suffix64HB", true)) listOf("_64_HB") else emptyList()
+            val sufHb64 =
+                if (DataStoreUtil.getBoolean("suffixHB64", true)) listOf("_HB_64") else emptyList()
+            val suf64hb1 = if (DataStoreUtil.getBoolean(
+                    "suffix64HB1", true
+                )
+            ) listOf("_64_HB1") else emptyList()
+            val sufHb164 = if (DataStoreUtil.getBoolean(
+                    "suffixHB164", true
+                )
+            ) listOf("_HB1_64") else emptyList()
+            val suf64hb2 = if (DataStoreUtil.getBoolean(
+                    "suffix64HB2", true
+                )
+            ) listOf("_64_HB2") else emptyList()
+            val sufHb264 = if (DataStoreUtil.getBoolean(
+                    "suffixHB264", true
+                )
+            ) listOf("_HB2_64") else emptyList()
+            val suf64hb3 = if (DataStoreUtil.getBoolean(
+                    "suffix64HB3", true
+                )
+            ) listOf("_64_HB3") else emptyList()
+            val sufHb364 = if (DataStoreUtil.getBoolean(
+                    "suffixHB364", true
+                )
+            ) listOf("_HB3_64") else emptyList()
+            val suf64hd =
+                if (DataStoreUtil.getBoolean("suffix64HD", true)) listOf("_64_HD") else emptyList()
+            val sufHd64 =
+                if (DataStoreUtil.getBoolean("suffixHD64", true)) listOf("_HD_64") else emptyList()
+            val suf64hd1 = if (DataStoreUtil.getBoolean(
+                    "suffix64HD1", true
+                )
+            ) listOf("_64_HD1") else emptyList()
+            val sufHd164 = if (DataStoreUtil.getBoolean(
+                    "suffixHD164", true
+                )
+            ) listOf("_HD1_64") else emptyList()
+            val suf64hd2 = if (DataStoreUtil.getBoolean(
+                    "suffix64HD2", true
+                )
+            ) listOf("_64_HD2") else emptyList()
+            val sufHd264 = if (DataStoreUtil.getBoolean(
+                    "suffixHD264", true
+                )
+            ) listOf("_HD2_64") else emptyList()
+            val suf64hd3 = if (DataStoreUtil.getBoolean(
+                    "suffix64HD3",
+                    true
+                )
+            ) listOf("_64_HD3") else emptyList()
+            val sufHd364 = if (DataStoreUtil.getBoolean(
+                    "suffixHD364",
+                    true
+                )
+            ) listOf("_HD3_64") else emptyList()
+            val suf64hd1hb = if (DataStoreUtil.getBoolean(
+                    "suffix64HD1HB",
+                    true
+                )
+            ) listOf("_64_HD1HB") else emptyList()
+            val sufHd1hb64 = if (DataStoreUtil.getBoolean(
+                    "suffixHD1HB64", true
+                )
+            ) listOf("_HD1HB_64") else emptyList()
+
+            val stListPre = listOf("_64") + arrayListOf(
+                suf64hb,
+                suf64hb1,
+                suf64hb2,
+                suf64hb3,
+                suf64hd,
+                suf64hd1,
+                suf64hd2,
+                suf64hd3,
+                suf64hd1hb,
+                sufHb64,
+                sufHb164,
+                sufHb264,
+                sufHb364,
+                sufHd64,
+                sufHd164,
+                sufHd264,
+                sufHd364,
+                sufHd1hb64
+            ).flatten()
+
+            /*
                 "_64_HB",
                 "_64_HB1",
                 "_64_HB2",
@@ -561,7 +781,7 @@ class MainActivity : AppCompatActivity() {
                 "_HD2_64",
                 "_HD3_64",
                 "_HD1HB_64"
-            )
+             */
             val stList = if (defineSufList != listOf("")) stListPre + defineSufList else stListPre
             try {
                 var sIndex = 0
@@ -570,15 +790,13 @@ class MainActivity : AppCompatActivity() {
                         STATUS_ONGOING -> {
                             if (mode == MODE_TEST) {
                                 if (link == "" || !DataStoreUtil.getBoolean(
-                                        "guessTestExtend",
-                                        false
+                                        "guessTestExtend", false
                                     )
                                 ) {
                                     link =
                                         "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}${stList[sIndex]}.apk"
                                     if (DataStoreUtil.getBoolean(
-                                            "guessTestExtend",
-                                            false
+                                            "guessTestExtend", false
                                         )
                                     ) sIndex += 1
                                 } else if (DataStoreUtil.getBoolean("guessTestExtend", false)) {
@@ -635,18 +853,19 @@ class MainActivity : AppCompatActivity() {
                                             }
                                         }
 
-                                        val successMaterialDialog = MaterialAlertDialogBuilder(this)
-                                            .setTitle("猜测成功")
-                                            .setMessage("下载地址：$link")
-                                            .setIcon(R.drawable.check_circle)
-                                            .setView(successButtonBinding.root)
-                                            .setCancelable(false)
-                                            .apply {
-                                                if (appSize != "Error" && appSize != "-0.00" && appSize != "0.00") setMessage(
-                                                    "下载地址：$link\n\n大小：$appSize MB"
-                                                )
-                                                else setMessage("下载地址：$link")
-                                            }.show()
+                                        val successMaterialDialog =
+                                            MaterialAlertDialogBuilder(this)
+                                                .setTitle("猜测成功")
+                                                .setMessage("下载地址：$link")
+                                                .setIcon(R.drawable.check_circle)
+                                                .setView(successButtonBinding.root)
+                                                .setCancelable(false)
+                                                .apply {
+                                                    if (appSize != "Error" && appSize != "-0.00" && appSize != "0.00") setMessage(
+                                                        "下载地址：$link\n\n大小：$appSize MB"
+                                                    )
+                                                    else setMessage("下载地址：$link")
+                                                }.show()
 
 
                                         // 复制并停止按钮点击事件
@@ -660,19 +879,16 @@ class MainActivity : AppCompatActivity() {
                                         successButtonBinding.btnContinue.setOnClickListener {
                                             // 测试版情况下，未打开扩展猜版或扩展猜版到最后一步时执行小版本号的递增
                                             if (mode == MODE_TEST && (!DataStoreUtil.getBoolean(
-                                                    "guessTestExtend",
-                                                    false
+                                                    "guessTestExtend", false
                                                 ) || sIndex == (stList.size))
                                             ) {
                                                 vSmall += if (!DataStoreUtil.getBoolean(
-                                                        "guessNot5",
-                                                        false
+                                                        "guessNot5", false
                                                     )
                                                 ) 5 else 1
                                                 sIndex = 0
                                             } else if (mode == MODE_UNOFFICIAL) vSmall += if (!DataStoreUtil.getBoolean(
-                                                    "guessNot5",
-                                                    false
+                                                    "guessNot5", false
                                                 )
                                             ) 5 else 1
                                             successMaterialDialog.dismiss()
@@ -734,19 +950,16 @@ class MainActivity : AppCompatActivity() {
                                 }
                             } else {
                                 if (mode == MODE_TEST && (!DataStoreUtil.getBoolean(
-                                        "guessTestExtend",
-                                        false
+                                        "guessTestExtend", false
                                     ) || sIndex == (stList.size)) // 测试版情况下，未打开扩展猜版或扩展猜版到最后一步时执行小版本号的递增
                                 ) {
                                     vSmall += if (!DataStoreUtil.getBoolean(
-                                            "guessNot5",
-                                            false
+                                            "guessNot5", false
                                         )
                                     ) 5 else 1
                                     sIndex = 0
                                 } else if (mode == MODE_UNOFFICIAL) vSmall += if (!DataStoreUtil.getBoolean(
-                                        "guessNot5",
-                                        false
+                                        "guessNot5", false
                                     )
                                 ) 5 else 1
                             }
