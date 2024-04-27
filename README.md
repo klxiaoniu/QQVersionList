@@ -127,7 +127,7 @@ QQ 版本列表实用工具 for Android 是一个使用 Material 3 组件库构�
 
 <a href='/ReadmeAssets/Get-it-on-Obtainium.md'><img src='https://raw.githubusercontent.com/ImranR98/Obtainium/main/assets/graphics/badge_obtainium.png' width="300" alt="Obtanium"></a>
 
-<a href='/ReadmeAssets/Get-it-on-JiuQi-NotifCenter-WeChatMiniProgram.md'><img src='https://raw.githubusercontent.com/klxiaoniu/QQVersionList/master/ReadmeAssets/JiuQi-NotifCenter-Badge-Dark-zh-Hans.png' width="300" alt="Get it on GitHub"></a>
+<a href='/ReadmeAssets/Get-it-on-JiuQi-NotifCenter-WeChatMiniProgram.md'><img src='https://raw.githubusercontent.com/klxiaoniu/QQVersionList/master/ReadmeAssets/JiuQi-NotifCenter-Badge-Dark-zh-Hans.png' width="300" alt="Get it on Notif Center"></a>
 
 ## 常见问题
 
