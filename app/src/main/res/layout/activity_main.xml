@@ -78,6 +78,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="猜版"
+        android:minWidth="0dp"
         app:icon="@drawable/search_line"
         app:layout_anchor="@id/bottomAppBar"
         app:removeEmbeddedFabElevation="true" />

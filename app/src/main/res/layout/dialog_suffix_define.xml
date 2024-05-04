@@ -1,10 +1,27 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?><!--
+    QQ Version Tool for Android™
+    Copyright (C) 2023 klxiaoniu
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/dialog_suffix_define_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="12dp"
     android:paddingStart="20dp"
+    android:paddingTop="12dp"
     android:paddingEnd="20dp"
     android:paddingBottom="20dp">
 
@@ -26,15 +43,274 @@
             android:singleLine="true" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <LinearLayout
+        android:id="@+id/suffix_define_check_group_all"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/suffix_define_button_group"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/setting_suffix_define">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbarStyle="insideOverlay">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/suffix_define_checkbox_group1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/setting_suffix_define">
+
+                    <CheckBox
+                        android:id="@+id/suffix_define_checkbox_64hb"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="_64_HB" />
+
+                    <CheckBox
+                        android:id="@+id/suffix_define_checkbox_hb64"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="_HB_64" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/suffix_define_checkbox_group2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/suffix_define_checkbox_group1">
+
+                    <CheckBox
+                        android:id="@+id/suffix_define_checkbox_64hb1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="_64_HB1" />
+
+                    <CheckBox
+                        android:id="@+id/suffix_define_checkbox_hb164"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="_HB1_64" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/suffix_define_checkbox_group3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/suffix_define_checkbox_group2">
+
+                    <CheckBox
+                        android:id="@+id/suffix_define_checkbox_64hb2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="_64_HB2" />
+
+                    <CheckBox
+                        android:id="@+id/suffix_define_checkbox_hb264"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="_HB2_64" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/suffix_define_checkbox_group4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/suffix_define_checkbox_group3">
+
+                    <CheckBox
+                        android:id="@+id/suffix_define_checkbox_64hb3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="_64_HB3" />
+
+                    <CheckBox
+                        android:id="@+id/suffix_define_checkbox_hb364"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="_HB3_64" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/suffix_define_checkbox_group5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/suffix_define_checkbox_group4">
+
+                    <CheckBox
+                        android:id="@+id/suffix_define_checkbox_64hd"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="_64_HD" />
+
+                    <CheckBox
+                        android:id="@+id/suffix_define_checkbox_hd64"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="_HD_64" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/suffix_define_checkbox_group6"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/suffix_define_checkbox_group5">
+
+                    <CheckBox
+                        android:id="@+id/suffix_define_checkbox_64hd1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="_64_HD1" />
+
+                    <CheckBox
+                        android:id="@+id/suffix_define_checkbox_hd164"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="_HD1_64" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/suffix_define_checkbox_group7"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/suffix_define_checkbox_group6">
+
+                    <CheckBox
+                        android:id="@+id/suffix_define_checkbox_64hd2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="_64_HD2" />
+
+                    <CheckBox
+                        android:id="@+id/suffix_define_checkbox_hd264"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="_HD2_64" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/suffix_define_checkbox_group8"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/suffix_define_checkbox_group7">
+
+                    <CheckBox
+                        android:id="@+id/suffix_define_checkbox_64hd3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="_64_HD3" />
+
+                    <CheckBox
+                        android:id="@+id/suffix_define_checkbox_hd364"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="_HD3_64" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/suffix_define_checkbox_group9"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/suffix_define_checkbox_group8">
+
+                    <CheckBox
+                        android:id="@+id/suffix_define_checkbox_64hd1hb"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="_64_HD1HB" />
+
+                    <CheckBox
+                        android:id="@+id/suffix_define_checkbox_hd1hb64"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="_HD1HB_64" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+        </ScrollView>
+    </LinearLayout>
+
 
     <LinearLayout
+        android:id="@+id/suffix_define_button_group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:weightSum="2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/setting_suffix_define">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/suffix_define_check_group_all">
 
         <Button
             android:id="@+id/btn_suffix_cancel"
