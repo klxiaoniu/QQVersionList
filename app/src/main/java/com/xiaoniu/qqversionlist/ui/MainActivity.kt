@@ -204,16 +204,67 @@ class MainActivity : AppCompatActivity() {
                 R.id.btn_about -> {
                     val message = SpannableString(
                         "QQ 版本列表实用工具 for Android\n\n" +
-                                "作者：快乐小牛、有鲫雪狐\n\n" +
-                                "版本：${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})\n\n" +
-                                "Since 2023.8.9\n\nLicensed under AGPL v3\n\n" +
-                                "开源地址"
+                                "提供 Android QQ 版本列表的查看和对 Android QQ 下载链接的枚举法猜测。\n\n" +
+                                "版本：${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})\n" +
+                                "作者：快乐小牛、有鲫雪狐\n" +
+                                "贡献者：Col_or、bggRGjQaUbCoE\n" +
+                                "开源地址：GitHub\n" +
+                                "开源协议：AGPL v3\n" +
+                                "Since 2023.8.9\n" +
+                                "获取更新：GitHub Releases、Obtainium、九七通知中心"
                     )
-                    val urlSpan = URLSpan("https://github.com/klxiaoniu/QQVersionList")
                     message.setSpan(
-                        urlSpan,
-                        message.length - 4,
-                        message.length,
+                        URLSpan("https://github.com/klxiaoniu"),
+                        message.indexOf("快乐小牛"),
+                        message.indexOf("快乐小牛") + "快乐小牛".length,
+                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
+                    message.setSpan(
+                        URLSpan("https://github.com/ArcticFoxPro"),
+                        message.indexOf("有鲫雪狐"),
+                        message.indexOf("有鲫雪狐") + "有鲫雪狐".length,
+                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
+                    message.setSpan(
+                        URLSpan("https://github.com/color597"),
+                        message.indexOf("Col_or"),
+                        message.indexOf("Col_or") + "Col_or".length,
+                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
+                    message.setSpan(
+                        URLSpan("https://github.com/bggRGjQaUbCoE"),
+                        message.indexOf("bggRGjQaUbCoE"),
+                        message.indexOf("bggRGjQaUbCoE") + "bggRGjQaUbCoE".length,
+                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
+                    message.setSpan(
+                        URLSpan("https://github.com/klxiaoniu/QQVersionList"),
+                        message.indexOf("GitHub"),
+                        message.indexOf("GitHub") + "GitHub".length,
+                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
+                    message.setSpan(
+                        URLSpan("https://github.com/klxiaoniu/QQVersionList/blob/master/LICENSE"),
+                        message.indexOf("AGPL v3"),
+                        message.indexOf("AGPL v3") + "AGPL v3".length,
+                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
+                    message.setSpan(
+                        URLSpan("https://github.com/klxiaoniu/QQVersionList/releases"),
+                        message.indexOf("GitHub Releases"),
+                        message.indexOf("GitHub Releases") + "GitHub Releases".length,
+                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
+                    message.setSpan(
+                        URLSpan("https://github.com/klxiaoniu/QQVersionList/blob/master/ReadmeAssets/Get-it-on-Obtainium.md"),
+                        message.indexOf("Obtainium"),
+                        message.indexOf("Obtainium") + "Obtainium".length,
+                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
+                    message.setSpan(
+                        URLSpan("https://github.com/klxiaoniu/QQVersionList/blob/master/ReadmeAssets/Get-it-on-JiuQi-NotifCenter-WeChatMiniProgram.md"),
+                        message.indexOf("九七通知中心"),
+                        message.indexOf("九七通知中心") + "九七通知中心".length,
                         SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
                     )
                     MaterialAlertDialogBuilder(this)
