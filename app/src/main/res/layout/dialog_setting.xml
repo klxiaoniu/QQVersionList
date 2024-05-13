@@ -40,7 +40,7 @@
         android:layout_height="wrap_content"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
-        android:text="长按版本列表文字弹出详细信息" />
+        android:text="长按版本列表文字弹出源 JSON 字符串" />
 
     <com.google.android.material.materialswitch.MaterialSwitch
         android:id="@+id/progress_size"
