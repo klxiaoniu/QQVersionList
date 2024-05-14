@@ -21,7 +21,6 @@ package com.xiaoniu.qqversionlist.ui
 
 import android.app.DownloadManager
 import android.content.Context
-import androidx.core.content.pm.PackageInfoCompat
 import android.content.Intent
 import android.content.res.Configuration
 import android.content.res.Resources
@@ -40,12 +39,12 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.text.method.LinkMovementMethodCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -90,11 +89,13 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
-            ViewCompat.setOnApplyWindowInsetsListener(binding.collapsingToolbar, null)
-            ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, windowInsets ->
-                val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
-                // binding.topAppBar.updatePadding(0, insets.top, 0, 0)
+            ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, windowInsets ->
+                val insets = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars())
+                view.setPadding(insets.left, 0, insets.right, 0)
                 binding.bottomAppBar.updatePadding(0, 0, 0, insets.bottom)
+                binding.btnGuess.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                    bottomMargin = insets.bottom / 2
+                }
                 windowInsets
             }
         }
@@ -233,8 +234,8 @@ class MainActivity : AppCompatActivity() {
                                 "贡献者：Col_or、bggRGjQaUbCoE\n" +
                                 "开源地址：GitHub\n" +
                                 "开源协议：AGPL v3\n" +
-                                "Since 2023.8.9\n" +
-                                "获取更新：GitHub Releases、Obtainium、九七通知中心"
+                                "获取更新：GitHub Releases、Obtainium、九七通知中心\n\n" +
+                                "Since 2023.8.9"
                     )
                     message.setSpan(
                         URLSpan("https://github.com/klxiaoniu"),
