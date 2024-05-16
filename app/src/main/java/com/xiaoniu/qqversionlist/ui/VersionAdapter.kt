@@ -123,6 +123,10 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
                 tvVersion.text = bean.versionNumber
                 tvSize.text = bean.size + " MB"
                 bindProgress(listProgressLine, null, tvPerSizeText, tvPerSizeCard, tvSizeCard, bean)
+                if (DataStoreUtil.getString("QQVersionInstall", "") == bean.versionNumber) {
+                    tvInstallCard.isVisible = true
+                    tvInstall.text = "已安装"
+                } else tvInstallCard.isVisible = false
             }
         } else if (holder is ViewHolderDetail) {
             holder.binding.apply {
@@ -144,6 +148,11 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
                 tvDesc.text = bean.summary.joinToString(separator = "\n- ", prefix = "- ")
 
                 tvTitle.isVisible = tvTitle.text != ""
+
+                if (DataStoreUtil.getString("QQVersionInstall", "") == bean.versionNumber) {
+                    tvOldInstallCard.isVisible = true
+                    tvOldInstall.text = "已安装"
+                } else tvOldInstallCard.isVisible = false
 
                 bindProgress(
                     listDetailProgressLine,
@@ -190,6 +199,7 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
 
                 tvPerSizeText.text =
                     "${"%.2f".format(bean.size.toFloat() / (currentList.maxByOrNull { it.size.toFloat() }?.size?.toFloat() ?: 0f) * 100)}%"
+
             }
         }
 
@@ -203,7 +213,7 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
         }
         MaterialAlertDialogBuilder(context)
             .setView(tv)
-            .setTitle("Json 详情")
+            .setTitle("JSON 详情")
             .setIcon(R.drawable.braces_line)
             .show()
     }

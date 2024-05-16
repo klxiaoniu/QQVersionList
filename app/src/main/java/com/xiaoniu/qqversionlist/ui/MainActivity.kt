@@ -47,6 +47,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -88,16 +89,16 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, windowInsets ->
-            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars())
-            view.setPadding(insets.left, 0, insets.right, 0)
-            binding.bottomAppBar.updatePadding(0, 0, 0, insets.bottom)
-            if (SDK_INT < 30) {
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
+            ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, windowInsets ->
+                val insets = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars())
+                view.setPadding(insets.left, 0, insets.right, 0)
+                binding.bottomAppBar.updatePadding(0, 0, 0, insets.bottom)
                 binding.btnGuess.updateLayoutParams<ViewGroup.MarginLayoutParams> {
                     bottomMargin = insets.bottom / 2
                 }
+                windowInsets
             }
-            windowInsets
         }
 
         // 不加这段代码的话 Google 可能会在系统栏加遮罩
@@ -105,8 +106,11 @@ class MainActivity : AppCompatActivity() {
             window.isNavigationBarContrastEnforced = false
             window.isStatusBarContrastEnforced = false
         }
-        window.statusBarColor = Color.TRANSPARENT
-        window.navigationBarColor = Color.TRANSPARENT
+
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
+            window.statusBarColor = Color.TRANSPARENT
+            window.navigationBarColor = Color.TRANSPARENT
+        }
 
         versionAdapter = VersionAdapter()
         binding.rvContent.apply {
@@ -231,8 +235,8 @@ class MainActivity : AppCompatActivity() {
                                 "贡献者：Col_or、bggRGjQaUbCoE\n" +
                                 "开源地址：GitHub\n" +
                                 "开源协议：AGPL v3\n" +
-                                "Since 2023.8.9\n" +
-                                "获取更新：GitHub Releases、Obtainium、九七通知中心"
+                                "获取更新：GitHub Releases、Obtainium、九七通知中心\n\n" +
+                                "Since 2023.8.9"
                     )
                     message.setSpan(
                         URLSpan("https://github.com/klxiaoniu"),
@@ -435,9 +439,26 @@ class MainActivity : AppCompatActivity() {
 
                             dialogSuffix.show()
 
-                            dialogSuffixDefine.settingSuffixDefine.editText?.setText(
-                                DataStoreUtil.getString("suffixDefine", "")
-                            )
+
+//                            dialogSuffixDefine.settingSuffixDefine.editText?.setText(
+//                                DataStoreUtil.getStringAsync("suffixDefine", "")
+//                            )
+
+                            // 异步读取字符串，防止超长字符串造成阻塞
+                            dialogSuffixDefine.settingSuffixDefine.apply {
+                                isEnabled = false
+                                dialogSuffixDefine.btnSuffixSave.isEnabled = false
+                                lifecycleScope.launch {
+                                    val suffixDefine = withContext(Dispatchers.IO) {
+                                        DataStoreUtil.getStringAsync("suffixDefine", "").await()
+                                    }
+                                    dialogSuffixDefine.settingSuffixDefine.editText?.setText(
+                                        suffixDefine
+                                    )
+                                    isEnabled = true
+                                    dialogSuffixDefine.btnSuffixSave.isEnabled = true
+                                }
+                            }
 
                             dialogSuffixDefine.btnSuffixSave.setOnClickListener {
                                 val suffixDefine =
@@ -578,11 +599,9 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
         })
 
 //            舍弃
@@ -646,46 +665,59 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
     private fun getData() {
         binding.progressLine.show()
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val okHttpClient = OkHttpClient()
-                val request =
-                    Request.Builder().url("https://im.qq.com/rainbow/androidQQVersionList").build()
-                val response = okHttpClient.newCall(request).execute()
-                val responseData = response.body?.string()
-                if (responseData != null) {
-                    val start = (responseData.indexOf("versions64\":[")) + 12
-                    val end = (responseData.indexOf(";\n" + "      typeof"))
-                    val totalJson = responseData.substring(start, end)
-                    qqVersion = totalJson.split("},{").reversed().map {
-                        val pstart = it.indexOf("{\"versions")
-                        val pend = it.indexOf(",\"length")
-                        val json = it.substring(pstart, pend)
-                        val isShowProgressSize = DataStoreUtil.getBoolean("progressSize", false)
-                        Gson().fromJson(json, QQVersionBean::class.java).apply {
-                            jsonString = json
-                            this.isShowProgressSize = isShowProgressSize
+                val QQPackageInfo = packageManager.getPackageInfo("com.tencent.mobileqq", 0)
+                val QQVersionInstall = QQPackageInfo.versionName
+                DataStoreUtil.putStringAsync("QQVersionInstall", QQVersionInstall)
+            } catch (e: Exception) {
+                DataStoreUtil.putStringAsync("QQVersionInstall", "")
+            } finally {
+                try {
+                    val okHttpClient = OkHttpClient()
+                    val request =
+                        Request.Builder().url("https://im.qq.com/rainbow/androidQQVersionList")
+                            .build()
+                    val response = okHttpClient.newCall(request).execute()
+                    val responseData = response.body?.string()
+                    if (responseData != null) {
+                        val start = (responseData.indexOf("versions64\":[")) + 12
+                        val end = (responseData.indexOf(";\n" + "      typeof"))
+                        val totalJson = responseData.substring(start, end)
+                        qqVersion = totalJson.split("},{").reversed().map {
+                            val pstart = it.indexOf("{\"versions")
+                            val pend = it.indexOf(",\"length")
+                            val json = it.substring(pstart, pend)
+                            val isShowProgressSize = DataStoreUtil.getBoolean("progressSize", false)
+                            Gson().fromJson(json, QQVersionBean::class.java).apply {
+                                jsonString = json
+                                this.isShowProgressSize = isShowProgressSize
+                            }
+                        }
+                        if (DataStoreUtil.getBoolean(
+                                "displayFirst",
+                                true
+                            )
+                        ) qqVersion[0].displayType = 1
+                        withContext(Dispatchers.Main) {
+                            versionAdapter.submitList(qqVersion)
+                            // 舍弃 currentQQVersion = qqVersion.first().versionNumber
+                            // 大版本号也放持久化存储了，否则猜版 Shortcut 因为加载过快而获取不到东西
+                            DataStoreUtil.putStringAsync(
+                                "versionBig", qqVersion.first().versionNumber
+                            )
                         }
                     }
-                    if (DataStoreUtil.getBoolean("displayFirst", true)) qqVersion[0].displayType = 1
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    dialogError(e)
+                } finally {
                     withContext(Dispatchers.Main) {
-                        versionAdapter.submitList(qqVersion)
-                        // 舍弃 currentQQVersion = qqVersion.first().versionNumber
-                        // 大版本号也放持久化存储了，否则猜版 Shortcut 因为加载过快而获取不到东西
-                        DataStoreUtil.putStringAsync(
-                            "versionBig", qqVersion.first().versionNumber
-                        )
+                        binding.progressLine.hide()
                     }
-
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                dialogError(e)
-            } finally {
-                withContext(Dispatchers.Main) {
-                    binding.progressLine.hide()
                 }
             }
         }
