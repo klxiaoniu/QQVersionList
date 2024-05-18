@@ -166,7 +166,7 @@ QQ 版本列表实用工具的诞生离不开以下开源项目，感谢以下�
 - [Material Components for Android](https://github.com/material-components/material-components-android/)，Licensed under [Apache License Version 2.0](https://github.com/material-components/material-components-android/blob/master/LICENSE)
 - [Android Jetpack](https://github.com/androidx/androidx/)，Licensed under [Apache License Version 2.0](https://github.com/androidx/androidx/blob/androidx-main/LICENSE.txt)
 - [Remix Icon（Remix Design）](https://remixicon.com/)，Licensed under [Apache License Version 2.0](https://remixicon.com/license)
-- [OKHttp（Square）](https://square.github.io/okhttp/)，Licensed under [Apache License Version 2.0](https://github.com/square/okhttp/blob/master/LICENSE.txt)
+- [OkHttp（Square）](https://square.github.io/okhttp/)，Licensed under [Apache License Version 2.0](https://github.com/square/okhttp/blob/master/LICENSE.txt)
 - [Kotlin（JetBrains）](https://kotlinlang.org/)，Licensed under [Apache License Version 2.0](https://github.com/JetBrains/kotlin/blob/master/license%2FREADME.md)
 - [Gson（Google）](https://github.com/google/gson/)，Licensed under [Apache License Version 2.0](https://github.com/google/gson/blob/master/LICENSE)
 - [Coil](https://coil-kt.github.io/coil/)，Licensed under [Apache License Version 2.0](https://github.com/coil-kt/coil/blob/main/LICENSE.txt)
