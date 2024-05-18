@@ -163,16 +163,16 @@ QQ 版本列表实用工具采用 [GNU Affero General Public License Version 3](
 
 QQ 版本列表实用工具的诞生离不开以下开源项目，感谢以下开源项目的作者和贡献者：
 
-- [Material Components for Android](https://github.com/material-components/material-components-android/)，Licenced under [Apache License Version 2.0](https://github.com/material-components/material-components-android/blob/master/LICENSE)
-- [Android Jetpack](https://github.com/androidx/androidx/)，Licenced under [Apache License Version 2.0](https://github.com/androidx/androidx/blob/androidx-main/LICENSE.txt)
-- [Remix Icon（Remix Design）](https://remixicon.com/)，Licenced under [Apache License Version 2.0](https://remixicon.com/license)
-- [OKHttp（Square）](https://square.github.io/okhttp/)，Licenced under [Apache License Version 2.0](https://github.com/square/okhttp/blob/master/LICENSE.txt)
-- [Kotlin（JetBrains）](https://kotlinlang.org/)，Licenced under [Apache License Version 2.0](https://github.com/JetBrains/kotlin/blob/master/license%2FREADME.md)
-- [Gson（Google）](https://github.com/google/gson/)，Licenced under [Apache License Version 2.0](https://github.com/google/gson/blob/master/LICENSE)
-- [Coil](https://coil-kt.github.io/coil/)，Licenced under [Apache License Version 2.0](https://github.com/coil-kt/coil/blob/main/LICENSE.txt)
-- [Eclipse Temurin™](https://adoptium.net/zh-CN/temurin/)，Licenced under GNU General Public License, version 2 with the Classpath Exception
-- [Oracle JDK](https://www.oracle.com/java/technologies/downloads/)，Licenced under [Oracle No-Fee Terms and Conditions](https://www.java.com/freeuselicense)
-- [JetBrains Runtime](https://github.com/JetBrains/JetBrainsRuntime)，Licenced under [GNU General Public License, version 2](https://github.com/JetBrains/JetBrainsRuntime/blob/main/LICENSE)
+- [Material Components for Android](https://github.com/material-components/material-components-android/)，Licensed under [Apache License Version 2.0](https://github.com/material-components/material-components-android/blob/master/LICENSE)
+- [Android Jetpack](https://github.com/androidx/androidx/)，Licensed under [Apache License Version 2.0](https://github.com/androidx/androidx/blob/androidx-main/LICENSE.txt)
+- [Remix Icon（Remix Design）](https://remixicon.com/)，Licensed under [Apache License Version 2.0](https://remixicon.com/license)
+- [OKHttp（Square）](https://square.github.io/okhttp/)，Licensed under [Apache License Version 2.0](https://github.com/square/okhttp/blob/master/LICENSE.txt)
+- [Kotlin（JetBrains）](https://kotlinlang.org/)，Licensed under [Apache License Version 2.0](https://github.com/JetBrains/kotlin/blob/master/license%2FREADME.md)
+- [Gson（Google）](https://github.com/google/gson/)，Licensed under [Apache License Version 2.0](https://github.com/google/gson/blob/master/LICENSE)
+- [Coil](https://coil-kt.github.io/coil/)，Licensed under [Apache License Version 2.0](https://github.com/coil-kt/coil/blob/main/LICENSE.txt)
+- [Eclipse Temurin™](https://adoptium.net/zh-CN/temurin/)，Licensed under GNU General Public License, version 2 with the Classpath Exception
+- [Oracle JDK](https://www.oracle.com/java/technologies/downloads/)，Licensed under [Oracle No-Fee Terms and Conditions](https://www.java.com/freeuselicense)
+- [JetBrains Runtime](https://github.com/JetBrains/JetBrainsRuntime)，Licensed under [GNU General Public License, version 2](https://github.com/JetBrains/JetBrainsRuntime/blob/main/LICENSE)
 
 ## 孪生项目
 
