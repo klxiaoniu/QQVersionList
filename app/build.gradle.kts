@@ -70,7 +70,7 @@ android {
 
 dependencies {
     implementation("androidx.core:core-ktx:1.13.1")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("androidx.core:core-splashscreen:1.1.0-rc01")
     implementation("com.google.android.material:material:1.12.0")
@@ -79,7 +79,7 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
-    implementation("com.google.code.gson:gson:2.10.1")
+    implementation("com.google.code.gson:gson:2.11.0")
     implementation("io.coil-kt:coil:2.6.0")
     implementation("androidx.datastore:datastore-preferences:1.1.1")
 }
