@@ -123,10 +123,7 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
                 tvVersion.text = bean.versionNumber
                 tvSize.text = bean.size + " MB"
                 bindProgress(listProgressLine, null, tvPerSizeText, tvPerSizeCard, tvSizeCard, bean)
-                if (DataStoreUtil.getString("QQVersionInstall", "") == bean.versionNumber) {
-                    tvInstallCard.isVisible = true
-                    tvInstall.text = "已安装"
-                } else tvInstallCard.isVisible = false
+                bindDisplayInstall(tvInstall, tvInstallCard, bean)
             }
         } else if (holder is ViewHolderDetail) {
             holder.binding.apply {
@@ -149,10 +146,7 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
 
                 tvTitle.isVisible = tvTitle.text != ""
 
-                if (DataStoreUtil.getString("QQVersionInstall", "") == bean.versionNumber) {
-                    tvOldInstallCard.isVisible = true
-                    tvOldInstall.text = "已安装"
-                } else tvOldInstallCard.isVisible = false
+                bindDisplayInstall(tvOldInstall, tvOldInstallCard, bean)
 
                 bindProgress(
                     listDetailProgressLine,
@@ -202,7 +196,20 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
 
             }
         }
+    }
 
+    @SuppressLint("SetTextI18n")
+    private fun bindDisplayInstall(
+        tvInstall: TextView,
+        tvInstallCard: MaterialCardView,
+        bean: QQVersionBean
+    ) {
+        if (bean.displayInstall) {
+            tvInstallCard.isVisible = true
+            tvInstall.text = "已安装"
+        } else {
+            tvInstallCard.isVisible = false
+        }
     }
 
     private fun showDialog(context: Context, s: String) {
@@ -253,6 +260,22 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
                         )
                     }
                 }
+
+                "displayInstall" -> {
+                    if (holder is ViewHolder) {
+                        bindDisplayInstall(
+                            holder.binding.tvInstall,
+                            holder.binding.tvInstallCard,
+                            bean
+                        )
+                    } else if (holder is ViewHolderDetail) {
+                        bindDisplayInstall(
+                            holder.binding.tvOldInstall,
+                            holder.binding.tvOldInstallCard,
+                            bean
+                        )
+                    }
+                }
             }
         }
     }
@@ -273,6 +296,7 @@ class VersionDiffCallback : DiffUtil.ItemCallback<QQVersionBean>() {
     ): Boolean {
         return oldItem.displayType == newItem.displayType
                 && oldItem.isShowProgressSize == newItem.isShowProgressSize
+                && oldItem.displayInstall == newItem.displayInstall
     }
 
     override fun getChangePayload(
@@ -281,6 +305,7 @@ class VersionDiffCallback : DiffUtil.ItemCallback<QQVersionBean>() {
     ): Any? {
         return if (oldItem.displayType != newItem.displayType) "displayType"
         else if (oldItem.isShowProgressSize != newItem.isShowProgressSize) "isShowProgressSize"
+        else if (oldItem.displayInstall != newItem.displayInstall) "displayInstall"
         else null
     }
 

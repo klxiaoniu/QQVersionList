@@ -89,7 +89,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
+        if (SDK_INT <= Build.VERSION_CODES.Q) {
             ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, windowInsets ->
                 val insets = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars())
                 view.setPadding(insets.left, 0, insets.right, 0)
@@ -107,7 +107,7 @@ class MainActivity : AppCompatActivity() {
             window.isStatusBarContrastEnforced = false
         }
 
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
+        if (SDK_INT <= Build.VERSION_CODES.Q) {
             window.statusBarColor = Color.TRANSPARENT
             window.navigationBarColor = Color.TRANSPARENT
         }
@@ -670,9 +670,12 @@ class MainActivity : AppCompatActivity() {
         binding.progressLine.show()
         CoroutineScope(Dispatchers.IO).launch {
             try {
+                // 识别本机 Android QQ 版本并放进持久化存储
                 val QQPackageInfo = packageManager.getPackageInfo("com.tencent.mobileqq", 0)
                 val QQVersionInstall = QQPackageInfo.versionName
-                DataStoreUtil.putStringAsync("QQVersionInstall", QQVersionInstall)
+                if (QQVersionInstall != DataStoreUtil.getString("QQVersionInstall", "")) {
+                    DataStoreUtil.putStringAsync("QQVersionInstall", QQVersionInstall)
+                }
             } catch (e: Exception) {
                 DataStoreUtil.putStringAsync("QQVersionInstall", "")
             } finally {
@@ -695,6 +698,11 @@ class MainActivity : AppCompatActivity() {
                             Gson().fromJson(json, QQVersionBean::class.java).apply {
                                 jsonString = json
                                 this.isShowProgressSize = isShowProgressSize
+                                // 标记本机 Android QQ 版本
+                                this.displayInstall = (DataStoreUtil.getString(
+                                    "QQVersionInstall",
+                                    ""
+                                ) == this.versionNumber)
                             }
                         }
                         if (DataStoreUtil.getBoolean(
