@@ -674,7 +674,7 @@ class MainActivity : AppCompatActivity() {
                 val QQPackageInfo = packageManager.getPackageInfo("com.tencent.mobileqq", 0)
                 val QQVersionInstall = QQPackageInfo.versionName
                 if (QQVersionInstall != DataStoreUtil.getString("QQVersionInstall", "")) {
-                    DataStoreUtil.putStringAsync("QQVersionInstall", QQVersionInstall)
+                    DataStoreUtil.putString("QQVersionInstall", QQVersionInstall)
                 }
             } catch (e: Exception) {
                 DataStoreUtil.putStringAsync("QQVersionInstall", "")
