@@ -636,7 +636,7 @@ class MainActivity : AppCompatActivity() {
                         dialogGuessBinding.etVersionSmall.editText?.text?.toString()?.toIntOrNull() ?: -1
                 }
                 if (versionSmall == -1) {
-                    showToast("小版本号不能为空。")
+                    showToast("小版本号不能为空")
                     return@setOnClickListener
                 }
                 if (versionSmall % 5 != 0 && !DataStoreUtil.getBoolean(
