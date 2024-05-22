@@ -633,7 +633,11 @@ class MainActivity : AppCompatActivity() {
                 var versionSmall = 0
                 if (mode == "测试版" || mode == "空格版") {
                     versionSmall =
-                        dialogGuessBinding.etVersionSmall.editText?.text.toString().toInt()
+                        dialogGuessBinding.etVersionSmall.editText?.text?.toString()?.toIntOrNull() ?: -1
+                }
+                if (versionSmall == -1) {
+                    showToast("小版本号不能为空")
+                    return@setOnClickListener
                 }
                 if (versionSmall % 5 != 0 && !DataStoreUtil.getBoolean(
                         "guessNot5", false
