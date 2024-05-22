@@ -37,12 +37,13 @@ object InfoUtil {
             MaterialAlertDialogBuilder(this)
                 .setTitle("程序出错")
                 .setIcon(R.drawable.alert_line)
-                .setMessage("如需反馈，请前往 GitHub 仓库报告 Issue(s) 并随附以下信息：\n\n" + e.stackTraceToString())
                 .setPositiveButton("确定", null)
                 .setCancelable(false)
                 .setNeutralButton("复制", null)
                 .create()
                 .apply {
+                    if (e.message != "测试版猜版（含空格版）需要填写小版本号，否则无法猜测测试版。" && e.message != "小版本号需填 5 的倍数。如有需求，请前往设置解除此限制。") setMessage("如需反馈，请前往 GitHub 仓库报告 Issue(s) 并随附以下信息：\n\n" + e.stackTraceToString())
+                    else setMessage(e.message)
                     show()
                     getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener {
                         copyText("" + e.stackTraceToString())

@@ -232,7 +232,7 @@ class MainActivity : AppCompatActivity() {
                                 "提供 Android QQ 版本列表的查看和对 Android QQ 下载链接的枚举法猜测。\n\n" +
                                 "版本：${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})\n" +
                                 "作者：快乐小牛、有鲫雪狐\n" +
-                                "贡献者：Col_or、bggRGjQaUbCoE\n" +
+                                "贡献者：Col_or、bggRGjQaUbCoE、GMerge\n" +
                                 "开源地址：GitHub\n" +
                                 "开源协议：AGPL v3\n" +
                                 "获取更新：GitHub Releases、Obtainium、九七通知中心\n\n" +
@@ -260,6 +260,12 @@ class MainActivity : AppCompatActivity() {
                         URLSpan("https://github.com/bggRGjQaUbCoE"),
                         message.indexOf("bggRGjQaUbCoE"),
                         message.indexOf("bggRGjQaUbCoE") + "bggRGjQaUbCoE".length,
+                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
+                    message.setSpan(
+                        URLSpan("https://github.com/egmsia01"),
+                        message.indexOf("GMerge"),
+                        message.indexOf("GMerge") + "GMerge".length,
                         SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
                     )
                     message.setSpan(
@@ -632,7 +638,10 @@ class MainActivity : AppCompatActivity() {
                 val mode = dialogGuessBinding.spinnerVersion.text.toString()
                 var versionSmall = 0
                 if (mode == "测试版" || mode == "空格版") {
-                    versionSmall =
+                    if (dialogGuessBinding.etVersionSmall.editText?.text.isNullOrEmpty()) throw Exception(
+                        "测试版猜版（含空格版）需要填写小版本号，否则无法猜测测试版。"
+                    )
+                    else versionSmall =
                         dialogGuessBinding.etVersionSmall.editText?.text.toString().toInt()
                 }
                 if (versionSmall % 5 != 0 && !DataStoreUtil.getBoolean(
@@ -649,7 +658,7 @@ class MainActivity : AppCompatActivity() {
                 guessUrl(versionBig, versionSmall, mode)
 
             } catch (e: Exception) {
-                e.printStackTrace()
+                if (e.message != "测试版猜版（含空格版）需要填写小版本号，否则无法猜测测试版。" && e.message != "小版本号需填 5 的倍数。如有需求，请前往设置解除此限制。") e.printStackTrace()
                 dialogError(e)
             }
         }
