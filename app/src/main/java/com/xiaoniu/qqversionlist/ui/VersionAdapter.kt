@@ -30,6 +30,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import coil.transform.RoundedCornersTransformation
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.progressindicator.LinearProgressIndicator
@@ -134,7 +135,8 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
                     }
                     linearImages.addView(iv)
                     iv.load(it) {
-                        crossfade(200)
+                        crossfade(true)
+                        transformations(RoundedCornersTransformation(2.dp.toFloat()))
                     }
                 }
                 tvOldVersion.text = bean.versionNumber
