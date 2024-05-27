@@ -626,6 +626,9 @@ class MainActivity : AppCompatActivity() {
             .setCancelable(false)
             .show()
 
+        class MissingSmallVersionException(message: String) : Exception(message)
+        class InvalidMultipleException(message: String) : Exception(message)
+
         dialogGuessBinding.btnGuessStart.setOnClickListener {
             dialogGuessBinding.etVersionBig.clearFocus()
             dialogGuessBinding.spinnerVersion.clearFocus()
@@ -638,30 +641,31 @@ class MainActivity : AppCompatActivity() {
                 val mode = dialogGuessBinding.spinnerVersion.text.toString()
                 var versionSmall = 0
                 if (mode == "测试版" || mode == "空格版") {
-                    if (dialogGuessBinding.etVersionSmall.editText?.text.isNullOrEmpty()) throw Exception(
+                    if (dialogGuessBinding.etVersionSmall.editText?.text.isNullOrEmpty()) throw MissingSmallVersionException(
                         "测试版猜版（含空格版）需要填写小版本号，否则无法猜测测试版。"
                     )
                     else versionSmall =
                         dialogGuessBinding.etVersionSmall.editText?.text.toString().toInt()
+
                 }
                 if (versionSmall % 5 != 0 && !DataStoreUtil.getBoolean(
-                        "guessNot5", false
+                        "guessNot5",
+                        false
                     )
-                ) throw Exception("小版本号需填 5 的倍数。如有需求，请前往设置解除此限制。")
-                if (versionSmall != 0) {
+                ) throw InvalidMultipleException("小版本号需填 5 的倍数。如有需求，请前往设置解除此限制。")
+                if (versionSmall != 0)
                     DataStoreUtil.putIntAsync("versionSmall", versionSmall)
-                }/*我偷懒了，因为我上面也有偷懒逻辑，
-                       为了防止 null，我在正式版猜版时默认填入了 0，
-                       但是我没处理下面涉及到持久化存储逻辑的语句，就把 0 存进去了，
-                       覆盖了原来的 15xxx 的持久化存储*/
-
                 guessUrl(versionBig, versionSmall, mode)
-
+            } catch (e: MissingSmallVersionException) {
+                dialogError(e, true)
+            } catch (e: InvalidMultipleException) {
+                dialogError(e, true)
             } catch (e: Exception) {
-                if (e.message != "测试版猜版（含空格版）需要填写小版本号，否则无法猜测测试版。" && e.message != "小版本号需填 5 的倍数。如有需求，请前往设置解除此限制。") e.printStackTrace()
+                e.printStackTrace()
                 dialogError(e)
             }
         }
+
 
 
         dialogGuessBinding.btnGuessCancel.setOnClickListener {

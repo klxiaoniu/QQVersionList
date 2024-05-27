@@ -32,24 +32,32 @@ object InfoUtil {
         }
     }
 
-    fun Activity.dialogError(e: Exception) {
+    fun Activity.dialogError(e: Exception, isCustomMessage: Boolean = false) {
         runOnUiThread {
+            val message = if (isCustomMessage) e.message else buildString {
+                appendLine("如需反馈，请前往 GitHub 仓库报告 Issue(s) 并随附以下信息：\n")
+                appendLine(e.stackTraceToString())
+            }
+
             MaterialAlertDialogBuilder(this)
                 .setTitle("程序出错")
                 .setIcon(R.drawable.alert_line)
                 .setPositiveButton("确定", null)
                 .setCancelable(false)
                 .setNeutralButton("复制", null)
+                .setMessage(message)
                 .create()
                 .apply {
-                    if (e.message != "测试版猜版（含空格版）需要填写小版本号，否则无法猜测测试版。" && e.message != "小版本号需填 5 的倍数。如有需求，请前往设置解除此限制。") setMessage("如需反馈，请前往 GitHub 仓库报告 Issue(s) 并随附以下信息：\n\n" + e.stackTraceToString())
-                    else setMessage(e.message)
-                    show()
-                    getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener {
-                        copyText("" + e.stackTraceToString())
+                    setOnShowListener {
+                        getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener {
+                            if (isCustomMessage) e.message?.let { it1 -> copyText(it1) }
+                            else copyText(e.stackTraceToString())
+                        }
                     }
+                    show()
                 }
         }
     }
+
 
 }
