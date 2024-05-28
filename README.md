@@ -176,6 +176,6 @@ QQ 版本列表实用工具的诞生离不开以下开源项目，感谢以下�
 
 ## 孪生项目
 
-[QQ 版本列表 Lite for WeChat MiniProgram](https://github.com/ArcticFoxPro/QQVersionListTool-WeChatMiniProgram)，Licenced under [木兰公共许可证, 第2版](https://github.com/ArcticFoxPro/QQVersionListTool-WeChatMiniProgram/blob/main/LICENSE)
+[QQ 版本列表 Lite for WeChat MiniProgram](https://github.com/ArcticFoxPro/QQVersionListTool-WeChatMiniProgram)，Licensed under [木兰公共许可证, 第2版](https://github.com/ArcticFoxPro/QQVersionListTool-WeChatMiniProgram/blob/main/LICENSE)
 
 [![QQ 版本列表 Lite Banner](https://raw.githubusercontent.com/ArcticFoxPro/QQVersionListTool-WeChatMiniProgram/main/QQVerLiteBanner.png)](https://github.com/ArcticFoxPro/QQVersionListTool-WeChatMiniProgram)
