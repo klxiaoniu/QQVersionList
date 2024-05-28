@@ -32,23 +32,32 @@ object InfoUtil {
         }
     }
 
-    fun Activity.dialogError(e: Exception) {
+    fun Activity.dialogError(e: Exception, isCustomMessage: Boolean = false) {
         runOnUiThread {
+            val message = if (isCustomMessage) e.message else buildString {
+                appendLine("如需反馈，请前往 GitHub 仓库报告 Issue(s) 并随附以下信息：\n")
+                appendLine(e.stackTraceToString())
+            }
+
             MaterialAlertDialogBuilder(this)
                 .setTitle("程序出错")
                 .setIcon(R.drawable.alert_line)
-                .setMessage("如需反馈，请前往 GitHub 仓库报告 Issue(s) 并随附以下信息：\n\n" + e.stackTraceToString())
                 .setPositiveButton("确定", null)
                 .setCancelable(false)
                 .setNeutralButton("复制", null)
+                .setMessage(message)
                 .create()
                 .apply {
-                    show()
-                    getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener {
-                        copyText("" + e.stackTraceToString())
+                    setOnShowListener {
+                        getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener {
+                            if (isCustomMessage) e.message?.let { it1 -> copyText(it1) }
+                            else copyText(e.stackTraceToString())
+                        }
                     }
+                    show()
                 }
         }
     }
+
 
 }

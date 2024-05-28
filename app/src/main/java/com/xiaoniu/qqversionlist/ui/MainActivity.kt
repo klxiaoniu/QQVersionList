@@ -89,7 +89,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
+        if (SDK_INT <= Build.VERSION_CODES.Q) {
             ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, windowInsets ->
                 val insets = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars())
                 view.setPadding(insets.left, 0, insets.right, 0)
@@ -107,7 +107,7 @@ class MainActivity : AppCompatActivity() {
             window.isStatusBarContrastEnforced = false
         }
 
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) {
+        if (SDK_INT <= Build.VERSION_CODES.Q) {
             window.statusBarColor = Color.TRANSPARENT
             window.navigationBarColor = Color.TRANSPARENT
         }
@@ -232,7 +232,7 @@ class MainActivity : AppCompatActivity() {
                                 "提供 Android QQ 版本列表的查看和对 Android QQ 下载链接的枚举法猜测。\n\n" +
                                 "版本：${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})\n" +
                                 "作者：快乐小牛、有鲫雪狐\n" +
-                                "贡献者：Col_or、bggRGjQaUbCoE\n" +
+                                "贡献者：Col_or、bggRGjQaUbCoE、GMerge\n" +
                                 "开源地址：GitHub\n" +
                                 "开源协议：AGPL v3\n" +
                                 "获取更新：GitHub Releases、Obtainium、九七通知中心\n\n" +
@@ -260,6 +260,12 @@ class MainActivity : AppCompatActivity() {
                         URLSpan("https://github.com/bggRGjQaUbCoE"),
                         message.indexOf("bggRGjQaUbCoE"),
                         message.indexOf("bggRGjQaUbCoE") + "bggRGjQaUbCoE".length,
+                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
+                    message.setSpan(
+                        URLSpan("https://github.com/egmsia01"),
+                        message.indexOf("GMerge"),
+                        message.indexOf("GMerge") + "GMerge".length,
                         SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
                     )
                     message.setSpan(
@@ -620,6 +626,9 @@ class MainActivity : AppCompatActivity() {
             .setCancelable(false)
             .show()
 
+        class MissingSmallVersionException(message: String) : Exception(message)
+        class InvalidMultipleException(message: String) : Exception(message)
+
         dialogGuessBinding.btnGuessStart.setOnClickListener {
             dialogGuessBinding.etVersionBig.clearFocus()
             dialogGuessBinding.spinnerVersion.clearFocus()
@@ -632,31 +641,31 @@ class MainActivity : AppCompatActivity() {
                 val mode = dialogGuessBinding.spinnerVersion.text.toString()
                 var versionSmall = 0
                 if (mode == "测试版" || mode == "空格版") {
-                    versionSmall =
-                        dialogGuessBinding.etVersionSmall.editText?.text?.toString()?.toIntOrNull() ?: -1
-                }
-                if (versionSmall == -1) {
-                    showToast("小版本号不能为空")
-                    return@setOnClickListener
+                    if (dialogGuessBinding.etVersionSmall.editText?.text.isNullOrEmpty()) throw MissingSmallVersionException(
+                        "测试版猜版（含空格版）需要填写小版本号，否则无法猜测测试版。"
+                    )
+                    else versionSmall =
+                        dialogGuessBinding.etVersionSmall.editText?.text.toString().toInt()
+
                 }
                 if (versionSmall % 5 != 0 && !DataStoreUtil.getBoolean(
-                        "guessNot5", false
+                        "guessNot5",
+                        false
                     )
-                ) throw Exception("小版本号需填 5 的倍数。如有需求，请前往设置解除此限制。")
-                if (versionSmall != 0) {
+                ) throw InvalidMultipleException("小版本号需填 5 的倍数。如有需求，请前往设置解除此限制。")
+                if (versionSmall != 0)
                     DataStoreUtil.putIntAsync("versionSmall", versionSmall)
-                }/*我偷懒了，因为我上面也有偷懒逻辑，
-                       为了防止 null，我在正式版猜版时默认填入了 0，
-                       但是我没处理下面涉及到持久化存储逻辑的语句，就把 0 存进去了，
-                       覆盖了原来的 15xxx 的持久化存储*/
-
                 guessUrl(versionBig, versionSmall, mode)
-
+            } catch (e: MissingSmallVersionException) {
+                dialogError(e, true)
+            } catch (e: InvalidMultipleException) {
+                dialogError(e, true)
             } catch (e: Exception) {
                 e.printStackTrace()
                 dialogError(e)
             }
         }
+
 
 
         dialogGuessBinding.btnGuessCancel.setOnClickListener {
@@ -674,9 +683,12 @@ class MainActivity : AppCompatActivity() {
         binding.progressLine.show()
         CoroutineScope(Dispatchers.IO).launch {
             try {
+                // 识别本机 Android QQ 版本并放进持久化存储
                 val QQPackageInfo = packageManager.getPackageInfo("com.tencent.mobileqq", 0)
                 val QQVersionInstall = QQPackageInfo.versionName
-                DataStoreUtil.putStringAsync("QQVersionInstall", QQVersionInstall)
+                if (QQVersionInstall != DataStoreUtil.getString("QQVersionInstall", "")) {
+                    DataStoreUtil.putString("QQVersionInstall", QQVersionInstall)
+                }
             } catch (e: Exception) {
                 DataStoreUtil.putStringAsync("QQVersionInstall", "")
             } finally {
@@ -699,6 +711,11 @@ class MainActivity : AppCompatActivity() {
                             Gson().fromJson(json, QQVersionBean::class.java).apply {
                                 jsonString = json
                                 this.isShowProgressSize = isShowProgressSize
+                                // 标记本机 Android QQ 版本
+                                this.displayInstall = (DataStoreUtil.getString(
+                                    "QQVersionInstall",
+                                    ""
+                                ) == this.versionNumber)
                             }
                         }
                         if (DataStoreUtil.getBoolean(
