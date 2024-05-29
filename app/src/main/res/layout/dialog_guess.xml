@@ -72,16 +72,33 @@
         android:id="@+id/et_version_small"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
         android:hint="起始小版本号"
+        android:layout_marginBottom="8dp"
         app:helperText="填写起始猜测小版本号，猜正式版时无需填写"
         app:helperTextEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:imeOptions="actionDone"
             android:inputType="number" />
+
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/et_version_16code"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:hint="十六进制代码"
+        app:prefixText="0x"
+        app:helperText="填写十六进制代码，仅微信猜版使用"
+        app:helperTextEnabled="true">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionDone" />
 
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -93,6 +110,7 @@
         android:layout_height="wrap_content"
         android:backgroundTint="?android:colorBackground">
             <TextView
+                android:id="@+id/tv_warning"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="4dp"
