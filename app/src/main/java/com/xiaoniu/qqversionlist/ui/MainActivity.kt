@@ -147,12 +147,14 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun showUADialog(agreed: Boolean) {
+    private fun showUADialog(agreed: Boolean, UATarget: Int) {
 
         // 屏幕高度获取
         val screenHeight = Resources.getSystem().displayMetrics.heightPixels
 
         //用户协议，传参内容表示先前是否同意过协议
+        //谁动了代码不动注释？
+
         val userAgreementBinding = UserAgreementBinding.inflate(layoutInflater)
 
         val dialogUA =
@@ -178,7 +180,7 @@ class MainActivity : AppCompatActivity() {
         constraintSet.applyTo(userAgreementBinding.userAgreement)
 
         userAgreementBinding.uaButtonAgree.setOnClickListener {
-            DataStoreUtil.putIntAsync("userAgreement", 1)
+            DataStoreUtil.putIntAsync("userAgreement", UATarget)
             dialogUA.dismiss()
             getData()
         }
@@ -198,8 +200,8 @@ class MainActivity : AppCompatActivity() {
         DataStoreUtil.deletePreferenceAsync("version")
 
         //这里的“getInt: userAgreement”的值代表着用户协议修订版本，后续更新协议版本后也需要在下面一行把“judgeUARead”+1，以此类推
-        val judgeUARead = 1
-        if (DataStoreUtil.getInt("userAgreement", 0) != judgeUARead) showUADialog(false)
+        val judgeUATarget = 2 // 2024.5.30 第二版
+        if (DataStoreUtil.getInt("userAgreement", 0) < judgeUATarget) showUADialog(false, judgeUATarget)
         else getData()
 
         // 进度条动画
@@ -304,7 +306,7 @@ class MainActivity : AppCompatActivity() {
                         .setMessage(message)
                         .setPositiveButton("确定", null)
                         .setNegativeButton("撤回同意用户协议") { _, _ ->
-                            showUADialog(true)
+                            showUADialog(true,judgeUATarget)
                         }
                         .show()
                         .apply {
@@ -566,7 +568,7 @@ class MainActivity : AppCompatActivity() {
         if (intent.action == "android.intent.action.VIEW" && DataStoreUtil.getInt(
                 "userAgreement",
                 0
-            ) == judgeUARead
+            ) >= judgeUATarget
         ) {
             showGuessVersionDialog()
         }
@@ -592,12 +594,14 @@ class MainActivity : AppCompatActivity() {
             dialogGuessBinding.etVersionTrue.visibility = View.GONE
             dialogGuessBinding.tvWarning.text =
                 "鉴于 QQ 测试版可能存在不可预知的稳定性问题，您在下载及使用该测试版本之前，必须明确并确保自身具备足够的风险识别和承受能力。根据相关条款，您使用本软件时应当已了解并同意，因下载或使用 QQ 测试版而可能产生的任何直接或间接损失、损害以及其他不利后果，均由您自行承担全部责任。"
+            dialogGuessBinding.etVersionBig.helperText = "填写格式为 x.y.z"
         } else if (dialogGuessBinding.spinnerVersion.text.toString() == "正式版") {
             dialogGuessBinding.etVersionSmall.isEnabled = false
             dialogGuessBinding.etVersionSmall.visibility = View.VISIBLE
             dialogGuessBinding.guessDialogWarning.visibility = View.GONE
             dialogGuessBinding.etVersion16code.visibility = View.GONE
             dialogGuessBinding.etVersionTrue.visibility = View.GONE
+            dialogGuessBinding.etVersionBig.helperText = "填写格式为 x.y.z"
         } else if (dialogGuessBinding.spinnerVersion.text.toString() == "微信猜版") {
             dialogGuessBinding.etVersionSmall.isEnabled = false
             dialogGuessBinding.guessDialogWarning.visibility = View.VISIBLE
@@ -606,6 +610,7 @@ class MainActivity : AppCompatActivity() {
             dialogGuessBinding.etVersion16code.visibility = View.VISIBLE
             dialogGuessBinding.tvWarning.text =
                 "微信猜版功能为 QQ 版本列表实用工具附带的实验性功能，可能存在不可预知的稳定性问题。请明确并确保自身具备足够的风险识别和承受能力。"
+            dialogGuessBinding.etVersionBig.helperText = "无需填写小数点"
         }
 
 
@@ -621,12 +626,14 @@ class MainActivity : AppCompatActivity() {
                     dialogGuessBinding.etVersionTrue.visibility = View.GONE
                     dialogGuessBinding.tvWarning.text =
                         "鉴于 QQ 测试版可能存在不可预知的稳定性问题，您在下载及使用该测试版本之前，必须明确并确保自身具备足够的风险识别和承受能力。根据相关条款，您使用本软件时应当已了解并同意，因下载或使用 QQ 测试版而可能产生的任何直接或间接损失、损害以及其他不利后果，均由您自行承担全部责任。"
+                    dialogGuessBinding.etVersionBig.helperText = "填写格式为 x.y.z"
                 } else if (judgeVerSelect == "正式版") {
                     dialogGuessBinding.etVersionSmall.visibility = View.VISIBLE
                     dialogGuessBinding.etVersionSmall.isEnabled = false
                     dialogGuessBinding.guessDialogWarning.visibility = View.GONE
                     dialogGuessBinding.etVersion16code.visibility = View.GONE
                     dialogGuessBinding.etVersionTrue.visibility = View.GONE
+                    dialogGuessBinding.etVersionBig.helperText = "填写格式为 x.y.z"
                 } else if (judgeVerSelect == "微信猜版") {
                     dialogGuessBinding.etVersionSmall.isEnabled = false
                     dialogGuessBinding.etVersionSmall.visibility = View.GONE
@@ -635,6 +642,7 @@ class MainActivity : AppCompatActivity() {
                     dialogGuessBinding.etVersionTrue.visibility = View.VISIBLE
                     dialogGuessBinding.tvWarning.text =
                         "微信猜版功能为 QQ 版本列表实用工具附带的实验性功能，可能存在不可预知的稳定性问题。请明确并确保自身具备足够的风险识别和承受能力。"
+                    dialogGuessBinding.etVersionBig.helperText = "无需填写小数点"
                 }
             }
 
@@ -686,7 +694,8 @@ class MainActivity : AppCompatActivity() {
                         if (versionSmall % 5 != 0 && !DataStoreUtil.getBoolean(
                                 "guessNot5",
                                 false
-                            )) throw InvalidMultipleException("小版本号需填 5 的倍数。如有需求，请前往设置解除此限制。")
+                            )
+                        ) throw InvalidMultipleException("小版本号需填 5 的倍数。如有需求，请前往设置解除此限制。")
                         if (versionSmall != 0)
                             DataStoreUtil.putIntAsync("versionSmall", versionSmall)
                     }

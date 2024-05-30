@@ -54,8 +54,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_weight="1"
-            android:hint="版本"
-            app:helperText="指定猜版版本"
+            android:hint="猜版类型"
+            app:helperText="指定猜版目标类型"
             app:helperTextEnabled="true">
 
             <AutoCompleteTextView
@@ -63,6 +63,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="none"
+                android:imeOptions="actionNext"
                 app:simpleItems="@array/version" />
 
         </com.google.android.material.textfield.TextInputLayout>
