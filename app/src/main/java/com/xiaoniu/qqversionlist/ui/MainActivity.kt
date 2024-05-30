@@ -586,20 +586,26 @@ class MainActivity : AppCompatActivity() {
         }
         if (dialogGuessBinding.spinnerVersion.text.toString() == "测试版" || dialogGuessBinding.spinnerVersion.text.toString() == "空格猜版") {
             dialogGuessBinding.etVersionSmall.isEnabled = true
+            dialogGuessBinding.etVersionSmall.visibility = View.VISIBLE
             dialogGuessBinding.guessDialogWarning.visibility = View.VISIBLE
             dialogGuessBinding.etVersion16code.visibility = View.GONE
+            dialogGuessBinding.etVersionTrue.visibility = View.GONE
             dialogGuessBinding.tvWarning.text =
                 "鉴于 QQ 测试版可能存在不可预知的稳定性问题，您在下载及使用该测试版本之前，必须明确并确保自身具备足够的风险识别和承受能力。根据相关条款，您使用本软件时应当已了解并同意，因下载或使用 QQ 测试版而可能产生的任何直接或间接损失、损害以及其他不利后果，均由您自行承担全部责任。"
         } else if (dialogGuessBinding.spinnerVersion.text.toString() == "正式版") {
             dialogGuessBinding.etVersionSmall.isEnabled = false
+            dialogGuessBinding.etVersionSmall.visibility = View.VISIBLE
             dialogGuessBinding.guessDialogWarning.visibility = View.GONE
             dialogGuessBinding.etVersion16code.visibility = View.GONE
+            dialogGuessBinding.etVersionTrue.visibility = View.GONE
         } else if (dialogGuessBinding.spinnerVersion.text.toString() == "微信猜版") {
-            dialogGuessBinding.etVersionSmall.isEnabled = true
+            dialogGuessBinding.etVersionSmall.isEnabled = false
             dialogGuessBinding.guessDialogWarning.visibility = View.VISIBLE
+            dialogGuessBinding.etVersionSmall.visibility = View.GONE
+            dialogGuessBinding.etVersionTrue.visibility = View.VISIBLE
             dialogGuessBinding.etVersion16code.visibility = View.VISIBLE
             dialogGuessBinding.tvWarning.text =
-                "QQ 版本列表实用工具的微信猜版功能为实验性功能，可能存在不可预知的稳定性问题。请明确并确保自身具备足够的风险识别和承受能力。"
+                "微信猜版功能为 QQ 版本列表实用工具附带的实验性功能，可能存在不可预知的稳定性问题。请明确并确保自身具备足够的风险识别和承受能力。"
         }
 
 
@@ -609,20 +615,26 @@ class MainActivity : AppCompatActivity() {
                 DataStoreUtil.putStringAsync("versionSelect", judgeVerSelect)
                 if (judgeVerSelect == "测试版" || judgeVerSelect == "空格猜版") {
                     dialogGuessBinding.etVersionSmall.isEnabled = true
+                    dialogGuessBinding.etVersionSmall.visibility = View.VISIBLE
                     dialogGuessBinding.guessDialogWarning.visibility = View.VISIBLE
                     dialogGuessBinding.etVersion16code.visibility = View.GONE
+                    dialogGuessBinding.etVersionTrue.visibility = View.GONE
                     dialogGuessBinding.tvWarning.text =
                         "鉴于 QQ 测试版可能存在不可预知的稳定性问题，您在下载及使用该测试版本之前，必须明确并确保自身具备足够的风险识别和承受能力。根据相关条款，您使用本软件时应当已了解并同意，因下载或使用 QQ 测试版而可能产生的任何直接或间接损失、损害以及其他不利后果，均由您自行承担全部责任。"
                 } else if (judgeVerSelect == "正式版") {
+                    dialogGuessBinding.etVersionSmall.visibility = View.VISIBLE
                     dialogGuessBinding.etVersionSmall.isEnabled = false
                     dialogGuessBinding.guessDialogWarning.visibility = View.GONE
                     dialogGuessBinding.etVersion16code.visibility = View.GONE
+                    dialogGuessBinding.etVersionTrue.visibility = View.GONE
                 } else if (judgeVerSelect == "微信猜版") {
-                    dialogGuessBinding.etVersionSmall.isEnabled = true
+                    dialogGuessBinding.etVersionSmall.isEnabled = false
+                    dialogGuessBinding.etVersionSmall.visibility = View.GONE
                     dialogGuessBinding.guessDialogWarning.visibility = View.VISIBLE
                     dialogGuessBinding.etVersion16code.visibility = View.VISIBLE
+                    dialogGuessBinding.etVersionTrue.visibility = View.VISIBLE
                     dialogGuessBinding.tvWarning.text =
-                        "QQ 版本列表实用工具的微信猜版功能为实验性功能，可能存在不可预知的稳定性问题。请明确并确保自身具备足够的风险识别和承受能力。"
+                        "微信猜版功能为 QQ 版本列表实用工具附带的实验性功能，可能存在不可预知的稳定性问题。请明确并确保自身具备足够的风险识别和承受能力。"
                 }
             }
 
@@ -663,37 +675,41 @@ class MainActivity : AppCompatActivity() {
                 val mode = dialogGuessBinding.spinnerVersion.text.toString()
                 var versionSmall = 0
                 var version16code = 0.toString()
+                var versionTrue = 0
                 if (mode == "测试版" || mode == "空格猜版") {
                     if (dialogGuessBinding.etVersionSmall.editText?.text.isNullOrEmpty()) throw MissingSmallVersionException(
                         "测试版猜版（含空格猜版）需要填写小版本号，否则无法猜测测试版。"
                     )
-                    else versionSmall =
-                        dialogGuessBinding.etVersionSmall.editText?.text.toString().toInt()
+                    else {
+                        versionSmall =
+                            dialogGuessBinding.etVersionSmall.editText?.text.toString().toInt()
+                        if (versionSmall % 5 != 0 && !DataStoreUtil.getBoolean(
+                                "guessNot5",
+                                false
+                            )) throw InvalidMultipleException("小版本号需填 5 的倍数。如有需求，请前往设置解除此限制。")
+                        if (versionSmall != 0)
+                            DataStoreUtil.putIntAsync("versionSmall", versionSmall)
+                    }
 
                 } else if (mode == "微信猜版") {
-                    if (dialogGuessBinding.etVersionSmall.editText?.text.isNullOrEmpty()) throw MissingSmallVersionException(
-                        "微信猜版需要填写小版本号，否则无法猜测微信版本。"
+                    if (dialogGuessBinding.etVersionTrue.editText?.text.isNullOrEmpty()) throw MissingSmallVersionException(
+                        "微信猜版需要填写真实版本号，否则无法猜测微信版本。"
                     )
                     else if (dialogGuessBinding.etVersion16code.editText?.text.isNullOrEmpty()) throw MissingSmallVersionException(
                         "微信猜版需要填写十六进制代码，否则无法猜测微信版本。"
                     )
                     else {
-                        versionSmall =
-                            dialogGuessBinding.etVersionSmall.editText?.text.toString().toInt()
+                        versionTrue =
+                            dialogGuessBinding.etVersionTrue.editText?.text.toString().toInt()
                         version16code =
                             dialogGuessBinding.etVersion16code.editText?.text.toString()
+                        if (version16code != 0.toString())
+                            DataStoreUtil.putStringAsync("version16code", version16code)
+                        if (versionTrue != 0)
+                            DataStoreUtil.putIntAsync("versionTrue", versionTrue)
                     }
                 }
-                if (versionSmall % 5 != 0 && !DataStoreUtil.getBoolean(
-                        "guessNot5",
-                        false
-                    ) && (mode == "测试版" || mode == "空格猜版")
-                ) throw InvalidMultipleException("小版本号需填 5 的倍数。如有需求，请前往设置解除此限制。")
-                if (versionSmall != 0)
-                    DataStoreUtil.putIntAsync("versionSmall", versionSmall)
-                if (version16code != 0.toString())
-                    DataStoreUtil.putStringAsync("version16code", version16code)
-                guessUrl(versionBig, versionSmall, version16code, mode)
+                guessUrl(versionBig, versionSmall, versionTrue, version16code, mode)
             } catch (e: MissingSmallVersionException) {
                 dialogError(e, true)
             } catch (e: InvalidMultipleException) {
@@ -711,14 +727,14 @@ class MainActivity : AppCompatActivity() {
         }
 
         val memVersionSmall = DataStoreUtil.getInt("versionSmall", -1)
-        if (memVersionSmall != -1) {
+        if (memVersionSmall != -1)
             dialogGuessBinding.etVersionSmall.editText?.setText(memVersionSmall.toString())
-        }
-
         val memVersion16code = DataStoreUtil.getString("version16code", "-1")
-        if (memVersion16code != "-1") {
+        if (memVersion16code != "-1")
             dialogGuessBinding.etVersion16code.editText?.setText(memVersion16code)
-        }
+        val memVersionTrue = DataStoreUtil.getInt("versionTrue", -1)
+        if (memVersionTrue != -1)
+            dialogGuessBinding.etVersionTrue.editText?.setText(memVersionTrue.toString())
     }
 
 
@@ -819,6 +835,7 @@ class MainActivity : AppCompatActivity() {
     private fun guessUrl(
         versionBig: String,
         versionSmall: Int,
+        versionTrue: Int,
         version16codeStr: String,
         mode: String
     ) {
@@ -845,6 +862,8 @@ class MainActivity : AppCompatActivity() {
         val thread = Thread {
             var vSmall = versionSmall
             var v16codeStr = version16codeStr
+            val guessNot5 = DataStoreUtil.getBoolean("guessNot5", false)
+            val guessTestExtend = DataStoreUtil.getBoolean("guessTestExtend", false)
             val defineSuf = DataStoreUtil.getString("suffixDefine", "")
             val defineSufList = defineSuf.split(", ")
             val suf64hb =
@@ -963,17 +982,11 @@ class MainActivity : AppCompatActivity() {
                     when (status) {
                         STATUS_ONGOING -> {
                             if (mode == MODE_TEST) {
-                                if (link == "" || !DataStoreUtil.getBoolean(
-                                        "guessTestExtend", false
-                                    )
-                                ) {
+                                if (link == "" || !guessTestExtend) {
                                     link =
                                         "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}${stList[sIndex]}.apk"
-                                    if (DataStoreUtil.getBoolean(
-                                            "guessTestExtend", false
-                                        )
-                                    ) sIndex += 1
-                                } else if (DataStoreUtil.getBoolean("guessTestExtend", false)) {
+                                    if (guessTestExtend) sIndex += 1
+                                } else {
                                     link =
                                         "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}.${vSmall}${stList[sIndex]}.apk"
                                     sIndex += 1
@@ -1012,7 +1025,7 @@ class MainActivity : AppCompatActivity() {
                             } else if (mode == MODE_WECHAT) {
                                 // https://dldir1.qq.com/weixin/android/weixin8049android2600_0x2800318a_arm64.apk
                                 link =
-                                    "https://dldir1.qq.com/weixin/android/weixin${versionBig}android${vSmall}_0x${v16codeStr}_arm64.apk"
+                                    "https://dldir1.qq.com/weixin/android/weixin${versionBig}android${versionTrue}_0x${v16codeStr}_arm64.apk"
                             }
                             runOnUiThread {
                                 updateProgressDialogMessage("正在猜测下载地址：$link")
@@ -1056,19 +1069,10 @@ class MainActivity : AppCompatActivity() {
                                         // 继续按钮点击事件
                                         successButtonBinding.btnContinue.setOnClickListener {
                                             // 测试版情况下，未打开扩展猜版或扩展猜版到最后一步时执行小版本号的递增
-                                            if (mode == MODE_TEST && (!DataStoreUtil.getBoolean(
-                                                    "guessTestExtend", false
-                                                ) || sIndex == (stList.size))
-                                            ) {
-                                                vSmall += if (!DataStoreUtil.getBoolean(
-                                                        "guessNot5", false
-                                                    )
-                                                ) 5 else 1
+                                            if (mode == MODE_TEST && (!guessTestExtend || sIndex == (stList.size))) {
+                                                vSmall += if (!guessNot5) 5 else 1
                                                 sIndex = 0
-                                            } else if (mode == MODE_UNOFFICIAL) vSmall += if (!DataStoreUtil.getBoolean(
-                                                    "guessNot5", false
-                                                )
-                                            ) 5 else 1
+                                            } else if (mode == MODE_UNOFFICIAL) vSmall += if (!guessNot5) 5 else 1
                                             else if (mode == MODE_WECHAT) {
                                                 val version16code = v16codeStr.toInt(16) + 1
                                                 v16codeStr = version16code.toString(16)
@@ -1148,19 +1152,11 @@ class MainActivity : AppCompatActivity() {
                                     }
                                 }
                             } else {
-                                if (mode == MODE_TEST && (!DataStoreUtil.getBoolean(
-                                        "guessTestExtend", false
-                                    ) || sIndex == (stList.size)) // 测试版情况下，未打开扩展猜版或扩展猜版到最后一步时执行小版本号的递增
+                                if (mode == MODE_TEST && (!guessTestExtend || sIndex == (stList.size)) // 测试版情况下，未打开扩展猜版或扩展猜版到最后一步时执行小版本号的递增
                                 ) {
-                                    vSmall += if (!DataStoreUtil.getBoolean(
-                                            "guessNot5", false
-                                        )
-                                    ) 5 else 1
+                                    vSmall += if (!guessNot5) 5 else 1
                                     sIndex = 0
-                                } else if (mode == MODE_UNOFFICIAL) vSmall += if (!DataStoreUtil.getBoolean(
-                                        "guessNot5", false
-                                    )
-                                ) 5 else 1
+                                } else if (mode == MODE_UNOFFICIAL) vSmall += if (!guessNot5) 5 else 1
                                 else if (mode == MODE_WECHAT) {
                                     val version16code = v16codeStr.toInt(16) + 1
                                     v16codeStr = version16code.toString(16)
