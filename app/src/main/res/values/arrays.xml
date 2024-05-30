@@ -19,6 +19,7 @@
     <string-array name="version">
         <item>正式版</item>
         <item>测试版</item>
-        <item>空格版</item>
+        <item>空格猜版</item>
+        <item>微信猜版</item>
     </string-array>
 </resources>
