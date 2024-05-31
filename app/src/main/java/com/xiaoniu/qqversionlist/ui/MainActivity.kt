@@ -1137,18 +1137,16 @@ class MainActivity : AppCompatActivity() {
                                                         "Android_QQ_${versionBig}.${vSmall}_64.apk"
                                                     )
                                                 }
-
                                                 MODE_OFFICIAL -> {
                                                     requestDownload.setDestinationInExternalPublicDir(
                                                         Environment.DIRECTORY_DOWNLOADS,
                                                         "Android_QQ_${versionBig}_64.apk"
                                                     )
                                                 }
-
                                                 MODE_WECHAT -> {
                                                     requestDownload.setDestinationInExternalPublicDir(
                                                         Environment.DIRECTORY_DOWNLOADS,
-                                                        "Android_微信_${versionBig}.${vSmall}.apk"
+                                                        "Android_微信_${versionBig}.${versionTrue}.apk"
                                                     )
                                                 }
                                             }
