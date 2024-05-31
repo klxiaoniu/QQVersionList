@@ -2,7 +2,7 @@ name: Android CI
 
 on:
   push:
-    branches: [ "master", "WC-1.3.0" ]
+    branches: [ "master", "WT-Temporary" ]
     paths-ignore:
       - '**.md'
       - '**.txt'

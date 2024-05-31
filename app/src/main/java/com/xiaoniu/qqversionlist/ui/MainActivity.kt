@@ -201,7 +201,10 @@ class MainActivity : AppCompatActivity() {
 
         //这里的“getInt: userAgreement”的值代表着用户协议修订版本，后续更新协议版本后也需要在下面一行把“judgeUARead”+1，以此类推
         val judgeUATarget = 2 // 2024.5.30 第二版
-        if (DataStoreUtil.getInt("userAgreement", 0) < judgeUATarget) showUADialog(false, judgeUATarget)
+        if (DataStoreUtil.getInt("userAgreement", 0) < judgeUATarget) showUADialog(
+            false,
+            judgeUATarget
+        )
         else getData()
 
         // 进度条动画
@@ -306,7 +309,7 @@ class MainActivity : AppCompatActivity() {
                         .setMessage(message)
                         .setPositiveButton("确定", null)
                         .setNegativeButton("撤回同意用户协议") { _, _ ->
-                            showUADialog(true,judgeUATarget)
+                            showUADialog(true, judgeUATarget)
                         }
                         .show()
                         .apply {
@@ -583,7 +586,7 @@ class MainActivity : AppCompatActivity() {
         val verBig = DataStoreUtil.getString("versionBig", "")
         dialogGuessBinding.etVersionBig.editText?.setText(verBig)
         val memVersion = DataStoreUtil.getString("versionSelect", "正式版")
-        if (memVersion == "测试版" || memVersion == "空格猜版" || memVersion == "正式版" || memVersion == "微信猜版") {
+        if (memVersion == "测试版" || memVersion == "空格猜版" || memVersion == "正式版" || memVersion == "微信猜版" || memVersion == "微信输入法") {
             dialogGuessBinding.spinnerVersion.setText(memVersion, false)
         }
         if (dialogGuessBinding.spinnerVersion.text.toString() == "测试版" || dialogGuessBinding.spinnerVersion.text.toString() == "空格猜版") {
@@ -611,6 +614,19 @@ class MainActivity : AppCompatActivity() {
             dialogGuessBinding.tvWarning.text =
                 "微信猜版功能为 QQ 版本列表实用工具附带的实验性功能，可能存在不可预知的稳定性问题。请明确并确保自身具备足够的风险识别和承受能力。"
             dialogGuessBinding.etVersionBig.helperText = "无需填写小数点"
+            dialogGuessBinding.etVersionTrue.helperText = "填写真实版本号（版本码），仅微信猜版使用"
+            dialogGuessBinding.etVersionTrue.hint = "真实版本号"
+        } else if (dialogGuessBinding.spinnerVersion.text.toString() == "微信输入法") {
+            dialogGuessBinding.etVersionSmall.isEnabled = false
+            dialogGuessBinding.guessDialogWarning.visibility = View.VISIBLE
+            dialogGuessBinding.etVersionSmall.visibility = View.GONE
+            dialogGuessBinding.etVersionTrue.visibility = View.VISIBLE
+            dialogGuessBinding.etVersion16code.visibility = View.GONE
+            dialogGuessBinding.tvWarning.text =
+                "微信输入法猜版为临时性功能，不会合并主线，请勿过度依赖此功能。"
+            dialogGuessBinding.etVersionBig.helperText = "填写格式为 x.y.z"
+            dialogGuessBinding.etVersionTrue.helperText = "填写直链版本号，仅微信输入法猜版使用"
+            dialogGuessBinding.etVersionTrue.hint = "直链版本号"
         }
 
 
@@ -643,6 +659,19 @@ class MainActivity : AppCompatActivity() {
                     dialogGuessBinding.tvWarning.text =
                         "微信猜版功能为 QQ 版本列表实用工具附带的实验性功能，可能存在不可预知的稳定性问题。请明确并确保自身具备足够的风险识别和承受能力。"
                     dialogGuessBinding.etVersionBig.helperText = "无需填写小数点"
+                    dialogGuessBinding.etVersionTrue.helperText = "填写真实版本号（版本码），仅微信猜版使用"
+                    dialogGuessBinding.etVersionTrue.hint = "真实版本号"
+                } else if (judgeVerSelect == "微信输入法") {
+                    dialogGuessBinding.etVersionSmall.isEnabled = false
+                    dialogGuessBinding.guessDialogWarning.visibility = View.VISIBLE
+                    dialogGuessBinding.etVersionSmall.visibility = View.GONE
+                    dialogGuessBinding.etVersionTrue.visibility = View.VISIBLE
+                    dialogGuessBinding.etVersion16code.visibility = View.GONE
+                    dialogGuessBinding.tvWarning.text =
+                        "微信输入法猜版为临时性功能，不会合并主线，请勿过度依赖此功能。"
+                    dialogGuessBinding.etVersionBig.helperText = "填写格式为 x.y.z"
+                    dialogGuessBinding.etVersionTrue.helperText = "填写直链版本号，仅微信输入法猜版使用"
+                    dialogGuessBinding.etVersionTrue.hint = "直链版本号"
                 }
             }
 
@@ -706,8 +735,7 @@ class MainActivity : AppCompatActivity() {
                     )
                     else if (dialogGuessBinding.etVersion16code.editText?.text.isNullOrEmpty()) throw MissingSmallVersionException(
                         "微信猜版需要填写十六进制代码，否则无法猜测微信版本。"
-                    )
-                    else {
+                    ) else {
                         versionTrue =
                             dialogGuessBinding.etVersionTrue.editText?.text.toString().toInt()
                         version16code =
@@ -716,6 +744,13 @@ class MainActivity : AppCompatActivity() {
                             DataStoreUtil.putStringAsync("version16code", version16code)
                         if (versionTrue != 0)
                             DataStoreUtil.putIntAsync("versionTrue", versionTrue)
+                    }
+                } else if (mode == "微信输入法") {
+                    if (dialogGuessBinding.etVersionTrue.editText?.text.isNullOrEmpty()) throw MissingSmallVersionException(
+                        "微信输入法猜版需要填写直链版本号，否则无法猜测微信输入法版本。"
+                    ) else {
+                        versionTrue =
+                            dialogGuessBinding.etVersionTrue.editText?.text.toString().toInt()
                     }
                 }
                 guessUrl(versionBig, versionSmall, versionTrue, version16code, mode)
@@ -871,6 +906,7 @@ class MainActivity : AppCompatActivity() {
         val thread = Thread {
             var vSmall = versionSmall
             var v16codeStr = version16codeStr
+            var vTrue = versionTrue
             val guessNot5 = DataStoreUtil.getBoolean("guessNot5", false)
             val guessTestExtend = DataStoreUtil.getBoolean("guessTestExtend", false)
             val defineSuf = DataStoreUtil.getString("suffixDefine", "")
@@ -1035,6 +1071,10 @@ class MainActivity : AppCompatActivity() {
                                 // https://dldir1.qq.com/weixin/android/weixin8049android2600_0x2800318a_arm64.apk
                                 link =
                                     "https://dldir1.qq.com/weixin/android/weixin${versionBig}android${versionTrue}_0x${v16codeStr}_arm64.apk"
+                            } else if (mode == MODE_WETYPE) {
+                                // https://download.z.weixin.qq.com/app/android/1.3.0/wxkb_754_32.apk
+                                link =
+                                    "https://download.z.weixin.qq.com/app/android/${versionBig}/wxkb_${vTrue}_32.apk"
                             }
                             runOnUiThread {
                                 updateProgressDialogMessage("正在猜测下载地址：$link")
@@ -1085,7 +1125,7 @@ class MainActivity : AppCompatActivity() {
                                             else if (mode == MODE_WECHAT) {
                                                 val version16code = v16codeStr.toInt(16) + 1
                                                 v16codeStr = version16code.toString(16)
-                                            }
+                                            } else if (mode == MODE_WETYPE) vTrue += 1
                                             successMaterialDialog.dismiss()
                                             status = STATUS_ONGOING
                                         }
@@ -1107,12 +1147,14 @@ class MainActivity : AppCompatActivity() {
                                                         when (mode) {
                                                             MODE_OFFICIAL -> "Android QQ $versionBig 正式版（大小：$appSize MB）\n\n下载地址：$link"
                                                             MODE_WECHAT -> "Android 微信 $versionBig（$vSmall）（大小：$appSize MB）\n\n下载地址：$link"
+                                                            MODE_WETYPE -> "Android 微信输入法 $versionBig（$vTrue）（大小：$appSize MB）\n\n下载地址：$link"
                                                             else -> "Android QQ $versionBig.$vSmall 测试版（大小：$appSize MB）\n\n下载地址：$link\n\n鉴于 QQ 测试版可能存在不可预知的稳定性问题，您在下载及使用该测试版本之前，必须明确并确保自身具备足够的风险识别和承受能力。"
                                                         }
                                                     } else {
                                                         when (mode) {
                                                             MODE_OFFICIAL -> "Android QQ $versionBig 正式版\n\n下载地址：$link"
                                                             MODE_WECHAT -> "Android 微信 $versionBig（$vSmall)\n\n下载地址：$link"
+                                                            MODE_WETYPE -> "Android 微信输入法 $versionBig（$vTrue）\n\n下载地址：$link"
                                                             else -> "Android QQ $versionBig.$vSmall 测试版\n\n下载地址：$link\n\n鉴于 QQ 测试版可能存在不可预知的稳定性问题，您在下载及使用该测试版本之前，必须明确并确保自身具备足够的风险识别和承受能力。"
                                                         }
                                                     }
@@ -1148,7 +1190,14 @@ class MainActivity : AppCompatActivity() {
                                                 MODE_WECHAT -> {
                                                     requestDownload.setDestinationInExternalPublicDir(
                                                         Environment.DIRECTORY_DOWNLOADS,
-                                                        "Android_微信_${versionBig}.${vSmall}.apk"
+                                                        "Android_微信_${versionBig}.${versionTrue}.apk"
+                                                    )
+                                                }
+
+                                                MODE_WETYPE -> {
+                                                    requestDownload.setDestinationInExternalPublicDir(
+                                                        Environment.DIRECTORY_DOWNLOADS,
+                                                        "Android_微信输入法_${versionBig}.${vTrue}.apk"
                                                     )
                                                 }
                                             }
@@ -1169,7 +1218,7 @@ class MainActivity : AppCompatActivity() {
                                 else if (mode == MODE_WECHAT) {
                                     val version16code = v16codeStr.toInt(16) + 1
                                     v16codeStr = version16code.toString(16)
-                                }
+                                } else if (mode == MODE_WETYPE) vTrue += 1
                             }
                         }
 
@@ -1212,6 +1261,7 @@ class MainActivity : AppCompatActivity() {
         const val MODE_OFFICIAL = "正式版"
         const val MODE_UNOFFICIAL = "空格猜版"  //空格猜版
         const val MODE_WECHAT = "微信猜版"
+        const val MODE_WETYPE = "微信输入法"
     }
 
 }
