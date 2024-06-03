@@ -47,8 +47,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="6dp"
                 android:layout_marginEnd="6dp"
+                android:fontFamily="@font/tcloud_number_vf"
                 android:textColor="?attr/colorOnPrimaryContainer"
-                android:textSize="24sp"
+                android:textSize="28sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="9.0.25" />
