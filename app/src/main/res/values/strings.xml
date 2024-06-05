@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">QQ Ver. Tool</string>
-    <string name="shortcutLongLabel">猜版 for Android</string>
-    <string name="shortcutShortLabel">猜版</string>
+    <string name="shortcutLongLabel">猜版 Extended</string>
+    <string name="shortcutShortLabel">猜版 Extd.</string>
 </resources>

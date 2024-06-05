@@ -52,7 +52,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.progressindicator.LinearProgressIndicator
-import com.google.gson.Gson
 import com.xiaoniu.qqversionlist.BuildConfig
 import com.xiaoniu.qqversionlist.R
 import com.xiaoniu.qqversionlist.data.QQVersionBean
@@ -71,6 +70,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.lang.Thread.sleep
@@ -201,7 +201,10 @@ class MainActivity : AppCompatActivity() {
 
         //这里的“getInt: userAgreement”的值代表着用户协议修订版本，后续更新协议版本后也需要在下面一行把“judgeUARead”+1，以此类推
         val judgeUATarget = 2 // 2024.5.30 第二版
-        if (DataStoreUtil.getInt("userAgreement", 0) < judgeUATarget) showUADialog(false, judgeUATarget)
+        if (DataStoreUtil.getInt("userAgreement", 0) < judgeUATarget) showUADialog(
+            false,
+            judgeUATarget
+        )
         else getData()
 
         // 进度条动画
@@ -306,7 +309,7 @@ class MainActivity : AppCompatActivity() {
                         .setMessage(message)
                         .setPositiveButton("确定", null)
                         .setNegativeButton("撤回同意用户协议") { _, _ ->
-                            showUADialog(true,judgeUATarget)
+                            showUADialog(true, judgeUATarget)
                         }
                         .show()
                         .apply {
@@ -661,7 +664,7 @@ class MainActivity : AppCompatActivity() {
 
 
         val dialogGuess = MaterialAlertDialogBuilder(this)
-            .setTitle("猜版 for Android")
+            .setTitle("猜版 Extended")
             .setIcon(R.drawable.search_line)
             .setView(dialogGuessBinding.root)
             .setCancelable(false)
@@ -776,7 +779,7 @@ class MainActivity : AppCompatActivity() {
                             val pend = it.indexOf(",\"length")
                             val json = it.substring(pstart, pend)
                             val isShowProgressSize = DataStoreUtil.getBoolean("progressSize", false)
-                            Gson().fromJson(json, QQVersionBean::class.java).apply {
+                            Json.decodeFromString<QQVersionBean>(json).apply {
                                 jsonString = json
                                 this.isShowProgressSize = isShowProgressSize
                                 // 标记本机 Android QQ 版本
@@ -1137,12 +1140,14 @@ class MainActivity : AppCompatActivity() {
                                                         "Android_QQ_${versionBig}.${vSmall}_64.apk"
                                                     )
                                                 }
+
                                                 MODE_OFFICIAL -> {
                                                     requestDownload.setDestinationInExternalPublicDir(
                                                         Environment.DIRECTORY_DOWNLOADS,
                                                         "Android_QQ_${versionBig}_64.apk"
                                                     )
                                                 }
+
                                                 MODE_WECHAT -> {
                                                     requestDownload.setDestinationInExternalPublicDir(
                                                         Environment.DIRECTORY_DOWNLOADS,

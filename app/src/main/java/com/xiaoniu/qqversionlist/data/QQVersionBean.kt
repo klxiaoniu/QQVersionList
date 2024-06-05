@@ -18,6 +18,10 @@
 
 package com.xiaoniu.qqversionlist.data
 
+import kotlinx.serialization.Serializable
+
+
+@Serializable
 data class QQVersionBean(
     val versions: String,
     val versionNumber: String,
@@ -26,7 +30,7 @@ data class QQVersionBean(
     val imgs: List<String>,
     val summary: List<String>,
 
-    var jsonString: String,
+    var jsonString: String = "",
     var displayType: Int = 0, // 0为收起
     var displayInstall: Boolean = false, // false 为不展示
     var isShowProgressSize: Boolean = false
