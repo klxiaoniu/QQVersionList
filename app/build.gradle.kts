@@ -80,7 +80,7 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
     // implementation("com.google.code.gson:gson:2.11.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.0")
     implementation("io.coil-kt:coil:2.6.0")
     implementation("androidx.datastore:datastore-preferences:1.1.1")
 }
