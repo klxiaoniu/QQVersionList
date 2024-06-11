@@ -93,23 +93,25 @@ class MainActivity : AppCompatActivity() {
             ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, windowInsets ->
                 val insets = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars())
                 view.setPadding(insets.left, 0, insets.right, 0)
-                binding.bottomAppBar.updatePadding(0, 0, 0, insets.bottom)
-                binding.btnGuess.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-                    bottomMargin = insets.bottom / 2
+                binding.apply {
+                    bottomAppBar.updatePadding(0, 0, 0, insets.bottom)
+                    btnGuess.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                        bottomMargin = insets.bottom / 2
+                    }
                 }
                 windowInsets
             }
         }
 
         // 不加这段代码的话 Google 可能会在系统栏加遮罩
-        if (SDK_INT >= Build.VERSION_CODES.Q) {
-            window.isNavigationBarContrastEnforced = false
-            window.isStatusBarContrastEnforced = false
+        if (SDK_INT >= Build.VERSION_CODES.Q) window.apply {
+            isNavigationBarContrastEnforced = false
+            isStatusBarContrastEnforced = false
         }
 
-        if (SDK_INT <= Build.VERSION_CODES.Q) {
-            window.statusBarColor = Color.TRANSPARENT
-            window.navigationBarColor = Color.TRANSPARENT
+        if (SDK_INT <= Build.VERSION_CODES.Q) window.apply {
+            statusBarColor = Color.TRANSPARENT
+            navigationBarColor = Color.TRANSPARENT
         }
 
         versionAdapter = VersionAdapter()
@@ -120,7 +122,6 @@ class MainActivity : AppCompatActivity() {
         }
         initButtons()
     }
-
 
     private fun Context.dpToPx(dp: Int): Int {
         return (dp * resources.displayMetrics.density).toInt()
@@ -243,66 +244,68 @@ class MainActivity : AppCompatActivity() {
                                 "获取更新：GitHub Releases、Obtainium、九七通知中心\n\n" +
                                 "Since 2023.8.9"
                     )
-                    message.setSpan(
-                        URLSpan("https://github.com/klxiaoniu"),
-                        message.indexOf("快乐小牛"),
-                        message.indexOf("快乐小牛") + "快乐小牛".length,
-                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-                    )
-                    message.setSpan(
-                        URLSpan("https://github.com/ArcticFoxPro"),
-                        message.indexOf("有鲫雪狐"),
-                        message.indexOf("有鲫雪狐") + "有鲫雪狐".length,
-                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-                    )
-                    message.setSpan(
-                        URLSpan("https://github.com/color597"),
-                        message.indexOf("Col_or"),
-                        message.indexOf("Col_or") + "Col_or".length,
-                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-                    )
-                    message.setSpan(
-                        URLSpan("https://github.com/bggRGjQaUbCoE"),
-                        message.indexOf("bggRGjQaUbCoE"),
-                        message.indexOf("bggRGjQaUbCoE") + "bggRGjQaUbCoE".length,
-                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-                    )
-                    message.setSpan(
-                        URLSpan("https://github.com/egmsia01"),
-                        message.indexOf("GMerge"),
-                        message.indexOf("GMerge") + "GMerge".length,
-                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-                    )
-                    message.setSpan(
-                        URLSpan("https://github.com/klxiaoniu/QQVersionList"),
-                        message.indexOf("GitHub"),
-                        message.indexOf("GitHub") + "GitHub".length,
-                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-                    )
-                    message.setSpan(
-                        URLSpan("https://github.com/klxiaoniu/QQVersionList/blob/master/LICENSE"),
-                        message.indexOf("AGPL v3"),
-                        message.indexOf("AGPL v3") + "AGPL v3".length,
-                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-                    )
-                    message.setSpan(
-                        URLSpan("https://github.com/klxiaoniu/QQVersionList/releases"),
-                        message.indexOf("GitHub Releases"),
-                        message.indexOf("GitHub Releases") + "GitHub Releases".length,
-                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-                    )
-                    message.setSpan(
-                        URLSpan("https://github.com/klxiaoniu/QQVersionList/blob/master/ReadmeAssets/Get-it-on-Obtainium.md"),
-                        message.indexOf("Obtainium"),
-                        message.indexOf("Obtainium") + "Obtainium".length,
-                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-                    )
-                    message.setSpan(
-                        URLSpan("https://github.com/klxiaoniu/QQVersionList/blob/master/ReadmeAssets/Get-it-on-JiuQi-NotifCenter-WeChatMiniProgram.md"),
-                        message.indexOf("九七通知中心"),
-                        message.indexOf("九七通知中心") + "九七通知中心".length,
-                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-                    )
+                    message.apply {
+                        setSpan(
+                            URLSpan("https://github.com/klxiaoniu"),
+                            indexOf("快乐小牛"),
+                            indexOf("快乐小牛") + "快乐小牛".length,
+                            SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
+                        )
+                        setSpan(
+                            URLSpan("https://github.com/ArcticFoxPro"),
+                            indexOf("有鲫雪狐"),
+                            indexOf("有鲫雪狐") + "有鲫雪狐".length,
+                            SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
+                        )
+                        setSpan(
+                            URLSpan("https://github.com/color597"),
+                            indexOf("Col_or"),
+                            indexOf("Col_or") + "Col_or".length,
+                            SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
+                        )
+                        setSpan(
+                            URLSpan("https://github.com/bggRGjQaUbCoE"),
+                            indexOf("bggRGjQaUbCoE"),
+                            indexOf("bggRGjQaUbCoE") + "bggRGjQaUbCoE".length,
+                            SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
+                        )
+                        setSpan(
+                            URLSpan("https://github.com/egmsia01"),
+                            indexOf("GMerge"),
+                            indexOf("GMerge") + "GMerge".length,
+                            SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
+                        )
+                        setSpan(
+                            URLSpan("https://github.com/klxiaoniu/QQVersionList"),
+                            indexOf("GitHub"),
+                            indexOf("GitHub") + "GitHub".length,
+                            SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
+                        )
+                        setSpan(
+                            URLSpan("https://github.com/klxiaoniu/QQVersionList/blob/master/LICENSE"),
+                            indexOf("AGPL v3"),
+                            indexOf("AGPL v3") + "AGPL v3".length,
+                            SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
+                        )
+                        setSpan(
+                            URLSpan("https://github.com/klxiaoniu/QQVersionList/releases"),
+                            indexOf("GitHub Releases"),
+                            indexOf("GitHub Releases") + "GitHub Releases".length,
+                            SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
+                        )
+                        setSpan(
+                            URLSpan("https://github.com/klxiaoniu/QQVersionList/blob/master/ReadmeAssets/Get-it-on-Obtainium.md"),
+                            indexOf("Obtainium"),
+                            indexOf("Obtainium") + "Obtainium".length,
+                            SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
+                        )
+                        setSpan(
+                            URLSpan("https://github.com/klxiaoniu/QQVersionList/blob/master/ReadmeAssets/Get-it-on-JiuQi-NotifCenter-WeChatMiniProgram.md"),
+                            indexOf("九七通知中心"),
+                            indexOf("九七通知中心") + "九七通知中心".length,
+                            SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
+                        )
+                    }
                     MaterialAlertDialogBuilder(this)
                         .setTitle("关于")
                         .setIcon(R.drawable.information_line)
@@ -409,44 +412,46 @@ class MainActivity : AppCompatActivity() {
 
                             constraintSet.applyTo(dialogSuffixDefine.dialogSuffixDefineContainer)
 
-                            dialogSuffixDefine.suffixDefineCheckbox64hb.isChecked =
-                                DataStoreUtil.getBoolean("suffix64HB", true)
-                            dialogSuffixDefine.suffixDefineCheckboxHb64.isChecked =
-                                DataStoreUtil.getBoolean("suffixHB64", true)
-                            dialogSuffixDefine.suffixDefineCheckbox64hb1.isChecked =
-                                DataStoreUtil.getBoolean("suffix64HB1", true)
-                            dialogSuffixDefine.suffixDefineCheckboxHb164.isChecked =
-                                DataStoreUtil.getBoolean("suffixHB164", true)
-                            dialogSuffixDefine.suffixDefineCheckbox64hb2.isChecked =
-                                DataStoreUtil.getBoolean("suffix64HB2", true)
-                            dialogSuffixDefine.suffixDefineCheckboxHb264.isChecked =
-                                DataStoreUtil.getBoolean("suffixHB264", true)
-                            dialogSuffixDefine.suffixDefineCheckbox64hb3.isChecked =
-                                DataStoreUtil.getBoolean("suffix64HB3", true)
-                            dialogSuffixDefine.suffixDefineCheckboxHb364.isChecked =
-                                DataStoreUtil.getBoolean("suffixHB364", true)
+                            dialogSuffixDefine.apply {
+                                suffixDefineCheckbox64hb.isChecked =
+                                    DataStoreUtil.getBoolean("suffix64HB", true)
+                                suffixDefineCheckboxHb64.isChecked =
+                                    DataStoreUtil.getBoolean("suffixHB64", true)
+                                suffixDefineCheckbox64hb1.isChecked =
+                                    DataStoreUtil.getBoolean("suffix64HB1", true)
+                                suffixDefineCheckboxHb164.isChecked =
+                                    DataStoreUtil.getBoolean("suffixHB164", true)
+                                suffixDefineCheckbox64hb2.isChecked =
+                                    DataStoreUtil.getBoolean("suffix64HB2", true)
+                                suffixDefineCheckboxHb264.isChecked =
+                                    DataStoreUtil.getBoolean("suffixHB264", true)
+                                suffixDefineCheckbox64hb3.isChecked =
+                                    DataStoreUtil.getBoolean("suffix64HB3", true)
+                                suffixDefineCheckboxHb364.isChecked =
+                                    DataStoreUtil.getBoolean("suffixHB364", true)
 
-                            dialogSuffixDefine.suffixDefineCheckbox64hd.isChecked =
-                                DataStoreUtil.getBoolean("suffix64HD", true)
-                            dialogSuffixDefine.suffixDefineCheckboxHd64.isChecked =
-                                DataStoreUtil.getBoolean("suffixHD64", true)
-                            dialogSuffixDefine.suffixDefineCheckbox64hd1.isChecked =
-                                DataStoreUtil.getBoolean("suffix64HD1", true)
-                            dialogSuffixDefine.suffixDefineCheckboxHd164.isChecked =
-                                DataStoreUtil.getBoolean("suffixHD164", true)
-                            dialogSuffixDefine.suffixDefineCheckbox64hd2.isChecked =
-                                DataStoreUtil.getBoolean("suffix64HD2", true)
-                            dialogSuffixDefine.suffixDefineCheckboxHd264.isChecked =
-                                DataStoreUtil.getBoolean("suffixHD264", true)
-                            dialogSuffixDefine.suffixDefineCheckbox64hd3.isChecked =
-                                DataStoreUtil.getBoolean("suffix64HD3", true)
-                            dialogSuffixDefine.suffixDefineCheckboxHd364.isChecked =
-                                DataStoreUtil.getBoolean("suffixHD364", true)
+                                suffixDefineCheckbox64hd.isChecked =
+                                    DataStoreUtil.getBoolean("suffix64HD", true)
+                                suffixDefineCheckboxHd64.isChecked =
+                                    DataStoreUtil.getBoolean("suffixHD64", true)
+                                suffixDefineCheckbox64hd1.isChecked =
+                                    DataStoreUtil.getBoolean("suffix64HD1", true)
+                                suffixDefineCheckboxHd164.isChecked =
+                                    DataStoreUtil.getBoolean("suffixHD164", true)
+                                suffixDefineCheckbox64hd2.isChecked =
+                                    DataStoreUtil.getBoolean("suffix64HD2", true)
+                                suffixDefineCheckboxHd264.isChecked =
+                                    DataStoreUtil.getBoolean("suffixHD264", true)
+                                suffixDefineCheckbox64hd3.isChecked =
+                                    DataStoreUtil.getBoolean("suffix64HD3", true)
+                                suffixDefineCheckboxHd364.isChecked =
+                                    DataStoreUtil.getBoolean("suffixHD364", true)
 
-                            dialogSuffixDefine.suffixDefineCheckbox64hd1hb.isChecked =
-                                DataStoreUtil.getBoolean("suffix64HD1HB", true)
-                            dialogSuffixDefine.suffixDefineCheckboxHd1hb64.isChecked =
-                                DataStoreUtil.getBoolean("suffixHD1HB64", true)
+                                suffixDefineCheckbox64hd1hb.isChecked =
+                                    DataStoreUtil.getBoolean("suffix64HD1HB", true)
+                                suffixDefineCheckboxHd1hb64.isChecked =
+                                    DataStoreUtil.getBoolean("suffixHD1HB64", true)
+                            }
 
                             dialogSuffix.show()
 
@@ -463,7 +468,7 @@ class MainActivity : AppCompatActivity() {
                                     val suffixDefine = withContext(Dispatchers.IO) {
                                         DataStoreUtil.getStringAsync("suffixDefine", "").await()
                                     }
-                                    dialogSuffixDefine.settingSuffixDefine.editText?.setText(
+                                    editText?.setText(
                                         suffixDefine
                                     )
                                     isEnabled = true
@@ -474,82 +479,84 @@ class MainActivity : AppCompatActivity() {
                             dialogSuffixDefine.btnSuffixSave.setOnClickListener {
                                 val suffixDefine =
                                     dialogSuffixDefine.settingSuffixDefine.editText?.text.toString()
-                                DataStoreUtil.putStringAsync("suffixDefine", suffixDefine)
+                                DataStoreUtil.apply {
+                                    putStringAsync("suffixDefine", suffixDefine)
 
-                                DataStoreUtil.putBooleanAsync(
-                                    "suffix64HB",
-                                    dialogSuffixDefine.suffixDefineCheckbox64hb.isChecked
-                                )
-                                DataStoreUtil.putBooleanAsync(
-                                    "suffixHB64",
-                                    dialogSuffixDefine.suffixDefineCheckboxHb64.isChecked
-                                )
-                                DataStoreUtil.putBooleanAsync(
-                                    "suffix64HB1",
-                                    dialogSuffixDefine.suffixDefineCheckbox64hb1.isChecked
-                                )
-                                DataStoreUtil.putBooleanAsync(
-                                    "suffixHB164",
-                                    dialogSuffixDefine.suffixDefineCheckboxHb164.isChecked
-                                )
-                                DataStoreUtil.putBooleanAsync(
-                                    "suffix64HB2",
-                                    dialogSuffixDefine.suffixDefineCheckbox64hb2.isChecked
-                                )
-                                DataStoreUtil.putBooleanAsync(
-                                    "suffixHB264",
-                                    dialogSuffixDefine.suffixDefineCheckboxHb264.isChecked
-                                )
-                                DataStoreUtil.putBooleanAsync(
-                                    "suffix64HB3",
-                                    dialogSuffixDefine.suffixDefineCheckbox64hb3.isChecked
-                                )
-                                DataStoreUtil.putBooleanAsync(
-                                    "suffixHB364",
-                                    dialogSuffixDefine.suffixDefineCheckboxHb364.isChecked
-                                )
+                                    putBooleanAsync(
+                                        "suffix64HB",
+                                        dialogSuffixDefine.suffixDefineCheckbox64hb.isChecked
+                                    )
+                                    putBooleanAsync(
+                                        "suffixHB64",
+                                        dialogSuffixDefine.suffixDefineCheckboxHb64.isChecked
+                                    )
+                                    putBooleanAsync(
+                                        "suffix64HB1",
+                                        dialogSuffixDefine.suffixDefineCheckbox64hb1.isChecked
+                                    )
+                                    putBooleanAsync(
+                                        "suffixHB164",
+                                        dialogSuffixDefine.suffixDefineCheckboxHb164.isChecked
+                                    )
+                                    putBooleanAsync(
+                                        "suffix64HB2",
+                                        dialogSuffixDefine.suffixDefineCheckbox64hb2.isChecked
+                                    )
+                                    putBooleanAsync(
+                                        "suffixHB264",
+                                        dialogSuffixDefine.suffixDefineCheckboxHb264.isChecked
+                                    )
+                                    putBooleanAsync(
+                                        "suffix64HB3",
+                                        dialogSuffixDefine.suffixDefineCheckbox64hb3.isChecked
+                                    )
+                                    putBooleanAsync(
+                                        "suffixHB364",
+                                        dialogSuffixDefine.suffixDefineCheckboxHb364.isChecked
+                                    )
 
-                                DataStoreUtil.putBooleanAsync(
-                                    "suffix64HD",
-                                    dialogSuffixDefine.suffixDefineCheckbox64hd.isChecked
-                                )
-                                DataStoreUtil.putBooleanAsync(
-                                    "suffixHD64",
-                                    dialogSuffixDefine.suffixDefineCheckboxHd64.isChecked
-                                )
-                                DataStoreUtil.putBooleanAsync(
-                                    "suffix64HD1",
-                                    dialogSuffixDefine.suffixDefineCheckbox64hd1.isChecked
-                                )
-                                DataStoreUtil.putBooleanAsync(
-                                    "suffixHD164",
-                                    dialogSuffixDefine.suffixDefineCheckboxHd164.isChecked
-                                )
-                                DataStoreUtil.putBooleanAsync(
-                                    "suffix64HD2",
-                                    dialogSuffixDefine.suffixDefineCheckbox64hd2.isChecked
-                                )
-                                DataStoreUtil.putBooleanAsync(
-                                    "suffixHD264",
-                                    dialogSuffixDefine.suffixDefineCheckboxHd264.isChecked
-                                )
-                                DataStoreUtil.putBooleanAsync(
-                                    "suffix64HD3",
-                                    dialogSuffixDefine.suffixDefineCheckbox64hd3.isChecked
-                                )
-                                DataStoreUtil.putBooleanAsync(
-                                    "suffixHD364",
-                                    dialogSuffixDefine.suffixDefineCheckboxHd364.isChecked
-                                )
+                                    putBooleanAsync(
+                                        "suffix64HD",
+                                        dialogSuffixDefine.suffixDefineCheckbox64hd.isChecked
+                                    )
+                                    putBooleanAsync(
+                                        "suffixHD64",
+                                        dialogSuffixDefine.suffixDefineCheckboxHd64.isChecked
+                                    )
+                                    putBooleanAsync(
+                                        "suffix64HD1",
+                                        dialogSuffixDefine.suffixDefineCheckbox64hd1.isChecked
+                                    )
+                                    putBooleanAsync(
+                                        "suffixHD164",
+                                        dialogSuffixDefine.suffixDefineCheckboxHd164.isChecked
+                                    )
+                                    putBooleanAsync(
+                                        "suffix64HD2",
+                                        dialogSuffixDefine.suffixDefineCheckbox64hd2.isChecked
+                                    )
+                                    putBooleanAsync(
+                                        "suffixHD264",
+                                        dialogSuffixDefine.suffixDefineCheckboxHd264.isChecked
+                                    )
+                                    putBooleanAsync(
+                                        "suffix64HD3",
+                                        dialogSuffixDefine.suffixDefineCheckbox64hd3.isChecked
+                                    )
+                                    putBooleanAsync(
+                                        "suffixHD364",
+                                        dialogSuffixDefine.suffixDefineCheckboxHd364.isChecked
+                                    )
 
-                                DataStoreUtil.putBooleanAsync(
-                                    "suffixHD1HB64",
-                                    dialogSuffixDefine.suffixDefineCheckboxHd1hb64.isChecked
-                                )
-                                DataStoreUtil.putBooleanAsync(
-                                    "suffix64HD1HB",
-                                    dialogSuffixDefine.suffixDefineCheckbox64hd1hb.isChecked
-                                )
+                                    putBooleanAsync(
+                                        "suffixHD1HB64",
+                                        dialogSuffixDefine.suffixDefineCheckboxHd1hb64.isChecked
+                                    )
+                                    putBooleanAsync(
+                                        "suffix64HD1HB",
+                                        dialogSuffixDefine.suffixDefineCheckbox64hd1hb.isChecked
+                                    )
+                                }
 
                                 showToast("已保存")
                                 dialogSuffix.dismiss()
@@ -589,31 +596,31 @@ class MainActivity : AppCompatActivity() {
         if (memVersion == "测试版" || memVersion == "空格猜版" || memVersion == "正式版" || memVersion == "微信猜版") {
             dialogGuessBinding.spinnerVersion.setText(memVersion, false)
         }
-        if (dialogGuessBinding.spinnerVersion.text.toString() == "测试版" || dialogGuessBinding.spinnerVersion.text.toString() == "空格猜版") {
-            dialogGuessBinding.etVersionSmall.isEnabled = true
-            dialogGuessBinding.etVersionSmall.visibility = View.VISIBLE
-            dialogGuessBinding.guessDialogWarning.visibility = View.VISIBLE
-            dialogGuessBinding.etVersion16code.visibility = View.GONE
-            dialogGuessBinding.etVersionTrue.visibility = View.GONE
-            dialogGuessBinding.tvWarning.text =
+        if (dialogGuessBinding.spinnerVersion.text.toString() == "测试版" || dialogGuessBinding.spinnerVersion.text.toString() == "空格猜版") dialogGuessBinding.apply {
+            etVersionSmall.isEnabled = true
+            etVersionSmall.visibility = View.VISIBLE
+            guessDialogWarning.visibility = View.VISIBLE
+            etVersion16code.visibility = View.GONE
+            etVersionTrue.visibility = View.GONE
+            tvWarning.text =
                 "鉴于 QQ 测试版可能存在不可预知的稳定性问题，您在下载及使用该测试版本之前，必须明确并确保自身具备足够的风险识别和承受能力。根据相关条款，您使用本软件时应当已了解并同意，因下载或使用 QQ 测试版而可能产生的任何直接或间接损失、损害以及其他不利后果，均由您自行承担全部责任。"
             dialogGuessBinding.etVersionBig.helperText = "填写格式为 x.y.z"
-        } else if (dialogGuessBinding.spinnerVersion.text.toString() == "正式版") {
-            dialogGuessBinding.etVersionSmall.isEnabled = false
-            dialogGuessBinding.etVersionSmall.visibility = View.VISIBLE
-            dialogGuessBinding.guessDialogWarning.visibility = View.GONE
-            dialogGuessBinding.etVersion16code.visibility = View.GONE
-            dialogGuessBinding.etVersionTrue.visibility = View.GONE
-            dialogGuessBinding.etVersionBig.helperText = "填写格式为 x.y.z"
-        } else if (dialogGuessBinding.spinnerVersion.text.toString() == "微信猜版") {
-            dialogGuessBinding.etVersionSmall.isEnabled = false
-            dialogGuessBinding.guessDialogWarning.visibility = View.VISIBLE
-            dialogGuessBinding.etVersionSmall.visibility = View.GONE
-            dialogGuessBinding.etVersionTrue.visibility = View.VISIBLE
-            dialogGuessBinding.etVersion16code.visibility = View.VISIBLE
-            dialogGuessBinding.tvWarning.text =
+        } else if (dialogGuessBinding.spinnerVersion.text.toString() == "正式版") dialogGuessBinding.apply {
+            etVersionSmall.isEnabled = false
+            etVersionSmall.visibility = View.VISIBLE
+            guessDialogWarning.visibility = View.GONE
+            etVersion16code.visibility = View.GONE
+            etVersionTrue.visibility = View.GONE
+            etVersionBig.helperText = "填写格式为 x.y.z"
+        } else if (dialogGuessBinding.spinnerVersion.text.toString() == "微信猜版") dialogGuessBinding.apply {
+            etVersionSmall.isEnabled = false
+            guessDialogWarning.visibility = View.VISIBLE
+            etVersionSmall.visibility = View.GONE
+            etVersionTrue.visibility = View.VISIBLE
+            etVersion16code.visibility = View.VISIBLE
+            tvWarning.text =
                 "微信猜版功能为 QQ 版本列表实用工具附带的实验性功能，可能存在不可预知的稳定性问题。请明确并确保自身具备足够的风险识别和承受能力。"
-            dialogGuessBinding.etVersionBig.helperText = "无需填写小数点"
+            etVersionBig.helperText = "无需填写小数点"
         }
 
 
@@ -621,31 +628,37 @@ class MainActivity : AppCompatActivity() {
             override fun afterTextChanged(p0: Editable?) {
                 val judgeVerSelect = dialogGuessBinding.spinnerVersion.text.toString()
                 DataStoreUtil.putStringAsync("versionSelect", judgeVerSelect)
-                if (judgeVerSelect == "测试版" || judgeVerSelect == "空格猜版") {
-                    dialogGuessBinding.etVersionSmall.isEnabled = true
-                    dialogGuessBinding.etVersionSmall.visibility = View.VISIBLE
-                    dialogGuessBinding.guessDialogWarning.visibility = View.VISIBLE
-                    dialogGuessBinding.etVersion16code.visibility = View.GONE
-                    dialogGuessBinding.etVersionTrue.visibility = View.GONE
-                    dialogGuessBinding.tvWarning.text =
-                        "鉴于 QQ 测试版可能存在不可预知的稳定性问题，您在下载及使用该测试版本之前，必须明确并确保自身具备足够的风险识别和承受能力。根据相关条款，您使用本软件时应当已了解并同意，因下载或使用 QQ 测试版而可能产生的任何直接或间接损失、损害以及其他不利后果，均由您自行承担全部责任。"
-                    dialogGuessBinding.etVersionBig.helperText = "填写格式为 x.y.z"
-                } else if (judgeVerSelect == "正式版") {
-                    dialogGuessBinding.etVersionSmall.visibility = View.VISIBLE
-                    dialogGuessBinding.etVersionSmall.isEnabled = false
-                    dialogGuessBinding.guessDialogWarning.visibility = View.GONE
-                    dialogGuessBinding.etVersion16code.visibility = View.GONE
-                    dialogGuessBinding.etVersionTrue.visibility = View.GONE
-                    dialogGuessBinding.etVersionBig.helperText = "填写格式为 x.y.z"
-                } else if (judgeVerSelect == "微信猜版") {
-                    dialogGuessBinding.etVersionSmall.isEnabled = false
-                    dialogGuessBinding.etVersionSmall.visibility = View.GONE
-                    dialogGuessBinding.guessDialogWarning.visibility = View.VISIBLE
-                    dialogGuessBinding.etVersion16code.visibility = View.VISIBLE
-                    dialogGuessBinding.etVersionTrue.visibility = View.VISIBLE
-                    dialogGuessBinding.tvWarning.text =
-                        "微信猜版功能为 QQ 版本列表实用工具附带的实验性功能，可能存在不可预知的稳定性问题。请明确并确保自身具备足够的风险识别和承受能力。"
-                    dialogGuessBinding.etVersionBig.helperText = "无需填写小数点"
+                when (judgeVerSelect) {
+                    "测试版", "空格猜版" -> dialogGuessBinding.apply {
+                        etVersionSmall.isEnabled = true
+                        etVersionSmall.visibility = View.VISIBLE
+                        guessDialogWarning.visibility = View.VISIBLE
+                        etVersion16code.visibility = View.GONE
+                        etVersionTrue.visibility = View.GONE
+                        tvWarning.text =
+                            "鉴于 QQ 测试版可能存在不可预知的稳定性问题，您在下载及使用该测试版本之前，必须明确并确保自身具备足够的风险识别和承受能力。根据相关条款，您使用本软件时应当已了解并同意，因下载或使用 QQ 测试版而可能产生的任何直接或间接损失、损害以及其他不利后果，均由您自行承担全部责任。"
+                        etVersionBig.helperText = "填写格式为 x.y.z"
+                    }
+
+                    "正式版" -> dialogGuessBinding.apply {
+                        etVersionSmall.visibility = View.VISIBLE
+                        etVersionSmall.isEnabled = false
+                        guessDialogWarning.visibility = View.GONE
+                        etVersion16code.visibility = View.GONE
+                        etVersionTrue.visibility = View.GONE
+                        etVersionBig.helperText = "填写格式为 x.y.z"
+                    }
+
+                    "微信猜版" -> dialogGuessBinding.apply {
+                        etVersionSmall.isEnabled = false
+                        etVersionSmall.visibility = View.GONE
+                        guessDialogWarning.visibility = View.VISIBLE
+                        etVersion16code.visibility = View.VISIBLE
+                        etVersionTrue.visibility = View.VISIBLE
+                        tvWarning.text =
+                            "微信猜版功能为 QQ 版本列表实用工具附带的实验性功能，可能存在不可预知的稳定性问题。请明确并确保自身具备足够的风险识别和承受能力。"
+                        etVersionBig.helperText = "无需填写小数点"
+                    }
                 }
             }
 
@@ -674,10 +687,13 @@ class MainActivity : AppCompatActivity() {
         class InvalidMultipleException(message: String) : Exception(message)
 
         dialogGuessBinding.btnGuessStart.setOnClickListener {
-            dialogGuessBinding.etVersionBig.clearFocus()
-            dialogGuessBinding.spinnerVersion.clearFocus()
-            dialogGuessBinding.etVersionSmall.clearFocus()
-            dialogGuessBinding.etVersion16code.clearFocus()
+            dialogGuessBinding.apply {
+                etVersionBig.clearFocus()
+                spinnerVersion.clearFocus()
+                etVersionSmall.clearFocus()
+                etVersion16code.clearFocus()
+                etVersionTrue.clearFocus()
+            }
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(dialogGuessBinding.spinnerVersion.windowToken, 0)
 
