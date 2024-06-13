@@ -77,6 +77,7 @@ import java.lang.Thread.sleep
 import java.net.HttpURLConnection
 import java.net.URL
 
+
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var versionAdapter: VersionAdapter
@@ -334,6 +335,8 @@ class MainActivity : AppCompatActivity() {
                         progressSize.isChecked = DataStoreUtil.getBoolean("progressSize", false)
                         switchGuessTestExtend.isChecked =
                             DataStoreUtil.getBoolean("guessTestExtend", false) // 扩展测试版猜版格式
+                        downloadOnSystemManager.isChecked =
+                            DataStoreUtil.getBoolean("downloadOnSystemManager", false)
                     }
 
                     val dialogSetting = MaterialAlertDialogBuilder(this)
@@ -373,6 +376,9 @@ class MainActivity : AppCompatActivity() {
                         }
                         switchGuessTestExtend.setOnCheckedChangeListener { _, isChecked ->
                             DataStoreUtil.putBooleanAsync("guessTestExtend", isChecked)
+                        }
+                        downloadOnSystemManager.setOnCheckedChangeListener { _, isChecked ->
+                            DataStoreUtil.putBooleanAsync("downloadOnSystemManager", isChecked)
                         }
 //                        settingSuffixSave.setOnClickListener { _ ->
 //                            val suffixDefine = settingSuffixDefine.editText?.text.toString()
@@ -892,6 +898,7 @@ class MainActivity : AppCompatActivity() {
             var v16codeStr = version16codeStr
             val guessNot5 = DataStoreUtil.getBoolean("guessNot5", false)
             val guessTestExtend = DataStoreUtil.getBoolean("guessTestExtend", false)
+            val downloadOnSystemManager = DataStoreUtil.getBoolean("downloadOnSystemManager", false)
             val defineSuf = DataStoreUtil.getString("suffixDefine", "")
             val defineSufList = defineSuf.split(", ")
             val suf64hb =
@@ -1147,35 +1154,48 @@ class MainActivity : AppCompatActivity() {
 
                                         // 下载按钮点击事件
                                         successButtonBinding.btnDownload.setOnClickListener {
-                                            val requestDownload =
-                                                DownloadManager.Request(Uri.parse(link))
-                                            when (mode) {
-                                                MODE_TEST, MODE_UNOFFICIAL -> {
-                                                    requestDownload.setDestinationInExternalPublicDir(
-                                                        Environment.DIRECTORY_DOWNLOADS,
-                                                        "Android_QQ_${versionBig}.${vSmall}_64.apk"
-                                                    )
-                                                }
-
-                                                MODE_OFFICIAL -> {
-                                                    requestDownload.setDestinationInExternalPublicDir(
-                                                        Environment.DIRECTORY_DOWNLOADS,
-                                                        "Android_QQ_${versionBig}_64.apk"
-                                                    )
-                                                }
-
-                                                MODE_WECHAT -> {
-                                                    requestDownload.setDestinationInExternalPublicDir(
-                                                        Environment.DIRECTORY_DOWNLOADS,
-                                                        "Android_微信_${versionBig}.${versionTrue}.apk"
-                                                    )
-                                                }
-                                            }
-                                            val downloadManager =
-                                                getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-                                            downloadManager.enqueue(requestDownload)
                                             successMaterialDialog.dismiss()
                                             status = STATUS_END
+                                            if (downloadOnSystemManager) {
+                                                val requestDownload =
+                                                    DownloadManager.Request(Uri.parse(link))
+                                                requestDownload.apply {
+                                                    when (mode) {
+                                                        MODE_TEST, MODE_UNOFFICIAL -> {
+                                                            setDestinationInExternalPublicDir(
+                                                                Environment.DIRECTORY_DOWNLOADS,
+                                                                "Android_QQ_${versionBig}.${vSmall}_64.apk"
+                                                            )
+                                                        }
+
+                                                        MODE_OFFICIAL -> {
+                                                            setDestinationInExternalPublicDir(
+                                                                Environment.DIRECTORY_DOWNLOADS,
+                                                                "Android_QQ_${versionBig}_64.apk"
+                                                            )
+                                                        }
+
+                                                        MODE_WECHAT -> {
+                                                            setDestinationInExternalPublicDir(
+                                                                Environment.DIRECTORY_DOWNLOADS,
+                                                                "Android_微信_${versionBig}.${versionTrue}.apk"
+                                                            )
+                                                        }
+                                                    }
+                                                }
+                                                val downloadManager =
+                                                    getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+                                                downloadManager.enqueue(requestDownload)
+                                            } else {
+                                                // 这里不用 Chrome Custom Tab 的原因是 Chrome 不知道咋回事有概率卡在“等待下载”状态
+                                                val browserIntent =
+                                                    Intent(Intent.ACTION_VIEW, Uri.parse(link))
+                                                browserIntent.apply {
+                                                    addCategory(Intent.CATEGORY_BROWSABLE)
+                                                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                                }
+                                                startActivity(browserIntent)
+                                            }
                                         }
                                     }
                                 }
