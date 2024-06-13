@@ -51,6 +51,14 @@
         android:text="版本列表展示额定包大小占比历史最大包指示条" />
 
     <com.google.android.material.materialswitch.MaterialSwitch
+        android:id="@+id/download_on_system_manager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:text="使用系统下载管理器接管下载意图" />
+
+    <com.google.android.material.materialswitch.MaterialSwitch
         android:id="@+id/switch_guess_test_extend"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

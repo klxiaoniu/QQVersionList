@@ -3,6 +3,7 @@ import java.io.ByteArrayOutputStream
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    kotlin("plugin.serialization") version "2.0.0"
 }
 
 fun String.execute(currentWorkingDir: File = file("./")): String {
@@ -27,8 +28,7 @@ android {
         minSdk = 24
         targetSdk = 34
         versionCode = gitCommitCount
-        versionName = "1.3.0-$gitCommitHash"
-
+        versionName = "1.3.1-$gitCommitHash"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -79,7 +79,7 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
-    implementation("com.google.code.gson:gson:2.11.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.0")
     implementation("io.coil-kt:coil:2.6.0")
     implementation("androidx.datastore:datastore-preferences:1.1.1")
 }

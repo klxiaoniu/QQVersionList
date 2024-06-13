@@ -18,19 +18,22 @@
 
 package com.xiaoniu.qqversionlist.util
 
-import com.google.gson.GsonBuilder
-import com.google.gson.JsonParser
-import com.google.gson.Strictness
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
 
 object StringUtil {
-    private val gsonBuilder = GsonBuilder().setStrictness(Strictness.LENIENT).setPrettyPrinting()
+    private val json = Json { isLenient = true; prettyPrint = true }
+
     fun String.toPrettyFormat(): String {
         return try {
-            val jsonObject = JsonParser.parseString(this).asJsonObject
-            gsonBuilder.create().toJson(jsonObject)
+            val jsonObject = Json.parseToJsonElement(this) as? JsonObject
+            jsonObject?.let { json.encodeToString(it) } ?: this
         } catch (e: Exception) {
             e.printStackTrace()
             this
         }
     }
 }
+
+
