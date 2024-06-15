@@ -700,7 +700,7 @@ class MainActivity : AppCompatActivity() {
                 etVersion16code.clearFocus()
                 etVersionTrue.clearFocus()
             }
-            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(dialogGuessBinding.spinnerVersion.windowToken, 0)
 
             try {
@@ -1184,7 +1184,7 @@ class MainActivity : AppCompatActivity() {
                                                     }
                                                 }
                                                 val downloadManager =
-                                                    getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+                                                    getSystemService(DOWNLOAD_SERVICE) as DownloadManager
                                                 downloadManager.enqueue(requestDownload)
                                             } else {
                                                 // 这里不用 Chrome Custom Tab 的原因是 Chrome 不知道咋回事有概率卡在“等待下载”状态

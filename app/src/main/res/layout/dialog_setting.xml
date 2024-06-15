@@ -70,13 +70,13 @@
         android:id="@+id/dialog_suffix_define_click"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:drawablePadding="8dp"
+        android:gravity="center_vertical"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
         android:text="猜版后缀设置"
         android:textColor="?attr/colorOnSurface"
-        android:drawablePadding="8dp"
-        app:drawableEndCompat="@drawable/arrow_right_s_line"
-        android:gravity="center_vertical"/>
+        app:drawableEndCompat="@drawable/arrow_right_s_line" />
 
     <com.google.android.material.materialswitch.MaterialSwitch
         android:id="@+id/guess_not_5"
