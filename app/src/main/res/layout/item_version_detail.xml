@@ -48,7 +48,7 @@
                 android:layout_marginStart="6dp"
                 android:layout_marginEnd="6dp"
                 android:fontFamily="@font/tcloud_number_vf"
-                android:textColor="?attr/colorOnPrimaryContainer"
+                android:textColor="?attr/colorPrimary"
                 android:textSize="28sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -144,7 +144,7 @@
             android:id="@+id/tv_detail_version"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="?attr/colorOnSecondaryContainer"
+            android:textColor="?attr/colorSecondary"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/ib_collapse"
             tools:text="版本：9.0.25" />
@@ -153,7 +153,7 @@
             android:id="@+id/tv_detail_size"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="?attr/colorOnSecondaryContainer"
+            android:textColor="?attr/colorSecondary"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_detail_version"
             tools:text="额定大小：307 MB" />
@@ -162,7 +162,7 @@
             android:id="@+id/tv_per_size"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:textColor="?attr/colorOnSecondaryContainer"
+            android:textColor="?attr/colorSecondary"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_detail_size"
             tools:text="占比历史额定最大包（）：" />
@@ -183,7 +183,7 @@
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:textColor="?attr/colorOnSecondaryContainer"
+            android:textColor="?attr/colorSecondary"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/list_detail_progress_line"
             tools:text="体验说明：" />
@@ -193,7 +193,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingBottom="6dp"
-            android:textColor="?attr/colorOnSecondaryContainer"
+            android:textColor="?attr/colorSecondary"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_title"
             tools:text="- 新年新“状态”\n- 文本文本文本" />
