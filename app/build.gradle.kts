@@ -26,9 +26,9 @@ android {
     defaultConfig {
         applicationId = "com.xiaoniu.qqversionlist"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35
         versionCode = gitCommitCount
-        versionName = "1.3.1-$gitCommitHash"
+        versionName = "1.3.2-$gitCommitHash"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -47,8 +47,7 @@ android {
         release {
             isMinifyEnabled = true
             proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
             signingConfig =
                 signingConfigs.findByName("release") ?: signingConfigs.findByName("debug")
