@@ -58,6 +58,7 @@ import com.xiaoniu.qqversionlist.data.QQVersionBean
 import com.xiaoniu.qqversionlist.databinding.ActivityMainBinding
 import com.xiaoniu.qqversionlist.databinding.DialogGuessBinding
 import com.xiaoniu.qqversionlist.databinding.DialogLoadingBinding
+import com.xiaoniu.qqversionlist.databinding.DialogPersonalizationBinding
 import com.xiaoniu.qqversionlist.databinding.DialogSettingBinding
 import com.xiaoniu.qqversionlist.databinding.DialogSuffixDefineBinding
 import com.xiaoniu.qqversionlist.databinding.SuccessButtonBinding
@@ -328,11 +329,8 @@ class MainActivity : AppCompatActivity() {
                     val dialogSettingBinding = DialogSettingBinding.inflate(layoutInflater)
 
                     dialogSettingBinding.apply {
-                        switchDisplayFirst.isChecked =
-                            DataStoreUtil.getBoolean("displayFirst", true)
                         longPressCard.isChecked = DataStoreUtil.getBoolean("longPressCard", true)
                         guessNot5.isChecked = DataStoreUtil.getBoolean("guessNot5", false)
-                        progressSize.isChecked = DataStoreUtil.getBoolean("progressSize", false)
                         switchGuessTestExtend.isChecked =
                             DataStoreUtil.getBoolean("guessTestExtend", false) // 扩展测试版猜版格式
                         downloadOnSystemManager.isChecked =
@@ -349,31 +347,71 @@ class MainActivity : AppCompatActivity() {
                         btnSettingOk.setOnClickListener {
                             dialogSetting.dismiss()
                         }
-                        switchDisplayFirst.setOnCheckedChangeListener { _, isChecked ->
-                            DataStoreUtil.putBooleanAsync("displayFirst", isChecked)
-                            qqVersion = qqVersion.mapIndexed { index, qqVersionBean ->
-                                if (index == 0) qqVersionBean.copy(
-                                    displayType = if (isChecked) 1 else 0
-                                )
-                                else qqVersionBean
-                            }
-                            versionAdapter.submitList(qqVersion)
-                        }
                         longPressCard.setOnCheckedChangeListener { _, isChecked ->
                             DataStoreUtil.putBooleanAsync("longPressCard", isChecked)
                         }
                         guessNot5.setOnCheckedChangeListener { _, isChecked ->
                             DataStoreUtil.putBooleanAsync("guessNot5", isChecked)
                         }
-                        progressSize.setOnCheckedChangeListener { _, isChecked ->
-                            DataStoreUtil.putBooleanAsync("progressSize", isChecked)
-                            qqVersion = qqVersion.map {
-                                it.copy(
-                                    isShowProgressSize = isChecked
-                                )
+                        dialogPersonalization.setOnClickListener {
+                            val dialogPersonalization =
+                                DialogPersonalizationBinding.inflate(layoutInflater)
+
+                            dialogPersonalization.root.parent?.let { parent ->
+                                if (parent is ViewGroup) {
+                                    parent.removeView(dialogPersonalization.root)
+                                }
                             }
-                            versionAdapter.submitList(qqVersion)
+
+                            val dialogPer = MaterialAlertDialogBuilder(this@MainActivity)
+                                .setTitle("个性化")
+                                .setIcon(R.drawable.palette_line)
+                                .setView(dialogPersonalization.root)
+                                .show()
+
+                            dialogPersonalization.apply {
+                                switchDisplayFirst.isChecked =
+                                    DataStoreUtil.getBoolean("displayFirst", true)
+                                progressSize.isChecked =
+                                    DataStoreUtil.getBoolean("progressSize", false)
+                                versionTcloud.isChecked =
+                                    DataStoreUtil.getBoolean("versionTCloud", true)
+
+                                switchDisplayFirst.setOnCheckedChangeListener { _, isChecked ->
+                                    DataStoreUtil.putBooleanAsync("displayFirst", isChecked)
+                                    qqVersion = qqVersion.mapIndexed { index, qqVersionBean ->
+                                        if (index == 0) qqVersionBean.copy(
+                                            displayType = if (isChecked) 1 else 0
+                                        )
+                                        else qqVersionBean
+                                    }
+                                    versionAdapter.submitList(qqVersion)
+                                }
+                                progressSize.setOnCheckedChangeListener { _, isChecked ->
+                                    DataStoreUtil.putBooleanAsync("progressSize", isChecked)
+                                    qqVersion = qqVersion.map {
+                                        it.copy(
+                                            isShowProgressSize = isChecked
+                                        )
+                                    }
+                                    versionAdapter.submitList(qqVersion)
+                                }
+                                versionTcloud.setOnCheckedChangeListener { _, isChecked ->
+                                    DataStoreUtil.putBooleanAsync("versionTCloud", isChecked)
+                                    qqVersion = qqVersion.map {
+                                        it.copy(
+                                            isTCloud = isChecked
+                                        )
+                                    }
+                                    versionAdapter.submitList(qqVersion)
+                                }
+                                btnPersonalizationOk.setOnClickListener {
+                                    dialogPer.dismiss()
+                                }
+                            }
+
                         }
+
                         switchGuessTestExtend.setOnCheckedChangeListener { _, isChecked ->
                             DataStoreUtil.putBooleanAsync("guessTestExtend", isChecked)
                         }
@@ -801,6 +839,7 @@ class MainActivity : AppCompatActivity() {
                             val pend = it.indexOf(",\"length")
                             val json = it.substring(pstart, pend)
                             val isShowProgressSize = DataStoreUtil.getBoolean("progressSize", false)
+                            val isTCloud = DataStoreUtil.getBoolean("versionTCloud", false)
                             Json.decodeFromString<QQVersionBean>(json).apply {
                                 jsonString = json
                                 this.isShowProgressSize = isShowProgressSize
@@ -809,6 +848,7 @@ class MainActivity : AppCompatActivity() {
                                     "QQVersionInstall",
                                     ""
                                 ) == this.versionNumber)
+                                this.isTCloud = isTCloud
                             }
                         }
                         if (DataStoreUtil.getBoolean(
