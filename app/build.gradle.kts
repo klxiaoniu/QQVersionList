@@ -21,7 +21,7 @@ val gitCommitHash = "git rev-parse --verify --short HEAD".execute()
 
 android {
     namespace = "com.xiaoniu.qqversionlist"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.xiaoniu.qqversionlist"

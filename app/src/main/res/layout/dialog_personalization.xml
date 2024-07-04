@@ -48,7 +48,7 @@
         android:layout_height="wrap_content"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
-        android:text="版本列表使用 TCloudNumber 字体" />
+        android:text="版本号字体使用 TCloudNumber" />
 
     <Button
         android:id="@+id/btn_personalization_ok"
