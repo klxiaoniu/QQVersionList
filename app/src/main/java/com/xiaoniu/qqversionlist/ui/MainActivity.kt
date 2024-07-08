@@ -386,24 +386,15 @@ class MainActivity : AppCompatActivity() {
                                         else qqVersionBean
                                     }
                                     versionAdapter.submitList(qqVersion)
+
                                 }
                                 progressSize.setOnCheckedChangeListener { _, isChecked ->
                                     DataStoreUtil.putBooleanAsync("progressSize", isChecked)
-                                    qqVersion = qqVersion.map {
-                                        it.copy(
-                                            isShowProgressSize = isChecked
-                                        )
-                                    }
-                                    versionAdapter.submitList(qqVersion)
+                                    versionAdapter.updateItemProperty("isShowProgressSize")
                                 }
                                 versionTcloud.setOnCheckedChangeListener { _, isChecked ->
                                     DataStoreUtil.putBooleanAsync("versionTCloud", isChecked)
-                                    qqVersion = qqVersion.map {
-                                        it.copy(
-                                            isTCloud = isChecked
-                                        )
-                                    }
-                                    versionAdapter.submitList(qqVersion)
+                                    versionAdapter.updateItemProperty("isTCloud")
                                 }
                                 btnPersonalizationOk.setOnClickListener {
                                     dialogPer.dismiss()
@@ -838,17 +829,13 @@ class MainActivity : AppCompatActivity() {
                             val pstart = it.indexOf("{\"versions")
                             val pend = it.indexOf(",\"length")
                             val json = it.substring(pstart, pend)
-                            val isShowProgressSize = DataStoreUtil.getBoolean("progressSize", false)
-                            val isTCloud = DataStoreUtil.getBoolean("versionTCloud", false)
                             Json.decodeFromString<QQVersionBean>(json).apply {
                                 jsonString = json
-                                this.isShowProgressSize = isShowProgressSize
                                 // 标记本机 Android QQ 版本
                                 this.displayInstall = (DataStoreUtil.getString(
                                     "QQVersionInstall",
                                     ""
                                 ) == this.versionNumber)
-                                this.isTCloud = isTCloud
                             }
                         }
                         if (DataStoreUtil.getBoolean(
