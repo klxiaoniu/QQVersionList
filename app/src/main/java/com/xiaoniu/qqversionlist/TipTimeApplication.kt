@@ -21,7 +21,6 @@ package com.xiaoniu.qqversionlist
 import android.app.Application
 import com.google.android.material.color.DynamicColors
 
-
 class TipTimeApplication : Application() {
     companion object {
         lateinit var instance: TipTimeApplication
@@ -32,13 +31,5 @@ class TipTimeApplication : Application() {
         DynamicColors.applyToActivitiesIfAvailable(this)
         instance = this
         super.onCreate()
-        /*
-        val rootDir = MMKV.initialize(this)
-        println("mmkv root: $rootDir")
-
-        if (!MMKVUtil.getBoolean("migration_completed", false)) {
-              MMKVUtil.importSPToMMKV()
-              MMKVUtil.putBoolean("migration_completed", true) // 设置迁移完成标志
-        }*/
     }
 }

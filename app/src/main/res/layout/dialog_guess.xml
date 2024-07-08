@@ -27,8 +27,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:orientation="horizontal"
-        android:baselineAligned="false">
+        android:baselineAligned="false"
+        android:orientation="horizontal">
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/et_version_big"
@@ -62,9 +62,9 @@
                 android:id="@+id/spinner_version"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:imeOptions="actionNext"
                 android:inputType="none"
                 android:singleLine="true"
-                android:imeOptions="actionNext"
                 app:simpleItems="@array/version" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -74,17 +74,17 @@
         android:id="@+id/et_version_small"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="起始小版本号"
         android:layout_marginBottom="10dp"
+        android:hint="起始小版本号"
         app:helperText="填写起始猜测小版本号，猜正式版时无需填写"
         app:helperTextEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:singleLine="true"
+            android:imeOptions="actionDone"
             android:inputType="number"
-            android:imeOptions="actionDone" />
+            android:singleLine="true" />
 
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -93,17 +93,17 @@
         android:id="@+id/et_version_true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="真实版本号"
         android:layout_marginBottom="8dp"
+        android:hint="真实版本号"
         app:helperText="填写真实版本号（版本码），仅微信猜版使用"
         app:helperTextEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:singleLine="true"
+            android:imeOptions="actionNext"
             android:inputType="number"
-            android:imeOptions="actionNext" />
+            android:singleLine="true" />
 
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -114,15 +114,15 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:hint="十六进制代码"
-        app:prefixText="0x"
         app:helperText="填写十六进制代码，仅微信猜版使用"
-        app:helperTextEnabled="true">
+        app:helperTextEnabled="true"
+        app:prefixText="0x">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:imeOptions="actionDone" />
+            android:imeOptions="actionDone"
+            android:singleLine="true" />
 
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -133,18 +133,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="?android:colorBackground">
-            <TextView
-                android:id="@+id/tv_warning"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="4dp"
-                android:paddingStart="3dp"
-                android:paddingEnd="0dp"
-                android:text="鉴于 QQ 测试版可能存在不可预知的稳定性问题，您在下载及使用该测试版本之前，必须明确并确保自身具备足够的风险识别和承受能力。根据相关条款，您使用本软件时应当已了解并同意，因下载或使用 QQ 测试版而可能产生的任何直接或间接损失、损害以及其他不利后果，均由您自行承担全部责任。"
-                android:textColor="?attr/colorPrimary"
-                android:textSize="10sp"
-                android:drawablePadding="4dp"
-                app:drawableStartCompat="@drawable/error_warning_fill" />
+
+        <TextView
+            android:id="@+id/tv_warning"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:drawablePadding="4dp"
+            android:paddingStart="3dp"
+            android:paddingEnd="0dp"
+            android:text="鉴于 QQ 测试版可能存在不可预知的稳定性问题，您在下载及使用该测试版本之前，必须明确并确保自身具备足够的风险识别和承受能力。根据相关条款，您使用本软件时应当已了解并同意，因下载或使用 QQ 测试版而可能产生的任何直接或间接损失、损害以及其他不利后果，均由您自行承担全部责任。"
+            android:textColor="?attr/colorPrimary"
+            android:textSize="10sp"
+            app:drawableStartCompat="@drawable/error_warning_fill" />
     </com.google.android.material.card.MaterialCardView>
 
     <LinearLayout

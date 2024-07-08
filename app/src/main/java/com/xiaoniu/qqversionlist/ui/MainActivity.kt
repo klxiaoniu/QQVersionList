@@ -58,6 +58,7 @@ import com.xiaoniu.qqversionlist.data.QQVersionBean
 import com.xiaoniu.qqversionlist.databinding.ActivityMainBinding
 import com.xiaoniu.qqversionlist.databinding.DialogGuessBinding
 import com.xiaoniu.qqversionlist.databinding.DialogLoadingBinding
+import com.xiaoniu.qqversionlist.databinding.DialogPersonalizationBinding
 import com.xiaoniu.qqversionlist.databinding.DialogSettingBinding
 import com.xiaoniu.qqversionlist.databinding.DialogSuffixDefineBinding
 import com.xiaoniu.qqversionlist.databinding.SuccessButtonBinding
@@ -328,11 +329,8 @@ class MainActivity : AppCompatActivity() {
                     val dialogSettingBinding = DialogSettingBinding.inflate(layoutInflater)
 
                     dialogSettingBinding.apply {
-                        switchDisplayFirst.isChecked =
-                            DataStoreUtil.getBoolean("displayFirst", true)
                         longPressCard.isChecked = DataStoreUtil.getBoolean("longPressCard", true)
                         guessNot5.isChecked = DataStoreUtil.getBoolean("guessNot5", false)
-                        progressSize.isChecked = DataStoreUtil.getBoolean("progressSize", false)
                         switchGuessTestExtend.isChecked =
                             DataStoreUtil.getBoolean("guessTestExtend", false) // 扩展测试版猜版格式
                         downloadOnSystemManager.isChecked =
@@ -349,31 +347,62 @@ class MainActivity : AppCompatActivity() {
                         btnSettingOk.setOnClickListener {
                             dialogSetting.dismiss()
                         }
-                        switchDisplayFirst.setOnCheckedChangeListener { _, isChecked ->
-                            DataStoreUtil.putBooleanAsync("displayFirst", isChecked)
-                            qqVersion = qqVersion.mapIndexed { index, qqVersionBean ->
-                                if (index == 0) qqVersionBean.copy(
-                                    displayType = if (isChecked) 1 else 0
-                                )
-                                else qqVersionBean
-                            }
-                            versionAdapter.submitList(qqVersion)
-                        }
                         longPressCard.setOnCheckedChangeListener { _, isChecked ->
                             DataStoreUtil.putBooleanAsync("longPressCard", isChecked)
                         }
                         guessNot5.setOnCheckedChangeListener { _, isChecked ->
                             DataStoreUtil.putBooleanAsync("guessNot5", isChecked)
                         }
-                        progressSize.setOnCheckedChangeListener { _, isChecked ->
-                            DataStoreUtil.putBooleanAsync("progressSize", isChecked)
-                            qqVersion = qqVersion.map {
-                                it.copy(
-                                    isShowProgressSize = isChecked
-                                )
+                        dialogPersonalization.setOnClickListener {
+                            val dialogPersonalization =
+                                DialogPersonalizationBinding.inflate(layoutInflater)
+
+                            dialogPersonalization.root.parent?.let { parent ->
+                                if (parent is ViewGroup) {
+                                    parent.removeView(dialogPersonalization.root)
+                                }
                             }
-                            versionAdapter.submitList(qqVersion)
+
+                            val dialogPer = MaterialAlertDialogBuilder(this@MainActivity)
+                                .setTitle("个性化")
+                                .setIcon(R.drawable.palette_line)
+                                .setView(dialogPersonalization.root)
+                                .show()
+
+                            dialogPersonalization.apply {
+                                switchDisplayFirst.isChecked =
+                                    DataStoreUtil.getBoolean("displayFirst", true)
+                                progressSize.isChecked =
+                                    DataStoreUtil.getBoolean("progressSize", false)
+                                versionTcloud.isChecked =
+                                    DataStoreUtil.getBoolean("versionTCloud", true)
+
+                                switchDisplayFirst.setOnCheckedChangeListener { _, isChecked ->
+                                    DataStoreUtil.putBooleanAsync("displayFirst", isChecked)
+                                    qqVersion = qqVersion.mapIndexed { index, qqVersionBean ->
+                                        if (index == 0) qqVersionBean.copy(
+                                            displayType = if (isChecked) 1 else 0
+                                        )
+                                        else qqVersionBean
+                                    }
+                                    versionAdapter.submitList(qqVersion)
+
+                                }
+                                progressSize.setOnCheckedChangeListener { _, isChecked ->
+                                    DataStoreUtil.putBooleanAsync("progressSize", isChecked)
+                                    versionAdapter.updateItemProperty("isShowProgressSize")
+                                }
+                                versionTcloud.setOnCheckedChangeListener { _, isChecked ->
+                                    DataStoreUtil.putBooleanAsync("versionTCloud", isChecked)
+                                    versionAdapter.updateItemProperty("isTCloud")
+                                }
+                                btnPersonalizationOk.setOnClickListener {
+                                    dialogPer.dismiss()
+                                }
+                            }
+
                         }
+
                         switchGuessTestExtend.setOnCheckedChangeListener { _, isChecked ->
                             DataStoreUtil.putBooleanAsync("guessTestExtend", isChecked)
                         }
@@ -700,7 +729,7 @@ class MainActivity : AppCompatActivity() {
                 etVersion16code.clearFocus()
                 etVersionTrue.clearFocus()
             }
-            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(dialogGuessBinding.spinnerVersion.windowToken, 0)
 
             try {
@@ -800,10 +829,8 @@ class MainActivity : AppCompatActivity() {
                             val pstart = it.indexOf("{\"versions")
                             val pend = it.indexOf(",\"length")
                             val json = it.substring(pstart, pend)
-                            val isShowProgressSize = DataStoreUtil.getBoolean("progressSize", false)
                             Json.decodeFromString<QQVersionBean>(json).apply {
                                 jsonString = json
-                                this.isShowProgressSize = isShowProgressSize
                                 // 标记本机 Android QQ 版本
                                 this.displayInstall = (DataStoreUtil.getString(
                                     "QQVersionInstall",
@@ -1184,7 +1211,7 @@ class MainActivity : AppCompatActivity() {
                                                     }
                                                 }
                                                 val downloadManager =
-                                                    getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+                                                    getSystemService(DOWNLOAD_SERVICE) as DownloadManager
                                                 downloadManager.enqueue(requestDownload)
                                             } else {
                                                 // 这里不用 Chrome Custom Tab 的原因是 Chrome 不知道咋回事有概率卡在“等待下载”状态

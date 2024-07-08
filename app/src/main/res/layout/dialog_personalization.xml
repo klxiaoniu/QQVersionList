@@ -17,7 +17,7 @@
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/ll_guess"
+    android:id="@+id/ll_personalization"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -27,63 +27,31 @@
     android:paddingBottom="20dp">
 
     <com.google.android.material.materialswitch.MaterialSwitch
-        android:id="@+id/long_press_card"
+        android:id="@+id/switch_display_first"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="16dp"
         android:layout_marginBottom="8dp"
-        android:text="长按版本列表文字弹出源 JSON 字符串" />
+        android:text="版本列表首项默认展开" />
 
     <com.google.android.material.materialswitch.MaterialSwitch
-        android:id="@+id/download_on_system_manager"
+        android:id="@+id/progress_size"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
-        android:text="使用系统下载管理器接管下载意图" />
-
-    <TextView
-        android:id="@+id/dialog_personalization"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:drawablePadding="8dp"
-        android:gravity="center_vertical"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
-        android:text="个性化"
-        android:textColor="?attr/colorOnSurface"
-        app:drawableEndCompat="@drawable/arrow_right_s_line" />
+        android:text="版本列表展示额定包大小占比历史最大包指示条" />
 
     <com.google.android.material.materialswitch.MaterialSwitch
-        android:id="@+id/switch_guess_test_extend"
+        android:id="@+id/version_tcloud"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
-        android:text="扩展测试版猜版直链格式" />
-
-    <TextView
-        android:id="@+id/dialog_suffix_define_click"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:drawablePadding="8dp"
-        android:gravity="center_vertical"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
-        android:text="猜版后缀设置"
-        android:textColor="?attr/colorOnSurface"
-        app:drawableEndCompat="@drawable/arrow_right_s_line" />
-
-    <com.google.android.material.materialswitch.MaterialSwitch
-        android:id="@+id/guess_not_5"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="8dp"
-        android:paddingBottom="16dp"
-        android:text="解除猜版小版本号遵循 5 的倍数限制" />
+        android:text="版本号字体使用 TCloudNumber" />
 
     <Button
-        android:id="@+id/btn_setting_ok"
+        android:id="@+id/btn_personalization_ok"
         style="@style/Widget.Material3.Button.TonalButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
