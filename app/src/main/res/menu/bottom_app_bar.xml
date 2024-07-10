@@ -18,13 +18,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-
-    <item
-        android:id="@+id/btn_about"
-        android:icon="@drawable/information_line"
-        android:title="关于"
-        app:showAsAction="ifRoom" />
-
     <item
         android:id="@+id/btn_setting"
         android:icon="@drawable/settings_line"
@@ -37,5 +30,16 @@
         android:title="刷新"
         app:showAsAction="ifRoom" />
 
+    <item
+        android:id="@+id/btn_tencent_shiply"
+        android:icon="@drawable/flask_line"
+        android:title="腾讯 Shiply 通道获取"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/btn_about"
+        android:icon="@drawable/information_line"
+        android:title="关于"
+        app:showAsAction="ifRoom" />
 
 </menu>

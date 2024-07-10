@@ -35,6 +35,7 @@ import android.text.Editable
 import android.text.SpannableString
 import android.text.TextWatcher
 import android.text.style.URLSpan
+import android.util.Base64
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
@@ -61,12 +62,16 @@ import com.xiaoniu.qqversionlist.databinding.DialogLoadingBinding
 import com.xiaoniu.qqversionlist.databinding.DialogPersonalizationBinding
 import com.xiaoniu.qqversionlist.databinding.DialogSettingBinding
 import com.xiaoniu.qqversionlist.databinding.DialogSuffixDefineBinding
+import com.xiaoniu.qqversionlist.databinding.DialogTencentShiplyBinding
 import com.xiaoniu.qqversionlist.databinding.SuccessButtonBinding
 import com.xiaoniu.qqversionlist.databinding.UserAgreementBinding
 import com.xiaoniu.qqversionlist.util.ClipboardUtil.copyText
 import com.xiaoniu.qqversionlist.util.DataStoreUtil
 import com.xiaoniu.qqversionlist.util.InfoUtil.dialogError
 import com.xiaoniu.qqversionlist.util.InfoUtil.showToast
+import com.xiaoniu.qqversionlist.util.LogUtil.log
+import com.xiaoniu.qqversionlist.util.StringUtil.toPrettyFormat
+import com.xiaoniu.qqversionlist.util.TencentShiplyUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -160,13 +165,12 @@ class MainActivity : AppCompatActivity() {
 
         val userAgreementBinding = UserAgreementBinding.inflate(layoutInflater)
 
-        val dialogUA =
-            MaterialAlertDialogBuilder(this)
-                .setTitle("用户协议")
-                .setIcon(R.drawable.file_text_line)
-                .setView(userAgreementBinding.root)
-                .setCancelable(false)
-                .create()
+        val dialogUA = MaterialAlertDialogBuilder(this)
+            .setTitle("用户协议")
+            .setIcon(R.drawable.file_text_line)
+            .setView(userAgreementBinding.root)
+            .setCancelable(false)
+            .create()
 
         val constraintSet = ConstraintSet()
         constraintSet.clone(userAgreementBinding.userAgreement)
@@ -205,8 +209,7 @@ class MainActivity : AppCompatActivity() {
         //这里的“getInt: userAgreement”的值代表着用户协议修订版本，后续更新协议版本后也需要在下面一行把“judgeUARead”+1，以此类推
         val judgeUATarget = 2 // 2024.5.30 第二版
         if (DataStoreUtil.getInt("userAgreement", 0) < judgeUATarget) showUADialog(
-            false,
-            judgeUATarget
+            false, judgeUATarget
         )
         else getData()
 
@@ -315,9 +318,7 @@ class MainActivity : AppCompatActivity() {
                         .setPositiveButton("确定", null)
                         .setNegativeButton("撤回同意用户协议") { _, _ ->
                             showUADialog(true, judgeUATarget)
-                        }
-                        .show()
-                        .apply {
+                        }.show().apply {
                             findViewById<TextView>(android.R.id.message)?.movementMethod =
                                 LinkMovementMethodCompat.getInstance()
                         }
@@ -424,12 +425,12 @@ class MainActivity : AppCompatActivity() {
                                 }
                             }
 
-                            val dialogSuffix =
-                                MaterialAlertDialogBuilder(this@MainActivity)
-                                    .setTitle("猜版后缀设置")
-                                    .setIcon(R.drawable.settings_line)
-                                    .setView(dialogSuffixDefine.root)
-                                    .create()
+                            val dialogSuffix = MaterialAlertDialogBuilder(this@MainActivity)
+                                .setTitle("猜版后缀设置")
+                                .setIcon(R.drawable.settings_line)
+                                .setView(dialogSuffixDefine.root)
+                                .setCancelable(false)
+                                .create()
 
                             val screenHeight = Resources.getSystem().displayMetrics.heightPixels
 
@@ -606,13 +607,115 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
 
+                R.id.btn_tencent_shiply -> {
+                    val dialogTencentShiplyBinding =
+                        DialogTencentShiplyBinding.inflate(layoutInflater)
+
+                    val shiplyDialog = MaterialAlertDialogBuilder(this)
+                        .setTitle("Shiply 通道获取")
+                        .setIcon(R.drawable.flask_line)
+                        .setView(dialogTencentShiplyBinding.root)
+                        .setCancelable(false)
+                        .show()
+
+                    dialogTencentShiplyBinding.apply {
+
+                        btnShiplyCancel.setOnClickListener {
+                            shiplyDialog.dismiss()
+                        }
+
+                        btnShiplyStart.setOnClickListener {
+                            shiplyUin.clearFocus()
+                            shiplyAppid.clearFocus()
+                            shiplyVersion.clearFocus()
+
+                            val shiplyKey = TencentShiplyUtil.generateAESKey()
+                            //shiplyKey?.log()
+                            if (shiplyKey == null) showToast("生成 AES 密钥失败")
+                            else {
+                                val shiplyData = TencentShiplyUtil.generateJsonString(
+                                    //shiplyVersion.editText?.text.toString(),
+                                    //shiplyUin.editText?.text.toString(),
+                                    //shiplyAppid.editText?.text.toString()
+                                    "9.0.0", "114514"//,"537230561"
+                                )
+                                //shiplyData.log()
+                                val shiplyKeyBase64 =
+                                    Base64.encodeToString(shiplyKey.encoded, Base64.DEFAULT)
+                                //shiplyKeyBase64.log()
+                                val shiplyEncode =
+                                    TencentShiplyUtil.aesEncrypt(shiplyData, shiplyKey)
+                                //shiplyEncode?.log()
+                                val shiplyRsaPublicKey =
+                                    TencentShiplyUtil.base64ToRsaPublicKey("MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC/rT6ULqXC32dgz4t/Vv4WS9pTks5Z2fPmbTHIXEVeiOEnjOpPBHOi1AUz+Ykqjk11ZyjidUwDyIaC/VtaC5Z7Bt/W+CFluDer7LiiDa6j77if5dbcvWUrJbgvhKqaEhWnMDXT1pAG2KxL/pNFAYguSLpOh9pK97G8umUMkkwWkwIDAQAB")
+                                //shiplyRsaPublicKey?.log()
+                                if (shiplyRsaPublicKey == null) showToast("生成 RSA 公钥失败")
+                                else {
+                                    val shiplyEncode2 = TencentShiplyUtil.rsaEncrypt(
+                                        shiplyKeyBase64,
+                                        shiplyRsaPublicKey
+                                    )
+                                    //shiplyEncode2?.log()
+                                    val shiplyPost = mapOf(
+                                        "req_list" to listOf(
+                                            mapOf(
+                                                "cipher_text" to shiplyEncode,
+                                                "public_key_version" to 1,
+                                                "pull_key" to shiplyEncode2
+                                            )
+                                        )
+                                    )
+                                    shiplyPost.log()
+                                    CoroutineScope(Dispatchers.IO).launch {
+                                        val shiplyResult = TencentShiplyUtil.postJsonWithOkHttp(
+                                            "https://rdelivery.qq.com/v3/config/batchpull",
+                                            shiplyPost
+                                        )
+                                        shiplyResult?.log()
+                                        if (shiplyResult != null) {
+                                            val shiplyText =
+                                                TencentShiplyUtil.getCipherText(shiplyResult.toString())
+                                            shiplyText?.log()
+                                            if (shiplyText != null) {
+                                                val shiplyDecode =
+                                                    TencentShiplyUtil.aesDecrypt(
+                                                        shiplyText,
+                                                        shiplyKey
+                                                    )
+                                                shiplyDecode.log()
+                                                runOnUiThread {
+                                                    val shiplyBack =
+                                                        TextView(this@MainActivity).apply {
+                                                            text = shiplyDecode.toPrettyFormat()
+                                                            setTextIsSelectable(true)
+                                                            setPadding(96, 48, 96, 96)
+                                                        }
+                                                    MaterialAlertDialogBuilder(this@MainActivity)
+                                                        .setView(shiplyBack)
+                                                        .setTitle("返回结果")
+                                                        .setIcon(R.drawable.flask_line)
+                                                        .show()
+                                                }
+                                            } else {
+                                                showToast("获取失败")
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+
+                    true
+                }
+
                 else -> false
             }
         }
 
         if (intent.action == "android.intent.action.VIEW" && DataStoreUtil.getInt(
-                "userAgreement",
-                0
+                "userAgreement", 0
             ) >= judgeUATarget
         ) {
             showGuessVersionDialog()
@@ -746,12 +849,12 @@ class MainActivity : AppCompatActivity() {
                         versionSmall =
                             dialogGuessBinding.etVersionSmall.editText?.text.toString().toInt()
                         if (versionSmall % 5 != 0 && !DataStoreUtil.getBoolean(
-                                "guessNot5",
-                                false
+                                "guessNot5", false
                             )
                         ) throw InvalidMultipleException("小版本号需填 5 的倍数。如有需求，请前往设置解除此限制。")
-                        if (versionSmall != 0)
-                            DataStoreUtil.putIntAsync("versionSmall", versionSmall)
+                        if (versionSmall != 0) DataStoreUtil.putIntAsync(
+                            "versionSmall", versionSmall
+                        )
                     }
 
                 } else if (mode == "微信猜版") {
@@ -764,12 +867,11 @@ class MainActivity : AppCompatActivity() {
                     else {
                         versionTrue =
                             dialogGuessBinding.etVersionTrue.editText?.text.toString().toInt()
-                        version16code =
-                            dialogGuessBinding.etVersion16code.editText?.text.toString()
-                        if (version16code != 0.toString())
-                            DataStoreUtil.putStringAsync("version16code", version16code)
-                        if (versionTrue != 0)
-                            DataStoreUtil.putIntAsync("versionTrue", versionTrue)
+                        version16code = dialogGuessBinding.etVersion16code.editText?.text.toString()
+                        if (version16code != 0.toString()) DataStoreUtil.putStringAsync(
+                            "version16code", version16code
+                        )
+                        if (versionTrue != 0) DataStoreUtil.putIntAsync("versionTrue", versionTrue)
                     }
                 }
                 guessUrl(versionBig, versionSmall, versionTrue, version16code, mode)
@@ -790,14 +892,15 @@ class MainActivity : AppCompatActivity() {
         }
 
         val memVersionSmall = DataStoreUtil.getInt("versionSmall", -1)
-        if (memVersionSmall != -1)
-            dialogGuessBinding.etVersionSmall.editText?.setText(memVersionSmall.toString())
+        if (memVersionSmall != -1) dialogGuessBinding.etVersionSmall.editText?.setText(
+            memVersionSmall.toString()
+        )
         val memVersion16code = DataStoreUtil.getString("version16code", "-1")
-        if (memVersion16code != "-1")
-            dialogGuessBinding.etVersion16code.editText?.setText(memVersion16code)
+        if (memVersion16code != "-1") dialogGuessBinding.etVersion16code.editText?.setText(
+            memVersion16code
+        )
         val memVersionTrue = DataStoreUtil.getInt("versionTrue", -1)
-        if (memVersionTrue != -1)
-            dialogGuessBinding.etVersionTrue.editText?.setText(memVersionTrue.toString())
+        if (memVersionTrue != -1) dialogGuessBinding.etVersionTrue.editText?.setText(memVersionTrue.toString())
     }
 
 
@@ -833,14 +936,12 @@ class MainActivity : AppCompatActivity() {
                                 jsonString = json
                                 // 标记本机 Android QQ 版本
                                 this.displayInstall = (DataStoreUtil.getString(
-                                    "QQVersionInstall",
-                                    ""
+                                    "QQVersionInstall", ""
                                 ) == this.versionNumber)
                             }
                         }
                         if (DataStoreUtil.getBoolean(
-                                "displayFirst",
-                                true
+                                "displayFirst", true
                             )
                         ) qqVersion[0].displayType = 1
                         withContext(Dispatchers.Main) {
@@ -906,11 +1007,10 @@ class MainActivity : AppCompatActivity() {
 
         var status = STATUS_ONGOING
 
-        val progressDialog =
-            MaterialAlertDialogBuilder(this)
-                .setView(dialogLoadingBinding.root)
-                .setCancelable(false)
-                .create()
+        val progressDialog = MaterialAlertDialogBuilder(this)
+            .setView(dialogLoadingBinding.root)
+            .setCancelable(false)
+            .create()
 
         fun updateProgressDialogMessage(newMessage: String) {
             dialogLoadingBinding.loadingMessage.text = newMessage
@@ -977,18 +1077,15 @@ class MainActivity : AppCompatActivity() {
                 )
             ) listOf("_HD2_64") else emptyList()
             val suf64hd3 = if (DataStoreUtil.getBoolean(
-                    "suffix64HD3",
-                    true
+                    "suffix64HD3", true
                 )
             ) listOf("_64_HD3") else emptyList()
             val sufHd364 = if (DataStoreUtil.getBoolean(
-                    "suffixHD364",
-                    true
+                    "suffixHD364", true
                 )
             ) listOf("_HD3_64") else emptyList()
             val suf64hd1hb = if (DataStoreUtil.getBoolean(
-                    "suffix64HD1HB",
-                    true
+                    "suffix64HD1HB", true
                 )
             ) listOf("_64_HD1HB") else emptyList()
             val sufHd1hb64 = if (DataStoreUtil.getBoolean(
@@ -1106,19 +1203,17 @@ class MainActivity : AppCompatActivity() {
                                             }
                                         }
 
-                                        val successMaterialDialog =
-                                            MaterialAlertDialogBuilder(this)
-                                                .setTitle("猜测成功")
-                                                .setMessage("下载地址：$link")
-                                                .setIcon(R.drawable.check_circle)
-                                                .setView(successButtonBinding.root)
-                                                .setCancelable(false)
-                                                .apply {
-                                                    if (appSize != "Error" && appSize != "-0.00" && appSize != "0.00") setMessage(
-                                                        "下载地址：$link\n\n大小：$appSize MB"
-                                                    )
-                                                    else setMessage("下载地址：$link")
-                                                }.show()
+                                        val successMaterialDialog = MaterialAlertDialogBuilder(this)
+                                            .setTitle("猜测成功")
+                                            .setMessage("下载地址：$link")
+                                            .setIcon(R.drawable.check_circle)
+                                            .setView(successButtonBinding.root)
+                                            .setCancelable(false).apply {
+                                                if (appSize != "Error" && appSize != "-0.00" && appSize != "0.00") setMessage(
+                                                    "下载地址：$link\n\n大小：$appSize MB"
+                                                )
+                                                else setMessage("下载地址：$link")
+                                            }.show()
 
 
                                         // 复制并停止按钮点击事件

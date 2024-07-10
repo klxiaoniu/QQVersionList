@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+    QQ Version Tool for Android™
+    Copyright (C) 2023 klxiaoniu
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ll_tencent_shiply"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/shiply_uin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:hint="uin"
+        app:helperText="填写腾讯 Shiply 通道对象 QQ 号"
+        app:helperTextEnabled="true">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionNext"
+            android:inputType="number"
+            android:singleLine="true" />
+
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/shiply_appid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:hint="appid"
+        app:helperText="填写目标 Android QQ 版本 appid，非必填"
+        app:helperTextEnabled="true">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionNext"
+            android:inputType="number"
+            android:singleLine="true" />
+
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/shiply_version"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:hint="目标版本"
+        app:helperText="填写目标 Android QQ 版本号"
+        app:helperTextEnabled="true">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionDone"
+            android:singleLine="true" />
+
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/shiply_warning_card"
+        style="?attr/materialCardViewOutlinedStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="?android:colorBackground">
+
+        <TextView
+            android:id="@+id/shiply_warning_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:drawablePadding="4dp"
+            android:paddingStart="3dp"
+            android:paddingEnd="0dp"
+            android:text="此功能当前为实验性功能，可能存在不可预知的稳定性问题。QQ 版本列表实用工具不对此功能及其任何后果作出任何可靠性保证。请明确并确保自身具备足够的风险识别和承受能力。"
+            android:textColor="?attr/colorPrimary"
+            android:textSize="10sp"
+            app:drawableStartCompat="@drawable/error_warning_fill" />
+    </com.google.android.material.card.MaterialCardView>
+
+    <LinearLayout
+        style="?android:attr/buttonBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <Button
+            android:id="@+id/btn_shiply_cancel"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:text="取消" />
+
+        <Button
+            android:id="@+id/btn_shiply_start"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_weight="1"
+            android:text="开始" />
+
+    </LinearLayout>
+
+</LinearLayout>

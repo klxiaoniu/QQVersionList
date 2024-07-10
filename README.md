@@ -197,6 +197,7 @@ QQ 版本列表实用工具的诞生离不开以下开源项目，感谢以下�
 - [Oracle JDK](https://www.oracle.com/java/technologies/downloads/)，Licensed under [Oracle No-Fee Terms and Conditions](https://www.java.com/freeuselicense)
 - [JetBrains Runtime](https://github.com/JetBrains/JetBrainsRuntime)，Licensed under [GNU General Public License, version 2](https://github.com/JetBrains/JetBrainsRuntime/blob/main/LICENSE)
 - [Kotlin Serialization](https://github.com/Kotlin/kotlinx.serialization)，Licensed under [Apache License Version 2.0](https://github.com/Kotlin/kotlinx.serialization/blob/master/LICENSE.txt)
+- [Get QQ Update Link（owo233）](https://github.com/callng/GQUL)，Licensed under [The Unlicense](https://github.com/callng/GQUL/blob/master/LICENSE)
 
 ## 孪生项目
 

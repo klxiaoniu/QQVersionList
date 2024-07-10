@@ -28,7 +28,7 @@ android {
         minSdk = 24
         targetSdk = 35
         versionCode = gitCommitCount
-        versionName = "1.3.2-$gitCommitHash"
+        versionName = "1.3.3-$gitCommitHash"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -81,4 +81,5 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1")
     implementation("io.coil-kt:coil:2.6.0")
     implementation("androidx.datastore:datastore-preferences:1.1.1")
+    implementation("com.google.code.gson:gson:2.11.0")
 }
