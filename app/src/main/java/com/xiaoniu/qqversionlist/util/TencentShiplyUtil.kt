@@ -6,21 +6,25 @@ import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
 import com.google.gson.JsonParseException
 import com.google.gson.Strictness
-import okhttp3.MediaType
-import okhttp3.MediaType.Companion.toMediaType
+import com.xiaoniu.qqversionlist.util.LogUtil.log
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import okhttp3.Response
+import okhttp3.logging.HttpLoggingInterceptor
 import java.io.IOException
+import java.io.InputStream
+import java.io.InputStreamReader
 import java.math.BigInteger
+import java.nio.charset.StandardCharsets
 import java.security.KeyFactory
 import java.security.MessageDigest
 import java.security.PublicKey
 import java.security.SecureRandom
 import java.security.spec.X509EncodedKeySpec
 import java.util.UUID
+import java.util.zip.GZIPInputStream
 import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
@@ -28,8 +32,6 @@ import javax.crypto.spec.IvParameterSpec
 
 object TencentShiplyUtil {
     private val gson = GsonBuilder().setStrictness(Strictness.LENIENT).create()
-    private const val AES_METHOD = "AES/CTR/NoPadding"
-    private const val RSA_METHOD = "RSA/ECB/PKCS1Padding"
 
     fun generateJsonString(appVersion: String, uin: String): String {
         val timestamp = System.currentTimeMillis() / 1000L
@@ -145,19 +147,37 @@ object TencentShiplyUtil {
         return Base64.encodeToString(encryptedData, Base64.DEFAULT)
     }
 
-    fun postJsonWithOkHttp(url: String, data: Any): Response {
-        val client = OkHttpClient()
-        val mediaType = "application/json; charset=utf-8".toMediaType()
-        val body = RequestBody.create(mediaType, gson.toJson(data))
+    fun postJsonWithOkHttp(url: String, data: Any): String {
+        val client = OkHttpClient.Builder()
+            .addInterceptor(HttpLoggingInterceptor().apply {
+                level = HttpLoggingInterceptor.Level.BODY
+            })
+            .build()
+
+        val mediaType = "application/json; charset=utf-8".toMediaTypeOrNull()
+        val body = gson.toJson(data)
+        "111".log()
+        body.log()
         val request = Request.Builder()
             .url(url)
-            .post(body)
+            .post(body.toRequestBody(mediaType!!))
             .addHeader("Content-Type", "application/json")
             .addHeader("Accept-Encoding", "gzip")
             .build()
 
-        return client.newCall(request).execute().apply {
-            if (!isSuccessful) throw IOException("Unexpected code $code for url: $url")
+        return client.newCall(request).execute().use { response ->
+            if (!response.isSuccessful) throw IOException("Unexpected code ${response.code} for url: $url")
+
+            response.body?.let { responseBody ->
+                val input: InputStream = when (response.header("Content-Encoding")) {
+                    "gzip" -> GZIPInputStream(responseBody.byteStream())
+                    else -> responseBody.byteStream()
+                }
+
+                InputStreamReader(input, StandardCharsets.UTF_8).use { reader ->
+                    reader.readText()
+                }
+            } ?: throw IOException("Response body is null")
         }
     }
 

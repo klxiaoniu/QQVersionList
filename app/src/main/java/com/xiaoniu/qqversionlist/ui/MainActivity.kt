@@ -637,7 +637,7 @@ class MainActivity : AppCompatActivity() {
                                     //shiplyVersion.editText?.text.toString(),
                                     //shiplyUin.editText?.text.toString(),
                                     //shiplyAppid.editText?.text.toString()
-                                    "9.0.0", "114514"//,"537230561"
+                                    "9.0.70", "114514"//,"537230561"
                                 )
                                 //shiplyData.log()
                                 val shiplyKeyBase64 =
@@ -645,7 +645,8 @@ class MainActivity : AppCompatActivity() {
                                 //shiplyKeyBase64.log()
                                 val shiplyEncode =
                                     TencentShiplyUtil.aesEncrypt(shiplyData, shiplyKey)
-                                //shiplyEncode?.log()
+                                        ?.replace("\n", "")
+                                shiplyEncode?.log()
                                 val shiplyRsaPublicKey =
                                     TencentShiplyUtil.base64ToRsaPublicKey("MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC/rT6ULqXC32dgz4t/Vv4WS9pTks5Z2fPmbTHIXEVeiOEnjOpPBHOi1AUz+Ykqjk11ZyjidUwDyIaC/VtaC5Z7Bt/W+CFluDer7LiiDa6j77if5dbcvWUrJbgvhKqaEhWnMDXT1pAG2KxL/pNFAYguSLpOh9pK97G8umUMkkwWkwIDAQAB")
                                 //shiplyRsaPublicKey?.log()
@@ -654,8 +655,8 @@ class MainActivity : AppCompatActivity() {
                                     val shiplyEncode2 = TencentShiplyUtil.rsaEncrypt(
                                         shiplyKeyBase64,
                                         shiplyRsaPublicKey
-                                    )
-                                    //shiplyEncode2?.log()
+                                    )?.replace("\n", "")
+                                    shiplyEncode2?.log()
                                     val shiplyPost = mapOf(
                                         "req_list" to listOf(
                                             mapOf(
@@ -672,9 +673,10 @@ class MainActivity : AppCompatActivity() {
                                             shiplyPost
                                         )
                                         shiplyResult?.log()
+                                        copyText(shiplyResult)
                                         if (shiplyResult != null) {
                                             val shiplyText =
-                                                TencentShiplyUtil.getCipherText(shiplyResult.toString())
+                                                TencentShiplyUtil.getCipherText(shiplyResult)
                                             shiplyText?.log()
                                             if (shiplyText != null) {
                                                 val shiplyDecode =
