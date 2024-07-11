@@ -19,6 +19,7 @@
 package com.xiaoniu.qqversionlist.ui
 
 
+//import android.util.Base64
 import android.app.DownloadManager
 import android.content.Context
 import android.content.Intent
@@ -69,7 +70,6 @@ import com.xiaoniu.qqversionlist.util.ClipboardUtil.copyText
 import com.xiaoniu.qqversionlist.util.DataStoreUtil
 import com.xiaoniu.qqversionlist.util.InfoUtil.dialogError
 import com.xiaoniu.qqversionlist.util.InfoUtil.showToast
-import com.xiaoniu.qqversionlist.util.LogUtil.log
 import com.xiaoniu.qqversionlist.util.StringUtil.toPrettyFormat
 import com.xiaoniu.qqversionlist.util.TencentShiplyUtil
 import kotlinx.coroutines.CoroutineScope
@@ -85,8 +85,6 @@ import java.io.InputStreamReader
 import java.lang.Thread.sleep
 import java.net.HttpURLConnection
 import java.net.URL
-import java.nio.charset.Charset
-import java.nio.charset.StandardCharsets
 import java.util.zip.GZIPInputStream
 
 
@@ -636,40 +634,24 @@ class MainActivity : AppCompatActivity() {
                             shiplyVersion.clearFocus()
 
                             val shiplyKey = TencentShiplyUtil.generateAESKey()
-                            //shiplyKey?.log()
                             if (shiplyKey == null) showToast("生成 AES 密钥失败")
                             else {
                                 val shiplyData = TencentShiplyUtil.generateJsonString(
-                                    //shiplyVersion.editText?.text.toString(),
-                                    //shiplyUin.editText?.text.toString(),
+                                    shiplyVersion.editText?.text.toString(),
+                                    shiplyUin.editText?.text.toString()
                                     //shiplyAppid.editText?.text.toString()
-                                    "9.0.0", "114514"//,"537230561"
+                                    //"9.0.0", "114514"//,"537230561"
                                 )
-                                //shiplyData.log()
                                 val shiplyEncode =
                                     TencentShiplyUtil.aesEncrypt(shiplyData, shiplyKey)
-                                Base64.encodeToString(
-                                    shiplyEncode,
-                                    Base64.NO_WRAP
-                                )?.log()
-                                if (shiplyEncode != null) {
-                                    "testttt".log()
-                                    TencentShiplyUtil.aesDecrypt(shiplyEncode,shiplyKey)
-                                        ?.toString(Charset.forName("UTF-8"))?.log()
-                                }
                                 val shiplyRsaPublicKey =
                                     TencentShiplyUtil.base64ToRsaPublicKey("MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC/rT6ULqXC32dgz4t/Vv4WS9pTks5Z2fPmbTHIXEVeiOEnjOpPBHOi1AUz+Ykqjk11ZyjidUwDyIaC/VtaC5Z7Bt/W+CFluDer7LiiDa6j77if5dbcvWUrJbgvhKqaEhWnMDXT1pAG2KxL/pNFAYguSLpOh9pK97G8umUMkkwWkwIDAQAB")
-                                //shiplyRsaPublicKey?.log()
                                 if (shiplyRsaPublicKey == null) showToast("生成 RSA 公钥失败")
                                 else {
                                     val shiplyEncode2 = TencentShiplyUtil.rsaEncrypt(
                                         shiplyKey,
                                         shiplyRsaPublicKey
                                     )
-                                    Base64.encodeToString(
-                                        shiplyEncode2,
-                                        Base64.NO_WRAP
-                                    )?.log()
                                     val shiplyPost = mapOf(
                                         "req_list" to listOf(
                                             mapOf(
@@ -685,18 +667,14 @@ class MainActivity : AppCompatActivity() {
                                             )
                                         )
                                     )
-                                    shiplyPost.log()
                                     CoroutineScope(Dispatchers.IO).launch {
                                         val shiplyResult = TencentShiplyUtil.postJsonWithOkHttp(
                                             "https://rdelivery.qq.com/v3/config/batchpull",
                                             shiplyPost
                                         )
-                                        shiplyResult.log()
-                                        copyText(shiplyResult)
                                         if (shiplyResult != null) {
                                             val shiplyText =
                                                 TencentShiplyUtil.getCipherText(shiplyResult)
-                                            shiplyText?.log()
                                             if (!shiplyText.isNullOrEmpty()) {
                                                 val shiplyDecode =
                                                     TencentShiplyUtil.aesDecrypt(
@@ -718,7 +696,6 @@ class MainActivity : AppCompatActivity() {
 
                                                 val shiplyDecodeString =
                                                     decompressedStringBuilder.toString()
-                                                shiplyDecodeString.log()
                                                 runOnUiThread {
                                                     val shiplyBack =
                                                         TextView(this@MainActivity).apply {
@@ -1200,7 +1177,9 @@ class MainActivity : AppCompatActivity() {
                                     "_HB_64",
                                     "_HB1_64",
                                     "_HB2_64",
-                                    "_HB3_64"
+                                    "_HB3_64",
+                                    "_64_BBPJ",
+                                    "_BBPJ_64"
                                 )
                                 val soList =
                                     if (defineSufList != listOf("")) soListPre + defineSufList else soListPre

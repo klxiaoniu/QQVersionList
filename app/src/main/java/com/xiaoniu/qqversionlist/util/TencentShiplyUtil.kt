@@ -1,19 +1,14 @@
 package com.xiaoniu.qqversionlist.util
 
 import android.util.Base64
-import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.google.gson.JsonObject
-import com.google.gson.JsonParseException
 import com.google.gson.JsonParser
 import com.google.gson.Strictness
-import com.xiaoniu.qqversionlist.util.LogUtil.log
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.logging.HttpLoggingInterceptor
-import org.json.JSONObject
 import java.io.IOException
 import java.io.InputStream
 import java.io.InputStreamReader
@@ -38,7 +33,7 @@ object TencentShiplyUtil {
         val data = mapOf(
             "systemID" to "10016",
             "appID" to "4cd6974be1",
-            "sign" to md5("10016$4cd6974be1$4$$timestamp$$uin${"rdelivery0ccc46ca-154c-4c6b-8b0b-4d8537ffcbcc"}"),
+            "sign" to md5("10016$4cd6974be1$4$$$timestamp$$uin$${"rdelivery0ccc46ca-154c-4c6b-8b0b-4d8537ffcbcc"}"),
             "timestamp" to timestamp,
             "pullType" to 4,
             "target" to 1,
@@ -120,7 +115,6 @@ object TencentShiplyUtil {
     }
 
     fun aesDecrypt(data: ByteArray, key: ByteArray): ByteArray? {
-        data.log()
         val method = "AES/CTR/NoPadding"
         val iv = ByteArray(16) { 0 }
         val secretKey = SecretKeySpec(key, "AES")
@@ -159,8 +153,6 @@ object TencentShiplyUtil {
 
         val mediaType = "application/json; charset=utf-8".toMediaTypeOrNull()
         val body = gson.toJson(data)
-        "111".log()
-        body.log()
         val request = Request.Builder()
             .url(url)
             .post(body.toRequestBody(mediaType!!))
