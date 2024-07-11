@@ -33,7 +33,7 @@ import javax.crypto.spec.SecretKeySpec
 object TencentShiplyUtil {
     private val gson = GsonBuilder().setStrictness(Strictness.LENIENT).create()
 
-    fun generateJsonString(appVersion: String, uin: String): JSONObject {
+    fun generateJsonString(appVersion: String, uin: String): String {
         val timestamp = System.currentTimeMillis() / 1000L
         val data = mapOf(
             "systemID" to "10016",
@@ -62,8 +62,7 @@ object TencentShiplyUtil {
             "context" to "H4sIAAAAAAAA/+Li5ni5T1WIVaBT1INRS8HS0MwyMdnCwMzQMCklxdQ81cTC1MzIIDnV0DIxydLYGAAAAP//AQAA//+OoFcLLwAAAA=="
         )
 
-        JSONObject(data as Map<*, *>).log()
-        return JSONObject(data as Map<*, *>)
+        return gson.toJson(data)
     }
 
     private fun md5(input: String): String {
@@ -104,14 +103,14 @@ object TencentShiplyUtil {
         return key
     }
 
-    fun aesEncrypt(data: JSONObject, key: ByteArray): ByteArray? {
+    fun aesEncrypt(data: String, key: ByteArray): ByteArray? {
         val method = "AES/CTR/NoPadding"
         val iv = ByteArray(16) { 0 }
         val secretKey = SecretKeySpec(key, "AES")
         val ivParameterSpec = IvParameterSpec(iv)
 
         try {
-            val dataByteArray = data.toString().toByteArray(StandardCharsets.UTF_8)
+            val dataByteArray = data.toByteArray(StandardCharsets.UTF_8)
             val cipher = Cipher.getInstance(method)
             cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivParameterSpec)
             return cipher.doFinal(dataByteArray)
@@ -139,7 +138,7 @@ object TencentShiplyUtil {
 
 
     fun base64ToRsaPublicKey(base64String: String): PublicKey? {
-        val decodedBytes = Base64.decode(base64String, Base64.DEFAULT)
+        val decodedBytes = Base64.decode(base64String, Base64.NO_WRAP)
         val spec = X509EncodedKeySpec(decodedBytes)
         val kf = KeyFactory.getInstance("RSA")
         return kf.generatePublic(spec)

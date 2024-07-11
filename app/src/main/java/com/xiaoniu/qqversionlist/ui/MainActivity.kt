@@ -85,6 +85,8 @@ import java.io.InputStreamReader
 import java.lang.Thread.sleep
 import java.net.HttpURLConnection
 import java.net.URL
+import java.nio.charset.Charset
+import java.nio.charset.StandardCharsets
 import java.util.zip.GZIPInputStream
 
 
@@ -648,8 +650,13 @@ class MainActivity : AppCompatActivity() {
                                     TencentShiplyUtil.aesEncrypt(shiplyData, shiplyKey)
                                 Base64.encodeToString(
                                     shiplyEncode,
-                                    Base64.DEFAULT
+                                    Base64.NO_WRAP
                                 )?.log()
+                                if (shiplyEncode != null) {
+                                    "testttt".log()
+                                    TencentShiplyUtil.aesDecrypt(shiplyEncode,shiplyKey)
+                                        ?.toString(Charset.forName("UTF-8"))?.log()
+                                }
                                 val shiplyRsaPublicKey =
                                     TencentShiplyUtil.base64ToRsaPublicKey("MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC/rT6ULqXC32dgz4t/Vv4WS9pTks5Z2fPmbTHIXEVeiOEnjOpPBHOi1AUz+Ykqjk11ZyjidUwDyIaC/VtaC5Z7Bt/W+CFluDer7LiiDa6j77if5dbcvWUrJbgvhKqaEhWnMDXT1pAG2KxL/pNFAYguSLpOh9pK97G8umUMkkwWkwIDAQAB")
                                 //shiplyRsaPublicKey?.log()
@@ -661,19 +668,19 @@ class MainActivity : AppCompatActivity() {
                                     )
                                     Base64.encodeToString(
                                         shiplyEncode2,
-                                        Base64.DEFAULT
+                                        Base64.NO_WRAP
                                     )?.log()
                                     val shiplyPost = mapOf(
                                         "req_list" to listOf(
                                             mapOf(
                                                 "cipher_text" to Base64.encodeToString(
                                                     shiplyEncode,
-                                                    Base64.DEFAULT
+                                                    Base64.NO_WRAP
                                                 ),
                                                 "public_key_version" to 1,
                                                 "pull_key" to Base64.encodeToString(
                                                     shiplyEncode2,
-                                                    Base64.DEFAULT
+                                                    Base64.NO_WRAP
                                                 )
                                             )
                                         )
@@ -693,7 +700,7 @@ class MainActivity : AppCompatActivity() {
                                             if (!shiplyText.isNullOrEmpty()) {
                                                 val shiplyDecode =
                                                     TencentShiplyUtil.aesDecrypt(
-                                                        Base64.decode(shiplyText, Base64.DEFAULT),
+                                                        Base64.decode(shiplyText, Base64.NO_WRAP),
                                                         shiplyKey
                                                     )
 
