@@ -79,9 +79,13 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import java.io.BufferedReader
+import java.io.ByteArrayInputStream
+import java.io.InputStreamReader
 import java.lang.Thread.sleep
 import java.net.HttpURLConnection
 import java.net.URL
+import java.util.zip.GZIPInputStream
 
 
 class MainActivity : AppCompatActivity() {
@@ -637,32 +641,40 @@ class MainActivity : AppCompatActivity() {
                                     //shiplyVersion.editText?.text.toString(),
                                     //shiplyUin.editText?.text.toString(),
                                     //shiplyAppid.editText?.text.toString()
-                                    "9.0.70", "114514"//,"537230561"
+                                    "9.0.0", "114514"//,"537230561"
                                 )
                                 //shiplyData.log()
-                                val shiplyKeyBase64 =
-                                    Base64.encodeToString(shiplyKey.encoded, Base64.DEFAULT)
-                                //shiplyKeyBase64.log()
                                 val shiplyEncode =
                                     TencentShiplyUtil.aesEncrypt(shiplyData, shiplyKey)
-                                        ?.replace("\n", "")
-                                shiplyEncode?.log()
+                                Base64.encodeToString(
+                                    shiplyEncode,
+                                    Base64.DEFAULT
+                                )?.log()
                                 val shiplyRsaPublicKey =
                                     TencentShiplyUtil.base64ToRsaPublicKey("MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC/rT6ULqXC32dgz4t/Vv4WS9pTks5Z2fPmbTHIXEVeiOEnjOpPBHOi1AUz+Ykqjk11ZyjidUwDyIaC/VtaC5Z7Bt/W+CFluDer7LiiDa6j77if5dbcvWUrJbgvhKqaEhWnMDXT1pAG2KxL/pNFAYguSLpOh9pK97G8umUMkkwWkwIDAQAB")
                                 //shiplyRsaPublicKey?.log()
                                 if (shiplyRsaPublicKey == null) showToast("生成 RSA 公钥失败")
                                 else {
                                     val shiplyEncode2 = TencentShiplyUtil.rsaEncrypt(
-                                        shiplyKeyBase64,
+                                        shiplyKey,
                                         shiplyRsaPublicKey
-                                    )?.replace("\n", "")
-                                    shiplyEncode2?.log()
+                                    )
+                                    Base64.encodeToString(
+                                        shiplyEncode2,
+                                        Base64.DEFAULT
+                                    )?.log()
                                     val shiplyPost = mapOf(
                                         "req_list" to listOf(
                                             mapOf(
-                                                "cipher_text" to shiplyEncode,
+                                                "cipher_text" to Base64.encodeToString(
+                                                    shiplyEncode,
+                                                    Base64.DEFAULT
+                                                ),
                                                 "public_key_version" to 1,
-                                                "pull_key" to shiplyEncode2
+                                                "pull_key" to Base64.encodeToString(
+                                                    shiplyEncode2,
+                                                    Base64.DEFAULT
+                                                )
                                             )
                                         )
                                     )
@@ -672,23 +684,39 @@ class MainActivity : AppCompatActivity() {
                                             "https://rdelivery.qq.com/v3/config/batchpull",
                                             shiplyPost
                                         )
-                                        shiplyResult?.log()
+                                        shiplyResult.log()
                                         copyText(shiplyResult)
                                         if (shiplyResult != null) {
                                             val shiplyText =
                                                 TencentShiplyUtil.getCipherText(shiplyResult)
                                             shiplyText?.log()
-                                            if (shiplyText != null) {
+                                            if (!shiplyText.isNullOrEmpty()) {
                                                 val shiplyDecode =
                                                     TencentShiplyUtil.aesDecrypt(
-                                                        shiplyText,
+                                                        Base64.decode(shiplyText, Base64.DEFAULT),
                                                         shiplyKey
                                                     )
-                                                shiplyDecode.log()
+
+                                                val gzipInputStream = GZIPInputStream(
+                                                    ByteArrayInputStream(shiplyDecode)
+                                                )
+                                                val bufferedReader = BufferedReader(
+                                                    InputStreamReader(gzipInputStream)
+                                                )
+                                                val decompressedStringBuilder = StringBuilder()
+
+                                                bufferedReader.lineSequence().forEach { line ->
+                                                    decompressedStringBuilder.append(line)
+                                                }
+
+                                                val shiplyDecodeString =
+                                                    decompressedStringBuilder.toString()
+                                                shiplyDecodeString.log()
                                                 runOnUiThread {
                                                     val shiplyBack =
                                                         TextView(this@MainActivity).apply {
-                                                            text = shiplyDecode.toPrettyFormat()
+                                                            text =
+                                                                shiplyDecodeString.toPrettyFormat()
                                                             setTextIsSelectable(true)
                                                             setPadding(96, 48, 96, 96)
                                                         }
