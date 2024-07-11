@@ -54,6 +54,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.progressindicator.LinearProgressIndicator
+import com.google.gson.GsonBuilder
 import com.xiaoniu.qqversionlist.BuildConfig
 import com.xiaoniu.qqversionlist.R
 import com.xiaoniu.qqversionlist.data.QQVersionBean
@@ -616,13 +617,20 @@ class MainActivity : AppCompatActivity() {
                         DialogTencentShiplyBinding.inflate(layoutInflater)
 
                     val shiplyDialog = MaterialAlertDialogBuilder(this)
-                        .setTitle("Shiply 通道获取")
+                        .setTitle("腾讯 Shiply 通道")
                         .setIcon(R.drawable.flask_line)
                         .setView(dialogTencentShiplyBinding.root)
                         .setCancelable(false)
                         .show()
 
                     dialogTencentShiplyBinding.apply {
+                        DataStoreUtil.apply {
+                            shiplyUin.editText?.setText(getString("shiplyUin", ""))
+                            shiplyAppid.editText?.setText(getString("shiplyAppid", ""))
+                            shiplyVersion.editText?.setText(
+                                getString("shiplyVersion", "")
+                            )
+                        }
 
                         btnShiplyCancel.setOnClickListener {
                             shiplyDialog.dismiss()
@@ -633,94 +641,59 @@ class MainActivity : AppCompatActivity() {
                             shiplyAppid.clearFocus()
                             shiplyVersion.clearFocus()
 
-                            val shiplyKey = TencentShiplyUtil.generateAESKey()
-                            if (shiplyKey == null) showToast("生成 AES 密钥失败")
-                            else {
-                                val shiplyData = TencentShiplyUtil.generateJsonString(
-                                    shiplyVersion.editText?.text.toString(),
-                                    shiplyUin.editText?.text.toString()
-                                    //shiplyAppid.editText?.text.toString()
-                                    //"9.0.0", "114514"//,"537230561"
-                                )
-                                val shiplyEncode =
-                                    TencentShiplyUtil.aesEncrypt(shiplyData, shiplyKey)
-                                val shiplyRsaPublicKey =
-                                    TencentShiplyUtil.base64ToRsaPublicKey("MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC/rT6ULqXC32dgz4t/Vv4WS9pTks5Z2fPmbTHIXEVeiOEnjOpPBHOi1AUz+Ykqjk11ZyjidUwDyIaC/VtaC5Z7Bt/W+CFluDer7LiiDa6j77if5dbcvWUrJbgvhKqaEhWnMDXT1pAG2KxL/pNFAYguSLpOh9pK97G8umUMkkwWkwIDAQAB")
-                                if (shiplyRsaPublicKey == null) showToast("生成 RSA 公钥失败")
-                                else {
-                                    val shiplyEncode2 = TencentShiplyUtil.rsaEncrypt(
-                                        shiplyKey,
-                                        shiplyRsaPublicKey
-                                    )
-                                    val shiplyPost = mapOf(
-                                        "req_list" to listOf(
-                                            mapOf(
-                                                "cipher_text" to Base64.encodeToString(
-                                                    shiplyEncode,
-                                                    Base64.NO_WRAP
-                                                ),
-                                                "public_key_version" to 1,
-                                                "pull_key" to Base64.encodeToString(
-                                                    shiplyEncode2,
-                                                    Base64.NO_WRAP
-                                                )
-                                            )
+                            val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                            imm.hideSoftInputFromWindow(shiplyVersion.windowToken, 0)
+
+                            class MissingParameterException(message: String) : Exception(message)
+
+                            try {
+                                if (shiplyUin.editText?.text.toString()
+                                        .isEmpty()
+                                ) throw MissingParameterException("uin 即腾讯 Shiply 灰度通道获取对象 QQ 号，缺失 uin 参数无法获取 Shiply 数据。")
+                                if (shiplyVersion.editText?.text.toString()
+                                        .isEmpty()
+                                ) throw MissingParameterException("腾讯 Shiply 灰度通道获取需要 QQ 版本号数据，缺失版本号参数无法获取 Shiply 数据。")
+
+                                if (shiplyVersion.editText?.text.toString()
+                                        .isEmpty()
+                                ) {
+                                    DataStoreUtil.apply {
+                                        putString(
+                                            "shiplyVersion",
+                                            shiplyVersion.editText?.text.toString()
                                         )
-                                    )
-                                    CoroutineScope(Dispatchers.IO).launch {
-                                        val shiplyResult = TencentShiplyUtil.postJsonWithOkHttp(
-                                            "https://rdelivery.qq.com/v3/config/batchpull",
-                                            shiplyPost
-                                        )
-                                        if (shiplyResult != null) {
-                                            val shiplyText =
-                                                TencentShiplyUtil.getCipherText(shiplyResult)
-                                            if (!shiplyText.isNullOrEmpty()) {
-                                                val shiplyDecode =
-                                                    TencentShiplyUtil.aesDecrypt(
-                                                        Base64.decode(shiplyText, Base64.NO_WRAP),
-                                                        shiplyKey
-                                                    )
-
-                                                val gzipInputStream = GZIPInputStream(
-                                                    ByteArrayInputStream(shiplyDecode)
-                                                )
-                                                val bufferedReader = BufferedReader(
-                                                    InputStreamReader(gzipInputStream)
-                                                )
-                                                val decompressedStringBuilder = StringBuilder()
-
-                                                bufferedReader.lineSequence().forEach { line ->
-                                                    decompressedStringBuilder.append(line)
-                                                }
-
-                                                val shiplyDecodeString =
-                                                    decompressedStringBuilder.toString()
-                                                runOnUiThread {
-                                                    val shiplyBack =
-                                                        TextView(this@MainActivity).apply {
-                                                            text =
-                                                                shiplyDecodeString.toPrettyFormat()
-                                                            setTextIsSelectable(true)
-                                                            setPadding(96, 48, 96, 96)
-                                                        }
-                                                    MaterialAlertDialogBuilder(this@MainActivity)
-                                                        .setView(shiplyBack)
-                                                        .setTitle("返回结果")
-                                                        .setIcon(R.drawable.flask_line)
-                                                        .show()
-                                                }
-                                            } else {
-                                                showToast("获取失败")
-                                            }
-                                        }
+                                        putString("shiplyUin", shiplyUin.editText?.text.toString())
                                     }
+                                    TencentShiplyStart(
+                                        shiplyVersion.editText?.text.toString(),
+                                        shiplyUin.editText?.text.toString()
+                                    )
+                                } else {
+                                    DataStoreUtil.apply {
+                                        putString(
+                                            "shiplyVersion",
+                                            shiplyVersion.editText?.text.toString()
+                                        )
+                                        putString(
+                                            "shiplyAppid",
+                                            shiplyAppid.editText?.text.toString()
+                                        )
+                                        putString("shiplyUin", shiplyUin.editText?.text.toString())
+                                    }
+                                    TencentShiplyStart(
+                                        shiplyVersion.editText?.text.toString(),
+                                        shiplyUin.editText?.text.toString(),
+                                        shiplyAppid.editText?.text.toString()
+                                    )
                                 }
+                            } catch (e: MissingParameterException) {
+                                dialogError(e, true)
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                                dialogError(e)
                             }
                         }
-
                     }
-
                     true
                 }
 
@@ -1377,6 +1350,75 @@ class MainActivity : AppCompatActivity() {
         }
 
         thread.start()
+    }
+
+    private fun TencentShiplyStart(
+        shiplyVersion: String, shiplyUin: String, shiplyAppid: String = "537230561"
+    ) {
+        val shiplyKey = TencentShiplyUtil.generateAESKey()
+        val shiplyData = TencentShiplyUtil.generateJsonString(
+            shiplyVersion, shiplyUin, shiplyAppid
+        )
+        val shiplyEncode = TencentShiplyUtil.aesEncrypt(shiplyData, shiplyKey)
+        val shiplyRsaPublicKey =
+            TencentShiplyUtil.base64ToRsaPublicKey("MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC/rT6ULqXC32dgz4t/Vv4WS9pTks5Z2fPmbTHIXEVeiOEnjOpPBHOi1AUz+Ykqjk11ZyjidUwDyIaC/VtaC5Z7Bt/W+CFluDer7LiiDa6j77if5dbcvWUrJbgvhKqaEhWnMDXT1pAG2KxL/pNFAYguSLpOh9pK97G8umUMkkwWkwIDAQAB")
+        if (shiplyRsaPublicKey == null) showToast("生成 RSA 公钥失败")
+        else {
+            val shiplyEncode2 = TencentShiplyUtil.rsaEncrypt(
+                shiplyKey, shiplyRsaPublicKey
+            )
+            val shiplyPost = mapOf(
+                "req_list" to listOf(
+                    mapOf(
+                        "cipher_text" to Base64.encodeToString(
+                            shiplyEncode, Base64.NO_WRAP
+                        ), "public_key_version" to 1, "pull_key" to Base64.encodeToString(
+                            shiplyEncode2, Base64.NO_WRAP
+                        )
+                    )
+                )
+            )
+            CoroutineScope(Dispatchers.IO).launch {
+                val shiplyResult = TencentShiplyUtil.postJsonWithOkHttp(
+                    "https://rdelivery.qq.com/v3/config/batchpull", shiplyPost
+                )
+                val shiplyText = TencentShiplyUtil.getCipherText(shiplyResult)
+                if (!shiplyText.isNullOrEmpty()) {
+                    val shiplyDecode = TencentShiplyUtil.aesDecrypt(
+                        Base64.decode(shiplyText, Base64.NO_WRAP), shiplyKey
+                    )
+
+                    val gzipInputStream = GZIPInputStream(
+                        ByteArrayInputStream(shiplyDecode)
+                    )
+                    val bufferedReader = BufferedReader(
+                        InputStreamReader(gzipInputStream)
+                    )
+                    val decompressedStringBuilder = StringBuilder()
+
+                    bufferedReader.lineSequence().forEach { line ->
+                        decompressedStringBuilder.append(line)
+                    }
+
+                    val shiplyDecodeString = decompressedStringBuilder.toString()
+                    val gson = GsonBuilder().setPrettyPrinting().create()
+                    val shiplyDecodeStringJson =
+                        gson.toJson(gson.fromJson(shiplyDecodeString, Any::class.java))
+
+                    runOnUiThread {
+                        val shiplyBack = TextView(this@MainActivity).apply {
+                            text = shiplyDecodeStringJson.toPrettyFormat()
+                            setTextIsSelectable(true)
+                            setPadding(96, 48, 96, 96)
+                        }
+                        MaterialAlertDialogBuilder(this@MainActivity).setView(shiplyBack)
+                            .setTitle("返回结果").setIcon(R.drawable.flask_line).show()
+                    }
+                } else {
+                    showToast("获取失败，请重试")
+                }
+            }
+        }
     }
 
 

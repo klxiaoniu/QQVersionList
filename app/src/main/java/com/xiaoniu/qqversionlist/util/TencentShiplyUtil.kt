@@ -28,7 +28,7 @@ import javax.crypto.spec.SecretKeySpec
 object TencentShiplyUtil {
     private val gson = GsonBuilder().setStrictness(Strictness.LENIENT).create()
 
-    fun generateJsonString(appVersion: String, uin: String): String {
+    fun generateJsonString(appVersion: String, uin: String, appid: String): String {
         val timestamp = System.currentTimeMillis() / 1000L
         val data = mapOf(
             "systemID" to "10016",
@@ -51,7 +51,7 @@ object TencentShiplyUtil {
                     "model" to "2304FPN6DC"
                 ),
                 "isDebugPackage" to false,
-                "customProperties" to mapOf("appid" to "537230561")
+                "customProperties" to mapOf("appid" to appid)
             ),
             "taskChecksum" to "0",
             "context" to "H4sIAAAAAAAA/+Li5ni5T1WIVaBT1INRS8HS0MwyMdnCwMzQMCklxdQ81cTC1MzIIDnV0DIxydLYGAAAAP//AQAA//+OoFcLLwAAAA=="

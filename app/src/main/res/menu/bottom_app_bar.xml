@@ -15,31 +15,34 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <item
-        android:id="@+id/btn_setting"
-        android:icon="@drawable/settings_line"
-        android:title="设置"
-        app:showAsAction="ifRoom" />
-
-    <item
-        android:id="@+id/btn_get"
-        android:icon="@drawable/refresh_line"
-        android:title="刷新"
-        app:showAsAction="ifRoom" />
-
-    <item
-        android:id="@+id/btn_tencent_shiply"
-        android:icon="@drawable/flask_line"
-        android:title="腾讯 Shiply 通道获取"
-        app:showAsAction="ifRoom"/>
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:ignore="AlwaysShowAction" >
 
     <item
         android:id="@+id/btn_about"
         android:icon="@drawable/information_line"
         android:title="关于"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/btn_setting"
+        android:icon="@drawable/settings_line"
+        android:title="设置"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/btn_get"
+        android:icon="@drawable/refresh_line"
+        android:title="刷新"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/btn_tencent_shiply"
+        android:icon="@drawable/flask_line"
+        android:title="腾讯 Shiply 通道获取"
+        app:showAsAction="always"
+        />
 
 </menu>
