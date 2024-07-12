@@ -14,9 +14,7 @@ updates:
     groups:
       gradle-plugins:
         patterns:
-          - "*.gradle"
-          - "*.gradle.kts"
-          - "gradle.properties"
+          - "*"
 
   - package-ecosystem: "github-actions"
     directory: "/"
