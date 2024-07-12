@@ -5,19 +5,23 @@
 
 version: 2
 updates:
-  - package-ecosystem: gradle
-    directory: /
+  - package-ecosystem: "gradle"
+    directory: "/"
+    target-files:
+      - "gradle/wrapper/gradle-wrapper.properties"
     schedule:
-      interval: daily
+      interval: "daily"
     groups:
-      maven-dependencies:
+      gradle-plugins:
         patterns:
-          - "*"
+          - "*.gradle"
+          - "*.gradle.kts"
+          - "gradle.properties"
 
-  - package-ecosystem: github-actions
-    directory: /
+  - package-ecosystem: "github-actions"
+    directory: "/"
     schedule:
-      interval: daily
+      interval: "daily"
     groups:
       action-dependencies:
         patterns:
