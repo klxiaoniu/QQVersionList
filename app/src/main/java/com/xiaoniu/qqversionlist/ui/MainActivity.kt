@@ -52,9 +52,13 @@ import androidx.core.view.updatePadding
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.progressindicator.CircularProgressIndicatorSpec
+import com.google.android.material.progressindicator.IndeterminateDrawable
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.google.gson.GsonBuilder
+import com.google.gson.JsonElement
 import com.xiaoniu.qqversionlist.BuildConfig
 import com.xiaoniu.qqversionlist.R
 import com.xiaoniu.qqversionlist.data.QQVersionBean
@@ -71,6 +75,7 @@ import com.xiaoniu.qqversionlist.util.ClipboardUtil.copyText
 import com.xiaoniu.qqversionlist.util.DataStoreUtil
 import com.xiaoniu.qqversionlist.util.InfoUtil.dialogError
 import com.xiaoniu.qqversionlist.util.InfoUtil.showToast
+import com.xiaoniu.qqversionlist.util.StringUtil.getAllAPKUrl
 import com.xiaoniu.qqversionlist.util.StringUtil.toPrettyFormat
 import com.xiaoniu.qqversionlist.util.TencentShiplyUtil
 import kotlinx.coroutines.CoroutineScope
@@ -647,6 +652,21 @@ class MainActivity : AppCompatActivity() {
                             class MissingParameterException(message: String) : Exception(message)
 
                             try {
+                                val spec = CircularProgressIndicatorSpec(
+                                    this@MainActivity,
+                                    null,
+                                    0,
+                                    com.google.android.material.R.style.Widget_Material3_CircularProgressIndicator_ExtraSmall
+                                )
+                                val progressIndicatorDrawable =
+                                    IndeterminateDrawable.createCircularDrawable(
+                                        this@MainActivity,
+                                        spec
+                                    )
+
+                                btnShiplyStart.isEnabled = false
+                                btnShiplyStart.icon = progressIndicatorDrawable
+
                                 if (shiplyUin.editText?.text.toString()
                                         .isEmpty()
                                 ) throw MissingParameterException("uin 即腾讯 Shiply 灰度通道获取对象 QQ 号，缺失 uin 参数无法获取 Shiply 数据。")
@@ -665,6 +685,7 @@ class MainActivity : AppCompatActivity() {
                                         putString("shiplyUin", shiplyUin.editText?.text.toString())
                                     }
                                     TencentShiplyStart(
+                                        btnShiplyStart,
                                         shiplyVersion.editText?.text.toString(),
                                         shiplyUin.editText?.text.toString()
                                     )
@@ -681,6 +702,7 @@ class MainActivity : AppCompatActivity() {
                                         putString("shiplyUin", shiplyUin.editText?.text.toString())
                                     }
                                     TencentShiplyStart(
+                                        btnShiplyStart,
                                         shiplyVersion.editText?.text.toString(),
                                         shiplyUin.editText?.text.toString(),
                                         shiplyAppid.editText?.text.toString()
@@ -1353,6 +1375,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun TencentShiplyStart(
+        btn: MaterialButton,
         shiplyVersion: String, shiplyUin: String, shiplyAppid: String = "537230561"
     ) {
         val shiplyKey = TencentShiplyUtil.generateAESKey()
@@ -1379,43 +1402,54 @@ class MainActivity : AppCompatActivity() {
                 )
             )
             CoroutineScope(Dispatchers.IO).launch {
-                val shiplyResult = TencentShiplyUtil.postJsonWithOkHttp(
-                    "https://rdelivery.qq.com/v3/config/batchpull", shiplyPost
-                )
-                val shiplyText = TencentShiplyUtil.getCipherText(shiplyResult)
-                if (!shiplyText.isNullOrEmpty()) {
-                    val shiplyDecode = TencentShiplyUtil.aesDecrypt(
-                        Base64.decode(shiplyText, Base64.NO_WRAP), shiplyKey
+                try {
+                    val shiplyResult = TencentShiplyUtil.postJsonWithOkHttp(
+                        "https://rdelivery.qq.com/v3/config/batchpull", shiplyPost
                     )
+                    val shiplyText = TencentShiplyUtil.getCipherText(shiplyResult)
+                    if (!shiplyText.isNullOrEmpty()) {
+                        val shiplyDecode = TencentShiplyUtil.aesDecrypt(
+                            Base64.decode(shiplyText, Base64.NO_WRAP), shiplyKey
+                        )
 
-                    val gzipInputStream = GZIPInputStream(
-                        ByteArrayInputStream(shiplyDecode)
-                    )
-                    val bufferedReader = BufferedReader(
-                        InputStreamReader(gzipInputStream)
-                    )
-                    val decompressedStringBuilder = StringBuilder()
+                        val gzipInputStream = GZIPInputStream(
+                            ByteArrayInputStream(shiplyDecode)
+                        )
+                        val bufferedReader = BufferedReader(
+                            InputStreamReader(gzipInputStream)
+                        )
+                        val decompressedStringBuilder = StringBuilder()
 
-                    bufferedReader.lineSequence().forEach { line ->
-                        decompressedStringBuilder.append(line)
-                    }
-
-                    val shiplyDecodeString = decompressedStringBuilder.toString()
-                    val gson = GsonBuilder().setPrettyPrinting().create()
-                    val shiplyDecodeStringJson =
-                        gson.toJson(gson.fromJson(shiplyDecodeString, Any::class.java))
-
-                    runOnUiThread {
-                        val shiplyBack = TextView(this@MainActivity).apply {
-                            text = shiplyDecodeStringJson.toPrettyFormat()
-                            setTextIsSelectable(true)
-                            setPadding(96, 48, 96, 96)
+                        bufferedReader.lineSequence().forEach { line ->
+                            decompressedStringBuilder.append(line)
                         }
-                        MaterialAlertDialogBuilder(this@MainActivity).setView(shiplyBack)
-                            .setTitle("返回结果").setIcon(R.drawable.flask_line).show()
+
+                        val shiplyDecodeString = decompressedStringBuilder.toString()
+                        val gson = GsonBuilder().setPrettyPrinting().create()
+                        val shiplyDecodeStringJson =
+                            gson.toJson(gson.fromJson(shiplyDecodeString, JsonElement::class.java))
+
+                        runOnUiThread {
+                            val shiplyBack = TextView(this@MainActivity).apply {
+                                text = shiplyDecodeStringJson.toPrettyFormat()
+                                    .getAllAPKUrl() + "\n\n" + shiplyDecodeStringJson.toPrettyFormat()
+                                setTextIsSelectable(true)
+                                setPadding(96, 48, 96, 96)
+                            }
+                            MaterialAlertDialogBuilder(this@MainActivity).setView(shiplyBack)
+                                .setTitle("返回结果").setIcon(R.drawable.flask_line).show()
+                        }
+                    } else {
+                        showToast("获取失败，请重试")
                     }
-                } else {
-                    showToast("获取失败，请重试")
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    dialogError(e)
+                } finally {
+                    runOnUiThread {
+                        btn.icon = null
+                        btn.isEnabled = true
+                    }
                 }
             }
         }

@@ -18,21 +18,62 @@
 
 package com.xiaoniu.qqversionlist.util
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
 
 object StringUtil {
-    private val json = Json { isLenient = true; prettyPrint = true }
+    @OptIn(ExperimentalSerializationApi::class)
+    private val json = Json { isLenient = true; prettyPrint = true; prettyPrintIndent = "  " }
 
     fun String.toPrettyFormat(): String {
         return try {
-            val jsonObject = Json.parseToJsonElement(this) as? JsonObject
-            jsonObject?.let { json.encodeToString(it) } ?: this
+            val parsedElement = Json.parseToJsonElement(this)
+            val prettyJson = formatJsonElement(parsedElement)
+            json.encodeToString(prettyJson)
         } catch (e: Exception) {
             e.printStackTrace()
             this
         }
+    }
+
+    fun String.getAllAPKUrl(): String {
+        val urlPattern =
+            """(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))""".toRegex()
+        val urls = urlPattern.findAll(this).map { it.value }.toList()
+        val apkUrls = urls.filter { it.endsWith(".apk", ignoreCase = true) }
+        return if (apkUrls.isEmpty()) "" else "检测到 Android 应用安装包直链：\n\n" + apkUrls.joinToString(
+            "\n\n"
+        )
+    }
+
+
+    private fun formatJsonElement(element: JsonElement): JsonElement {
+        return when (element) {
+            is JsonObject -> JsonObject(element.entries.map { (key, value) ->
+                key to formatJsonElement(value)
+            }.toMap())
+
+            is JsonArray -> JsonArray(element.map { formatJsonElement(it) })
+            is JsonPrimitive -> {
+                if (element.isString && element.content.isJson()) formatJsonElement(
+                    Json.parseToJsonElement(
+                        element.content
+                    )
+                )
+                else element
+            }
+
+            else -> element
+        }
+    }
+
+    private fun String.isJson(): Boolean {
+        return this.startsWith("{") && this.endsWith("}") || this.startsWith("[") && this.endsWith("]")
     }
 }
 
