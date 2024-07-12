@@ -7,10 +7,8 @@ version: 2
 updates:
   - package-ecosystem: "gradle"
     directory: "/"
-    target-files:
-      - "gradle/wrapper/gradle-wrapper.properties"
     schedule:
-      interval: "daily"
+      interval: monthly
     groups:
       gradle-plugins:
         patterns:
@@ -19,7 +17,7 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "daily"
+      interval: monthly
     groups:
       action-dependencies:
         patterns:
