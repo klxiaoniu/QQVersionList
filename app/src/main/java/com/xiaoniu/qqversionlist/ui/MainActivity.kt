@@ -67,6 +67,7 @@ import com.xiaoniu.qqversionlist.databinding.DialogGuessBinding
 import com.xiaoniu.qqversionlist.databinding.DialogLoadingBinding
 import com.xiaoniu.qqversionlist.databinding.DialogPersonalizationBinding
 import com.xiaoniu.qqversionlist.databinding.DialogSettingBinding
+import com.xiaoniu.qqversionlist.databinding.DialogShiplyBackBinding
 import com.xiaoniu.qqversionlist.databinding.DialogSuffixDefineBinding
 import com.xiaoniu.qqversionlist.databinding.DialogTencentShiplyBinding
 import com.xiaoniu.qqversionlist.databinding.SuccessButtonBinding
@@ -258,8 +259,7 @@ class MainActivity : AppCompatActivity() {
                                 "开源协议：AGPL v3\n" +
                                 "获取更新：GitHub Releases、Obtainium、九七通知中心\n\n" +
                                 "Since 2023.8.9"
-                    )
-                    message.apply {
+                    ).apply {
                         setSpan(
                             URLSpan("https://github.com/klxiaoniu"),
                             indexOf("快乐小牛"),
@@ -497,123 +497,103 @@ class MainActivity : AppCompatActivity() {
                                     DataStoreUtil.getBoolean("suffix64HD1HB", true)
                                 suffixDefineCheckboxHd1hb64.isChecked =
                                     DataStoreUtil.getBoolean("suffixHD1HB64", true)
-                            }
 
-                            dialogSuffix.show()
 
+                                dialogSuffix.show()
 
 //                            dialogSuffixDefine.settingSuffixDefine.editText?.setText(
 //                                DataStoreUtil.getStringAsync("suffixDefine", "")
 //                            )
 
-                            // 异步读取字符串，防止超长字符串造成阻塞
-                            dialogSuffixDefine.settingSuffixDefine.apply {
-                                isEnabled = false
-                                dialogSuffixDefine.btnSuffixSave.isEnabled = false
-                                lifecycleScope.launch {
-                                    val suffixDefine = withContext(Dispatchers.IO) {
-                                        DataStoreUtil.getStringAsync("suffixDefine", "").await()
+                                // 异步读取字符串，防止超长字符串造成阻塞
+                                settingSuffixDefine.apply {
+                                    isEnabled = false
+                                    btnSuffixSave.isEnabled = false
+                                    lifecycleScope.launch {
+                                        val suffixDefine = withContext(Dispatchers.IO) {
+                                            DataStoreUtil.getStringAsync("suffixDefine", "").await()
+                                        }
+                                        editText?.setText(
+                                            suffixDefine
+                                        )
+                                        isEnabled = true
+                                        btnSuffixSave.isEnabled = true
                                     }
-                                    editText?.setText(
-                                        suffixDefine
-                                    )
-                                    isEnabled = true
-                                    dialogSuffixDefine.btnSuffixSave.isEnabled = true
-                                }
-                            }
-
-                            dialogSuffixDefine.btnSuffixSave.setOnClickListener {
-                                val suffixDefine =
-                                    dialogSuffixDefine.settingSuffixDefine.editText?.text.toString()
-                                DataStoreUtil.apply {
-                                    putStringAsync("suffixDefine", suffixDefine)
-
-                                    putBooleanAsync(
-                                        "suffix64HB",
-                                        dialogSuffixDefine.suffixDefineCheckbox64hb.isChecked
-                                    )
-                                    putBooleanAsync(
-                                        "suffixHB64",
-                                        dialogSuffixDefine.suffixDefineCheckboxHb64.isChecked
-                                    )
-                                    putBooleanAsync(
-                                        "suffix64HB1",
-                                        dialogSuffixDefine.suffixDefineCheckbox64hb1.isChecked
-                                    )
-                                    putBooleanAsync(
-                                        "suffixHB164",
-                                        dialogSuffixDefine.suffixDefineCheckboxHb164.isChecked
-                                    )
-                                    putBooleanAsync(
-                                        "suffix64HB2",
-                                        dialogSuffixDefine.suffixDefineCheckbox64hb2.isChecked
-                                    )
-                                    putBooleanAsync(
-                                        "suffixHB264",
-                                        dialogSuffixDefine.suffixDefineCheckboxHb264.isChecked
-                                    )
-                                    putBooleanAsync(
-                                        "suffix64HB3",
-                                        dialogSuffixDefine.suffixDefineCheckbox64hb3.isChecked
-                                    )
-                                    putBooleanAsync(
-                                        "suffixHB364",
-                                        dialogSuffixDefine.suffixDefineCheckboxHb364.isChecked
-                                    )
-
-                                    putBooleanAsync(
-                                        "suffix64HD",
-                                        dialogSuffixDefine.suffixDefineCheckbox64hd.isChecked
-                                    )
-                                    putBooleanAsync(
-                                        "suffixHD64",
-                                        dialogSuffixDefine.suffixDefineCheckboxHd64.isChecked
-                                    )
-                                    putBooleanAsync(
-                                        "suffix64HD1",
-                                        dialogSuffixDefine.suffixDefineCheckbox64hd1.isChecked
-                                    )
-                                    putBooleanAsync(
-                                        "suffixHD164",
-                                        dialogSuffixDefine.suffixDefineCheckboxHd164.isChecked
-                                    )
-                                    putBooleanAsync(
-                                        "suffix64HD2",
-                                        dialogSuffixDefine.suffixDefineCheckbox64hd2.isChecked
-                                    )
-                                    putBooleanAsync(
-                                        "suffixHD264",
-                                        dialogSuffixDefine.suffixDefineCheckboxHd264.isChecked
-                                    )
-                                    putBooleanAsync(
-                                        "suffix64HD3",
-                                        dialogSuffixDefine.suffixDefineCheckbox64hd3.isChecked
-                                    )
-                                    putBooleanAsync(
-                                        "suffixHD364",
-                                        dialogSuffixDefine.suffixDefineCheckboxHd364.isChecked
-                                    )
-
-                                    putBooleanAsync(
-                                        "suffixHD1HB64",
-                                        dialogSuffixDefine.suffixDefineCheckboxHd1hb64.isChecked
-                                    )
-                                    putBooleanAsync(
-                                        "suffix64HD1HB",
-                                        dialogSuffixDefine.suffixDefineCheckbox64hd1hb.isChecked
-                                    )
                                 }
 
-                                showToast("已保存")
-                                dialogSuffix.dismiss()
-                            }
+                                btnSuffixSave.setOnClickListener {
+                                    val suffixDefine = settingSuffixDefine.editText?.text.toString()
+                                    DataStoreUtil.apply {
+                                        putStringAsync("suffixDefine", suffixDefine)
 
-                            dialogSuffixDefine.btnSuffixCancel.setOnClickListener {
-                                dialogSuffix.dismiss()
+                                        putBooleanAsync(
+                                            "suffix64HB", suffixDefineCheckbox64hb.isChecked
+                                        )
+                                        putBooleanAsync(
+                                            "suffixHB64", suffixDefineCheckboxHb64.isChecked
+                                        )
+                                        putBooleanAsync(
+                                            "suffix64HB1", suffixDefineCheckbox64hb1.isChecked
+                                        )
+                                        putBooleanAsync(
+                                            "suffixHB164", suffixDefineCheckboxHb164.isChecked
+                                        )
+                                        putBooleanAsync(
+                                            "suffix64HB2", suffixDefineCheckbox64hb2.isChecked
+                                        )
+                                        putBooleanAsync(
+                                            "suffixHB264", suffixDefineCheckboxHb264.isChecked
+                                        )
+                                        putBooleanAsync(
+                                            "suffix64HB3", suffixDefineCheckbox64hb3.isChecked
+                                        )
+                                        putBooleanAsync(
+                                            "suffixHB364", suffixDefineCheckboxHb364.isChecked
+                                        )
+
+                                        putBooleanAsync(
+                                            "suffix64HD", suffixDefineCheckbox64hd.isChecked
+                                        )
+                                        putBooleanAsync(
+                                            "suffixHD64", suffixDefineCheckboxHd64.isChecked
+                                        )
+                                        putBooleanAsync(
+                                            "suffix64HD1", suffixDefineCheckbox64hd1.isChecked
+                                        )
+                                        putBooleanAsync(
+                                            "suffixHD164", suffixDefineCheckboxHd164.isChecked
+                                        )
+                                        putBooleanAsync(
+                                            "suffix64HD2", suffixDefineCheckbox64hd2.isChecked
+                                        )
+                                        putBooleanAsync(
+                                            "suffixHD264", suffixDefineCheckboxHd264.isChecked
+                                        )
+                                        putBooleanAsync(
+                                            "suffix64HD3", suffixDefineCheckbox64hd3.isChecked
+                                        )
+                                        putBooleanAsync(
+                                            "suffixHD364", suffixDefineCheckboxHd364.isChecked
+                                        )
+
+                                        putBooleanAsync(
+                                            "suffixHD1HB64", suffixDefineCheckboxHd1hb64.isChecked
+                                        )
+                                        putBooleanAsync(
+                                            "suffix64HD1HB", suffixDefineCheckbox64hd1hb.isChecked
+                                        )
+                                    }
+
+                                    showToast("已保存")
+                                    dialogSuffix.dismiss()
+                                }
+
+                                btnSuffixCancel.setOnClickListener {
+                                    dialogSuffix.dismiss()
+                                }
                             }
                         }
                     }
-
                     true
                 }
 
@@ -669,10 +649,10 @@ class MainActivity : AppCompatActivity() {
 
                                 if (shiplyUin.editText?.text.toString()
                                         .isEmpty()
-                                ) throw MissingParameterException("uin 即腾讯 Shiply 灰度通道获取对象 QQ 号，缺失 uin 参数无法获取 Shiply 数据。")
+                                ) throw MissingParameterException("uin 即用于 Post 腾讯 Shiply 服务的对象 QQ 号，缺失 uin 参数无法获取 Shiply 数据。")
                                 if (shiplyVersion.editText?.text.toString()
                                         .isEmpty()
-                                ) throw MissingParameterException("腾讯 Shiply 灰度通道获取需要 QQ 版本号数据，缺失版本号参数无法获取 Shiply 数据。")
+                                ) throw MissingParameterException("Post 腾讯 Shiply 服务需要 QQ 版本号参数，缺失版本号参数无法获取 Shiply 数据。")
 
                                 if (shiplyVersion.editText?.text.toString()
                                         .isEmpty()
@@ -724,11 +704,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (intent.action == "android.intent.action.VIEW" && DataStoreUtil.getInt(
-                "userAgreement", 0
+                "userAgreement",
+                0
             ) >= judgeUATarget
-        ) {
-            showGuessVersionDialog()
-        }
+        ) showGuessVersionDialog()
         binding.btnGuess.setOnClickListener {
             showGuessVersionDialog()
         }
@@ -740,9 +719,10 @@ class MainActivity : AppCompatActivity() {
         val verBig = DataStoreUtil.getString("versionBig", "")
         dialogGuessBinding.etVersionBig.editText?.setText(verBig)
         val memVersion = DataStoreUtil.getString("versionSelect", "正式版")
-        if (memVersion == "测试版" || memVersion == "空格猜版" || memVersion == "正式版" || memVersion == "微信猜版") {
-            dialogGuessBinding.spinnerVersion.setText(memVersion, false)
-        }
+        if (memVersion == "测试版" || memVersion == "空格猜版" || memVersion == "正式版" || memVersion == "微信猜版") dialogGuessBinding.spinnerVersion.setText(
+            memVersion,
+            false
+        )
         if (dialogGuessBinding.spinnerVersion.text.toString() == "测试版" || dialogGuessBinding.spinnerVersion.text.toString() == "空格猜版") dialogGuessBinding.apply {
             etVersionSmall.isEnabled = true
             etVersionSmall.visibility = View.VISIBLE
@@ -920,9 +900,11 @@ class MainActivity : AppCompatActivity() {
                 // 识别本机 Android QQ 版本并放进持久化存储
                 val QQPackageInfo = packageManager.getPackageInfo("com.tencent.mobileqq", 0)
                 val QQVersionInstall = QQPackageInfo.versionName
-                if (QQVersionInstall != DataStoreUtil.getString("QQVersionInstall", "")) {
-                    DataStoreUtil.putString("QQVersionInstall", QQVersionInstall)
-                }
+                if (QQVersionInstall != DataStoreUtil.getString(
+                        "QQVersionInstall",
+                        ""
+                    )
+                ) DataStoreUtil.putString("QQVersionInstall", QQVersionInstall)
             } catch (e: Exception) {
                 DataStoreUtil.putStringAsync("QQVersionInstall", "")
             } finally {
@@ -1023,9 +1005,7 @@ class MainActivity : AppCompatActivity() {
 
         fun updateProgressDialogMessage(newMessage: String) {
             dialogLoadingBinding.loadingMessage.text = newMessage
-            if (!progressDialog.isShowing) {
-                progressDialog.show()// 更新文本后才显示对话框
-            }
+            if (!progressDialog.isShowing) progressDialog.show() // 更新文本后才显示对话框
         }
 
         var link = ""
@@ -1146,217 +1126,215 @@ class MainActivity : AppCompatActivity() {
             val stList = if (defineSufList != listOf("")) stListPre + defineSufList else stListPre
             try {
                 var sIndex = 0
-                while (true) {
-                    when (status) {
-                        STATUS_ONGOING -> {
-                            if (mode == MODE_TEST) {
-                                if (link == "" || !guessTestExtend) {
-                                    link =
-                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}${stList[sIndex]}.apk"
-                                    if (guessTestExtend) sIndex += 1
-                                } else {
-                                    link =
-                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}.${vSmall}${stList[sIndex]}.apk"
-                                    sIndex += 1
-                                }
-                            } else if (mode == MODE_UNOFFICIAL) {
+                while (true) when (status) {
+                    STATUS_ONGOING -> {
+                        if (mode == MODE_TEST) {
+                            if (link == "" || !guessTestExtend) {
                                 link =
-                                    "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android%20$versionBig.${vSmall}%2064.apk"
-                            } else if (mode == MODE_OFFICIAL) {
-                                val soListPre = listOf(
-                                    "_64",
-                                    "_64_HB",
-                                    "_64_HB1",
-                                    "_64_HB2",
-                                    "_64_HB3",
-                                    "_HB_64",
-                                    "_HB1_64",
-                                    "_HB2_64",
-                                    "_HB3_64",
-                                    "_64_BBPJ",
-                                    "_BBPJ_64"
-                                )
-                                val soList =
-                                    if (defineSufList != listOf("")) soListPre + defineSufList else soListPre
-                                if (link == "") {
-                                    link =
-                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}${soList[sIndex]}.apk"
-                                    sIndex += 1
-                                } else if (sIndex == (soList.size)) {
-                                    status = STATUS_END
-                                    showToast("未猜测到包")
-                                    continue
-                                } else {
-                                    link =
-                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}${soList[sIndex]}.apk"
-                                    sIndex += 1
-                                }
-
-                            } else if (mode == MODE_WECHAT) {
-                                // https://dldir1.qq.com/weixin/android/weixin8049android2600_0x2800318a_arm64.apk
+                                    "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}${stList[sIndex]}.apk"
+                                if (guessTestExtend) sIndex += 1
+                            } else {
                                 link =
-                                    "https://dldir1.qq.com/weixin/android/weixin${versionBig}android${versionTrue}_0x${v16codeStr}_arm64.apk"
+                                    "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}.${vSmall}${stList[sIndex]}.apk"
+                                sIndex += 1
                             }
-                            runOnUiThread {
-                                updateProgressDialogMessage("正在猜测下载地址：$link")
+                        } else if (mode == MODE_UNOFFICIAL) link =
+                            "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android%20$versionBig.${vSmall}%2064.apk"
+                        else if (mode == MODE_OFFICIAL) {
+                            val soListPre = listOf(
+                                "_64",
+                                "_64_HB",
+                                "_64_HB1",
+                                "_64_HB2",
+                                "_64_HB3",
+                                "_HB_64",
+                                "_HB1_64",
+                                "_HB2_64",
+                                "_HB3_64",
+                                "_64_BBPJ",
+                                "_BBPJ_64"
+                            )
+                            val soList =
+                                if (defineSufList != listOf("")) soListPre + defineSufList else soListPre
+                            if (link == "") {
+                                link =
+                                    "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}${soList[sIndex]}.apk"
+                                sIndex += 1
+                            } else if (sIndex == (soList.size)) {
+                                status = STATUS_END
+                                showToast("未猜测到包")
+                                continue
+                            } else {
+                                link =
+                                    "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}${soList[sIndex]}.apk"
+                                sIndex += 1
                             }
-                            val okHttpClient = OkHttpClient()
-                            val request = Request.Builder().url(link).build()
-                            val response = okHttpClient.newCall(request).execute()
-                            val success = response.isSuccessful
-                            if (success) {
-                                status = STATUS_PAUSE
-                                getFileSizeInMB(link) { appSize ->
-                                    runOnUiThread {
-                                        successButtonBinding.root.parent?.let { parent ->
-                                            if (parent is ViewGroup) {
-                                                parent.removeView(successButtonBinding.root)
-                                            }
-                                        }
 
-                                        val successMaterialDialog = MaterialAlertDialogBuilder(this)
-                                            .setTitle("猜测成功")
-                                            .setMessage("下载地址：$link")
-                                            .setIcon(R.drawable.check_circle)
-                                            .setView(successButtonBinding.root)
-                                            .setCancelable(false).apply {
-                                                if (appSize != "Error" && appSize != "-0.00" && appSize != "0.00") setMessage(
-                                                    "下载地址：$link\n\n大小：$appSize MB"
-                                                )
-                                                else setMessage("下载地址：$link")
-                                            }.show()
+                        } else if (mode == MODE_WECHAT) {
+                            // https://dldir1.qq.com/weixin/android/weixin8049android2600_0x2800318a_arm64.apk
+                            link =
+                                "https://dldir1.qq.com/weixin/android/weixin${versionBig}android${versionTrue}_0x${v16codeStr}_arm64.apk"
+                        }
+                        runOnUiThread {
+                            updateProgressDialogMessage("正在猜测下载地址：$link")
+                        }
+                        val okHttpClient = OkHttpClient()
+                        val request = Request.Builder().url(link).build()
+                        val response = okHttpClient.newCall(request).execute()
+                        val success = response.isSuccessful
+                        if (success) {
+                            status = STATUS_PAUSE
+                            getFileSizeInMB(link) { appSize ->
+                                runOnUiThread {
+                                    successButtonBinding.root.parent?.let { parent ->
+                                        if (parent is ViewGroup) parent.removeView(
+                                            successButtonBinding.root
+                                        )
+                                    }
 
-
-                                        // 复制并停止按钮点击事件
-                                        successButtonBinding.btnCopy.setOnClickListener {
-                                            copyText(link)
-                                            successMaterialDialog.dismiss()
-                                            status = STATUS_END
-                                        }
-
-                                        // 继续按钮点击事件
-                                        successButtonBinding.btnContinue.setOnClickListener {
-                                            // 测试版情况下，未打开扩展猜版或扩展猜版到最后一步时执行小版本号的递增
-                                            if (mode == MODE_TEST && (!guessTestExtend || sIndex == (stList.size))) {
-                                                vSmall += if (!guessNot5) 5 else 1
-                                                sIndex = 0
-                                            } else if (mode == MODE_UNOFFICIAL) vSmall += if (!guessNot5) 5 else 1
-                                            else if (mode == MODE_WECHAT) {
-                                                val version16code = v16codeStr.toInt(16) + 1
-                                                v16codeStr = version16code.toString(16)
-                                            }
-                                            successMaterialDialog.dismiss()
-                                            status = STATUS_ONGOING
-                                        }
-
-                                        // 停止按钮点击事件
-                                        successButtonBinding.btnStop.setOnClickListener {
-                                            successMaterialDialog.dismiss()
-                                            status = STATUS_END
-                                        }
-
-                                        // 分享按钮点击事件
-                                        successButtonBinding.btnShare.setOnClickListener {
-                                            successMaterialDialog.dismiss()
-                                            val shareIntent = Intent(Intent.ACTION_SEND).apply {
-                                                type = "text/plain"
-                                                putExtra(
-                                                    Intent.EXTRA_TEXT,
-                                                    if (appSize != "Error" && appSize != "-0.00" && appSize != "0.00") {
-                                                        when (mode) {
-                                                            MODE_OFFICIAL -> "Android QQ $versionBig 正式版（大小：$appSize MB）\n\n下载地址：$link"
-                                                            MODE_WECHAT -> "Android 微信 $versionBig（$vSmall）（大小：$appSize MB）\n\n下载地址：$link"
-                                                            else -> "Android QQ $versionBig.$vSmall 测试版（大小：$appSize MB）\n\n下载地址：$link\n\n鉴于 QQ 测试版可能存在不可预知的稳定性问题，您在下载及使用该测试版本之前，必须明确并确保自身具备足够的风险识别和承受能力。"
-                                                        }
-                                                    } else {
-                                                        when (mode) {
-                                                            MODE_OFFICIAL -> "Android QQ $versionBig 正式版\n\n下载地址：$link"
-                                                            MODE_WECHAT -> "Android 微信 $versionBig（$vSmall)\n\n下载地址：$link"
-                                                            else -> "Android QQ $versionBig.$vSmall 测试版\n\n下载地址：$link\n\n鉴于 QQ 测试版可能存在不可预知的稳定性问题，您在下载及使用该测试版本之前，必须明确并确保自身具备足够的风险识别和承受能力。"
-                                                        }
-                                                    }
-                                                )
-                                            }
-                                            startActivity(
-                                                Intent.createChooser(
-                                                    shareIntent, "分享到"
-                                                )
+                                    val successMaterialDialog = MaterialAlertDialogBuilder(this)
+                                        .setTitle("猜测成功")
+                                        .setMessage("下载地址：$link")
+                                        .setIcon(R.drawable.check_circle)
+                                        .setView(successButtonBinding.root)
+                                        .setCancelable(false).apply {
+                                            if (appSize != "Error" && appSize != "-0.00" && appSize != "0.00") setMessage(
+                                                "下载地址：$link\n\n大小：$appSize MB"
                                             )
-                                            status = STATUS_END
+                                            else setMessage("下载地址：$link")
+                                        }.show()
+
+
+                                    // 复制并停止按钮点击事件
+                                    successButtonBinding.btnCopy.setOnClickListener {
+                                        copyText(link)
+                                        successMaterialDialog.dismiss()
+                                        status = STATUS_END
+                                    }
+
+                                    // 继续按钮点击事件
+                                    successButtonBinding.btnContinue.setOnClickListener {
+                                        // 测试版情况下，未打开扩展猜版或扩展猜版到最后一步时执行小版本号的递增
+                                        if (mode == MODE_TEST && (!guessTestExtend || sIndex == (stList.size))) {
+                                            vSmall += if (!guessNot5) 5 else 1
+                                            sIndex = 0
+                                        } else if (mode == MODE_UNOFFICIAL) vSmall += if (!guessNot5) 5 else 1
+                                        else if (mode == MODE_WECHAT) {
+                                            val version16code = v16codeStr.toInt(16) + 1
+                                            v16codeStr = version16code.toString(16)
                                         }
+                                        successMaterialDialog.dismiss()
+                                        status = STATUS_ONGOING
+                                    }
 
-                                        // 下载按钮点击事件
-                                        successButtonBinding.btnDownload.setOnClickListener {
-                                            successMaterialDialog.dismiss()
-                                            status = STATUS_END
-                                            if (downloadOnSystemManager) {
-                                                val requestDownload =
-                                                    DownloadManager.Request(Uri.parse(link))
-                                                requestDownload.apply {
+                                    // 停止按钮点击事件
+                                    successButtonBinding.btnStop.setOnClickListener {
+                                        successMaterialDialog.dismiss()
+                                        status = STATUS_END
+                                    }
+
+                                    // 分享按钮点击事件
+                                    successButtonBinding.btnShare.setOnClickListener {
+                                        successMaterialDialog.dismiss()
+                                        val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                                            type = "text/plain"
+                                            putExtra(
+                                                Intent.EXTRA_TEXT,
+                                                if (appSize != "Error" && appSize != "-0.00" && appSize != "0.00") {
                                                     when (mode) {
-                                                        MODE_TEST, MODE_UNOFFICIAL -> {
-                                                            setDestinationInExternalPublicDir(
-                                                                Environment.DIRECTORY_DOWNLOADS,
-                                                                "Android_QQ_${versionBig}.${vSmall}_64.apk"
-                                                            )
-                                                        }
-
-                                                        MODE_OFFICIAL -> {
-                                                            setDestinationInExternalPublicDir(
-                                                                Environment.DIRECTORY_DOWNLOADS,
-                                                                "Android_QQ_${versionBig}_64.apk"
-                                                            )
-                                                        }
-
-                                                        MODE_WECHAT -> {
-                                                            setDestinationInExternalPublicDir(
-                                                                Environment.DIRECTORY_DOWNLOADS,
-                                                                "Android_微信_${versionBig}.${versionTrue}.apk"
-                                                            )
-                                                        }
+                                                        MODE_OFFICIAL -> "Android QQ $versionBig 正式版（大小：$appSize MB）\n\n下载地址：$link"
+                                                        MODE_WECHAT -> "Android 微信 $versionBig（$vSmall）（大小：$appSize MB）\n\n下载地址：$link"
+                                                        else -> "Android QQ $versionBig.$vSmall 测试版（大小：$appSize MB）\n\n下载地址：$link\n\n鉴于 QQ 测试版可能存在不可预知的稳定性问题，您在下载及使用该测试版本之前，必须明确并确保自身具备足够的风险识别和承受能力。"
+                                                    }
+                                                } else {
+                                                    when (mode) {
+                                                        MODE_OFFICIAL -> "Android QQ $versionBig 正式版\n\n下载地址：$link"
+                                                        MODE_WECHAT -> "Android 微信 $versionBig（$vSmall)\n\n下载地址：$link"
+                                                        else -> "Android QQ $versionBig.$vSmall 测试版\n\n下载地址：$link\n\n鉴于 QQ 测试版可能存在不可预知的稳定性问题，您在下载及使用该测试版本之前，必须明确并确保自身具备足够的风险识别和承受能力。"
                                                     }
                                                 }
-                                                val downloadManager =
-                                                    getSystemService(DOWNLOAD_SERVICE) as DownloadManager
-                                                downloadManager.enqueue(requestDownload)
-                                            } else {
-                                                // 这里不用 Chrome Custom Tab 的原因是 Chrome 不知道咋回事有概率卡在“等待下载”状态
-                                                val browserIntent =
-                                                    Intent(Intent.ACTION_VIEW, Uri.parse(link))
-                                                browserIntent.apply {
-                                                    addCategory(Intent.CATEGORY_BROWSABLE)
-                                                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                            )
+                                        }
+                                        startActivity(
+                                            Intent.createChooser(
+                                                shareIntent, "分享到"
+                                            )
+                                        )
+                                        status = STATUS_END
+                                    }
+
+                                    // 下载按钮点击事件
+                                    successButtonBinding.btnDownload.setOnClickListener {
+                                        successMaterialDialog.dismiss()
+                                        status = STATUS_END
+                                        if (downloadOnSystemManager) {
+                                            val requestDownload =
+                                                DownloadManager.Request(Uri.parse(link))
+                                            requestDownload.apply {
+                                                when (mode) {
+                                                    MODE_TEST, MODE_UNOFFICIAL -> {
+                                                        setDestinationInExternalPublicDir(
+                                                            Environment.DIRECTORY_DOWNLOADS,
+                                                            "Android_QQ_${versionBig}.${vSmall}_64.apk"
+                                                        )
+                                                    }
+
+                                                    MODE_OFFICIAL -> {
+                                                        setDestinationInExternalPublicDir(
+                                                            Environment.DIRECTORY_DOWNLOADS,
+                                                            "Android_QQ_${versionBig}_64.apk"
+                                                        )
+                                                    }
+
+                                                    MODE_WECHAT -> {
+                                                        setDestinationInExternalPublicDir(
+                                                            Environment.DIRECTORY_DOWNLOADS,
+                                                            "Android_微信_${versionBig}.${versionTrue}.apk"
+                                                        )
+                                                    }
                                                 }
-                                                startActivity(browserIntent)
                                             }
+                                            val downloadManager =
+                                                getSystemService(DOWNLOAD_SERVICE) as DownloadManager
+                                            downloadManager.enqueue(requestDownload)
+                                        } else {
+                                            // 这里不用 Chrome Custom Tab 的原因是 Chrome 不知道咋回事有概率卡在“等待下载”状态
+                                            val browserIntent =
+                                                Intent(Intent.ACTION_VIEW, Uri.parse(link))
+                                            browserIntent.apply {
+                                                addCategory(Intent.CATEGORY_BROWSABLE)
+                                                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                            }
+                                            startActivity(browserIntent)
                                         }
                                     }
                                 }
-                            } else {
-                                if (mode == MODE_TEST && (!guessTestExtend || sIndex == (stList.size)) // 测试版情况下，未打开扩展猜版或扩展猜版到最后一步时执行小版本号的递增
-                                ) {
-                                    vSmall += if (!guessNot5) 5 else 1
-                                    sIndex = 0
-                                } else if (mode == MODE_UNOFFICIAL) vSmall += if (!guessNot5) 5 else 1
-                                else if (mode == MODE_WECHAT) {
-                                    val version16code = v16codeStr.toInt(16) + 1
-                                    v16codeStr = version16code.toString(16)
-                                }
+                            }
+                        } else {
+                            if (mode == MODE_TEST && (!guessTestExtend || sIndex == (stList.size)) // 测试版情况下，未打开扩展猜版或扩展猜版到最后一步时执行小版本号的递增
+                            ) {
+                                vSmall += if (!guessNot5) 5 else 1
+                                sIndex = 0
+                            } else if (mode == MODE_UNOFFICIAL) vSmall += if (!guessNot5) 5 else 1
+                            else if (mode == MODE_WECHAT) {
+                                val version16code = v16codeStr.toInt(16) + 1
+                                v16codeStr = version16code.toString(16)
                             }
                         }
+                    }
 
-                        STATUS_PAUSE -> {
-                            sleep(500)
-                        }
+                    STATUS_PAUSE -> {
+                        sleep(500)
+                    }
 
-                        STATUS_END -> {
-                            if (mode != MODE_OFFICIAL) showToast("已停止猜测")
-                            sIndex = 0
-                            progressDialog.dismiss()
-                            break
-                        }
+                    STATUS_END -> {
+                        if (mode != MODE_OFFICIAL) showToast("已停止猜测")
+                        sIndex = 0
+                        progressDialog.dismiss()
+                        break
                     }
                 }
+
 
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -1430,15 +1408,40 @@ class MainActivity : AppCompatActivity() {
                             gson.toJson(gson.fromJson(shiplyDecodeString, JsonElement::class.java))
 
                         runOnUiThread {
-                            val shiplyBack = TextView(this@MainActivity).apply {
-                                text = shiplyDecodeStringJson.toPrettyFormat()
-                                    .getAllAPKUrl() + "\n\n" + shiplyDecodeStringJson.toPrettyFormat()
-                                setTextIsSelectable(true)
-                                setPadding(96, 48, 96, 96)
+                            val dialogShiplyBackBinding =
+                                DialogShiplyBackBinding.inflate(layoutInflater)
+
+                            dialogShiplyBackBinding.root.parent?.let { parent ->
+                                if (parent is ViewGroup) parent.removeView(dialogShiplyBackBinding.root)
                             }
-                            MaterialAlertDialogBuilder(this@MainActivity).setView(shiplyBack)
-                                .setTitle("返回结果").setIcon(R.drawable.flask_line).show()
+
+                            val shiplyApkUrl =
+                                shiplyDecodeStringJson.toPrettyFormat().getAllAPKUrl()
+
+                            dialogShiplyBackBinding.apply {
+
+                                MaterialAlertDialogBuilder(this@MainActivity)
+                                    .setView(dialogShiplyBackBinding.root)
+                                    .setTitle("Shiply 返回内容")
+                                    .setIcon(R.drawable.flask_line)
+                                    .show().apply {
+                                        shiplyUrlRecyclerView.layoutManager =
+                                            LinearLayoutManager(this@MainActivity)
+                                        if (shiplyApkUrl != null) {
+                                            shiplyUrlBackTitle.visibility = View.VISIBLE
+                                            shiplyUrlRecyclerView.visibility = View.VISIBLE
+                                            shiplyUrlRecyclerView.adapter =
+                                                ShiplyUrlListAdapter(shiplyApkUrl)
+                                        } else {
+                                            shiplyUrlBackTitle.visibility = View.GONE
+                                            shiplyUrlRecyclerView.visibility = View.GONE
+                                        }
+                                        shiplyBackText.text =
+                                            shiplyDecodeStringJson.toPrettyFormat()
+                                    }
+                            }
                         }
+
                     } else {
                         showToast("获取失败，请重试")
                     }

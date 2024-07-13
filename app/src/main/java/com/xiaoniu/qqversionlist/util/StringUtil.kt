@@ -41,14 +41,12 @@ object StringUtil {
         }
     }
 
-    fun String.getAllAPKUrl(): String {
+    fun String.getAllAPKUrl(): List<String>? {
         val urlPattern =
             """(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))""".toRegex()
         val urls = urlPattern.findAll(this).map { it.value }.toList()
-        val apkUrls = urls.filter { it.endsWith(".apk", ignoreCase = true) }
-        return if (apkUrls.isEmpty()) "" else "检测到 Android 应用安装包直链：\n\n" + apkUrls.joinToString(
-            "\n\n"
-        )
+        val apkUrls = urls.filter { it.endsWith(".apk", ignoreCase = true) }.toSet().toList()
+        return if (apkUrls.isEmpty()) null else apkUrls
     }
 
 

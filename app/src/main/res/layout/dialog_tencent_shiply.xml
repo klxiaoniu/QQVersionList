@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:hint="uin"
-        app:helperText="填写腾讯 Shiply 通道对象 QQ 号"
+        app:helperText="填写用于 Post 腾讯 Shiply 的对象 QQ 号"
         app:helperTextEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -47,8 +47,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:hint="appid"
-        app:helperText="填写目标 Android QQ 版本 appid，非必填"
+        android:hint="appid（非必填）"
+        app:helperText="填写用于 Post 腾讯 Shiply 的 Android QQ appid"
         app:helperTextEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -66,8 +66,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:hint="目标版本"
-        app:helperText="填写目标 Android QQ 版本号"
+        android:hint="版本"
+        app:helperText="填写用于 Post 腾讯 Shiply 的 Android QQ 版本号"
         app:helperTextEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -84,10 +84,32 @@
         style="?attr/materialCardViewOutlinedStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:backgroundTint="?android:colorBackground">
 
         <TextView
             android:id="@+id/shiply_warning_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:drawablePadding="4dp"
+            android:paddingStart="3dp"
+            android:paddingEnd="0dp"
+            android:text="腾讯 QQ 通过腾讯 Shiply 服务并根据 QQ 号（uin）和版本分发小范围灰度测试安装包，并非每次访问都能成功获取到更新数据。无法获取更新数据则表示填写的参数不在腾讯 Shiply 认可与分发范围内。"
+            android:textColor="?attr/colorPrimary"
+            android:textSize="10sp"
+            app:drawableStartCompat="@drawable/error_warning_fill" />
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/shiply_warning_card2"
+        style="?attr/materialCardViewOutlinedStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="?android:colorBackground">
+
+        <TextView
+            android:id="@+id/shiply_warning_text2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
