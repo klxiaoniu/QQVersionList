@@ -35,9 +35,9 @@ object ClipboardUtil {
     }
 
     fun Context.copyText(text: String) {
-        val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        val clip = ClipData.newPlainText("Copied Text", text)
-        clipboard.setPrimaryClip(clip)
+        val clipboardManager =
+            getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        clipboardManager.setPrimaryClip(ClipData.newPlainText("", text))
         Toast.makeText(this, "已复制：$text", Toast.LENGTH_SHORT).show()
     }
 }
