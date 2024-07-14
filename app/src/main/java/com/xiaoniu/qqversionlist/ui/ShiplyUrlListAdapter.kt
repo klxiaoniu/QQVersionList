@@ -24,7 +24,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.xiaoniu.qqversionlist.R
-import com.xiaoniu.qqversionlist.util.ClipboardUtil.copyTextWithContext
+import com.xiaoniu.qqversionlist.util.ClipboardUtil.copyText
 
 class ShiplyUrlListAdapter(private val urlList: List<String>) :
     RecyclerView.Adapter<ShiplyUrlListAdapter.ShiplyUrlViewHolder>() {
@@ -37,12 +37,12 @@ class ShiplyUrlListAdapter(private val urlList: List<String>) :
             val shiplyUrlCard = itemView.findViewById<View>(R.id.shiply_url_card)
             shiplyUrlCard.setOnClickListener {
                 currentUrl?.let { url ->
-                    copyTextWithContext(itemView.context, url)
+                    itemView.context.copyText(url)
                 }
             }
             shiplyUrlCard.setOnLongClickListener {
                 currentUrl?.let { url ->
-                    copyTextWithContext(itemView.context, url)
+                    itemView.context.copyText(url)
                 }
                 true
             }

@@ -19,7 +19,6 @@
 package com.xiaoniu.qqversionlist.ui
 
 
-//import android.util.Base64
 import android.app.DownloadManager
 import android.content.Context
 import android.content.Intent

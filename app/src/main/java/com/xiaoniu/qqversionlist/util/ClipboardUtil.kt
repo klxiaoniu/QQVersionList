@@ -34,10 +34,10 @@ object ClipboardUtil {
         showToast("已复制：$text")
     }
 
-    fun copyTextWithContext(context: Context, text: String) {
-        val clipboardManager =
-            context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        clipboardManager.setPrimaryClip(ClipData.newPlainText("", text))
-        Toast.makeText(context, "已复制：$text", Toast.LENGTH_SHORT).show()
+    fun Context.copyText(text: String) {
+        val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clip = ClipData.newPlainText("Copied Text", text)
+        clipboard.setPrimaryClip(clip)
+        Toast.makeText(this, "已复制：$text", Toast.LENGTH_SHORT).show()
     }
 }
