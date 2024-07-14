@@ -656,7 +656,7 @@ class MainActivity : AppCompatActivity() {
 
                                 if (shiplyUin.editText?.text.toString()
                                         .isEmpty()
-                                ) throw MissingParameterException("uin 信息用于请求 TDS 腾讯端服务 Shiply 发布平台的对象 QQ 号，缺失 uin 参数将无法获取 Shiply 平台返回数据。")
+                                ) throw MissingParameterException("uin 信息是用于请求 TDS 腾讯端服务 Shiply 发布平台的对象 QQ 号，缺失 uin 参数将无法获取 Shiply 平台返回数据。")
                                 if (shiplyVersion.editText?.text.toString()
                                         .isEmpty()
                                 ) throw MissingParameterException("请求 TDS 腾讯端服务 Shiply 发布平台需要 QQ 版本号参数，缺失版本号参数将无法获取 Shiply 平台返回数据。")
