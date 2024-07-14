@@ -26,14 +26,17 @@ import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
 
 object TencentShiplyUtil {
-    private val gson = GsonBuilder().setStrictness(Strictness.LENIENT).create()
 
     fun generateJsonString(appVersion: String, uin: String, appid: String): String {
         val timestamp = System.currentTimeMillis() / 1000L
         val data = mapOf(
             "systemID" to "10016",
             "appID" to "4cd6974be1",
-            "sign" to md5("10016$4cd6974be1$4$$$timestamp$$uin$${"rdelivery0ccc46ca-154c-4c6b-8b0b-4d8537ffcbcc"}"),
+            "sign" to BigInteger(
+                1,
+                MessageDigest.getInstance("MD5")
+                    .digest("10016$4cd6974be1$4$$$timestamp$$uin$${"rdelivery0ccc46ca-154c-4c6b-8b0b-4d8537ffcbcc"}".toByteArray())
+            ).toString(16).padStart(32, '0'),
             "timestamp" to timestamp,
             "pullType" to 4,
             "target" to 1,
@@ -47,26 +50,14 @@ object TencentShiplyUtil {
                     "osVersion" to "34",
                     "is64Bit" to true,
                     "bundleId" to "com.tencent.mobileqq",
-                    "uniqueId" to generateRandomUUID(),
+                    "uniqueId" to UUID.randomUUID().toString(),
                     "model" to "2304FPN6DC"
-                ),
-                "isDebugPackage" to false,
-                "customProperties" to mapOf("appid" to appid)
+                ), "isDebugPackage" to false, "customProperties" to mapOf("appid" to appid)
             ),
             "taskChecksum" to "0",
             "context" to "H4sIAAAAAAAA/+Li5ni5T1WIVaBT1INRS8HS0MwyMdnCwMzQMCklxdQ81cTC1MzIIDnV0DIxydLYGAAAAP//AQAA//+OoFcLLwAAAA=="
         )
-
-        return gson.toJson(data)
-    }
-
-    private fun md5(input: String): String {
-        val md = MessageDigest.getInstance("MD5")
-        return BigInteger(1, md.digest(input.toByteArray())).toString(16).padStart(32, '0')
-    }
-
-    private fun generateRandomUUID(): String {
-        return UUID.randomUUID().toString()
+        return GsonBuilder().setStrictness(Strictness.LENIENT).create().toJson(data)
     }
 
     fun getCipherText(jsonString: String): String? {
@@ -82,14 +73,10 @@ object TencentShiplyUtil {
         if (firstEntry != null) {
             val response = firstEntry.value.asJsonObject
             val cipherText = response.get("cipher_text")
-            if (cipherText != null && cipherText.isJsonPrimitive) {
-                return cipherText.asString
-            }
+            if (cipherText != null && cipherText.isJsonPrimitive) return cipherText.asString
         }
-
         return null
     }
-
 
     fun generateAESKey(): ByteArray {
         val secureRandom = SecureRandom()
@@ -130,7 +117,6 @@ object TencentShiplyUtil {
         }
     }
 
-
     fun base64ToRsaPublicKey(base64String: String): PublicKey? {
         val decodedBytes = Base64.decode(base64String, Base64.NO_WRAP)
         val spec = X509EncodedKeySpec(decodedBytes)
@@ -145,19 +131,14 @@ object TencentShiplyUtil {
     }
 
     fun postJsonWithOkHttp(url: String, data: Any): String {
-        val client = OkHttpClient.Builder()
-            .addInterceptor(HttpLoggingInterceptor().apply {
-                level = HttpLoggingInterceptor.Level.BODY
-            })
-            .build()
+        val client = OkHttpClient.Builder().addInterceptor(HttpLoggingInterceptor().apply {
+            level = HttpLoggingInterceptor.Level.BODY
+        }).build()
 
         val mediaType = "application/json; charset=utf-8".toMediaTypeOrNull()
-        val body = gson.toJson(data)
-        val request = Request.Builder()
-            .url(url)
-            .post(body.toRequestBody(mediaType!!))
-            .addHeader("Content-Type", "application/json")
-            .addHeader("Accept-Encoding", "gzip")
+        val body = GsonBuilder().setStrictness(Strictness.LENIENT).create().toJson(data)
+        val request = Request.Builder().url(url).post(body.toRequestBody(mediaType!!))
+            .addHeader("Content-Type", "application/json").addHeader("Accept-Encoding", "gzip")
             .build()
 
         return client.newCall(request).execute().use { response ->

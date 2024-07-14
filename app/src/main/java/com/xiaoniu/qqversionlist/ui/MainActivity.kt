@@ -602,7 +602,7 @@ class MainActivity : AppCompatActivity() {
                         DialogTencentShiplyBinding.inflate(layoutInflater)
 
                     val shiplyDialog = MaterialAlertDialogBuilder(this)
-                        .setTitle("腾讯 Shiply 通道")
+                        .setTitle("Shiply 平台更新获取（实验性）")
                         .setIcon(R.drawable.flask_line)
                         .setView(dialogTencentShiplyBinding.root)
                         .setCancelable(false)
@@ -649,10 +649,10 @@ class MainActivity : AppCompatActivity() {
 
                                 if (shiplyUin.editText?.text.toString()
                                         .isEmpty()
-                                ) throw MissingParameterException("uin 即用于 Post 腾讯 Shiply 服务的对象 QQ 号，缺失 uin 参数无法获取 Shiply 数据。")
+                                ) throw MissingParameterException("uin 信息用于请求 TDS 腾讯端服务 Shiply 发布平台的对象 QQ 号，缺失 uin 参数将无法获取 Shiply 平台返回数据。")
                                 if (shiplyVersion.editText?.text.toString()
                                         .isEmpty()
-                                ) throw MissingParameterException("Post 腾讯 Shiply 服务需要 QQ 版本号参数，缺失版本号参数无法获取 Shiply 数据。")
+                                ) throw MissingParameterException("请求 TDS 腾讯端服务 Shiply 发布平台需要 QQ 版本号参数，缺失版本号参数将无法获取 Shiply 平台返回数据。")
 
                                 if (shiplyVersion.editText?.text.toString()
                                         .isEmpty()
@@ -664,7 +664,7 @@ class MainActivity : AppCompatActivity() {
                                         )
                                         putString("shiplyUin", shiplyUin.editText?.text.toString())
                                     }
-                                    TencentShiplyStart(
+                                    tencentShiplyStart(
                                         btnShiplyStart,
                                         shiplyVersion.editText?.text.toString(),
                                         shiplyUin.editText?.text.toString()
@@ -681,7 +681,7 @@ class MainActivity : AppCompatActivity() {
                                         )
                                         putString("shiplyUin", shiplyUin.editText?.text.toString())
                                     }
-                                    TencentShiplyStart(
+                                    tencentShiplyStart(
                                         btnShiplyStart,
                                         shiplyVersion.editText?.text.toString(),
                                         shiplyUin.editText?.text.toString(),
@@ -810,7 +810,7 @@ class MainActivity : AppCompatActivity() {
             .setCancelable(false)
             .show()
 
-        class MissingSmallVersionException(message: String) : Exception(message)
+        class MissingVersionException(message: String) : Exception(message)
         class InvalidMultipleException(message: String) : Exception(message)
 
         dialogGuessBinding.btnGuessStart.setOnClickListener {
@@ -825,13 +825,16 @@ class MainActivity : AppCompatActivity() {
             imm.hideSoftInputFromWindow(dialogGuessBinding.spinnerVersion.windowToken, 0)
 
             try {
+                if (dialogGuessBinding.etVersionBig.editText?.text.toString()
+                        .isEmpty()
+                ) throw MissingVersionException("猜版需要填写主版本号，否则无法执行猜版。")
                 val versionBig = dialogGuessBinding.etVersionBig.editText?.text.toString()
                 val mode = dialogGuessBinding.spinnerVersion.text.toString()
                 var versionSmall = 0
                 var version16code = 0.toString()
                 var versionTrue = 0
                 if (mode == "测试版" || mode == "空格猜版") {
-                    if (dialogGuessBinding.etVersionSmall.editText?.text.isNullOrEmpty()) throw MissingSmallVersionException(
+                    if (dialogGuessBinding.etVersionSmall.editText?.text.isNullOrEmpty()) throw MissingVersionException(
                         "测试版猜版（含空格猜版）需要填写小版本号，否则无法猜测测试版。"
                     )
                     else {
@@ -847,10 +850,10 @@ class MainActivity : AppCompatActivity() {
                     }
 
                 } else if (mode == "微信猜版") {
-                    if (dialogGuessBinding.etVersionTrue.editText?.text.isNullOrEmpty()) throw MissingSmallVersionException(
+                    if (dialogGuessBinding.etVersionTrue.editText?.text.isNullOrEmpty()) throw MissingVersionException(
                         "微信猜版需要填写真实版本号，否则无法猜测微信版本。"
                     )
-                    else if (dialogGuessBinding.etVersion16code.editText?.text.isNullOrEmpty()) throw MissingSmallVersionException(
+                    else if (dialogGuessBinding.etVersion16code.editText?.text.isNullOrEmpty()) throw MissingVersionException(
                         "微信猜版需要填写十六进制代码，否则无法猜测微信版本。"
                     )
                     else {
@@ -864,7 +867,7 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
                 guessUrl(versionBig, versionSmall, versionTrue, version16code, mode)
-            } catch (e: MissingSmallVersionException) {
+            } catch (e: MissingVersionException) {
                 dialogError(e, true)
             } catch (e: InvalidMultipleException) {
                 dialogError(e, true)
@@ -1352,35 +1355,39 @@ class MainActivity : AppCompatActivity() {
         thread.start()
     }
 
-    private fun TencentShiplyStart(
+    private fun tencentShiplyStart(
         btn: MaterialButton,
-        shiplyVersion: String, shiplyUin: String, shiplyAppid: String = "537230561"
+        shiplyVersion: String,
+        shiplyUin: String,
+        shiplyAppid: String = "537230561"
     ) {
-        val shiplyKey = TencentShiplyUtil.generateAESKey()
-        val shiplyData = TencentShiplyUtil.generateJsonString(
-            shiplyVersion, shiplyUin, shiplyAppid
-        )
-        val shiplyEncode = TencentShiplyUtil.aesEncrypt(shiplyData, shiplyKey)
-        val shiplyRsaPublicKey =
-            TencentShiplyUtil.base64ToRsaPublicKey("MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC/rT6ULqXC32dgz4t/Vv4WS9pTks5Z2fPmbTHIXEVeiOEnjOpPBHOi1AUz+Ykqjk11ZyjidUwDyIaC/VtaC5Z7Bt/W+CFluDer7LiiDa6j77if5dbcvWUrJbgvhKqaEhWnMDXT1pAG2KxL/pNFAYguSLpOh9pK97G8umUMkkwWkwIDAQAB")
-        if (shiplyRsaPublicKey == null) showToast("生成 RSA 公钥失败")
-        else {
-            val shiplyEncode2 = TencentShiplyUtil.rsaEncrypt(
-                shiplyKey, shiplyRsaPublicKey
-            )
-            val shiplyPost = mapOf(
-                "req_list" to listOf(
-                    mapOf(
-                        "cipher_text" to Base64.encodeToString(
-                            shiplyEncode, Base64.NO_WRAP
-                        ), "public_key_version" to 1, "pull_key" to Base64.encodeToString(
-                            shiplyEncode2, Base64.NO_WRAP
+        CoroutineScope(Dispatchers.IO).launch {
+            class MissingCipherTextException(message: String) : Exception(message)
+            try {
+                // 参考：https://github.com/callng/GQUL
+                val shiplyKey = TencentShiplyUtil.generateAESKey()
+                val shiplyData = TencentShiplyUtil.generateJsonString(
+                    shiplyVersion, shiplyUin, shiplyAppid
+                )
+                val shiplyEncode = TencentShiplyUtil.aesEncrypt(shiplyData, shiplyKey)
+                val shiplyRsaPublicKey =
+                    TencentShiplyUtil.base64ToRsaPublicKey("MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC/rT6ULqXC32dgz4t/Vv4WS9pTks5Z2fPmbTHIXEVeiOEnjOpPBHOi1AUz+Ykqjk11ZyjidUwDyIaC/VtaC5Z7Bt/W+CFluDer7LiiDa6j77if5dbcvWUrJbgvhKqaEhWnMDXT1pAG2KxL/pNFAYguSLpOh9pK97G8umUMkkwWkwIDAQAB")
+                if (shiplyRsaPublicKey == null) runOnUiThread { showToast("生成 RSA 公钥失败") } // 应该不会失败吧
+                else {
+                    val shiplyEncode2 = TencentShiplyUtil.rsaEncrypt(
+                        shiplyKey, shiplyRsaPublicKey
+                    )
+                    val shiplyPost = mapOf(
+                        "req_list" to listOf(
+                            mapOf(
+                                "cipher_text" to Base64.encodeToString(
+                                    shiplyEncode, Base64.NO_WRAP
+                                ), "public_key_version" to 1, "pull_key" to Base64.encodeToString(
+                                    shiplyEncode2, Base64.NO_WRAP
+                                )
+                            )
                         )
                     )
-                )
-            )
-            CoroutineScope(Dispatchers.IO).launch {
-                try {
                     val shiplyResult = TencentShiplyUtil.postJsonWithOkHttp(
                         "https://rdelivery.qq.com/v3/config/batchpull", shiplyPost
                     )
@@ -1389,7 +1396,6 @@ class MainActivity : AppCompatActivity() {
                         val shiplyDecode = TencentShiplyUtil.aesDecrypt(
                             Base64.decode(shiplyText, Base64.NO_WRAP), shiplyKey
                         )
-
                         val gzipInputStream = GZIPInputStream(
                             ByteArrayInputStream(shiplyDecode)
                         )
@@ -1419,11 +1425,9 @@ class MainActivity : AppCompatActivity() {
                                 shiplyDecodeStringJson.toPrettyFormat().getAllAPKUrl()
 
                             dialogShiplyBackBinding.apply {
-
-                                MaterialAlertDialogBuilder(this@MainActivity)
-                                    .setView(dialogShiplyBackBinding.root)
-                                    .setTitle("Shiply 返回内容")
-                                    .setIcon(R.drawable.flask_line)
+                                MaterialAlertDialogBuilder(this@MainActivity).setView(
+                                    dialogShiplyBackBinding.root
+                                ).setTitle("Shiply 平台返回内容").setIcon(R.drawable.flask_line)
                                     .show().apply {
                                         shiplyUrlRecyclerView.layoutManager =
                                             LinearLayoutManager(this@MainActivity)
@@ -1441,18 +1445,18 @@ class MainActivity : AppCompatActivity() {
                                     }
                             }
                         }
-
-                    } else {
-                        showToast("获取失败，请重试")
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    dialogError(e)
-                } finally {
-                    runOnUiThread {
-                        btn.icon = null
-                        btn.isEnabled = true
-                    }
+                    } else throw MissingCipherTextException("TDS 腾讯端服务 Shiply 发布平台返回 JSON 内容中未包含 \"cipher_text\" 键值对。")
+                }
+            } catch (e: MissingCipherTextException) {
+                e.printStackTrace()
+                dialogError(e, true)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                dialogError(e)
+            } finally {
+                runOnUiThread {
+                    btn.icon = null
+                    btn.isEnabled = true
                 }
             }
         }
@@ -1466,7 +1470,7 @@ class MainActivity : AppCompatActivity() {
 
         const val MODE_TEST = "测试版"
         const val MODE_OFFICIAL = "正式版"
-        const val MODE_UNOFFICIAL = "空格猜版"  //空格猜版
+        const val MODE_UNOFFICIAL = "空格猜版"
         const val MODE_WECHAT = "微信猜版"
     }
 

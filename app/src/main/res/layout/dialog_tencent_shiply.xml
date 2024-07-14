@@ -21,134 +21,130 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="20dp">
+    android:paddingStart="20dp"
+    android:paddingTop="6dp"
+    android:paddingEnd="20dp">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/shiply_uin"
+    <ScrollView
+        android:id="@+id/shiply_back_text_scroll"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:hint="uin"
-        app:helperText="填写用于 Post 腾讯 Shiply 的对象 QQ 号"
-        app:helperTextEnabled="true">
+        android:layout_height="match_parent"
+        android:scrollbars="none">
 
-        <com.google.android.material.textfield.TextInputEditText
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:imeOptions="actionNext"
-            android:inputType="number"
-            android:singleLine="true" />
+            android:orientation="vertical"
+            android:paddingTop="12dp">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/shiply_uin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:hint="uin"
+                app:helperText="填写用于请求 Shiply 平台的对象 QQ 号"
+                app:helperTextEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionNext"
+                    android:inputType="number"
+                    android:singleLine="true" />
 
 
-    </com.google.android.material.textfield.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/shiply_appid"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:hint="appid（非必填）"
-        app:helperText="填写用于 Post 腾讯 Shiply 的 Android QQ appid"
-        app:helperTextEnabled="true">
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/shiply_version"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:hint="版本"
+                app:helperText="填写用于请求 Shiply 平台的 Android QQ 版本号"
+                app:helperTextEnabled="true">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:imeOptions="actionNext"
-            android:inputType="number"
-            android:singleLine="true" />
-
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/shiply_version"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:hint="版本"
-        app:helperText="填写用于 Post 腾讯 Shiply 的 Android QQ 版本号"
-        app:helperTextEnabled="true">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:imeOptions="actionDone"
-            android:singleLine="true" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionNext"
+                    android:singleLine="true" />
 
 
-    </com.google.android.material.textfield.TextInputLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/shiply_warning_card"
-        style="?attr/materialCardViewOutlinedStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:backgroundTint="?android:colorBackground">
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/shiply_appid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:hint="appid（非必填）"
+                app:helperText="填写用于请求 Shiply 平台的 Android QQ appid"
+                app:helperTextEnabled="true">
 
-        <TextView
-            android:id="@+id/shiply_warning_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:drawablePadding="4dp"
-            android:paddingStart="3dp"
-            android:paddingEnd="0dp"
-            android:text="腾讯 QQ 通过腾讯 Shiply 服务并根据 QQ 号（uin）和版本分发小范围灰度测试安装包，并非每次访问都能成功获取到更新数据。无法获取更新数据则表示填写的参数不在腾讯 Shiply 认可与分发范围内。"
-            android:textColor="?attr/colorPrimary"
-            android:textSize="10sp"
-            app:drawableStartCompat="@drawable/error_warning_fill" />
-    </com.google.android.material.card.MaterialCardView>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionDone"
+                    android:inputType="number"
+                    android:singleLine="true" />
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/shiply_warning_card2"
-        style="?attr/materialCardViewOutlinedStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="?android:colorBackground">
 
-        <TextView
-            android:id="@+id/shiply_warning_text2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:drawablePadding="4dp"
-            android:paddingStart="3dp"
-            android:paddingEnd="0dp"
-            android:text="此功能当前为实验性功能，可能存在不可预知的稳定性问题。QQ 版本列表实用工具不对此功能及其任何后果作出任何可靠性保证。请明确并确保自身具备足够的风险识别和承受能力。"
-            android:textColor="?attr/colorPrimary"
-            android:textSize="10sp"
-            app:drawableStartCompat="@drawable/error_warning_fill" />
-    </com.google.android.material.card.MaterialCardView>
+            </com.google.android.material.textfield.TextInputLayout>
 
-    <LinearLayout
-        style="?android:attr/buttonBarStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="2">
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/shiply_warning_card"
+                style="?attr/materialCardViewOutlinedStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="?android:colorBackground">
 
-        <Button
-            android:id="@+id/btn_shiply_cancel"
-            style="@style/Widget.Material3.Button.TonalButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_weight="1"
-            android:text="取消" />
+                <TextView
+                    android:id="@+id/shiply_warning_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:drawablePadding="4dp"
+                    android:paddingStart="3dp"
+                    android:paddingEnd="0dp"
+                    android:text="腾讯 QQ 使用 TDS 腾讯端服务 Shiply 发布平台，根据 QQ 号（uin）及其终端信息分发小范围灰度测试安装包。此功能并非每次请求都能成功获取到更新数据，无法获取更新数据则表示填写的参数不在 Shiply 平台认可与分发范围内。QQ 版本列表实用工具不对此功能及其任何后果作出任何可靠性保证。请明确并确保自身具备足够的风险识别和承受能力。"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="10sp"
+                    app:drawableStartCompat="@drawable/error_warning_fill" />
+            </com.google.android.material.card.MaterialCardView>
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_shiply_start"
-            style="@style/Widget.Material3.Button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_weight="1"
-            android:text="开始" />
+            <LinearLayout
+                style="?android:attr/buttonBarStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2">
 
-    </LinearLayout>
+                <Button
+                    android:id="@+id/btn_shiply_cancel"
+                    style="@style/Widget.Material3.Button.TonalButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_weight="1"
+                    android:text="取消" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_shiply_start"
+                    style="@style/Widget.Material3.Button"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_weight="1"
+                    android:text="开始" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

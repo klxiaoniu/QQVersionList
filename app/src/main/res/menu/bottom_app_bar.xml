@@ -41,7 +41,7 @@
     <item
         android:id="@+id/btn_tencent_shiply"
         android:icon="@drawable/flask_line"
-        android:title="腾讯 Shiply 通道获取"
+        android:title="TDS 腾讯端服务 Shiply 发布平台更新获取（实验性）"
         app:showAsAction="always"
         />
 
