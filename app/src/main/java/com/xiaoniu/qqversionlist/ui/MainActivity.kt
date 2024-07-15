@@ -254,7 +254,7 @@ class MainActivity : AppCompatActivity() {
                                 "版本：${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})\n" +
                                 "作者：快乐小牛、有鲫雪狐\n" +
                                 "贡献者：Col_or、bggRGjQaUbCoE、GMerge\n" +
-                                "特别感谢：owo233\n"+
+                                "特别感谢：owo233\n" +
                                 "开源地址：GitHub\n" +
                                 "开源协议：AGPL v3\n" +
                                 "获取更新：GitHub Releases、Obtainium、九七通知中心\n\n" +
