@@ -18,25 +18,14 @@
 
 package com.xiaoniu.qqversionlist.util
 
-import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import com.xiaoniu.qqversionlist.util.InfoUtil.showToast
 
 object ClipboardUtil {
-    fun Activity.copyText(text: String) {
-        val clipboardManager =
-            getSystemService(AppCompatActivity.CLIPBOARD_SERVICE) as ClipboardManager
-        clipboardManager.setPrimaryClip(ClipData.newPlainText("", text))
-        showToast("已复制：$text")
-    }
-
     fun Context.copyText(text: String) {
-        val clipboardManager =
-            getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         clipboardManager.setPrimaryClip(ClipData.newPlainText("", text))
         Toast.makeText(this, "已复制：$text", Toast.LENGTH_SHORT).show()
     }
