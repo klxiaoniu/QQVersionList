@@ -256,8 +256,9 @@ class MainActivity : AppCompatActivity() {
                                 "贡献者：Col_or、bggRGjQaUbCoE、GMerge\n" +
                                 "特别感谢：owo233\n" +
                                 "开源地址：GitHub\n" +
-                                "开源协议：AGPL v3\n" +
                                 "获取更新：GitHub Releases、Obtainium、九七通知中心\n\n" +
+                                "Designed & Built with Material 3\n" +
+                                "Licensed under GNU AGPL v3\n" +
                                 "Since 2023.8.9"
                     ).apply {
                         setSpan(
@@ -304,8 +305,14 @@ class MainActivity : AppCompatActivity() {
                         )
                         setSpan(
                             URLSpan("https://github.com/klxiaoniu/QQVersionList/blob/master/LICENSE"),
-                            indexOf("AGPL v3"),
-                            indexOf("AGPL v3") + "AGPL v3".length,
+                            indexOf("GNU AGPL v3"),
+                            indexOf("GNU AGPL v3") + "GNU AGPL v3".length,
+                            SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
+                        )
+                        setSpan(
+                            URLSpan("https://m3.material.io"),
+                            indexOf("Material 3"),
+                            indexOf("Material 3") + "Material 3".length,
                             SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
                         )
                         setSpan(
