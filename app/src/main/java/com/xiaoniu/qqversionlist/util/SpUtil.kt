@@ -40,63 +40,6 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
-/* SharedPreferences
-object SpUtil {
-    private fun getSp() =
-        TipTimeApplication.instance.getSharedPreferences("data", AppCompatActivity.MODE_PRIVATE)
-
-    fun getInt(key: String, defValue: Int = 0) =
-        getSp().getInt(key, defValue)
-
-    fun putInt(key: String, value: Int) =
-        getSp().edit().putInt(key, value).apply()
-
-    fun getString(key: String, defValue: String = "") =
-        getSp().getString(key, defValue)
-
-    fun putString(key: String, value: String) =
-        getSp().edit().putString(key, value).apply()
-
-    fun getBoolean(key: String, defValue: Boolean) =
-        getSp().getBoolean(key, defValue)
-
-    fun putBoolean(key: String, value: Boolean) =
-        getSp().edit().putBoolean(key, value).apply()
-
-    fun deleteSp(key: String) =
-        getSp().edit().remove(key).apply()
-
-}*/
-
-/*MMKV
-object MMKVUtil {
-    val mmkv by lazy {
-        MMKV.mmkvWithID("data", MMKV.MULTI_PROCESS_MODE)
-    }
-
-    fun importSPToMMKV() {
-        val oldSP =
-            TipTimeApplication.instance.getSharedPreferences("data", AppCompatActivity.MODE_PRIVATE)
-        mmkv.importFromSharedPreferences(oldSP)
-        oldSP.edit().clear().apply()
-    }
-
-    fun getInt(key: String, defValue: Int = 0): Int = mmkv.getInt(key, defValue)
-
-    fun putInt(key: String, value: Int) = mmkv.encode(key, value)
-
-    fun getString(key: String, defValue: String = ""): String? = mmkv.getString(key, defValue)
-
-    fun putString(key: String, value: String) = mmkv.encode(key, value)
-
-    fun getBoolean(key: String, defValue: Boolean): Boolean = mmkv.getBoolean(key, defValue)
-
-    fun putBoolean(key: String, value: Boolean) = mmkv.encode(key, value)
-
-    fun deleteMMKVKey(key: String) = mmkv.removeValueForKey(key)
-}*/
-
-
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
     name = "data",
     produceMigrations = { context ->

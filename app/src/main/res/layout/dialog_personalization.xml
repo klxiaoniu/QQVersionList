@@ -16,46 +16,58 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/ll_personalization"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:paddingStart="20dp"
     android:paddingTop="6dp"
-    android:paddingEnd="20dp"
-    android:paddingBottom="20dp">
+    android:paddingEnd="20dp">
 
-    <com.google.android.material.materialswitch.MaterialSwitch
-        android:id="@+id/switch_display_first"
+    <ScrollView
+        android:id="@+id/shiply_back_text_scroll"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="16dp"
-        android:layout_marginBottom="8dp"
-        android:text="版本列表首项默认展开" />
+        android:layout_height="match_parent"
+        android:scrollbars="none">
 
-    <com.google.android.material.materialswitch.MaterialSwitch
-        android:id="@+id/progress_size"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
-        android:text="版本列表展示额定包大小占比历史最大包指示条" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="20dp">
 
-    <com.google.android.material.materialswitch.MaterialSwitch
-        android:id="@+id/version_tcloud"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
-        android:text="版本号字体使用 TCloudNumber" />
+            <com.google.android.material.materialswitch.MaterialSwitch
+                android:id="@+id/switch_display_first"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:paddingTop="16dp"
+                android:text="版本列表首项默认展开" />
 
-    <Button
-        android:id="@+id/btn_personalization_ok"
-        style="@style/Widget.Material3.Button.TonalButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="确定" />
+            <com.google.android.material.materialswitch.MaterialSwitch
+                android:id="@+id/progress_size"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:text="版本列表展示额定包大小占比历史最大包指示条" />
 
+            <com.google.android.material.materialswitch.MaterialSwitch
+                android:id="@+id/version_tcloud"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:text="版本号字体使用 TCloudNumber" />
+
+            <Button
+                android:id="@+id/btn_personalization_ok"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="确定" />
+
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

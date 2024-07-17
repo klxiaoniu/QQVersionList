@@ -16,26 +16,32 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="AlwaysShowAction">
 
     <item
         android:id="@+id/btn_about"
         android:icon="@drawable/information_line"
         android:title="关于"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/btn_setting"
         android:icon="@drawable/settings_line"
         android:title="设置"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/btn_get"
         android:icon="@drawable/refresh_line"
         android:title="刷新"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="always" />
 
+    <item
+        android:id="@+id/btn_tencent_shiply"
+        android:icon="@drawable/flask_line"
+        android:title="TDS 腾讯端服务 Shiply 发布平台更新获取（实验性）"
+        app:showAsAction="always" />
 
 </menu>

@@ -76,20 +76,20 @@ QQ 版本列表实用工具 for Android 是一个使用 Material 3 组件库构�
   - `https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_<主版本号>_64_HB1.apk`
   - `https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_<主版本号>_64_HB2.apk`
   - `https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_<主版本号>_64_HB3.apk`
+  - `https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_<主版本号>_64_BBPJ.apk`
   - `https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_<主版本号>_HB_64.apk`
   - `https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_<主版本号>_HB1_64.apk`
   - `https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_<主版本号>_HB2_64.apk`
   - `https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_<主版本号>_HB3_64.apk`
+  - `https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_<主版本号>_BBPJ_64.apk`
 
 - 若选择猜测试版，则需要填写起始小版本号：
 
   - 默认情况下，软件将尝试访问 `https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_<主版本号>.<小版本号>_64.apk` ，若当次访问未果，默认情况下将按照设置逻辑自动递增小版本号后再次尝试访问，直到访问成功为止。
 
   - 在设置中打开扩展测试版猜版格式后，软件将尝试访问以下链接：
-
     <details>
     <summary>点击展开</summary>
-
     - `https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_<主版本号>.<小版本号>_64.apk`
     - `https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_<主版本号>.<小版本号>_64_HB.apk`
     - `https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_<主版本号>.<小版本号>_64_HB1.apk`
@@ -109,7 +109,6 @@ QQ 版本列表实用工具 for Android 是一个使用 Material 3 组件库构�
     - `https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_<主版本号>.<小版本号>_HD3_64.apk`
     - `https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_<主版本号>.<小版本号>_64_HD1HB.apk`
     - `https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_<主版本号>.<小版本号>_HD1HB_64.apk`
-
     </details>
 
     若当次访问未果，默认情况下将按照设置逻辑自动递增小版本号后再次尝试访问，直到访问成功为止。
@@ -197,6 +196,7 @@ QQ 版本列表实用工具的诞生离不开以下开源项目，感谢以下�
 - [Oracle JDK](https://www.oracle.com/java/technologies/downloads/)，Licensed under [Oracle No-Fee Terms and Conditions](https://www.java.com/freeuselicense)
 - [JetBrains Runtime](https://github.com/JetBrains/JetBrainsRuntime)，Licensed under [GNU General Public License, version 2](https://github.com/JetBrains/JetBrainsRuntime/blob/main/LICENSE)
 - [Kotlin Serialization](https://github.com/Kotlin/kotlinx.serialization)，Licensed under [Apache License Version 2.0](https://github.com/Kotlin/kotlinx.serialization/blob/master/LICENSE.txt)
+- [Get QQ Update Link（owo233）](https://github.com/callng/GQUL)，Licensed under [The Unlicense](https://github.com/callng/GQUL/blob/master/LICENSE)
 
 ## 孪生项目
 
