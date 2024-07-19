@@ -36,9 +36,12 @@ import android.text.SpannableString
 import android.text.TextWatcher
 import android.text.style.URLSpan
 import android.util.Base64
+import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -257,8 +260,6 @@ class MainActivity : AppCompatActivity() {
                                 "特别感谢：owo233\n" +
                                 "开源地址：GitHub\n" +
                                 "获取更新：GitHub Releases、Obtainium、九七通知中心\n\n" +
-                                "Designed & Built with Material 3\n" +
-                                "Licensed under GNU AGPL v3\n" +
                                 "Since 2023.8.9"
                     ).apply {
                         setSpan(
@@ -304,18 +305,6 @@ class MainActivity : AppCompatActivity() {
                             SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
                         )
                         setSpan(
-                            URLSpan("https://github.com/klxiaoniu/QQVersionList/blob/master/LICENSE"),
-                            indexOf("GNU AGPL v3"),
-                            indexOf("GNU AGPL v3") + "GNU AGPL v3".length,
-                            SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-                        )
-                        setSpan(
-                            URLSpan("https://m3.material.io"),
-                            indexOf("Material 3"),
-                            indexOf("Material 3") + "Material 3".length,
-                            SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-                        )
-                        setSpan(
                             URLSpan("https://github.com/klxiaoniu/QQVersionList/releases"),
                             indexOf("GitHub Releases"),
                             indexOf("GitHub Releases") + "GitHub Releases".length,
@@ -334,10 +323,30 @@ class MainActivity : AppCompatActivity() {
                             SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
                         )
                     }
+                    val linearLayout = LinearLayout(this).apply {
+                        orientation = LinearLayout.VERTICAL
+                        layoutParams = ViewGroup.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT
+                        )
+                        setPadding(128, 64, 128, 0)
+                        gravity = Gravity.CENTER_HORIZONTAL
+                    }
+                    val imageView = ImageView(this).apply {
+                        setImageResource(R.drawable.built_with_material_licensed_under_agpl_v3)
+                        scaleType = ImageView.ScaleType.CENTER_INSIDE
+                        adjustViewBounds = true
+                    }
+                    imageView.layoutParams = LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    )
+                    linearLayout.addView(imageView)
                     MaterialAlertDialogBuilder(this)
                         .setTitle("关于")
                         .setIcon(R.drawable.information_line)
                         .setMessage(message)
+                        .setView(linearLayout)
                         .setPositiveButton("确定", null)
                         .setNegativeButton("撤回同意用户协议") { _, _ ->
                             showUADialog(true, judgeUATarget)
