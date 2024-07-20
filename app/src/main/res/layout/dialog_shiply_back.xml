@@ -43,7 +43,6 @@
                 android:paddingBottom="6dp"
                 android:text="建议的内容"
                 android:textColor="?attr/colorPrimary"
-                android:textIsSelectable="true"
                 android:textSize="11sp"
                 android:textStyle="bold" />
 
@@ -62,7 +61,6 @@
                 android:paddingBottom="4dp"
                 android:text="源 JSON"
                 android:textColor="?attr/colorPrimary"
-                android:textIsSelectable="true"
                 android:textSize="11sp"
                 android:textStyle="bold" />
 
@@ -73,7 +71,7 @@
                 android:paddingStart="4dp"
                 android:paddingEnd="4dp"
                 android:paddingBottom="20dp"
-                android:text="489945498498\n89844947987\n89494948\n9787984"
+                android:text="我是一段测试文本\n我也是一段测试文本\n兄弟，我还是\n兄弟，我没了"
                 android:textIsSelectable="true" />
 
         </LinearLayout>
