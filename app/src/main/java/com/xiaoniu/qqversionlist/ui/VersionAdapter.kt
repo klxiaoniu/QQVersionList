@@ -50,6 +50,9 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
         return (dp * resources.displayMetrics.density).toInt()
     }*/
 
+    private var getProgressSize = DataStoreUtil.getBoolean("progressSize", false)
+    private var getVersionTCloud = DataStoreUtil.getBoolean("versionTCloud", true)
+
     class ViewHolder(val binding: ItemVersionBinding, val context: Context) :
         RecyclerView.ViewHolder(binding.root)
 
@@ -176,7 +179,7 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
         tvSizeCard: MaterialCardView,
         bean: QQVersionBean,
     ) {
-        with(DataStoreUtil.getBoolean("progressSize", false)) {
+        with(getProgressSize) {
             tvPerSize?.isVisible = this
             listProgressLine.isVisible = this
             tvPerSizeCard.isVisible = this
@@ -221,7 +224,7 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
     private fun bindVersionTCloud(
         tvVersion: TextView, bean: QQVersionBean, context: Context
     ) {
-        if (DataStoreUtil.getBoolean("versionTCloud", true)) {
+        if (getVersionTCloud) {
             val TCloudFont = ResourcesCompat.getFont(context, R.font.tcloud_number_vf)
             tvVersion.typeface = TCloudFont
         } else {
@@ -303,10 +306,12 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
     fun updateItemProperty(payloads: Any?) {
         when (payloads) {
             "isShowProgressSize" -> {
+                getProgressSize = DataStoreUtil.getBoolean("progressSize", false)
                 notifyItemRangeChanged(0, currentList.size, "isShowProgressSize")
             }
 
             "isTCloud" -> {
+                getVersionTCloud = DataStoreUtil.getBoolean("versionTCloud", true)
                 notifyItemRangeChanged(0, currentList.size, "isTCloud")
             }
         }

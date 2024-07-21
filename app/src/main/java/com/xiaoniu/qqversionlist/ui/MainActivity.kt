@@ -420,11 +420,11 @@ class MainActivity : AppCompatActivity() {
 
                                 }
                                 progressSize.setOnCheckedChangeListener { _, isChecked ->
-                                    DataStoreUtil.putBooleanAsync("progressSize", isChecked)
+                                    DataStoreUtil.putBoolean("progressSize", isChecked)
                                     versionAdapter.updateItemProperty("isShowProgressSize")
                                 }
                                 versionTcloud.setOnCheckedChangeListener { _, isChecked ->
-                                    DataStoreUtil.putBooleanAsync("versionTCloud", isChecked)
+                                    DataStoreUtil.putBoolean("versionTCloud", isChecked)
                                     versionAdapter.updateItemProperty("isTCloud")
                                 }
                                 btnPersonalizationOk.setOnClickListener {
