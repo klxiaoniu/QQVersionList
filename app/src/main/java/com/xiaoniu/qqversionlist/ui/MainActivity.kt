@@ -456,7 +456,7 @@ class MainActivity : AppCompatActivity() {
                             }
 
                             val dialogSuffix = MaterialAlertDialogBuilder(this@MainActivity)
-                                .setTitle("猜版后缀设置")
+                                .setTitle("猜版直链后缀设置")
                                 .setIcon(R.drawable.settings_line)
                                 .setView(dialogSuffixDefine.root)
                                 .setCancelable(false)

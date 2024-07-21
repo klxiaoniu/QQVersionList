@@ -75,7 +75,7 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
                         currentList[adapterPosition].displayType = 1
                         notifyItemChanged(adapterPosition)
                     }
-                    binding.itemAll.setOnLongClickListener {
+                    binding.cardAll.setOnLongClickListener {
                         if (DataStoreUtil.getBoolean("longPressCard", true)) {
                             showDialog(
                                 it.context, currentList[adapterPosition].jsonString.toPrettyFormat()
@@ -83,7 +83,7 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
                         } else {
                             Toast.makeText(
                                 it.context,
-                                "未开启长按查看详情功能\n请前往设置开启",
+                                "未开启长按查看 JSON 详情功能，请前往设置开启",
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
@@ -102,7 +102,7 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
                         currentList[adapterPosition].displayType = 0
                         notifyItemChanged(adapterPosition)
                     }
-                    binding.itemAllDetail.setOnLongClickListener {
+                    binding.cardAllDetail.setOnLongClickListener {
                         if (DataStoreUtil.getBoolean("longPressCard", true)) {
                             showDialog(
                                 it.context, currentList[adapterPosition].jsonString.toPrettyFormat()
@@ -110,7 +110,7 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
                         } else {
                             Toast.makeText(
                                 it.context,
-                                "未开启长按查看详情功能\n请前往设置开启",
+                                "未开启长按查看 JSON 详情功能，请前往设置开启",
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
