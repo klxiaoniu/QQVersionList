@@ -92,8 +92,6 @@ import java.io.BufferedReader
 import java.io.ByteArrayInputStream
 import java.io.InputStreamReader
 import java.lang.Thread.sleep
-import java.net.HttpURLConnection
-import java.net.URL
 import java.util.zip.GZIPInputStream
 
 
@@ -981,34 +979,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
-    /*获取文件大小（以MB为单位）
-      @param urlString 文件的URL字符串
-      @param callback 回调函数，接收文件大小（以MB为单位）作为参数*/
-    private fun getFileSizeInMB(urlString: String, callback: (String) -> Unit) {
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                val url = URL(urlString)
-                val connection = url.openConnection() as HttpURLConnection
-                connection.requestMethod = "HEAD"
-
-                val fileSize = connection.contentLength.toDouble()
-                val fileSizeInMB = fileSize / (1024 * 1024)
-
-                withContext(Dispatchers.Main) {
-                    callback("%.2f".format(fileSizeInMB))
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                withContext(Dispatchers.Main) {
-                    callback("Error")
-                    dialogError(e)
-                }
-            }
-        }
-    }
-
-
     // https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_8.9.75.XXXXX_64.apk
     private fun guessUrl(
         versionBig: String,
@@ -1204,137 +1174,128 @@ class MainActivity : AppCompatActivity() {
                             updateProgressDialogMessage("正在猜测下载地址：$link")
                         }
                         val okHttpClient = OkHttpClient()
-                        val request = Request.Builder().url(link).build()
+                        val request = Request.Builder().url(link).head().build()
                         val response = okHttpClient.newCall(request).execute()
-                        val success = response.isSuccessful
-                        if (success) {
+                        if (response.isSuccessful) {
+                            val appSize = "%.2f".format(
+                                response.header("Content-Length")?.toDoubleOrNull()
+                                    ?.div(1024 * 1024)
+                            )
                             status = STATUS_PAUSE
-                            getFileSizeInMB(link) { appSize ->
-                                runOnUiThread {
-                                    successButtonBinding.root.parent?.let { parent ->
-                                        if (parent is ViewGroup) parent.removeView(
-                                            successButtonBinding.root
+                            runOnUiThread {
+                                successButtonBinding.root.parent?.let { parent ->
+                                    if (parent is ViewGroup) parent.removeView(
+                                        successButtonBinding.root
+                                    )
+                                }
+
+                                val successMaterialDialog = MaterialAlertDialogBuilder(this)
+                                    .setTitle("猜测成功")
+                                    .setMessage("下载地址：$link")
+                                    .setIcon(R.drawable.check_circle)
+                                    .setView(successButtonBinding.root)
+                                    .setCancelable(false).apply {
+                                        setMessage("下载地址：$link\n\n大小：$appSize MB")
+                                    }.show()
+
+
+                                // 复制并停止按钮点击事件
+                                successButtonBinding.btnCopy.setOnClickListener {
+                                    copyText(link)
+                                    successMaterialDialog.dismiss()
+                                    status = STATUS_END
+                                }
+
+                                // 继续按钮点击事件
+                                successButtonBinding.btnContinue.setOnClickListener {
+                                    // 测试版情况下，未打开扩展猜版或扩展猜版到最后一步时执行小版本号的递增
+                                    if (mode == MODE_TEST && (!guessTestExtend || sIndex == (stList.size))) {
+                                        vSmall += if (!guessNot5) 5 else 1
+                                        sIndex = 0
+                                    } else if (mode == MODE_UNOFFICIAL) vSmall += if (!guessNot5) 5 else 1
+                                    else if (mode == MODE_WECHAT) {
+                                        val version16code = v16codeStr.toInt(16) + 1
+                                        v16codeStr = version16code.toString(16)
+                                    }
+                                    successMaterialDialog.dismiss()
+                                    status = STATUS_ONGOING
+                                }
+
+                                // 停止按钮点击事件
+                                successButtonBinding.btnStop.setOnClickListener {
+                                    successMaterialDialog.dismiss()
+                                    status = STATUS_END
+                                }
+
+                                // 分享按钮点击事件
+                                successButtonBinding.btnShare.setOnClickListener {
+                                    successMaterialDialog.dismiss()
+                                    val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                                        type = "text/plain"
+                                        putExtra(
+                                            Intent.EXTRA_TEXT,
+                                            when (mode) {
+                                                MODE_OFFICIAL -> "Android QQ $versionBig 正式版（大小：$appSize MB）\n\n下载地址：$link"
+                                                MODE_WECHAT -> "Android 微信 $versionBig（$vSmall）（大小：$appSize MB）\n\n下载地址：$link"
+                                                else -> "Android QQ $versionBig.$vSmall 测试版（大小：$appSize MB）\n\n下载地址：$link\n\n鉴于 QQ 测试版可能存在不可预知的稳定性问题，您在下载及使用该测试版本之前，必须明确并确保自身具备足够的风险识别和承受能力。"
+                                            }
                                         )
                                     }
-
-                                    val successMaterialDialog = MaterialAlertDialogBuilder(this)
-                                        .setTitle("猜测成功")
-                                        .setMessage("下载地址：$link")
-                                        .setIcon(R.drawable.check_circle)
-                                        .setView(successButtonBinding.root)
-                                        .setCancelable(false).apply {
-                                            if (appSize != "Error" && appSize != "-0.00" && appSize != "0.00") setMessage(
-                                                "下载地址：$link\n\n大小：$appSize MB"
-                                            )
-                                            else setMessage("下载地址：$link")
-                                        }.show()
-
-
-                                    // 复制并停止按钮点击事件
-                                    successButtonBinding.btnCopy.setOnClickListener {
-                                        copyText(link)
-                                        successMaterialDialog.dismiss()
-                                        status = STATUS_END
-                                    }
-
-                                    // 继续按钮点击事件
-                                    successButtonBinding.btnContinue.setOnClickListener {
-                                        // 测试版情况下，未打开扩展猜版或扩展猜版到最后一步时执行小版本号的递增
-                                        if (mode == MODE_TEST && (!guessTestExtend || sIndex == (stList.size))) {
-                                            vSmall += if (!guessNot5) 5 else 1
-                                            sIndex = 0
-                                        } else if (mode == MODE_UNOFFICIAL) vSmall += if (!guessNot5) 5 else 1
-                                        else if (mode == MODE_WECHAT) {
-                                            val version16code = v16codeStr.toInt(16) + 1
-                                            v16codeStr = version16code.toString(16)
-                                        }
-                                        successMaterialDialog.dismiss()
-                                        status = STATUS_ONGOING
-                                    }
-
-                                    // 停止按钮点击事件
-                                    successButtonBinding.btnStop.setOnClickListener {
-                                        successMaterialDialog.dismiss()
-                                        status = STATUS_END
-                                    }
-
-                                    // 分享按钮点击事件
-                                    successButtonBinding.btnShare.setOnClickListener {
-                                        successMaterialDialog.dismiss()
-                                        val shareIntent = Intent(Intent.ACTION_SEND).apply {
-                                            type = "text/plain"
-                                            putExtra(
-                                                Intent.EXTRA_TEXT,
-                                                if (appSize != "Error" && appSize != "-0.00" && appSize != "0.00") {
-                                                    when (mode) {
-                                                        MODE_OFFICIAL -> "Android QQ $versionBig 正式版（大小：$appSize MB）\n\n下载地址：$link"
-                                                        MODE_WECHAT -> "Android 微信 $versionBig（$vSmall）（大小：$appSize MB）\n\n下载地址：$link"
-                                                        else -> "Android QQ $versionBig.$vSmall 测试版（大小：$appSize MB）\n\n下载地址：$link\n\n鉴于 QQ 测试版可能存在不可预知的稳定性问题，您在下载及使用该测试版本之前，必须明确并确保自身具备足够的风险识别和承受能力。"
-                                                    }
-                                                } else {
-                                                    when (mode) {
-                                                        MODE_OFFICIAL -> "Android QQ $versionBig 正式版\n\n下载地址：$link"
-                                                        MODE_WECHAT -> "Android 微信 $versionBig（$vSmall)\n\n下载地址：$link"
-                                                        else -> "Android QQ $versionBig.$vSmall 测试版\n\n下载地址：$link\n\n鉴于 QQ 测试版可能存在不可预知的稳定性问题，您在下载及使用该测试版本之前，必须明确并确保自身具备足够的风险识别和承受能力。"
-                                                    }
-                                                }
-                                            )
-                                        }
-                                        startActivity(
-                                            Intent.createChooser(
-                                                shareIntent, "分享到"
-                                            )
+                                    startActivity(
+                                        Intent.createChooser(
+                                            shareIntent, "分享到"
                                         )
-                                        status = STATUS_END
-                                    }
+                                    )
+                                    status = STATUS_END
+                                }
 
-                                    // 下载按钮点击事件
-                                    successButtonBinding.btnDownload.setOnClickListener {
-                                        successMaterialDialog.dismiss()
-                                        status = STATUS_END
-                                        if (downloadOnSystemManager) {
-                                            val requestDownload =
-                                                DownloadManager.Request(Uri.parse(link))
-                                            requestDownload.apply {
-                                                when (mode) {
-                                                    MODE_TEST, MODE_UNOFFICIAL -> {
-                                                        setDestinationInExternalPublicDir(
-                                                            Environment.DIRECTORY_DOWNLOADS,
-                                                            "Android_QQ_${versionBig}.${vSmall}_64.apk"
-                                                        )
-                                                    }
+                                // 下载按钮点击事件
+                                successButtonBinding.btnDownload.setOnClickListener {
+                                    successMaterialDialog.dismiss()
+                                    status = STATUS_END
+                                    if (downloadOnSystemManager) {
+                                        val requestDownload =
+                                            DownloadManager.Request(Uri.parse(link))
+                                        requestDownload.apply {
+                                            when (mode) {
+                                                MODE_TEST, MODE_UNOFFICIAL -> {
+                                                    setDestinationInExternalPublicDir(
+                                                        Environment.DIRECTORY_DOWNLOADS,
+                                                        "Android_QQ_${versionBig}.${vSmall}_64.apk"
+                                                    )
+                                                }
 
-                                                    MODE_OFFICIAL -> {
-                                                        setDestinationInExternalPublicDir(
-                                                            Environment.DIRECTORY_DOWNLOADS,
-                                                            "Android_QQ_${versionBig}_64.apk"
-                                                        )
-                                                    }
+                                                MODE_OFFICIAL -> {
+                                                    setDestinationInExternalPublicDir(
+                                                        Environment.DIRECTORY_DOWNLOADS,
+                                                        "Android_QQ_${versionBig}_64.apk"
+                                                    )
+                                                }
 
-                                                    MODE_WECHAT -> {
-                                                        setDestinationInExternalPublicDir(
-                                                            Environment.DIRECTORY_DOWNLOADS,
-                                                            "Android_微信_${versionBig}.${versionTrue}.apk"
-                                                        )
-                                                    }
+                                                MODE_WECHAT -> {
+                                                    setDestinationInExternalPublicDir(
+                                                        Environment.DIRECTORY_DOWNLOADS,
+                                                        "Android_微信_${versionBig}.${versionTrue}.apk"
+                                                    )
                                                 }
                                             }
-                                            val downloadManager =
-                                                getSystemService(DOWNLOAD_SERVICE) as DownloadManager
-                                            downloadManager.enqueue(requestDownload)
-                                        } else {
-                                            // 这里不用 Chrome Custom Tab 的原因是 Chrome 不知道咋回事有概率卡在“等待下载”状态
-                                            val browserIntent =
-                                                Intent(Intent.ACTION_VIEW, Uri.parse(link))
-                                            browserIntent.apply {
-                                                addCategory(Intent.CATEGORY_BROWSABLE)
-                                                flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                            }
-                                            startActivity(browserIntent)
                                         }
+                                        val downloadManager =
+                                            getSystemService(DOWNLOAD_SERVICE) as DownloadManager
+                                        downloadManager.enqueue(requestDownload)
+                                    } else {
+                                        // 这里不用 Chrome Custom Tab 的原因是 Chrome 不知道咋回事有概率卡在“等待下载”状态
+                                        val browserIntent =
+                                            Intent(Intent.ACTION_VIEW, Uri.parse(link))
+                                        browserIntent.apply {
+                                            addCategory(Intent.CATEGORY_BROWSABLE)
+                                            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                        }
+                                        startActivity(browserIntent)
                                     }
                                 }
                             }
+
                         } else {
                             if (mode == MODE_TEST && (!guessTestExtend || sIndex == (stList.size)) // 测试版情况下，未打开扩展猜版或扩展猜版到最后一步时执行小版本号的递增
                             ) {
