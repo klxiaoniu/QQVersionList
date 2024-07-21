@@ -71,7 +71,7 @@
                 android:layout_height="wrap_content"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
-                android:text="扩展测试版猜版直链格式" />
+                android:text="扩展测试版猜版直链后缀" />
 
             <TextView
                 android:id="@+id/dialog_suffix_define_click"
