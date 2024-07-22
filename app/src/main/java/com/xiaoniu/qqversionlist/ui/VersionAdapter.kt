@@ -50,6 +50,9 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
         return (dp * resources.displayMetrics.density).toInt()
     }*/
 
+    private var getProgressSize = DataStoreUtil.getBoolean("progressSize", false)
+    private var getVersionTCloud = DataStoreUtil.getBoolean("versionTCloud", true)
+
     class ViewHolder(val binding: ItemVersionBinding, val context: Context) :
         RecyclerView.ViewHolder(binding.root)
 
@@ -72,7 +75,7 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
                         currentList[adapterPosition].displayType = 1
                         notifyItemChanged(adapterPosition)
                     }
-                    binding.itemAll.setOnLongClickListener {
+                    binding.cardAll.setOnLongClickListener {
                         if (DataStoreUtil.getBoolean("longPressCard", true)) {
                             showDialog(
                                 it.context, currentList[adapterPosition].jsonString.toPrettyFormat()
@@ -80,7 +83,7 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
                         } else {
                             Toast.makeText(
                                 it.context,
-                                "未开启长按查看详情功能\n请前往设置开启",
+                                "未开启长按查看 JSON 详情功能，请前往设置开启",
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
@@ -99,7 +102,7 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
                         currentList[adapterPosition].displayType = 0
                         notifyItemChanged(adapterPosition)
                     }
-                    binding.itemAllDetail.setOnLongClickListener {
+                    binding.cardAllDetail.setOnLongClickListener {
                         if (DataStoreUtil.getBoolean("longPressCard", true)) {
                             showDialog(
                                 it.context, currentList[adapterPosition].jsonString.toPrettyFormat()
@@ -107,7 +110,7 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
                         } else {
                             Toast.makeText(
                                 it.context,
-                                "未开启长按查看详情功能\n请前往设置开启",
+                                "未开启长按查看 JSON 详情功能，请前往设置开启",
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
@@ -176,7 +179,7 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
         tvSizeCard: MaterialCardView,
         bean: QQVersionBean,
     ) {
-        with(DataStoreUtil.getBoolean("progressSize", false)) {
+        with(getProgressSize) {
             tvPerSize?.isVisible = this
             listProgressLine.isVisible = this
             tvPerSizeCard.isVisible = this
@@ -221,7 +224,7 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
     private fun bindVersionTCloud(
         tvVersion: TextView, bean: QQVersionBean, context: Context
     ) {
-        if (DataStoreUtil.getBoolean("versionTCloud", true)) {
+        if (getVersionTCloud) {
             val TCloudFont = ResourcesCompat.getFont(context, R.font.tcloud_number_vf)
             tvVersion.typeface = TCloudFont
         } else {
@@ -303,10 +306,12 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
     fun updateItemProperty(payloads: Any?) {
         when (payloads) {
             "isShowProgressSize" -> {
+                getProgressSize = DataStoreUtil.getBoolean("progressSize", false)
                 notifyItemRangeChanged(0, currentList.size, "isShowProgressSize")
             }
 
             "isTCloud" -> {
+                getVersionTCloud = DataStoreUtil.getBoolean("versionTCloud", true)
                 notifyItemRangeChanged(0, currentList.size, "isTCloud")
             }
         }
