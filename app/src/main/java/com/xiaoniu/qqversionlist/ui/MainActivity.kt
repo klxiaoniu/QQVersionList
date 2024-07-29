@@ -160,7 +160,6 @@ class MainActivity : AppCompatActivity() {
                 bottom = space
                 // 如果不是第一行，则添加顶部间距
                 if (parent.getChildAdapterPosition(view) != 0) top = space
-
             }
         }
     }
@@ -1191,12 +1190,11 @@ class MainActivity : AppCompatActivity() {
 
                                 val successMaterialDialog = MaterialAlertDialogBuilder(this)
                                     .setTitle("猜测成功")
-                                    .setMessage("下载地址：$link")
                                     .setIcon(R.drawable.check_circle)
                                     .setView(successButtonBinding.root)
-                                    .setCancelable(false).apply {
-                                        setMessage("下载地址：$link\n\n大小：$appSize MB")
-                                    }.show()
+                                    .setCancelable(false)
+                                    .setMessage("下载地址：$link\n\n大小：$appSize MB")
+                                    .show()
 
 
                                 // 复制并停止按钮点击事件
