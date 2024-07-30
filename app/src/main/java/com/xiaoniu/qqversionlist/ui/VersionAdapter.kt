@@ -124,48 +124,52 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val bean = currentList[position]
-        if (holder is ViewHolder) {
-            //val result = "版本：" + bean.versionNumber + "\n额定大小：" + bean.size + " MB"
-            holder.binding.apply {
-                tvVersion.text = bean.versionNumber
-                tvSize.text = bean.size + " MB"
-                bindProgress(listProgressLine, null, tvPerSizeText, tvPerSizeCard, tvSizeCard, bean)
-                bindDisplayInstall(tvInstall, tvInstallCard, bean)
-                bindVersionTCloud(tvVersion, bean, holder.context)
-            }
-        } else if (holder is ViewHolderDetail) {
-            holder.binding.apply {
-                linearImages.removeAllViews()
-                bean.imgs.forEach {
-                    val iv = ImageView(holder.itemView.context).apply {
-                        setPadding(0, 0, 10, 0)
-                    }
-                    linearImages.addView(iv)
-                    iv.load(it) {
-                        crossfade(true)
-                        transformations(RoundedCornersTransformation(2.dp.toFloat()))
-                    }
+        when (holder) {
+            is ViewHolder -> {
+                //val result = "版本：" + bean.versionNumber + "\n额定大小：" + bean.size + " MB"
+                holder.binding.apply {
+                    tvVersion.text = bean.versionNumber
+                    tvSize.text = bean.size + " MB"
+                    bindProgress(listProgressLine, null, tvPerSizeText, tvPerSizeCard, tvSizeCard, bean)
+                    bindDisplayInstall(tvInstall, tvInstallCard, bean)
+                    bindVersionTCloud(tvVersion, bean, holder.context)
                 }
-                tvOldVersion.text = bean.versionNumber
-                tvOldSize.text = bean.size + " MB"
-                tvDetailVersion.text = "版本：" + bean.versionNumber
-                tvDetailSize.text = "额定大小：" + bean.size + " MB"
-                tvTitle.text = bean.featureTitle
-                tvDesc.text = bean.summary.joinToString(separator = "\n- ", prefix = "- ")
+            }
 
-                tvTitle.isVisible = tvTitle.text != ""
+            is ViewHolderDetail -> {
+                holder.binding.apply {
+                    linearImages.removeAllViews()
+                    bean.imgs.forEach {
+                        val iv = ImageView(holder.itemView.context).apply {
+                            setPadding(0, 0, 10, 0)
+                        }
+                        linearImages.addView(iv)
+                        iv.load(it) {
+                            crossfade(true)
+                            transformations(RoundedCornersTransformation(2.dp.toFloat()))
+                        }
+                    }
+                    tvOldVersion.text = bean.versionNumber
+                    tvOldSize.text = bean.size + " MB"
+                    tvDetailVersion.text = "版本：" + bean.versionNumber
+                    tvDetailSize.text = "额定大小：" + bean.size + " MB"
+                    tvTitle.text = bean.featureTitle
+                    tvDesc.text = bean.summary.joinToString(separator = "\n- ", prefix = "- ")
 
-                bindDisplayInstall(tvOldInstall, tvOldInstallCard, bean)
-                bindVersionTCloud(tvOldVersion, bean, holder.context)
+                    tvTitle.isVisible = tvTitle.text != ""
 
-                bindProgress(
-                    listDetailProgressLine,
-                    tvPerSize,
-                    tvOldPerSizeText,
-                    tvOldPerSizeCard,
-                    tvOldSizeCard,
-                    bean
-                )
+                    bindDisplayInstall(tvOldInstall, tvOldInstallCard, bean)
+                    bindVersionTCloud(tvOldVersion, bean, holder.context)
+
+                    bindProgress(
+                        listDetailProgressLine,
+                        tvPerSize,
+                        tvOldPerSizeText,
+                        tvOldPerSizeCard,
+                        tvOldSizeCard,
+                        bean
+                    )
+                }
             }
         }
     }

@@ -852,37 +852,43 @@ class MainActivity : AppCompatActivity() {
                 var versionSmall = 0
                 var version16code = 0.toString()
                 var versionTrue = 0
-                if (mode == "测试版" || mode == "空格猜版") {
-                    if (dialogGuessBinding.etVersionSmall.editText?.text.isNullOrEmpty()) throw MissingVersionException(
-                        "测试版猜版（含空格猜版）需要填写小版本号，否则无法猜测测试版。"
-                    )
-                    else {
-                        versionSmall =
-                            dialogGuessBinding.etVersionSmall.editText?.text.toString().toInt()
-                        if (versionSmall % 5 != 0 && !DataStoreUtil.getBoolean(
-                                "guessNot5", false
+                when (mode) {
+                    "测试版", "空格猜版" -> {
+                        if (dialogGuessBinding.etVersionSmall.editText?.text.isNullOrEmpty()) throw MissingVersionException(
+                            "测试版猜版（含空格猜版）需要填写小版本号，否则无法猜测测试版。"
+                        ) else {
+                            versionSmall =
+                                dialogGuessBinding.etVersionSmall.editText?.text.toString()
+                                    .toInt()
+                            if (versionSmall % 5 != 0 && !DataStoreUtil.getBoolean(
+                                    "guessNot5", false
+                                )
+                            ) throw InvalidMultipleException("小版本号需填写 5 的倍数。如需解除此限制，请前往设置进行解除。")
+                            if (versionSmall != 0) DataStoreUtil.putIntAsync(
+                                "versionSmall", versionSmall
                             )
-                        ) throw InvalidMultipleException("小版本号需填 5 的倍数。如有需求，请前往设置解除此限制。")
-                        if (versionSmall != 0) DataStoreUtil.putIntAsync(
-                            "versionSmall", versionSmall
-                        )
+                        }
+
                     }
 
-                } else if (mode == "微信猜版") {
-                    if (dialogGuessBinding.etVersionTrue.editText?.text.isNullOrEmpty()) throw MissingVersionException(
-                        "微信猜版需要填写真实版本号，否则无法猜测微信版本。"
-                    )
-                    else if (dialogGuessBinding.etVersion16code.editText?.text.isNullOrEmpty()) throw MissingVersionException(
-                        "微信猜版需要填写十六进制代码，否则无法猜测微信版本。"
-                    )
-                    else {
-                        versionTrue =
-                            dialogGuessBinding.etVersionTrue.editText?.text.toString().toInt()
-                        version16code = dialogGuessBinding.etVersion16code.editText?.text.toString()
-                        if (version16code != 0.toString()) DataStoreUtil.putStringAsync(
-                            "version16code", version16code
-                        )
-                        if (versionTrue != 0) DataStoreUtil.putIntAsync("versionTrue", versionTrue)
+                    "微信猜版" -> {
+                        if (dialogGuessBinding.etVersionTrue.editText?.text.isNullOrEmpty()) throw MissingVersionException(
+                            "微信猜版需要填写真实版本号，否则无法猜测微信版本。"
+                        ) else if (dialogGuessBinding.etVersion16code.editText?.text.isNullOrEmpty()) throw MissingVersionException(
+                            "微信猜版需要填写十六进制代码，否则无法猜测微信版本。"
+                        ) else {
+                            versionTrue =
+                                dialogGuessBinding.etVersionTrue.editText?.text.toString()
+                                    .toInt()
+                            version16code =
+                                dialogGuessBinding.etVersion16code.editText?.text.toString()
+                            if (version16code != 0.toString()) DataStoreUtil.putStringAsync(
+                                "version16code", version16code
+                            )
+                            if (versionTrue != 0) DataStoreUtil.putIntAsync(
+                                "versionTrue", versionTrue
+                            )
+                        }
                     }
                 }
                 guessUrl(versionBig, versionSmall, versionTrue, version16code, mode)
@@ -1122,52 +1128,59 @@ class MainActivity : AppCompatActivity() {
                 var sIndex = 0
                 while (true) when (status) {
                     STATUS_ONGOING -> {
-                        if (mode == MODE_TEST) {
-                            if (link == "" || !guessTestExtend) {
-                                link =
-                                    "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}${stList[sIndex]}.apk"
-                                if (guessTestExtend) sIndex += 1
-                            } else {
-                                link =
-                                    "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}.${vSmall}${stList[sIndex]}.apk"
-                                sIndex += 1
-                            }
-                        } else if (mode == MODE_UNOFFICIAL) link =
-                            "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android%20$versionBig.${vSmall}%2064.apk"
-                        else if (mode == MODE_OFFICIAL) {
-                            val soListPre = listOf(
-                                "_64",
-                                "_64_HB",
-                                "_64_HB1",
-                                "_64_HB2",
-                                "_64_HB3",
-                                "_HB_64",
-                                "_HB1_64",
-                                "_HB2_64",
-                                "_HB3_64",
-                                "_64_BBPJ",
-                                "_BBPJ_64"
-                            )
-                            val soList =
-                                if (defineSufList != listOf("")) soListPre + defineSufList else soListPre
-                            if (link == "") {
-                                link =
-                                    "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}${soList[sIndex]}.apk"
-                                sIndex += 1
-                            } else if (sIndex == (soList.size)) {
-                                status = STATUS_END
-                                showToast("未猜测到包")
-                                continue
-                            } else {
-                                link =
-                                    "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}${soList[sIndex]}.apk"
-                                sIndex += 1
+                        when (mode) {
+                            MODE_TEST -> {
+                                if (link == "" || !guessTestExtend) {
+                                    link =
+                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}${stList[sIndex]}.apk"
+                                    if (guessTestExtend) sIndex += 1
+                                } else {
+                                    link =
+                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}.${vSmall}${stList[sIndex]}.apk"
+                                    sIndex += 1
+                                }
                             }
 
-                        } else if (mode == MODE_WECHAT) {
-                            // https://dldir1.qq.com/weixin/android/weixin8049android2600_0x2800318a_arm64.apk
-                            link =
-                                "https://dldir1.qq.com/weixin/android/weixin${versionBig}android${versionTrue}_0x${v16codeStr}_arm64.apk"
+                            MODE_UNOFFICIAL -> link =
+                                "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android%20$versionBig.${vSmall}%2064.apk"
+
+                            MODE_OFFICIAL -> {
+                                val soListPre = listOf(
+                                    "_64",
+                                    "_64_HB",
+                                    "_64_HB1",
+                                    "_64_HB2",
+                                    "_64_HB3",
+                                    "_HB_64",
+                                    "_HB1_64",
+                                    "_HB2_64",
+                                    "_HB3_64",
+                                    "_64_BBPJ",
+                                    "_BBPJ_64"
+                                )
+                                val soList =
+                                    if (defineSufList != listOf("")) soListPre + defineSufList else soListPre
+                                if (link == "") {
+                                    link =
+                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}${soList[sIndex]}.apk"
+                                    sIndex += 1
+                                } else if (sIndex == (soList.size)) {
+                                    status = STATUS_END
+                                    showToast("未猜测到包")
+                                    continue
+                                } else {
+                                    link =
+                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}${soList[sIndex]}.apk"
+                                    sIndex += 1
+                                }
+
+                            }
+
+                            MODE_WECHAT -> {
+                                // https://dldir1.qq.com/weixin/android/weixin8049android2600_0x2800318a_arm64.apk
+                                link =
+                                    "https://dldir1.qq.com/weixin/android/weixin${versionBig}android${versionTrue}_0x${v16codeStr}_arm64.apk"
+                            }
                         }
                         runOnUiThread {
                             updateProgressDialogMessage("正在猜测下载地址：$link")
@@ -1295,14 +1308,18 @@ class MainActivity : AppCompatActivity() {
                             }
 
                         } else {
-                            if (mode == MODE_TEST && (!guessTestExtend || sIndex == (stList.size)) // 测试版情况下，未打开扩展猜版或扩展猜版到最后一步时执行小版本号的递增
-                            ) {
-                                vSmall += if (!guessNot5) 5 else 1
-                                sIndex = 0
-                            } else if (mode == MODE_UNOFFICIAL) vSmall += if (!guessNot5) 5 else 1
-                            else if (mode == MODE_WECHAT) {
-                                val version16code = v16codeStr.toInt(16) + 1
-                                v16codeStr = version16code.toString(16)
+                            when {
+                                mode == MODE_TEST && (!guessTestExtend || sIndex == (stList.size)) // 测试版情况下，未打开扩展猜版或扩展猜版到最后一步时执行小版本号的递增
+                                -> {
+                                    vSmall += if (!guessNot5) 5 else 1
+                                    sIndex = 0
+                                }
+
+                                mode == MODE_UNOFFICIAL -> vSmall += if (!guessNot5) 5 else 1
+                                mode == MODE_WECHAT -> {
+                                    val version16code = v16codeStr.toInt(16) + 1
+                                    v16codeStr = version16code.toString(16)
+                                }
                             }
                         }
                     }
@@ -1412,14 +1429,18 @@ class MainActivity : AppCompatActivity() {
                                     .show().apply {
                                         shiplyUrlRecyclerView.layoutManager =
                                             LinearLayoutManager(this@MainActivity)
-                                        if (shiplyApkUrl != null) {
-                                            shiplyUrlBackTitle.visibility = View.VISIBLE
-                                            shiplyUrlRecyclerView.visibility = View.VISIBLE
-                                            shiplyUrlRecyclerView.adapter =
-                                                ShiplyUrlListAdapter(shiplyApkUrl)
-                                        } else {
-                                            shiplyUrlBackTitle.visibility = View.GONE
-                                            shiplyUrlRecyclerView.visibility = View.GONE
+                                        when {
+                                            shiplyApkUrl != null -> {
+                                                shiplyUrlBackTitle.visibility = View.VISIBLE
+                                                shiplyUrlRecyclerView.visibility = View.VISIBLE
+                                                shiplyUrlRecyclerView.adapter =
+                                                    ShiplyUrlListAdapter(shiplyApkUrl)
+                                            }
+
+                                            else -> {
+                                                shiplyUrlBackTitle.visibility = View.GONE
+                                                shiplyUrlRecyclerView.visibility = View.GONE
+                                            }
                                         }
                                         shiplyBackText.text =
                                             shiplyDecodeStringJson.toPrettyFormat()
