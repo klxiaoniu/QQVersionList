@@ -1,0 +1,48 @@
+<!--
+    QQ Versions Tool for Android™
+    Copyright (C) 2023 klxiaoniu
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-->
+<resources>
+    <string name="app_name">QQ 版本列表實用工具</string>
+    <string name="appTitle">QQ 版本列表實用工具</string>
+    <string name="shortcutLongLabel">猜版 Extended</string>
+    <string name="shortcutShortLabel">猜版 Extd.</string>
+    <string name="start">開始</string>
+    <string name="cancel">取消</string>
+    <string name="done">確定</string>
+    <string name="save">儲存</string>
+    <string name="installed">已安裝</string>
+    <string name="copy">複製</string>
+    <string name="refresh">更新</string>
+    <string name="agree">同意</string>
+    <string name="disagreeAndExit">不同意並退出</string>
+    <string name="withdrawConsentAndExit">撤回同意並退出</string>
+    <string name="userAgreement">用戶協議</string>
+    <string name="enumerateVersionsFAB">猜版</string>
+    <string name="enumerateVersionsDialogTitle">猜版 Extended</string>
+    <string name="setting">設定</string>
+    <string name="personalization">個人化</string>
+    <string name="about">關於</string>
+    <string name="enumerateVersionsSuffixSetting">猜版直鏈後綴設定</string>
+    <string name="getUpdateFromTencentDeviceOrientedServiceShiplyDistributionPlatform">TDS 腾訊端服務 Shiply 發布平台更新取得（實驗性）</string>
+    <string name="getUpdateFromShiplyPlatform">Shiply 平台更新取得（實驗性）</string>
+    <string name="acceptedEnumerateVersion">猜測成功</string>
+    <string name="contentReturnedByShiplyPlatform">Shiply 平台返回內容</string>
+    <string name="applicationError">程式出錯</string>
+    <string name="additionalActions">進一步操作</string>
+    <string name="shareTo">分享至</string>
+    <string name="jsonDetails">JSON 詳情</string>
+</resources>

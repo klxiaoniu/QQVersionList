@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?><!--
-    QQ Version Tool for Android™
+    QQ Versions Tool for Android™
     Copyright (C) 2023 klxiaoniu
 
     This program is free software: you can redistribute it and/or modify
@@ -249,14 +249,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="同意" />
+            android:text="@string/agree" />
 
         <Button
             android:id="@+id/ua_button_disagree"
             style="@style/Widget.Material3.Button.TonalButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="不同意并退出"
+            android:text="@string/disagreeAndExit"
             android:textColor="?attr/colorOnErrorContainer"
             app:backgroundTint="?attr/colorErrorContainer"
             app:iconTint="?attr/colorOnErrorContainer" />

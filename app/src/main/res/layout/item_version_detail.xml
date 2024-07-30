@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?><!--
-    QQ Version Tool for Android™
+    QQ Versions Tool for Android™
     Copyright (C) 2023 klxiaoniu
 
     This program is free software: you can redistribute it and/or modify
@@ -79,7 +79,7 @@
                     app:layout_constraintBottom_toBottomOf="@id/tv_old_version"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/tv_old_version"
-                    tools:text="已安装" />
+                    tools:text="@string/installed" />
 
             </com.google.android.material.card.MaterialCardView>
 
@@ -187,7 +187,7 @@
             android:textColor="?attr/colorSecondary"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/list_detail_progress_line"
-            tools:text="体验说明：" />
+            tools:text="版本特性：" />
 
         <TextView
             android:id="@+id/tv_desc"

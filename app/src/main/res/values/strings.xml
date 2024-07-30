@@ -1,5 +1,5 @@
 <!--
-    QQ Version Tool for Android™
+    QQ Versions Tool for Android™
     Copyright (C) 2023 klxiaoniu
 
     This program is free software: you can redistribute it and/or modify
@@ -17,6 +17,32 @@
 -->
 <resources>
     <string name="app_name">QQ Ver. Tool</string>
-    <string name="shortcutLongLabel">猜版 Extended</string>
-    <string name="shortcutShortLabel">猜版 Extd.</string>
+    <string name="appTitle">QQ Versions Tool</string>
+    <string name="shortcutLongLabel">Enumerate Versions Extended</string>
+    <string name="shortcutShortLabel">Enumerate Ver. Extd.</string>
+    <string name="start">Start</string>
+    <string name="cancel">Cancel</string>
+    <string name="done">Done</string>
+    <string name="save">Save</string>
+    <string name="installed">Installed</string>
+    <string name="copy">Copy</string>
+    <string name="refresh">Refresh</string>
+    <string name="agree">Agree</string>
+    <string name="disagreeAndExit">Disagree and Exit</string>
+    <string name="withdrawConsentAndExit">Withdraw Consent and Exit</string>
+    <string name="userAgreement">User Agreement</string>
+    <string name="enumerateVersionsFAB">Enumerate Ver.</string>
+    <string name="enumerateVersionsDialogTitle">Enumerate Versions</string>
+    <string name="setting">Setting</string>
+    <string name="personalization">Personalization</string>
+    <string name="about">About</string>
+    <string name="enumerateVersionsSuffixSetting">Enumerate Versions Suffix Setting</string>
+    <string name="getUpdateFromTencentDeviceOrientedServiceShiplyDistributionPlatform">Get Update From Tencent Device-oriented Service (TDS) Shiply Distribution Platform (Experimental)</string>
+    <string name="getUpdateFromShiplyPlatform">Get Update From Shiply Platform (Experimental)</string>
+    <string name="acceptedEnumerateVersion">Accepted Enumerate Version</string>
+    <string name="contentReturnedByShiplyPlatform">Content Returned By Shiply Platform</string>
+    <string name="applicationError">Application Error</string>
+    <string name="additionalActions">Additional Actions</string>
+    <string name="shareTo">Share To</string>
+    <string name="jsonDetails">JSON Details</string>
 </resources>

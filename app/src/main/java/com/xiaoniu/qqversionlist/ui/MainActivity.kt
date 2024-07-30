@@ -1,5 +1,5 @@
 /*
-    QQ Version Tool for Android™
+    QQ Versions Tool for Android™
     Copyright (C) 2023 klxiaoniu
 
     This program is free software: you can redistribute it and/or modify
@@ -139,6 +139,10 @@ class MainActivity : AppCompatActivity() {
             addItemDecoration(VerticalSpaceItemDecoration(dpToPx(5)))
         }
         initButtons()
+
+        if (!BuildConfig.VERSION_NAME.endsWith("Release")) binding.materialToolbar.setNavigationIcon(
+            R.drawable.git_commit_line
+        )
     }
 
     private fun Context.dpToPx(dp: Int): Int {
@@ -176,7 +180,7 @@ class MainActivity : AppCompatActivity() {
         val userAgreementBinding = UserAgreementBinding.inflate(layoutInflater)
 
         val dialogUA = MaterialAlertDialogBuilder(this)
-            .setTitle("用户协议")
+            .setTitle(R.string.userAgreement)
             .setIcon(R.drawable.file_text_line)
             .setView(userAgreementBinding.root)
             .setCancelable(false)
@@ -206,7 +210,7 @@ class MainActivity : AppCompatActivity() {
             DataStoreUtil.putIntAsync("userAgreement", 0)
             finish()
         }
-        if (agreed) userAgreementBinding.uaButtonDisagree.text = "撤回同意并退出"
+        if (agreed) userAgreementBinding.uaButtonDisagree.setText(R.string.withdrawConsentAndExit)
 
         dialogUA.show()
     }
@@ -340,12 +344,12 @@ class MainActivity : AppCompatActivity() {
                     )
                     linearLayout.addView(imageView)
                     MaterialAlertDialogBuilder(this)
-                        .setTitle("关于")
+                        .setTitle(R.string.about)
                         .setIcon(R.drawable.information_line)
                         .setMessage(message)
                         .setView(linearLayout)
-                        .setPositiveButton("确定", null)
-                        .setNegativeButton("撤回同意用户协议") { _, _ ->
+                        .setPositiveButton(R.string.done, null)
+                        .setNegativeButton(R.string.withdrawConsentAndExit) { _, _ ->
                             showUADialog(true, judgeUATarget)
                         }.show().apply {
                             findViewById<TextView>(android.R.id.message)?.movementMethod =
@@ -394,7 +398,7 @@ class MainActivity : AppCompatActivity() {
                             }
 
                             val dialogPer = MaterialAlertDialogBuilder(this@MainActivity)
-                                .setTitle("个性化")
+                                .setTitle(R.string.personalization)
                                 .setIcon(R.drawable.palette_line)
                                 .setView(dialogPersonalization.root)
                                 .show()
@@ -455,7 +459,7 @@ class MainActivity : AppCompatActivity() {
                             }
 
                             val dialogSuffix = MaterialAlertDialogBuilder(this@MainActivity)
-                                .setTitle("猜版直链后缀设置")
+                                .setTitle(R.string.enumerateVersionsSuffixSetting)
                                 .setIcon(R.drawable.settings_line)
                                 .setView(dialogSuffixDefine.root)
                                 .setCancelable(false)
@@ -621,7 +625,7 @@ class MainActivity : AppCompatActivity() {
                         DialogTencentShiplyBinding.inflate(layoutInflater)
 
                     val shiplyDialog = MaterialAlertDialogBuilder(this)
-                        .setTitle("Shiply 平台更新获取（实验性）")
+                        .setTitle(R.string.getUpdateFromShiplyPlatform)
                         .setIcon(R.drawable.flask_line)
                         .setView(dialogTencentShiplyBinding.root)
                         .setCancelable(false)
@@ -823,7 +827,7 @@ class MainActivity : AppCompatActivity() {
 
 
         val dialogGuess = MaterialAlertDialogBuilder(this)
-            .setTitle("猜版 Extended")
+            .setTitle(R.string.enumerateVersionsDialogTitle)
             .setIcon(R.drawable.search_line)
             .setView(dialogGuessBinding.root)
             .setCancelable(false)
@@ -1202,7 +1206,7 @@ class MainActivity : AppCompatActivity() {
                                 }
 
                                 val successMaterialDialog = MaterialAlertDialogBuilder(this)
-                                    .setTitle("猜测成功")
+                                    .setTitle(R.string.acceptedEnumerateVersion)
                                     .setIcon(R.drawable.check_circle)
                                     .setView(successButtonBinding.root)
                                     .setCancelable(false)
@@ -1254,7 +1258,7 @@ class MainActivity : AppCompatActivity() {
                                     }
                                     startActivity(
                                         Intent.createChooser(
-                                            shareIntent, "分享到"
+                                            shareIntent, getString(R.string.shareTo)
                                         )
                                     )
                                     status = STATUS_END
@@ -1425,7 +1429,8 @@ class MainActivity : AppCompatActivity() {
                             dialogShiplyBackBinding.apply {
                                 MaterialAlertDialogBuilder(this@MainActivity).setView(
                                     dialogShiplyBackBinding.root
-                                ).setTitle("Shiply 平台返回内容").setIcon(R.drawable.flask_line)
+                                ).setTitle(R.string.contentReturnedByShiplyPlatform)
+                                    .setIcon(R.drawable.flask_line)
                                     .show().apply {
                                         shiplyUrlRecyclerView.layoutManager =
                                             LinearLayoutManager(this@MainActivity)

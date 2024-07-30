@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?><!--
-    QQ Version Tool for Android™
+    QQ Versions Tool for Android™
     Copyright (C) 2023 klxiaoniu
 
     This program is free software: you can redistribute it and/or modify
@@ -23,25 +23,25 @@
     <item
         android:id="@+id/btn_about"
         android:icon="@drawable/information_line"
-        android:title="关于"
+        android:title="@string/about"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/btn_setting"
         android:icon="@drawable/settings_line"
-        android:title="设置"
+        android:title="@string/setting"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/btn_get"
         android:icon="@drawable/refresh_line"
-        android:title="刷新"
+        android:title="@string/refresh"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/btn_tencent_shiply"
         android:icon="@drawable/flask_line"
-        android:title="TDS 腾讯端服务 Shiply 发布平台更新获取（实验性）"
+        android:title="@string/getUpdateFromTencentDeviceOrientedServiceShiplyDistributionPlatform"
         app:showAsAction="always" />
 
 </menu>

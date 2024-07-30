@@ -1,5 +1,5 @@
 /*
-    QQ Version Tool for Android™
+    QQ Versions Tool for Android™
     Copyright (C) 2023 klxiaoniu
 
     This program is free software: you can redistribute it and/or modify
@@ -18,7 +18,6 @@
 
 package com.xiaoniu.qqversionlist.ui
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Typeface
 import android.view.LayoutInflater
@@ -121,7 +120,6 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
         }
     }
 
-    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val bean = currentList[position]
         when (holder) {
@@ -130,7 +128,14 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
                 holder.binding.apply {
                     tvVersion.text = bean.versionNumber
                     tvSize.text = bean.size + " MB"
-                    bindProgress(listProgressLine, null, tvPerSizeText, tvPerSizeCard, tvSizeCard, bean)
+                    bindProgress(
+                        listProgressLine,
+                        null,
+                        tvPerSizeText,
+                        tvPerSizeCard,
+                        tvSizeCard,
+                        bean
+                    )
                     bindDisplayInstall(tvInstall, tvInstallCard, bean)
                     bindVersionTCloud(tvVersion, bean, holder.context)
                 }
@@ -174,7 +179,6 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
         }
     }
 
-    @SuppressLint("SetTextI18n")
     private fun bindProgress(
         listProgressLine: LinearProgressIndicator,
         tvPerSize: TextView?,
@@ -212,19 +216,17 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
         }
     }
 
-    @SuppressLint("SetTextI18n")
     private fun bindDisplayInstall(
         tvInstall: TextView, tvInstallCard: MaterialCardView, bean: QQVersionBean
     ) {
         if (bean.displayInstall) {
             tvInstallCard.isVisible = true
-            tvInstall.text = "已安装"
+            tvInstall.text = tvInstall.context.getString(R.string.installed)
         } else {
             tvInstallCard.isVisible = false
         }
     }
 
-    @SuppressLint("SetTextI18n")
     private fun bindVersionTCloud(
         tvVersion: TextView, bean: QQVersionBean, context: Context
     ) {
@@ -242,7 +244,7 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
             setTextIsSelectable(true)
             setPadding(96, 48, 96, 96)
         }
-        MaterialAlertDialogBuilder(context).setView(tv).setTitle("JSON 详情")
+        MaterialAlertDialogBuilder(context).setView(tv).setTitle(R.string.jsonDetails)
             .setIcon(R.drawable.braces_line).show()
     }
 

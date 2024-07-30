@@ -1,5 +1,5 @@
 /*
-    QQ Version Tool for Android™
+    QQ Versions Tool for Android™
     Copyright (C) 2023 klxiaoniu
 
     This program is free software: you can redistribute it and/or modify
@@ -76,7 +76,7 @@ class ShiplyUrlListAdapter(private val urlList: List<String>) :
                                 }
                                 val shiplyNextMaterialDialog =
                                     MaterialAlertDialogBuilder(itemView.context)
-                                        .setTitle("进一步操作")
+                                        .setTitle(R.string.additionalActions)
                                         .setMessage("下载地址：$url")
                                         .setIcon(R.drawable.flask_line)
                                         .setView(shiplyLinkNextButtonBinding.root).apply {
@@ -138,7 +138,8 @@ class ShiplyUrlListAdapter(private val urlList: List<String>) :
                                         }
                                         itemView.context.startActivity(
                                             Intent.createChooser(
-                                                shareIntent, "分享到"
+                                                shareIntent,
+                                                itemView.context.getString(R.string.shareTo)
                                             )
                                         )
                                     }

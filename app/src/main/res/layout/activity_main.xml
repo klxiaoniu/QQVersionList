@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?><!--
-    QQ Version Tool for Android™
+    QQ Versions Tool for Android™
     Copyright (C) 2023 klxiaoniu
 
     This program is free software: you can redistribute it and/or modify
@@ -52,11 +52,12 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
             <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/material_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:elevation="0dp"
                 app:layout_collapseMode="pin"
-                app:title="QQ 版本列表实用工具" />
+                app:title="@string/appTitle"/>
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -78,7 +79,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:minWidth="0dp"
-        android:text="猜版"
+        android:text="@string/enumerateVersionsFAB"
         app:icon="@drawable/search_line"
         app:layout_anchor="@id/bottomAppBar"
         app:removeEmbeddedFabElevation="true" />
@@ -87,8 +88,8 @@
         android:id="@+id/progress_line"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginEnd="4dp"
+        android:layout_marginStart="6dp"
+        android:layout_marginEnd="6dp"
         android:elevation="10dp"
         android:indeterminate="true"
         app:layout_anchor="@id/topAppBar"
