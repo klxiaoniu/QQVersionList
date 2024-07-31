@@ -19,6 +19,7 @@
 package com.xiaoniu.qqversionlist.ui
 
 
+import android.annotation.SuppressLint
 import android.app.DownloadManager
 import android.content.Context
 import android.content.Intent
@@ -106,6 +107,8 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        setContext(this)
 
         if (SDK_INT <= Build.VERSION_CODES.Q) {
             ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, windowInsets ->
@@ -253,14 +256,14 @@ class MainActivity : AppCompatActivity() {
 
                 R.id.btn_about -> {
                     val message = SpannableString(
-                        "QQ 版本列表实用工具 for Android\n\n" +
-                                "提供 Android QQ 版本列表的查看和对 Android QQ 下载链接的枚举法猜测。\n\n" +
-                                "版本：${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})\n" +
-                                "作者：快乐小牛、有鲫雪狐\n" +
-                                "贡献者：Col_or、bggRGjQaUbCoE、GMerge\n" +
-                                "特别感谢：owo233\n" +
-                                "开源地址：GitHub\n" +
-                                "获取更新：GitHub Releases、Obtainium、九七通知中心\n\n" +
+                        "${getString(R.string.aboutAppName)}\n\n" +
+                                "${getString(R.string.aboutDescription)}\n\n" +
+                                "${getString(R.string.version)}${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})\n" +
+                                "${getString(R.string.aboutAuthor)}快乐小牛、有鲫雪狐\n" +
+                                "${getString(R.string.aboutContributor)}Col_or、bggRGjQaUbCoE、GMerge\n" +
+                                "${getString(R.string.aboutSpecialThanksTo)}owo233\n" +
+                                "${getString(R.string.aboutOpenSourceRepo)}GitHub\n" +
+                                "${getString(R.string.aboutGetUpdate)}GitHub Releases、Obtainium、九七通知中心\n\n" +
                                 "Since 2023.8.9"
                     ).apply {
                         setSpan(
@@ -372,7 +375,7 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     val dialogSetting = MaterialAlertDialogBuilder(this)
-                        .setTitle("设置")
+                        .setTitle(R.string.setting)
                         .setIcon(R.drawable.settings_line)
                         .setView(dialogSettingBinding.root)
                         .show()
@@ -607,7 +610,7 @@ class MainActivity : AppCompatActivity() {
                                         )
                                     }
 
-                                    showToast("已保存")
+                                    showToast(getString(R.string.saved))
                                     dialogSuffix.dismiss()
                                 }
 
@@ -741,12 +744,13 @@ class MainActivity : AppCompatActivity() {
         val dialogGuessBinding = DialogGuessBinding.inflate(layoutInflater)
         val verBig = DataStoreUtil.getString("versionBig", "")
         dialogGuessBinding.etVersionBig.editText?.setText(verBig)
-        val memVersion = DataStoreUtil.getString("versionSelect", "正式版")
-        if (memVersion == "测试版" || memVersion == "空格猜版" || memVersion == "正式版" || memVersion == "微信猜版") dialogGuessBinding.spinnerVersion.setText(
+        val memVersion = DataStoreUtil.getString("versionSelect", MODE_OFFICIAL)
+        if (memVersion == MODE_TEST || memVersion == MODE_UNOFFICIAL || memVersion == MODE_OFFICIAL || memVersion == MODE_WECHAT) dialogGuessBinding.spinnerVersion.setText(
             memVersion,
             false
         )
-        if (dialogGuessBinding.spinnerVersion.text.toString() == "测试版" || dialogGuessBinding.spinnerVersion.text.toString() == "空格猜版") dialogGuessBinding.apply {
+        if (dialogGuessBinding.spinnerVersion.text.toString() == MODE_TEST || dialogGuessBinding.spinnerVersion.text.toString() == MODE_UNOFFICIAL
+        ) dialogGuessBinding.apply {
             etVersionSmall.isEnabled = true
             etVersionSmall.visibility = View.VISIBLE
             guessDialogWarning.visibility = View.VISIBLE
@@ -755,14 +759,14 @@ class MainActivity : AppCompatActivity() {
             tvWarning.text =
                 "鉴于 QQ 测试版可能存在不可预知的稳定性问题，您在下载及使用该测试版本之前，必须明确并确保自身具备足够的风险识别和承受能力。根据相关条款，您使用本软件时应当已了解并同意，因下载或使用 QQ 测试版而可能产生的任何直接或间接损失、损害以及其他不利后果，均由您自行承担全部责任。"
             dialogGuessBinding.etVersionBig.helperText = "填写格式为 x.y.z"
-        } else if (dialogGuessBinding.spinnerVersion.text.toString() == "正式版") dialogGuessBinding.apply {
+        } else if (dialogGuessBinding.spinnerVersion.text.toString() == MODE_OFFICIAL) dialogGuessBinding.apply {
             etVersionSmall.isEnabled = false
             etVersionSmall.visibility = View.VISIBLE
             guessDialogWarning.visibility = View.GONE
             etVersion16code.visibility = View.GONE
             etVersionTrue.visibility = View.GONE
             etVersionBig.helperText = "填写格式为 x.y.z"
-        } else if (dialogGuessBinding.spinnerVersion.text.toString() == "微信猜版") dialogGuessBinding.apply {
+        } else if (dialogGuessBinding.spinnerVersion.text.toString() == MODE_WECHAT) dialogGuessBinding.apply {
             etVersionSmall.isEnabled = false
             guessDialogWarning.visibility = View.VISIBLE
             etVersionSmall.visibility = View.GONE
@@ -779,7 +783,7 @@ class MainActivity : AppCompatActivity() {
                 val judgeVerSelect = dialogGuessBinding.spinnerVersion.text.toString()
                 DataStoreUtil.putStringAsync("versionSelect", judgeVerSelect)
                 when (judgeVerSelect) {
-                    "测试版", "空格猜版" -> dialogGuessBinding.apply {
+                    MODE_TEST, MODE_UNOFFICIAL -> dialogGuessBinding.apply {
                         etVersionSmall.isEnabled = true
                         etVersionSmall.visibility = View.VISIBLE
                         guessDialogWarning.visibility = View.VISIBLE
@@ -790,7 +794,7 @@ class MainActivity : AppCompatActivity() {
                         etVersionBig.helperText = "填写格式为 x.y.z"
                     }
 
-                    "正式版" -> dialogGuessBinding.apply {
+                    MODE_OFFICIAL -> dialogGuessBinding.apply {
                         etVersionSmall.visibility = View.VISIBLE
                         etVersionSmall.isEnabled = false
                         guessDialogWarning.visibility = View.GONE
@@ -799,7 +803,7 @@ class MainActivity : AppCompatActivity() {
                         etVersionBig.helperText = "填写格式为 x.y.z"
                     }
 
-                    "微信猜版" -> dialogGuessBinding.apply {
+                    MODE_WECHAT -> dialogGuessBinding.apply {
                         etVersionSmall.isEnabled = false
                         etVersionSmall.visibility = View.GONE
                         guessDialogWarning.visibility = View.VISIBLE
@@ -857,7 +861,7 @@ class MainActivity : AppCompatActivity() {
                 var version16code = 0.toString()
                 var versionTrue = 0
                 when (mode) {
-                    "测试版", "空格猜版" -> {
+                    MODE_TEST, MODE_UNOFFICIAL -> {
                         if (dialogGuessBinding.etVersionSmall.editText?.text.isNullOrEmpty()) throw MissingVersionException(
                             "测试版猜版（含空格猜版）需要填写小版本号，否则无法猜测测试版。"
                         ) else {
@@ -875,7 +879,7 @@ class MainActivity : AppCompatActivity() {
 
                     }
 
-                    "微信猜版" -> {
+                    MODE_WECHAT -> {
                         if (dialogGuessBinding.etVersionTrue.editText?.text.isNullOrEmpty()) throw MissingVersionException(
                             "微信猜版需要填写真实版本号，否则无法猜测微信版本。"
                         ) else if (dialogGuessBinding.etVersion16code.editText?.text.isNullOrEmpty()) throw MissingVersionException(
@@ -1210,7 +1214,7 @@ class MainActivity : AppCompatActivity() {
                                     .setIcon(R.drawable.check_circle)
                                     .setView(successButtonBinding.root)
                                     .setCancelable(false)
-                                    .setMessage("下载地址：$link\n\n大小：$appSize MB")
+                                    .setMessage("${getString(R.string.downloadLink)}$link\n\n${getString(R.string.fileSize)}$appSize MB")
                                     .show()
 
 
@@ -1250,9 +1254,9 @@ class MainActivity : AppCompatActivity() {
                                         putExtra(
                                             Intent.EXTRA_TEXT,
                                             when (mode) {
-                                                MODE_OFFICIAL -> "Android QQ $versionBig 正式版（大小：$appSize MB）\n\n下载地址：$link"
+                                                MODE_OFFICIAL -> "Android QQ $versionBig ${getString(R.string.stableVersion)}（大小：$appSize MB）\n\n下载地址：$link"
                                                 MODE_WECHAT -> "Android 微信 $versionBig（$vSmall）（大小：$appSize MB）\n\n下载地址：$link"
-                                                else -> "Android QQ $versionBig.$vSmall 测试版（大小：$appSize MB）\n\n下载地址：$link\n\n鉴于 QQ 测试版可能存在不可预知的稳定性问题，您在下载及使用该测试版本之前，必须明确并确保自身具备足够的风险识别和承受能力。"
+                                                else -> "Android QQ $versionBig.$vSmall ${getString(R.string.previewVersion)}（大小：$appSize MB）\n\n下载地址：$link\n\n鉴于 QQ 测试版可能存在不可预知的稳定性问题，您在下载及使用该测试版本之前，必须明确并确保自身具备足够的风险识别和承受能力。"
                                             }
                                         )
                                     }
@@ -1471,14 +1475,20 @@ class MainActivity : AppCompatActivity() {
 
 
     companion object {
+        @SuppressLint("StaticFieldLeak")
+        private lateinit var context: Context
+
+        fun setContext(newContext: Context) {
+            this.context = newContext
+        }
+
         const val STATUS_ONGOING = 0
         const val STATUS_PAUSE = 1
         const val STATUS_END = 2
 
-        const val MODE_TEST = "测试版"
-        const val MODE_OFFICIAL = "正式版"
-        const val MODE_UNOFFICIAL = "空格猜版"
-        const val MODE_WECHAT = "微信猜版"
+        val MODE_TEST: String by lazy { context.getString(R.string.previewVersion) }
+        val MODE_OFFICIAL: String by lazy { context.getString(R.string.stableVersion) }
+        val MODE_UNOFFICIAL: String by lazy { context.getString(R.string.spaceEnumerateVersion) }
+        val MODE_WECHAT: String by lazy { context.getString(R.string.weixinEnumerateVersion) }
     }
-
 }

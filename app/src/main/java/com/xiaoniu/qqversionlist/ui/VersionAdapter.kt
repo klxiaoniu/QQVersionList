@@ -18,6 +18,7 @@
 
 package com.xiaoniu.qqversionlist.ui
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Typeface
 import android.view.LayoutInflater
@@ -82,7 +83,7 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
                         } else {
                             Toast.makeText(
                                 it.context,
-                                "未开启长按查看 JSON 详情功能，请前往设置开启",
+                                R.string.longPressToViewJSONDetailsIsDisabledPleaseGoToSettingsToTurnItOn,
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
@@ -109,7 +110,7 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
                         } else {
                             Toast.makeText(
                                 it.context,
-                                "未开启长按查看 JSON 详情功能，请前往设置开启",
+                                R.string.longPressToViewJSONDetailsIsDisabledPleaseGoToSettingsToTurnItOn,
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
@@ -120,6 +121,7 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
         }
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val bean = currentList[position]
         when (holder) {
@@ -156,8 +158,8 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
                     }
                     tvOldVersion.text = bean.versionNumber
                     tvOldSize.text = bean.size + " MB"
-                    tvDetailVersion.text = "版本：" + bean.versionNumber
-                    tvDetailSize.text = "额定大小：" + bean.size + " MB"
+                    tvDetailVersion.text = holder.itemView.context.getString(R.string.version) + bean.versionNumber
+                    tvDetailSize.text = holder.itemView.context.getString(R.string.reatedFileSize) + bean.size + " MB"
                     tvTitle.text = bean.featureTitle
                     tvDesc.text = bean.summary.joinToString(separator = "\n- ", prefix = "- ")
 
@@ -179,6 +181,7 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun bindProgress(
         listProgressLine: LinearProgressIndicator,
         tvPerSize: TextView?,
@@ -203,7 +206,7 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
                 listProgressLine.progress = (bean.size.toFloat() * 10).toInt()
 
                 tvPerSize?.text =
-                    "占比历史最大包（${(currentList.maxByOrNull { it.size.toFloat() }?.size?.toFloat() ?: 0f)} MB）：${
+                    "${tvPerSizeCard.context.getString(R.string.currentSizeVsLargestHistoricalPack)}${(currentList.maxByOrNull { it.size.toFloat() }?.size?.toFloat() ?: 0f)} MB${tvPerSizeCard.context.getString(R.string.endParenthesis)}${
                         "%.2f".format(
                             bean.size.toFloat() / (currentList.maxByOrNull { it.size.toFloat() }?.size?.toFloat() ?: 0f) * 100
                         )

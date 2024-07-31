@@ -45,4 +45,31 @@
     <string name="additionalActions">进一步操作</string>
     <string name="shareTo">分享到</string>
     <string name="jsonDetails">JSON 详情</string>
+    <string name="stableVersion">正式版</string>
+    <string name="previewVersion">测试版</string>
+    <string name="spaceEnumerateVersion">空格猜版</string>
+    <string name="weixinEnumerateVersion">微信猜版</string>
+    <string name="aboutAppName">QQ 版本列表实用工具 for Android™</string>
+    <string name="aboutAuthor">作者：</string>
+    <string name="aboutContributor">贡献者：</string>
+    <string name="version">版本：</string>
+    <string name="aboutSpecialThanksTo">特别感谢：</string>
+    <string name="aboutOpenSourceRepo">开源仓库：</string>
+    <string name="aboutGetUpdate">获取更新：</string>
+    <string name="aboutDescription">提供 Android QQ 版本列表的查看和对 Android QQ 下载链接的枚举法猜测。</string>
+    <string name="copied">已复制：</string>
+    <string name="reatedFileSize">额定大小：</string>
+    <string name="sourceJSON">源 JSON</string>
+    <string name="recommendations">建议的内容</string>
+    <string name="longPressTheVersionCardToViewSourceJSONDetails">长按版本卡片查看源 JSON 详情</string>
+    <string name="useTheSystemDownloadManagerToTakeOverTheDownloadIntent">使用系统下载管理器接管下载意图</string>
+    <string name="removeTheRestrictionOfAdheringToMultiplesOf5WhenEnumeratingMinorVersionNumbersForQQPreviewVersions">解除 QQ 测试版猜版小版本号遵循 5 的倍数限制</string>
+    <string name="longPressToViewJSONDetailsIsDisabledPleaseGoToSettingsToTurnItOn">未开启长按查看 JSON 详情功能，请前往设置开启</string>
+    <string name="currentSizeVsLargestHistoricalPack">占比历史最大包（</string>
+    <string name="endParenthesis">）：</string>
+    <string name="extendTheSuffixForDirectDownloadLinksOfEnumeratedPreviewVersions">扩展测试版猜版直链后缀</string>
+    <string name="fileSize">大小：</string>
+    <string name="downloadLink">下载地址：</string>
+    <string name="saved">已保存</string>
+
 </resources>

@@ -43,7 +43,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:paddingTop="16dp"
-                android:text="长按版本卡片查看源 JSON 详情" />
+                android:text="@string/longPressTheVersionCardToViewSourceJSONDetails" />
 
             <com.google.android.material.materialswitch.MaterialSwitch
                 android:id="@+id/download_on_system_manager"
@@ -51,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
-                android:text="使用系统下载管理器接管下载意图" />
+                android:text="@string/useTheSystemDownloadManagerToTakeOverTheDownloadIntent" />
 
             <TextView
                 android:id="@+id/dialog_personalization"
@@ -71,7 +71,7 @@
                 android:layout_height="wrap_content"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
-                android:text="扩展测试版猜版直链后缀" />
+                android:text="@string/extendTheSuffixForDirectDownloadLinksOfEnumeratedPreviewVersions" />
 
             <TextView
                 android:id="@+id/dialog_suffix_define_click"
@@ -91,7 +91,7 @@
                 android:layout_height="wrap_content"
                 android:paddingTop="8dp"
                 android:paddingBottom="16dp"
-                android:text="解除 QQ 测试版猜版小版本号遵循 5 的倍数限制" />
+                android:text="@string/removeTheRestrictionOfAdheringToMultiplesOf5WhenEnumeratingMinorVersionNumbersForQQPreviewVersions" />
 
             <Button
                 android:id="@+id/btn_setting_ok"

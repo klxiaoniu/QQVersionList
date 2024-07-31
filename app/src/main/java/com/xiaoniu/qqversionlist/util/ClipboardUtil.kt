@@ -22,11 +22,12 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.widget.Toast
+import com.xiaoniu.qqversionlist.R
 
 object ClipboardUtil {
     fun Context.copyText(text: String) {
         val clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         clipboardManager.setPrimaryClip(ClipData.newPlainText("", text))
-        Toast.makeText(this, "已复制：$text", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "${getString(R.string.copied)}$text", Toast.LENGTH_SHORT).show()
     }
 }

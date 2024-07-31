@@ -77,13 +77,12 @@ class ShiplyUrlListAdapter(private val urlList: List<String>) :
                                 val shiplyNextMaterialDialog =
                                     MaterialAlertDialogBuilder(itemView.context)
                                         .setTitle(R.string.additionalActions)
-                                        .setMessage("下载地址：$url")
                                         .setIcon(R.drawable.flask_line)
                                         .setView(shiplyLinkNextButtonBinding.root).apply {
                                             if (appSize != "" && appSize != "-1" && appSize != "0") setMessage(
-                                                "下载地址：$url\n\n大小：$appSize MB"
+                                                "${itemView.context.getString(R.string.downloadLink)}$url\n\n${itemView.context.getString(R.string.fileSize)}$appSize MB"
                                             )
-                                            else setMessage("下载地址：$url")
+                                            else setMessage("${itemView.context.getString(R.string.downloadLink)}$url")
                                         }
                                         .show()
 
@@ -128,11 +127,11 @@ class ShiplyUrlListAdapter(private val urlList: List<String>) :
                                             putExtra(
                                                 Intent.EXTRA_TEXT,
                                                 if (url.contains("downv6.qq.com")) {
-                                                    if (appSize != "" && appSize != "-1" && appSize != "0") "Android QQ（大小：$appSize MB）\n\n下载地址：$url\n\n此下载地址指向的 QQ 安装包可能属于测试版本。测试版本可能存在不可预知的稳定性问题，请明确并确保自身具备足够的风险识别和承受能力。"
-                                                    else "Android QQ 下载地址：$url\n\n此下载地址指向的 QQ 安装包可能属于测试版本。测试版本可能存在不可预知的稳定性问题，请明确并确保自身具备足够的风险识别和承受能力。"
+                                                    if (appSize != "" && appSize != "-1" && appSize != "0") "Android QQ（${itemView.context.getString(R.string.fileSize)}$appSize MB）\n\n${itemView.context.getString(R.string.downloadLink)}$url\n\n此下载地址指向的 QQ 安装包可能属于测试版本。测试版本可能存在不可预知的稳定性问题，请明确并确保自身具备足够的风险识别和承受能力。"
+                                                    else "Android QQ ${itemView.context.getString(R.string.downloadLink)}$url\n\n此下载地址指向的 QQ 安装包可能属于测试版本。测试版本可能存在不可预知的稳定性问题，请明确并确保自身具备足够的风险识别和承受能力。"
                                                 } else {
                                                     if (appSize != "" && appSize != "-1" && appSize != "0") "Android QQ（大小：$appSize MB）\n\n下载地址：$url\n\n此下载地址由 TDS 腾讯端服务 Shiply 发布平台提供，指向的 QQ 安装包可能属于测试版本。测试版本可能存在不可预知的稳定性问题，请明确并确保自身具备足够的风险识别和承受能力。"
-                                                    else "Android QQ 下载地址：$url\n\n此下载地址由 TDS 腾讯端服务 Shiply 发布平台提供，指向的 QQ 安装包可能属于测试版本。测试版本可能存在不可预知的稳定性问题，请明确并确保自身具备足够的风险识别和承受能力。"
+                                                    else "Android QQ ${itemView.context.getString(R.string.downloadLink)}$url\n\n此下载地址由 TDS 腾讯端服务 Shiply 发布平台提供，指向的 QQ 安装包可能属于测试版本。测试版本可能存在不可预知的稳定性问题，请明确并确保自身具备足够的风险识别和承受能力。"
                                                 }
                                             )
                                         }
