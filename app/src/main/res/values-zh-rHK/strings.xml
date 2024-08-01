@@ -58,14 +58,14 @@
     <string name="aboutGetUpdate">取得更新：</string>
     <string name="aboutDescription">提供 Android QQ 版本列表的檢視及對 Android QQ 下載連結的枚舉法猜測。</string>
     <string name="copied">已複製：</string>
-    <string name="reatedFileSize">額定大小</string>
+    <string name="reatedFileSize">額定大小：</string>
     <string name="sourceJSON">源 JSON</string>
     <string name="recommendations">建議的內容</string>
     <string name="longPressTheVersionCardToViewSourceJSONDetails">長按版本卡片查看源 JSON 詳情</string>
     <string name="useTheSystemDownloadManagerToTakeOverTheDownloadIntent">使用系統下載管理器接管下載意圖</string>
     <string name="removeTheRestrictionOfAdheringToMultiplesOf5WhenEnumeratingMinorVersionNumbersForQQPreviewVersions">解除 QQ 測試版猜版小版本號遵循 5 的倍數限制</string>
     <string name="longPressToViewJSONDetailsIsDisabledPleaseGoToSettingsToTurnItOn">未開啟長按查看 JSON 詳情功能，請前往設定開啟</string>
-    <string name="currentSizeVsLargestHistoricalPackage">占比歷史最大包（：</string>
+    <string name="currentSizeVsLargestHistoricalPackage">占比歷史最大包（</string>
     <string name="endParenthesis">）：</string>
     <string name="extendTheSuffixForDirectDownloadLinksOfEnumeratedPreviewVersions">擴展測試版猜版直鏈後綴</string>
     <string name="fileSize">大小：</string>
