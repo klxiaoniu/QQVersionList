@@ -48,7 +48,7 @@
     <string name="stableVersion">正式版</string>
     <string name="previewVersion">測試版</string>
     <string name="spaceEnumerateVersion">空格猜版</string>
-    <string name="weixinEnumerateVersion">微信（中國大陸）猜版</string>
+    <string name="weixinEnumerateVersion">微信猜版</string>
     <string name="aboutAppName">QQ 版本列表實用工具 for Android™</string>
     <string name="aboutAuthor">作者：</string>
     <string name="aboutContributor">貢獻者：</string>
@@ -65,11 +65,44 @@
     <string name="useTheSystemDownloadManagerToTakeOverTheDownloadIntent">使用系統下載管理器接管下載意圖</string>
     <string name="removeTheRestrictionOfAdheringToMultiplesOf5WhenEnumeratingMinorVersionNumbersForQQPreviewVersions">解除 QQ 測試版猜版小版本號遵循 5 的倍數限制</string>
     <string name="longPressToViewJSONDetailsIsDisabledPleaseGoToSettingsToTurnItOn">未開啟長按查看 JSON 詳情功能，請前往設定開啟</string>
-    <string name="currentSizeVsLargestHistoricalPack">占比歷史最大包（：</string>
+    <string name="currentSizeVsLargestHistoricalPackage">占比歷史最大包（：</string>
     <string name="endParenthesis">）：</string>
     <string name="extendTheSuffixForDirectDownloadLinksOfEnumeratedPreviewVersions">擴展測試版猜版直鏈後綴</string>
     <string name="fileSize">大小：</string>
     <string name="downloadLink">下載連結：</string>
     <string name="saved">已儲存</string>
+    <string name="enumQQPreviewWarning">鑑於 QQ 測試版可能存在無法預知的穩定性問題，您在下載及使用該測試版本之前，必須明確並確保自身具備足夠的風險辨識和承受能力。根據相關條款，您使用本軟體時應當已了解並同意，因下載或使用 QQ 測試版而可能產生的任何直接或間接損失、損害以及其他不利後果，均由您自行承擔全盤責任。</string>
+    <string name="enumQQMajorVersionHelpText">填寫格式為 x.y.z</string>
+    <string name="enumWeixinMajorVersionHelpText">無需填寫小數點</string>
+    <string name="enumWeixinWarning">微信猜版功能為 QQ 版本列表實用工具附帶的實驗性功能，可能存在無法預知的穩定性問題。請明確並確保自身具備足夠的風險辨識和承受能力。</string>
+    <string name="enumHasBeenStopped">已停止猜版</string>
+    <string name="missingCipherWarning">TDS 腾訊端服務 Shiply 發布平台返回 JSON 內容中未包含「cipher_text」鍵值對。</string>
+    <string name="missingMajorVersionWarning">猜版需要填寫主版本號，否則無法執行猜版。</string>
+    <string name="missingQQPreviewMinorVersionWarning">測試版猜版（含空格猜版）需要填寫小版本號，否則無法猜測測試版。</string>
+    <string name="QQPreviewMinorNot5Warning">小版本號需填寫 5 的倍數。如需解除此限制，請前往設定進行解除。</string>
+    <string name="missingWeixinTrueVersionWarning">微信猜版需要填寫真實版本號，否則無法猜測微信版本。</string>
+    <string name="missingWeixin16CodeWarning">微信猜版需要填寫十六進位碼，否則無法猜測微信版本。</string>
+    <string name="enumeratingDownloadLink">正在猜測下載地址：</string>
+    <string name="majorVersion">主版本號</string>
+    <string name="initialMinorVersion">起始小版本號</string>
+    <string name="hexadecimalCode">十六進位碼</string>
+    <string name="initialMinorVersionHelpText">填寫起始猜測小版本號，猜正式版時無需填寫</string>
+    <string name="hexadecimalCodeHelpText">填寫十六進位碼，僅微信猜版使用</string>
+    <string name="enumType">猜版類型</string>
+    <string name="enumTypeHelpText">指定猜版目標類型</string>
+    <string name="trueVersion">真實版本號</string>
+    <string name="trueVersionHelpText">填寫真實版本號（版本碼），僅微信猜版使用</string>
+    <string name="appidOptional">appid（非必填）</string>
+    <string name="appidOptionalHelpText">填寫用於請求 Shiply 平台的 Android QQ appid</string>
+    <string name="shiplyVersion">版本</string>
+    <string name="shiplyVersionHelpText">填寫用於請求 Shiply 平台的 Android QQ 版本號</string>
+    <string name="uinHelpText">填寫用於請求 Shiply 平台的對象 QQ 號</string>
+    <string name="shiplyWarning">騰訊 QQ 使用 TDS 腾訊端服務 Shiply 發布平台，根據 QQ 號（uin）及其終端資訊分發小範圍灰度測試安裝包。此功能並非每次請求都能成功獲取到更新資料，無法獲取更新資料則表示填寫的參數不在 Shiply 平台認可與分發範圍內。QQ 版本列表實用工具不對此功能及其任何後果作出任何可靠性保證。請明確並確保自身具備足夠的風險辨識和承受能力。</string>
+    <string name="defaultDisplayOfFirstListItemDetails">版本列表首項卡片默認顯示詳情</string>
+    <string name="versionNumberFontUsesTCloudNumber">版本號字體使用 TCloudNumber</string>
+    <string name="versionCardsDisplaysTheRatioOfCurrentPackageSizeToTheHistoricalMaximumPackageSizeIndicator">版本卡片展示額定包大小佔比歷史最大包指示條</string>
+    <string name="customVersionEnumSuffix">自定義猜版後綴</string>
+    <string name="customVersionEnumSuffixHelpText">請使用“, ”（西文逗號+空格）分割</string>
+
 
 </resources>

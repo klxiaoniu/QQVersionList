@@ -51,8 +51,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
                     android:layout_weight="1"
-                    android:hint="主版本号"
-                    app:helperText="填写格式为 x.y.z"
+                    android:hint="@string/majorVersion"
+                    app:helperText="@string/enumQQMajorVersionHelpText"
                     app:helperTextEnabled="true">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -69,8 +69,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_weight="1"
-                    android:hint="猜版类型"
-                    app:helperText="指定猜版目标类型"
+                    android:hint="@string/enumType"
+                    app:helperText="@string/enumTypeHelpText"
                     app:helperTextEnabled="true">
 
                     <AutoCompleteTextView
@@ -90,8 +90,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:hint="起始小版本号"
-                app:helperText="填写起始猜测小版本号，猜正式版时无需填写"
+                android:hint="@string/initialMinorVersion"
+                app:helperText="@string/initialMinorVersionHelpText"
                 app:helperTextEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -109,8 +109,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:hint="真实版本号"
-                app:helperText="填写真实版本号（版本码），仅微信猜版使用"
+                android:hint="@string/trueVersion"
+                app:helperText="@string/trueVersionHelpText"
                 app:helperTextEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -128,8 +128,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:hint="十六进制代码"
-                app:helperText="填写十六进制代码，仅微信猜版使用"
+                android:hint="@string/hexadecimalCode"
+                app:helperText="@string/hexadecimalCodeHelpText"
                 app:helperTextEnabled="true"
                 app:prefixText="0x">
 
@@ -157,7 +157,7 @@
                     android:drawablePadding="4dp"
                     android:paddingStart="3dp"
                     android:paddingEnd="0dp"
-                    android:text="鉴于 QQ 测试版可能存在不可预知的稳定性问题，您在下载及使用该测试版本之前，必须明确并确保自身具备足够的风险识别和承受能力。根据相关条款，您使用本软件时应当已了解并同意，因下载或使用 QQ 测试版而可能产生的任何直接或间接损失、损害以及其他不利后果，均由您自行承担全部责任。"
+                    android:text="@string/enumQQPreviewWarning"
                     android:textColor="?attr/colorPrimary"
                     android:textSize="10sp"
                     app:drawableStartCompat="@drawable/error_warning_fill" />

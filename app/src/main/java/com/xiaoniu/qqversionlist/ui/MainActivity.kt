@@ -756,25 +756,24 @@ class MainActivity : AppCompatActivity() {
             guessDialogWarning.visibility = View.VISIBLE
             etVersion16code.visibility = View.GONE
             etVersionTrue.visibility = View.GONE
-            tvWarning.text =
-                "鉴于 QQ 测试版可能存在不可预知的稳定性问题，您在下载及使用该测试版本之前，必须明确并确保自身具备足够的风险识别和承受能力。根据相关条款，您使用本软件时应当已了解并同意，因下载或使用 QQ 测试版而可能产生的任何直接或间接损失、损害以及其他不利后果，均由您自行承担全部责任。"
-            dialogGuessBinding.etVersionBig.helperText = "填写格式为 x.y.z"
+            tvWarning.setText(R.string.enumQQPreviewWarning)
+            dialogGuessBinding.etVersionBig.helperText =
+                getString(R.string.enumQQMajorVersionHelpText)
         } else if (dialogGuessBinding.spinnerVersion.text.toString() == MODE_OFFICIAL) dialogGuessBinding.apply {
             etVersionSmall.isEnabled = false
             etVersionSmall.visibility = View.VISIBLE
             guessDialogWarning.visibility = View.GONE
             etVersion16code.visibility = View.GONE
             etVersionTrue.visibility = View.GONE
-            etVersionBig.helperText = "填写格式为 x.y.z"
+            etVersionBig.helperText = getString(R.string.enumQQMajorVersionHelpText)
         } else if (dialogGuessBinding.spinnerVersion.text.toString() == MODE_WECHAT) dialogGuessBinding.apply {
             etVersionSmall.isEnabled = false
             guessDialogWarning.visibility = View.VISIBLE
             etVersionSmall.visibility = View.GONE
             etVersionTrue.visibility = View.VISIBLE
             etVersion16code.visibility = View.VISIBLE
-            tvWarning.text =
-                "微信猜版功能为 QQ 版本列表实用工具附带的实验性功能，可能存在不可预知的稳定性问题。请明确并确保自身具备足够的风险识别和承受能力。"
-            etVersionBig.helperText = "无需填写小数点"
+            tvWarning.setText(R.string.enumWeixinWarning)
+            etVersionBig.helperText = getString(R.string.enumWeixinMajorVersionHelpText)
         }
 
 
@@ -789,9 +788,8 @@ class MainActivity : AppCompatActivity() {
                         guessDialogWarning.visibility = View.VISIBLE
                         etVersion16code.visibility = View.GONE
                         etVersionTrue.visibility = View.GONE
-                        tvWarning.text =
-                            "鉴于 QQ 测试版可能存在不可预知的稳定性问题，您在下载及使用该测试版本之前，必须明确并确保自身具备足够的风险识别和承受能力。根据相关条款，您使用本软件时应当已了解并同意，因下载或使用 QQ 测试版而可能产生的任何直接或间接损失、损害以及其他不利后果，均由您自行承担全部责任。"
-                        etVersionBig.helperText = "填写格式为 x.y.z"
+                        tvWarning.setText(R.string.enumQQPreviewWarning)
+                        etVersionBig.helperText = getString(R.string.enumQQMajorVersionHelpText)
                     }
 
                     MODE_OFFICIAL -> dialogGuessBinding.apply {
@@ -800,7 +798,7 @@ class MainActivity : AppCompatActivity() {
                         guessDialogWarning.visibility = View.GONE
                         etVersion16code.visibility = View.GONE
                         etVersionTrue.visibility = View.GONE
-                        etVersionBig.helperText = "填写格式为 x.y.z"
+                        etVersionBig.helperText = getString(R.string.enumQQMajorVersionHelpText)
                     }
 
                     MODE_WECHAT -> dialogGuessBinding.apply {
@@ -809,9 +807,8 @@ class MainActivity : AppCompatActivity() {
                         guessDialogWarning.visibility = View.VISIBLE
                         etVersion16code.visibility = View.VISIBLE
                         etVersionTrue.visibility = View.VISIBLE
-                        tvWarning.text =
-                            "微信猜版功能为 QQ 版本列表实用工具附带的实验性功能，可能存在不可预知的稳定性问题。请明确并确保自身具备足够的风险识别和承受能力。"
-                        etVersionBig.helperText = "无需填写小数点"
+                        tvWarning.setText(R.string.enumWeixinWarning)
+                        etVersionBig.helperText = getString(R.string.enumWeixinMajorVersionHelpText)
                     }
                 }
             }
@@ -854,7 +851,7 @@ class MainActivity : AppCompatActivity() {
             try {
                 if (dialogGuessBinding.etVersionBig.editText?.text.toString()
                         .isEmpty()
-                ) throw MissingVersionException("猜版需要填写主版本号，否则无法执行猜版。")
+                ) throw MissingVersionException(getString(R.string.missingMajorVersionWarning))
                 val versionBig = dialogGuessBinding.etVersionBig.editText?.text.toString()
                 val mode = dialogGuessBinding.spinnerVersion.text.toString()
                 var versionSmall = 0
@@ -863,7 +860,7 @@ class MainActivity : AppCompatActivity() {
                 when (mode) {
                     MODE_TEST, MODE_UNOFFICIAL -> {
                         if (dialogGuessBinding.etVersionSmall.editText?.text.isNullOrEmpty()) throw MissingVersionException(
-                            "测试版猜版（含空格猜版）需要填写小版本号，否则无法猜测测试版。"
+                            getString(R.string.missingMajorVersionWarning)
                         ) else {
                             versionSmall =
                                 dialogGuessBinding.etVersionSmall.editText?.text.toString()
@@ -871,7 +868,7 @@ class MainActivity : AppCompatActivity() {
                             if (versionSmall % 5 != 0 && !DataStoreUtil.getBoolean(
                                     "guessNot5", false
                                 )
-                            ) throw InvalidMultipleException("小版本号需填写 5 的倍数。如需解除此限制，请前往设置进行解除。")
+                            ) throw InvalidMultipleException(getString(R.string.QQPreviewMinorNot5Warning))
                             if (versionSmall != 0) DataStoreUtil.putIntAsync(
                                 "versionSmall", versionSmall
                             )
@@ -881,9 +878,9 @@ class MainActivity : AppCompatActivity() {
 
                     MODE_WECHAT -> {
                         if (dialogGuessBinding.etVersionTrue.editText?.text.isNullOrEmpty()) throw MissingVersionException(
-                            "微信猜版需要填写真实版本号，否则无法猜测微信版本。"
+                            getString(R.string.missingWeixinTrueVersionWarning)
                         ) else if (dialogGuessBinding.etVersion16code.editText?.text.isNullOrEmpty()) throw MissingVersionException(
-                            "微信猜版需要填写十六进制代码，否则无法猜测微信版本。"
+                            getString(R.string.missingWeixin16CodeWarning)
                         ) else {
                             versionTrue =
                                 dialogGuessBinding.etVersionTrue.editText?.text.toString()
@@ -1191,7 +1188,7 @@ class MainActivity : AppCompatActivity() {
                             }
                         }
                         runOnUiThread {
-                            updateProgressDialogMessage("正在猜测下载地址：$link")
+                            updateProgressDialogMessage("${getString(R.string.enumeratingDownloadLink)}$link")
                         }
                         val okHttpClient = OkHttpClient()
                         val request = Request.Builder().url(link).head().build()
@@ -1214,7 +1211,13 @@ class MainActivity : AppCompatActivity() {
                                     .setIcon(R.drawable.check_circle)
                                     .setView(successButtonBinding.root)
                                     .setCancelable(false)
-                                    .setMessage("${getString(R.string.downloadLink)}$link\n\n${getString(R.string.fileSize)}$appSize MB")
+                                    .setMessage(
+                                        "${getString(R.string.downloadLink)}$link\n\n${
+                                            getString(
+                                                R.string.fileSize
+                                            )
+                                        }$appSize MB"
+                                    )
                                     .show()
 
 
@@ -1254,9 +1257,31 @@ class MainActivity : AppCompatActivity() {
                                         putExtra(
                                             Intent.EXTRA_TEXT,
                                             when (mode) {
-                                                MODE_OFFICIAL -> "Android QQ $versionBig ${getString(R.string.stableVersion)}（大小：$appSize MB）\n\n下载地址：$link"
-                                                MODE_WECHAT -> "Android 微信 $versionBig（$vSmall）（大小：$appSize MB）\n\n下载地址：$link"
-                                                else -> "Android QQ $versionBig.$vSmall ${getString(R.string.previewVersion)}（大小：$appSize MB）\n\n下载地址：$link\n\n鉴于 QQ 测试版可能存在不可预知的稳定性问题，您在下载及使用该测试版本之前，必须明确并确保自身具备足够的风险识别和承受能力。"
+                                                MODE_OFFICIAL -> "Android QQ $versionBig ${
+                                                    getString(
+                                                        R.string.stableVersion
+                                                    )
+                                                }（${getString(R.string.fileSize)}$appSize MB）\n\n${
+                                                    getString(
+                                                        R.string.downloadLink
+                                                    )
+                                                }$link"
+
+                                                MODE_WECHAT -> "Android 微信 $versionBig（$vSmall）（${
+                                                    getString(
+                                                        R.string.fileSize
+                                                    )
+                                                }$appSize MB）\n\n${getString(R.string.downloadLink)}$link"
+
+                                                else -> "Android QQ $versionBig.$vSmall ${
+                                                    getString(
+                                                        R.string.previewVersion
+                                                    )
+                                                }（${getString(R.string.fileSize)}$appSize MB）\n\n${
+                                                    getString(
+                                                        R.string.downloadLink
+                                                    )
+                                                }$link\n\n鉴于 QQ 测试版可能存在不可预知的稳定性问题，您在下载及使用该测试版本之前，必须明确并确保自身具备足够的风险识别和承受能力。"
                                             }
                                         )
                                     }
@@ -1337,7 +1362,7 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     STATUS_END -> {
-                        if (mode != MODE_OFFICIAL) showToast("已停止猜测")
+                        if (mode != MODE_OFFICIAL) showToast(getString(R.string.enumHasBeenStopped))
                         sIndex = 0
                         progressDialog.dismiss()
                         break
@@ -1348,7 +1373,7 @@ class MainActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 e.printStackTrace()
                 dialogError(e)
-                showToast("已停止猜测")
+                showToast(getString(R.string.enumHasBeenStopped))
                 progressDialog.dismiss()
             }
         }
@@ -1456,7 +1481,7 @@ class MainActivity : AppCompatActivity() {
                                     }
                             }
                         }
-                    } else throw MissingCipherTextException("TDS 腾讯端服务 Shiply 发布平台返回 JSON 内容中未包含 \"cipher_text\" 键值对。")
+                    } else throw MissingCipherTextException(getString(R.string.missingCipherWarning))
                 }
             } catch (e: MissingCipherTextException) {
                 e.printStackTrace()

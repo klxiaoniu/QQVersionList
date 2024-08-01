@@ -206,7 +206,7 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
                 listProgressLine.progress = (bean.size.toFloat() * 10).toInt()
 
                 tvPerSize?.text =
-                    "${tvPerSizeCard.context.getString(R.string.currentSizeVsLargestHistoricalPack)}${(currentList.maxByOrNull { it.size.toFloat() }?.size?.toFloat() ?: 0f)} MB${tvPerSizeCard.context.getString(R.string.endParenthesis)}${
+                    "${tvPerSizeCard.context.getString(R.string.currentSizeVsLargestHistoricalPackage)}${(currentList.maxByOrNull { it.size.toFloat() }?.size?.toFloat() ?: 0f)} MB${tvPerSizeCard.context.getString(R.string.endParenthesis)}${
                         "%.2f".format(
                             bean.size.toFloat() / (currentList.maxByOrNull { it.size.toFloat() }?.size?.toFloat() ?: 0f) * 100
                         )

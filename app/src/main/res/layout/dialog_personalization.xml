@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:paddingTop="16dp"
-                android:text="版本列表首项卡片默认显示详情" />
+                android:text="@string/defaultDisplayOfFirstListItemDetails" />
 
             <com.google.android.material.materialswitch.MaterialSwitch
                 android:id="@+id/progress_size"
@@ -50,7 +50,7 @@
                 android:layout_height="wrap_content"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
-                android:text="版本卡片展示额定包大小占比历史最大包指示条" />
+                android:text="@string/versionCardsDisplaysTheRatioOfCurrentPackageSizeToTheHistoricalMaximumPackageSizeIndicator" />
 
             <com.google.android.material.materialswitch.MaterialSwitch
                 android:id="@+id/version_tcloud"
@@ -58,7 +58,7 @@
                 android:layout_height="wrap_content"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
-                android:text="版本号字体使用 TCloudNumber" />
+                android:text="@string/versionNumberFontUsesTCloudNumber" />
 
             <Button
                 android:id="@+id/btn_personalization_ok"
