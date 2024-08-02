@@ -43,7 +43,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:hint="uin"
-                app:helperText="填写用于请求 Shiply 平台的对象 QQ 号"
+                app:helperText="@string/uinHelpText"
                 app:helperTextEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
