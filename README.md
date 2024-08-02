@@ -56,7 +56,7 @@ QQ 版本列表实用工具 for Android 是一个使用 Material 3 组件库构�
 
 ### 版本列表
 
-在进入 QQ 版本列表实用工具时，您首先会看到一系列显示“x.y.z””xxx MB”的卡片，这些卡片组成的列表即为 Android QQ 的版本列表，卡片列表展示了已经或即将发布的 Android QQ 版本。版本信息来源：https://im.qq.com/rainbow/androidQQVersionList
+在进入 QQ 版本列表实用工具时，您首先会看到一系列显示“x.y.z”“xxx MB”的卡片，这些卡片组成的列表即为 Android QQ 的版本列表，卡片列表展示了已经或即将发布的 Android QQ 版本。版本信息来源：https://im.qq.com/rainbow/androidQQVersionList
 
 通过点击卡片右侧箭头按钮，可展开卡片以查阅到更为详尽的信息。
 
