@@ -91,7 +91,7 @@
                 android:layout_height="wrap_content"
                 android:paddingTop="8dp"
                 android:paddingBottom="16dp"
-                android:text="@string/removeTheRestrictionOfAdheringToMultiplesOf5WhenEnumeratingMinorVersionNumbersForQQPreviewVersions" />
+                android:text="@string/removeMultiplesOf5ForQQPreviewVersions" />
 
             <Button
                 android:id="@+id/btn_setting_ok"

@@ -50,7 +50,7 @@
                 android:layout_height="wrap_content"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
-                android:text="@string/versionCardsDisplaysTheRatioOfCurrentPackageSizeToTheHistoricalMaximumPackageSizeIndicator" />
+                android:text="@string/versionCardsDisplaysPackageSizeIndicator" />
 
             <com.google.android.material.materialswitch.MaterialSwitch
                 android:id="@+id/version_tcloud"
