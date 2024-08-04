@@ -180,7 +180,7 @@ QQ 版本列表实用工具不能实现“检测到新版本自动提醒您”�
 
 ## 其它
 
-欢迎帮助我们完成本地化翻译！提交翻译则代表您同意您的译文将跟随 QQ 版本列表实用工具项目采用 [GNU Affero General Public License Version 3](/LICENSE) 开源许可。
+欢迎[帮助我们完成本地化翻译](https://crowdin.com/project/qqversionstool)！提交翻译则代表您同意您的译文将跟随 QQ 版本列表实用工具项目采用 [GNU Affero General Public License Version 3](/LICENSE) 开源许可。
 
 [![Crowdin](https://badges.crowdin.net/qqversionstool/localized.svg)](https://crowdin.com/project/qqversionstool)
 
