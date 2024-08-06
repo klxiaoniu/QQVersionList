@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <!--
     QQ Versions Tool for Android™
     Copyright (C) 2023 klxiaoniu
@@ -103,6 +104,4 @@
     <string name="versionCardsDisplaysPackageSizeIndicator">版本卡片展示額定包大小佔比歷史最大包指示條</string>
     <string name="customVersionEnumSuffix">自定義猜版後綴</string>
     <string name="customVersionEnumSuffixHelpText">請使用“, ”（西文逗號+空格）分割</string>
-
-
 </resources>
