@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?><!--
-    QQ Version Tool for Android™
+    QQ Versions Tool for Android™
     Copyright (C) 2023 klxiaoniu
 
     This program is free software: you can redistribute it and/or modify
@@ -43,7 +43,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:paddingTop="16dp"
-                android:text="长按版本卡片查看源 JSON 详情" />
+                android:text="@string/longPressTheVersionCardToViewSourceJSONDetails" />
 
             <com.google.android.material.materialswitch.MaterialSwitch
                 android:id="@+id/download_on_system_manager"
@@ -51,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
-                android:text="使用系统下载管理器接管下载意图" />
+                android:text="@string/useTheSystemDownloadManagerToTakeOverTheDownloadIntent" />
 
             <TextView
                 android:id="@+id/dialog_personalization"
@@ -61,7 +61,7 @@
                 android:gravity="center_vertical"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
-                android:text="个性化"
+                android:text="@string/personalization"
                 android:textColor="?attr/colorOnSurface"
                 app:drawableEndCompat="@drawable/arrow_right_s_line" />
 
@@ -71,7 +71,7 @@
                 android:layout_height="wrap_content"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
-                android:text="扩展测试版猜版直链后缀" />
+                android:text="@string/extendTheSuffixForDirectDownloadLinksOfEnumeratedPreviewVersions" />
 
             <TextView
                 android:id="@+id/dialog_suffix_define_click"
@@ -81,7 +81,7 @@
                 android:gravity="center_vertical"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
-                android:text="猜版直链后缀设置"
+                android:text="@string/enumerateVersionsSuffixSetting"
                 android:textColor="?attr/colorOnSurface"
                 app:drawableEndCompat="@drawable/arrow_right_s_line" />
 
@@ -91,7 +91,7 @@
                 android:layout_height="wrap_content"
                 android:paddingTop="8dp"
                 android:paddingBottom="16dp"
-                android:text="解除 QQ 测试版猜版小版本号遵循 5 的倍数限制" />
+                android:text="@string/removeMultiplesOf5ForQQPreviewVersions" />
 
             <Button
                 android:id="@+id/btn_setting_ok"
@@ -99,7 +99,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="确定" />
+                android:text="@string/done" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

@@ -1,0 +1,108 @@
+<!--
+    QQ Versions Tool for Android™
+    Copyright (C) 2023 klxiaoniu
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-->
+<resources>
+    <string name="app_name">QQ 版本列表實用工具</string>
+    <string name="appTitle">QQ 版本列表實用工具</string>
+    <string name="shortcutLongLabel">猜版 Extended</string>
+    <string name="shortcutShortLabel">猜版 Extd.</string>
+    <string name="start">開始</string>
+    <string name="cancel">取消</string>
+    <string name="done">確定</string>
+    <string name="save">儲存</string>
+    <string name="installed">已安裝</string>
+    <string name="copy">複製</string>
+    <string name="refresh">更新</string>
+    <string name="agree">同意</string>
+    <string name="disagreeAndExit">不同意並退出</string>
+    <string name="withdrawConsentAndExit">撤回同意並退出</string>
+    <string name="userAgreement">用戶協議</string>
+    <string name="enumerateVersionsFAB">猜版</string>
+    <string name="enumerateVersionsDialogTitle">猜版 Extended</string>
+    <string name="setting">設定</string>
+    <string name="personalization">個人化</string>
+    <string name="about">關於</string>
+    <string name="enumerateVersionsSuffixSetting">猜版直鏈後綴設定</string>
+    <string name="getUpdateFromTDSShiplyDistributionPlatform">TDS 腾訊端服務 Shiply 發布平台更新取得（實驗性）</string>
+    <string name="getUpdateFromShiplyPlatform">Shiply 平台更新取得（實驗性）</string>
+    <string name="acceptedEnumerateVersion">猜測成功</string>
+    <string name="contentReturnedByShiplyPlatform">Shiply 平台返回內容</string>
+    <string name="applicationError">程式出錯</string>
+    <string name="additionalActions">進一步操作</string>
+    <string name="shareTo">分享至</string>
+    <string name="jsonDetails">JSON 詳情</string>
+    <string name="stableVersion">正式版</string>
+    <string name="previewVersion">測試版</string>
+    <string name="spaceEnumerateVersion">空格猜版</string>
+    <string name="weixinEnumerateVersion">微信猜版</string>
+    <string name="aboutAppName">QQ 版本列表實用工具 for Android™</string>
+    <string name="aboutAuthor">作者：</string>
+    <string name="aboutContributor">貢獻者：</string>
+    <string name="version">版本：</string>
+    <string name="aboutSpecialThanksTo">特別感謝：</string>
+    <string name="aboutOpenSourceRepo">開源倉庫：</string>
+    <string name="aboutGetUpdate">取得更新：</string>
+    <string name="aboutDescription">提供 Android QQ 版本列表的檢視及對 Android QQ 下載連結的枚舉法猜測。</string>
+    <string name="copied">已複製：</string>
+    <string name="reatedFileSize">額定大小：</string>
+    <string name="sourceJSON">源 JSON</string>
+    <string name="recommendations">建議的內容</string>
+    <string name="longPressTheVersionCardToViewSourceJSONDetails">長按版本卡片查看源 JSON 詳情</string>
+    <string name="useTheSystemDownloadManagerToTakeOverTheDownloadIntent">使用系統下載管理器接管下載意圖</string>
+    <string name="removeMultiplesOf5ForQQPreviewVersions">解除 QQ 測試版猜版小版本號遵循 5 的倍數限制</string>
+    <string name="longPressToViewJSONDetailsIsDisabledPleaseGoToSettingsToTurnItOn">未開啟長按查看 JSON 詳情功能，請前往設定開啟</string>
+    <string name="currentSizeVsLargestHistoricalPackage">占比歷史最大包（</string>
+    <string name="endParenthesis">）：</string>
+    <string name="extendTheSuffixForDirectDownloadLinksOfEnumeratedPreviewVersions">擴展測試版猜版直鏈後綴</string>
+    <string name="fileSize">大小：</string>
+    <string name="downloadLink">下載連結：</string>
+    <string name="saved">已儲存</string>
+    <string name="enumQQPreviewWarning">鑑於 QQ 測試版可能存在無法預知的穩定性問題，您在下載及使用該測試版本之前，必須明確並確保自身具備足夠的風險辨識和承受能力。根據相關條款，您使用本軟體時應當已了解並同意，因下載或使用 QQ 測試版而可能產生的任何直接或間接損失、損害以及其他不利後果，均由您自行承擔全盤責任。</string>
+    <string name="enumQQMajorVersionHelpText">填寫格式為 x.y.z</string>
+    <string name="enumWeixinMajorVersionHelpText">無需填寫小數點</string>
+    <string name="enumWeixinWarning">微信猜版功能為 QQ 版本列表實用工具附帶的實驗性功能，可能存在無法預知的穩定性問題。請明確並確保自身具備足夠的風險辨識和承受能力。</string>
+    <string name="enumHasBeenStopped">已停止猜版</string>
+    <string name="missingCipherWarning">TDS 腾訊端服務 Shiply 發布平台返回 JSON 內容中未包含「cipher_text」鍵值對。</string>
+    <string name="missingMajorVersionWarning">猜版需要填寫主版本號，否則無法執行猜版。</string>
+    <string name="missingQQPreviewMinorVersionWarning">測試版猜版（含空格猜版）需要填寫小版本號，否則無法猜測測試版。</string>
+    <string name="QQPreviewMinorNot5Warning">小版本號需填寫 5 的倍數。如需解除此限制，請前往設定進行解除。</string>
+    <string name="missingWeixinTrueVersionWarning">微信猜版需要填寫真實版本號，否則無法猜測微信版本。</string>
+    <string name="missingWeixin16CodeWarning">微信猜版需要填寫十六進位碼，否則無法猜測微信版本。</string>
+    <string name="enumeratingDownloadLink">正在猜測下載地址：</string>
+    <string name="majorVersion">主版本號</string>
+    <string name="initialMinorVersion">起始小版本號</string>
+    <string name="hexadecimalCode">十六進位碼</string>
+    <string name="initialMinorVersionHelpText">填寫起始猜測小版本號，猜正式版時無需填寫</string>
+    <string name="hexadecimalCodeHelpText">填寫十六進位碼，僅微信猜版使用</string>
+    <string name="enumType">猜版類型</string>
+    <string name="enumTypeHelpText">指定猜版目標類型</string>
+    <string name="trueVersion">真實版本號</string>
+    <string name="trueVersionHelpText">填寫真實版本號（版本碼），僅微信猜版使用</string>
+    <string name="appidOptional">appid（非必填）</string>
+    <string name="appidOptionalHelpText">填寫用於請求 Shiply 平台的 Android QQ appid</string>
+    <string name="shiplyVersion">版本</string>
+    <string name="shiplyVersionHelpText">填寫用於請求 Shiply 平台的 Android QQ 版本號</string>
+    <string name="uinHelpText">填寫用於請求 Shiply 平台的對象 QQ 號</string>
+    <string name="shiplyWarning">騰訊 QQ 使用 TDS 腾訊端服務 Shiply 發布平台，根據 QQ 號（uin）及其終端資訊分發小範圍灰度測試安裝包。此功能並非每次請求都能成功獲取到更新資料，無法獲取更新資料則表示填寫的參數不在 Shiply 平台認可與分發範圍內。QQ 版本列表實用工具不對此功能及其任何後果作出任何可靠性保證。請明確並確保自身具備足夠的風險辨識和承受能力。</string>
+    <string name="defaultDisplayOfFirstListItemDetails">版本列表首項卡片默認顯示詳情</string>
+    <string name="versionNumberFontUsesTCloudNumber">版本號字體使用 TCloudNumber</string>
+    <string name="versionCardsDisplaysPackageSizeIndicator">版本卡片展示額定包大小佔比歷史最大包指示條</string>
+    <string name="customVersionEnumSuffix">自定義猜版後綴</string>
+    <string name="customVersionEnumSuffixHelpText">請使用“, ”（西文逗號+空格）分割</string>
+
+
+</resources>

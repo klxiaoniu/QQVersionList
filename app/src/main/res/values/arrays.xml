@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?><!--
-    QQ Version Tool for Android™
+    QQ Versions Tool for Android™
     Copyright (C) 2023 klxiaoniu
 
     This program is free software: you can redistribute it and/or modify
@@ -17,9 +17,9 @@
 -->
 <resources>
     <string-array name="version">
-        <item>正式版</item>
-        <item>测试版</item>
-        <item>空格猜版</item>
-        <item>微信猜版</item>
+        <item>@string/stableVersion</item>
+        <item>@string/previewVersion</item>
+        <item>@string/spaceEnumerateVersion</item>
+        <item>@string/weixinEnumerateVersion</item>
     </string-array>
 </resources>

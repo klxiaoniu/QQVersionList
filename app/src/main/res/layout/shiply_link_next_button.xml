@@ -17,7 +17,7 @@
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/success_button_constraint_layout"
+    android:id="@+id/shiply_link_next_button_constraint_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
@@ -37,39 +37,25 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/btn_share"
+                android:id="@+id/shiply_next_btn_share"
                 style="?attr/materialIconButtonFilledTonalStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:icon="@drawable/share_line" />
 
             <Button
-                android:id="@+id/btn_download"
+                android:id="@+id/shiply_next_btn_download"
                 style="?attr/materialIconButtonFilledTonalStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:icon="@drawable/download_line" />
-
-            <Button
-                android:id="@+id/btn_stop"
-                style="?attr/materialIconButtonFilledTonalStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:icon="@drawable/stop_line" />
-
-            <Button
-                android:id="@+id/btn_continue"
-                style="?attr/materialIconButtonFilledTonalStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:icon="@drawable/skip_forward_line" />
 
         </LinearLayout>
 
     </HorizontalScrollView>
 
     <Button
-        android:id="@+id/btn_copy"
+        android:id="@+id/shiply_next_btn_copy"
         style="@style/Widget.Material3.Button.Icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

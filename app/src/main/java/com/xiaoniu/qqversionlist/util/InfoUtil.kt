@@ -1,5 +1,5 @@
 /*
-    QQ Version Tool for Android™
+    QQ Versions Tool for Android™
     Copyright (C) 2023 klxiaoniu
 
     This program is free software: you can redistribute it and/or modify
@@ -40,11 +40,11 @@ object InfoUtil {
             }
 
             MaterialAlertDialogBuilder(this)
-                .setTitle("程序出错")
+                .setTitle(R.string.applicationError)
                 .setIcon(R.drawable.alert_line)
-                .setPositiveButton("确定", null)
+                .setPositiveButton(R.string.done, null)
                 .setCancelable(false)
-                .setNeutralButton("复制", null)
+                .setNeutralButton(R.string.copy, null)
                 .setMessage(message)
                 .create()
                 .apply {

@@ -1,5 +1,5 @@
 /*
-    QQ Version Tool for Android™
+    QQ Versions Tool for Android™
     Copyright (C) 2023 klxiaoniu
 
     This program is free software: you can redistribute it and/or modify
@@ -83,7 +83,7 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
                         } else {
                             Toast.makeText(
                                 it.context,
-                                "未开启长按查看 JSON 详情功能，请前往设置开启",
+                                R.string.longPressToViewJSONDetailsIsDisabledPleaseGoToSettingsToTurnItOn,
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
@@ -110,7 +110,7 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
                         } else {
                             Toast.makeText(
                                 it.context,
-                                "未开启长按查看 JSON 详情功能，请前往设置开启",
+                                R.string.longPressToViewJSONDetailsIsDisabledPleaseGoToSettingsToTurnItOn,
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
@@ -124,48 +124,59 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val bean = currentList[position]
-        if (holder is ViewHolder) {
-            //val result = "版本：" + bean.versionNumber + "\n额定大小：" + bean.size + " MB"
-            holder.binding.apply {
-                tvVersion.text = bean.versionNumber
-                tvSize.text = bean.size + " MB"
-                bindProgress(listProgressLine, null, tvPerSizeText, tvPerSizeCard, tvSizeCard, bean)
-                bindDisplayInstall(tvInstall, tvInstallCard, bean)
-                bindVersionTCloud(tvVersion, bean, holder.context)
-            }
-        } else if (holder is ViewHolderDetail) {
-            holder.binding.apply {
-                linearImages.removeAllViews()
-                bean.imgs.forEach {
-                    val iv = ImageView(holder.itemView.context).apply {
-                        setPadding(0, 0, 10, 0)
-                    }
-                    linearImages.addView(iv)
-                    iv.load(it) {
-                        crossfade(true)
-                        transformations(RoundedCornersTransformation(2.dp.toFloat()))
-                    }
+        when (holder) {
+            is ViewHolder -> {
+                //val result = "版本：" + bean.versionNumber + "\n额定大小：" + bean.size + " MB"
+                holder.binding.apply {
+                    tvVersion.text = bean.versionNumber
+                    tvSize.text = bean.size + " MB"
+                    bindProgress(
+                        listProgressLine,
+                        null,
+                        tvPerSizeText,
+                        tvPerSizeCard,
+                        tvSizeCard,
+                        bean
+                    )
+                    bindDisplayInstall(tvInstall, tvInstallCard, bean)
+                    bindVersionTCloud(tvVersion, bean, holder.context)
                 }
-                tvOldVersion.text = bean.versionNumber
-                tvOldSize.text = bean.size + " MB"
-                tvDetailVersion.text = "版本：" + bean.versionNumber
-                tvDetailSize.text = "额定大小：" + bean.size + " MB"
-                tvTitle.text = bean.featureTitle
-                tvDesc.text = bean.summary.joinToString(separator = "\n- ", prefix = "- ")
+            }
 
-                tvTitle.isVisible = tvTitle.text != ""
+            is ViewHolderDetail -> {
+                holder.binding.apply {
+                    linearImages.removeAllViews()
+                    bean.imgs.forEach {
+                        val iv = ImageView(holder.itemView.context).apply {
+                            setPadding(0, 0, 10, 0)
+                        }
+                        linearImages.addView(iv)
+                        iv.load(it) {
+                            crossfade(true)
+                            transformations(RoundedCornersTransformation(2.dp.toFloat()))
+                        }
+                    }
+                    tvOldVersion.text = bean.versionNumber
+                    tvOldSize.text = bean.size + " MB"
+                    tvDetailVersion.text = holder.itemView.context.getString(R.string.version) + bean.versionNumber
+                    tvDetailSize.text = holder.itemView.context.getString(R.string.reatedFileSize) + bean.size + " MB"
+                    tvTitle.text = bean.featureTitle
+                    tvDesc.text = bean.summary.joinToString(separator = "\n- ", prefix = "- ")
 
-                bindDisplayInstall(tvOldInstall, tvOldInstallCard, bean)
-                bindVersionTCloud(tvOldVersion, bean, holder.context)
+                    tvTitle.isVisible = tvTitle.text != ""
 
-                bindProgress(
-                    listDetailProgressLine,
-                    tvPerSize,
-                    tvOldPerSizeText,
-                    tvOldPerSizeCard,
-                    tvOldSizeCard,
-                    bean
-                )
+                    bindDisplayInstall(tvOldInstall, tvOldInstallCard, bean)
+                    bindVersionTCloud(tvOldVersion, bean, holder.context)
+
+                    bindProgress(
+                        listDetailProgressLine,
+                        tvPerSize,
+                        tvOldPerSizeText,
+                        tvOldPerSizeCard,
+                        tvOldSizeCard,
+                        bean
+                    )
+                }
             }
         }
     }
@@ -195,7 +206,7 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
                 listProgressLine.progress = (bean.size.toFloat() * 10).toInt()
 
                 tvPerSize?.text =
-                    "占比历史最大包（${(currentList.maxByOrNull { it.size.toFloat() }?.size?.toFloat() ?: 0f)} MB）：${
+                    "${tvPerSizeCard.context.getString(R.string.currentSizeVsLargestHistoricalPackage)}${(currentList.maxByOrNull { it.size.toFloat() }?.size?.toFloat() ?: 0f)} MB${tvPerSizeCard.context.getString(R.string.endParenthesis)}${
                         "%.2f".format(
                             bean.size.toFloat() / (currentList.maxByOrNull { it.size.toFloat() }?.size?.toFloat() ?: 0f) * 100
                         )
@@ -208,19 +219,17 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
         }
     }
 
-    @SuppressLint("SetTextI18n")
     private fun bindDisplayInstall(
         tvInstall: TextView, tvInstallCard: MaterialCardView, bean: QQVersionBean
     ) {
         if (bean.displayInstall) {
             tvInstallCard.isVisible = true
-            tvInstall.text = "已安装"
+            tvInstall.text = tvInstall.context.getString(R.string.installed)
         } else {
             tvInstallCard.isVisible = false
         }
     }
 
-    @SuppressLint("SetTextI18n")
     private fun bindVersionTCloud(
         tvVersion: TextView, bean: QQVersionBean, context: Context
     ) {
@@ -238,7 +247,7 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
             setTextIsSelectable(true)
             setPadding(96, 48, 96, 96)
         }
-        MaterialAlertDialogBuilder(context).setView(tv).setTitle("JSON 详情")
+        MaterialAlertDialogBuilder(context).setView(tv).setTitle(R.string.jsonDetails)
             .setIcon(R.drawable.braces_line).show()
     }
 

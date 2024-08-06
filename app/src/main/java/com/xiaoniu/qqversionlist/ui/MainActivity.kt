@@ -1,5 +1,5 @@
 /*
-    QQ Version Tool for Android™
+    QQ Versions Tool for Android™
     Copyright (C) 2023 klxiaoniu
 
     This program is free software: you can redistribute it and/or modify
@@ -19,6 +19,7 @@
 package com.xiaoniu.qqversionlist.ui
 
 
+import android.annotation.SuppressLint
 import android.app.DownloadManager
 import android.content.Context
 import android.content.Intent
@@ -107,6 +108,8 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        setContext(this)
+
         if (SDK_INT <= Build.VERSION_CODES.Q) {
             ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, windowInsets ->
                 val insets = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars())
@@ -139,6 +142,10 @@ class MainActivity : AppCompatActivity() {
             addItemDecoration(VerticalSpaceItemDecoration(dpToPx(5)))
         }
         initButtons()
+
+        if (!BuildConfig.VERSION_NAME.endsWith("Release")) binding.materialToolbar.setNavigationIcon(
+            R.drawable.git_commit_line
+        )
     }
 
     private fun Context.dpToPx(dp: Int): Int {
@@ -160,7 +167,6 @@ class MainActivity : AppCompatActivity() {
                 bottom = space
                 // 如果不是第一行，则添加顶部间距
                 if (parent.getChildAdapterPosition(view) != 0) top = space
-
             }
         }
     }
@@ -177,7 +183,7 @@ class MainActivity : AppCompatActivity() {
         val userAgreementBinding = UserAgreementBinding.inflate(layoutInflater)
 
         val dialogUA = MaterialAlertDialogBuilder(this)
-            .setTitle("用户协议")
+            .setTitle(R.string.userAgreement)
             .setIcon(R.drawable.file_text_line)
             .setView(userAgreementBinding.root)
             .setCancelable(false)
@@ -207,7 +213,7 @@ class MainActivity : AppCompatActivity() {
             DataStoreUtil.putIntAsync("userAgreement", 0)
             finish()
         }
-        if (agreed) userAgreementBinding.uaButtonDisagree.text = "撤回同意并退出"
+        if (agreed) userAgreementBinding.uaButtonDisagree.setText(R.string.withdrawConsentAndExit)
 
         dialogUA.show()
     }
@@ -250,14 +256,14 @@ class MainActivity : AppCompatActivity() {
 
                 R.id.btn_about -> {
                     val message = SpannableString(
-                        "QQ 版本列表实用工具 for Android\n\n" +
-                                "提供 Android QQ 版本列表的查看和对 Android QQ 下载链接的枚举法猜测。\n\n" +
-                                "版本：${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})\n" +
-                                "作者：快乐小牛、有鲫雪狐\n" +
-                                "贡献者：Col_or、bggRGjQaUbCoE、GMerge\n" +
-                                "特别感谢：owo233\n" +
-                                "开源地址：GitHub\n" +
-                                "获取更新：GitHub Releases、Obtainium、九七通知中心\n\n" +
+                        "${getString(R.string.aboutAppName)}\n\n" +
+                                "${getString(R.string.aboutDescription)}\n\n" +
+                                "${getString(R.string.version)}${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})\n" +
+                                "${getString(R.string.aboutAuthor)}快乐小牛、有鲫雪狐\n" +
+                                "${getString(R.string.aboutContributor)}Col_or、bggRGjQaUbCoE、GMerge\n" +
+                                "${getString(R.string.aboutSpecialThanksTo)}owo233\n" +
+                                "${getString(R.string.aboutOpenSourceRepo)}GitHub\n" +
+                                "${getString(R.string.aboutGetUpdate)}GitHub Releases、Obtainium、九七通知中心\n\n" +
                                 "Since 2023.8.9"
                     ).apply {
                         setSpan(
@@ -341,12 +347,12 @@ class MainActivity : AppCompatActivity() {
                     )
                     linearLayout.addView(imageView)
                     MaterialAlertDialogBuilder(this)
-                        .setTitle("关于")
+                        .setTitle(R.string.about)
                         .setIcon(R.drawable.information_line)
                         .setMessage(message)
                         .setView(linearLayout)
-                        .setPositiveButton("确定", null)
-                        .setNegativeButton("撤回同意用户协议") { _, _ ->
+                        .setPositiveButton(R.string.done, null)
+                        .setNegativeButton(R.string.withdrawConsentAndExit) { _, _ ->
                             showUADialog(true, judgeUATarget)
                         }.show().apply {
                             findViewById<TextView>(android.R.id.message)?.movementMethod =
@@ -369,7 +375,7 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     val dialogSetting = MaterialAlertDialogBuilder(this)
-                        .setTitle("设置")
+                        .setTitle(R.string.setting)
                         .setIcon(R.drawable.settings_line)
                         .setView(dialogSettingBinding.root)
                         .show()
@@ -395,7 +401,7 @@ class MainActivity : AppCompatActivity() {
                             }
 
                             val dialogPer = MaterialAlertDialogBuilder(this@MainActivity)
-                                .setTitle("个性化")
+                                .setTitle(R.string.personalization)
                                 .setIcon(R.drawable.palette_line)
                                 .setView(dialogPersonalization.root)
                                 .show()
@@ -456,7 +462,7 @@ class MainActivity : AppCompatActivity() {
                             }
 
                             val dialogSuffix = MaterialAlertDialogBuilder(this@MainActivity)
-                                .setTitle("猜版直链后缀设置")
+                                .setTitle(R.string.enumerateVersionsSuffixSetting)
                                 .setIcon(R.drawable.settings_line)
                                 .setView(dialogSuffixDefine.root)
                                 .setCancelable(false)
@@ -604,7 +610,7 @@ class MainActivity : AppCompatActivity() {
                                         )
                                     }
 
-                                    showToast("已保存")
+                                    showToast(getString(R.string.saved))
                                     dialogSuffix.dismiss()
                                 }
 
@@ -622,7 +628,7 @@ class MainActivity : AppCompatActivity() {
                         DialogTencentShiplyBinding.inflate(layoutInflater)
 
                     val shiplyDialog = MaterialAlertDialogBuilder(this)
-                        .setTitle("Shiply 平台更新获取（实验性）")
+                        .setTitle(R.string.getUpdateFromShiplyPlatform)
                         .setIcon(R.drawable.flask_line)
                         .setView(dialogTencentShiplyBinding.root)
                         .setCancelable(false)
@@ -738,36 +744,36 @@ class MainActivity : AppCompatActivity() {
         val dialogGuessBinding = DialogGuessBinding.inflate(layoutInflater)
         val verBig = DataStoreUtil.getString("versionBig", "")
         dialogGuessBinding.etVersionBig.editText?.setText(verBig)
-        val memVersion = DataStoreUtil.getString("versionSelect", "正式版")
-        if (memVersion == "测试版" || memVersion == "空格猜版" || memVersion == "正式版" || memVersion == "微信猜版") dialogGuessBinding.spinnerVersion.setText(
+        val memVersion = DataStoreUtil.getString("versionSelect", MODE_OFFICIAL)
+        if (memVersion == MODE_TEST || memVersion == MODE_UNOFFICIAL || memVersion == MODE_OFFICIAL || memVersion == MODE_WECHAT) dialogGuessBinding.spinnerVersion.setText(
             memVersion,
             false
         )
-        if (dialogGuessBinding.spinnerVersion.text.toString() == "测试版" || dialogGuessBinding.spinnerVersion.text.toString() == "空格猜版") dialogGuessBinding.apply {
+        if (dialogGuessBinding.spinnerVersion.text.toString() == MODE_TEST || dialogGuessBinding.spinnerVersion.text.toString() == MODE_UNOFFICIAL
+        ) dialogGuessBinding.apply {
             etVersionSmall.isEnabled = true
             etVersionSmall.visibility = View.VISIBLE
             guessDialogWarning.visibility = View.VISIBLE
             etVersion16code.visibility = View.GONE
             etVersionTrue.visibility = View.GONE
-            tvWarning.text =
-                "鉴于 QQ 测试版可能存在不可预知的稳定性问题，您在下载及使用该测试版本之前，必须明确并确保自身具备足够的风险识别和承受能力。根据相关条款，您使用本软件时应当已了解并同意，因下载或使用 QQ 测试版而可能产生的任何直接或间接损失、损害以及其他不利后果，均由您自行承担全部责任。"
-            dialogGuessBinding.etVersionBig.helperText = "填写格式为 x.y.z"
-        } else if (dialogGuessBinding.spinnerVersion.text.toString() == "正式版") dialogGuessBinding.apply {
+            tvWarning.setText(R.string.enumQQPreviewWarning)
+            dialogGuessBinding.etVersionBig.helperText =
+                getString(R.string.enumQQMajorVersionHelpText)
+        } else if (dialogGuessBinding.spinnerVersion.text.toString() == MODE_OFFICIAL) dialogGuessBinding.apply {
             etVersionSmall.isEnabled = false
             etVersionSmall.visibility = View.VISIBLE
             guessDialogWarning.visibility = View.GONE
             etVersion16code.visibility = View.GONE
             etVersionTrue.visibility = View.GONE
-            etVersionBig.helperText = "填写格式为 x.y.z"
-        } else if (dialogGuessBinding.spinnerVersion.text.toString() == "微信猜版") dialogGuessBinding.apply {
+            etVersionBig.helperText = getString(R.string.enumQQMajorVersionHelpText)
+        } else if (dialogGuessBinding.spinnerVersion.text.toString() == MODE_WECHAT) dialogGuessBinding.apply {
             etVersionSmall.isEnabled = false
             guessDialogWarning.visibility = View.VISIBLE
             etVersionSmall.visibility = View.GONE
             etVersionTrue.visibility = View.VISIBLE
             etVersion16code.visibility = View.VISIBLE
-            tvWarning.text =
-                "微信猜版功能为 QQ 版本列表实用工具附带的实验性功能，可能存在不可预知的稳定性问题。请明确并确保自身具备足够的风险识别和承受能力。"
-            etVersionBig.helperText = "无需填写小数点"
+            tvWarning.setText(R.string.enumWeixinWarning)
+            etVersionBig.helperText = getString(R.string.enumWeixinMajorVersionHelpText)
         }
 
 
@@ -776,35 +782,33 @@ class MainActivity : AppCompatActivity() {
                 val judgeVerSelect = dialogGuessBinding.spinnerVersion.text.toString()
                 DataStoreUtil.putStringAsync("versionSelect", judgeVerSelect)
                 when (judgeVerSelect) {
-                    "测试版", "空格猜版" -> dialogGuessBinding.apply {
+                    MODE_TEST, MODE_UNOFFICIAL -> dialogGuessBinding.apply {
                         etVersionSmall.isEnabled = true
                         etVersionSmall.visibility = View.VISIBLE
                         guessDialogWarning.visibility = View.VISIBLE
                         etVersion16code.visibility = View.GONE
                         etVersionTrue.visibility = View.GONE
-                        tvWarning.text =
-                            "鉴于 QQ 测试版可能存在不可预知的稳定性问题，您在下载及使用该测试版本之前，必须明确并确保自身具备足够的风险识别和承受能力。根据相关条款，您使用本软件时应当已了解并同意，因下载或使用 QQ 测试版而可能产生的任何直接或间接损失、损害以及其他不利后果，均由您自行承担全部责任。"
-                        etVersionBig.helperText = "填写格式为 x.y.z"
+                        tvWarning.setText(R.string.enumQQPreviewWarning)
+                        etVersionBig.helperText = getString(R.string.enumQQMajorVersionHelpText)
                     }
 
-                    "正式版" -> dialogGuessBinding.apply {
+                    MODE_OFFICIAL -> dialogGuessBinding.apply {
                         etVersionSmall.visibility = View.VISIBLE
                         etVersionSmall.isEnabled = false
                         guessDialogWarning.visibility = View.GONE
                         etVersion16code.visibility = View.GONE
                         etVersionTrue.visibility = View.GONE
-                        etVersionBig.helperText = "填写格式为 x.y.z"
+                        etVersionBig.helperText = getString(R.string.enumQQMajorVersionHelpText)
                     }
 
-                    "微信猜版" -> dialogGuessBinding.apply {
+                    MODE_WECHAT -> dialogGuessBinding.apply {
                         etVersionSmall.isEnabled = false
                         etVersionSmall.visibility = View.GONE
                         guessDialogWarning.visibility = View.VISIBLE
                         etVersion16code.visibility = View.VISIBLE
                         etVersionTrue.visibility = View.VISIBLE
-                        tvWarning.text =
-                            "微信猜版功能为 QQ 版本列表实用工具附带的实验性功能，可能存在不可预知的稳定性问题。请明确并确保自身具备足够的风险识别和承受能力。"
-                        etVersionBig.helperText = "无需填写小数点"
+                        tvWarning.setText(R.string.enumWeixinWarning)
+                        etVersionBig.helperText = getString(R.string.enumWeixinMajorVersionHelpText)
                     }
                 }
             }
@@ -824,7 +828,7 @@ class MainActivity : AppCompatActivity() {
 
 
         val dialogGuess = MaterialAlertDialogBuilder(this)
-            .setTitle("猜版 Extended")
+            .setTitle(R.string.enumerateVersionsDialogTitle)
             .setIcon(R.drawable.search_line)
             .setView(dialogGuessBinding.root)
             .setCancelable(false)
@@ -847,43 +851,49 @@ class MainActivity : AppCompatActivity() {
             try {
                 if (dialogGuessBinding.etVersionBig.editText?.text.toString()
                         .isEmpty()
-                ) throw MissingVersionException("猜版需要填写主版本号，否则无法执行猜版。")
+                ) throw MissingVersionException(getString(R.string.missingMajorVersionWarning))
                 val versionBig = dialogGuessBinding.etVersionBig.editText?.text.toString()
                 val mode = dialogGuessBinding.spinnerVersion.text.toString()
                 var versionSmall = 0
                 var version16code = 0.toString()
                 var versionTrue = 0
-                if (mode == "测试版" || mode == "空格猜版") {
-                    if (dialogGuessBinding.etVersionSmall.editText?.text.isNullOrEmpty()) throw MissingVersionException(
-                        "测试版猜版（含空格猜版）需要填写小版本号，否则无法猜测测试版。"
-                    )
-                    else {
-                        versionSmall =
-                            dialogGuessBinding.etVersionSmall.editText?.text.toString().toInt()
-                        if (versionSmall % 5 != 0 && !DataStoreUtil.getBoolean(
-                                "guessNot5", false
+                when (mode) {
+                    MODE_TEST, MODE_UNOFFICIAL -> {
+                        if (dialogGuessBinding.etVersionSmall.editText?.text.isNullOrEmpty()) throw MissingVersionException(
+                            getString(R.string.missingMajorVersionWarning)
+                        ) else {
+                            versionSmall =
+                                dialogGuessBinding.etVersionSmall.editText?.text.toString()
+                                    .toInt()
+                            if (versionSmall % 5 != 0 && !DataStoreUtil.getBoolean(
+                                    "guessNot5", false
+                                )
+                            ) throw InvalidMultipleException(getString(R.string.QQPreviewMinorNot5Warning))
+                            if (versionSmall != 0) DataStoreUtil.putIntAsync(
+                                "versionSmall", versionSmall
                             )
-                        ) throw InvalidMultipleException("小版本号需填 5 的倍数。如有需求，请前往设置解除此限制。")
-                        if (versionSmall != 0) DataStoreUtil.putIntAsync(
-                            "versionSmall", versionSmall
-                        )
+                        }
+
                     }
 
-                } else if (mode == "微信猜版") {
-                    if (dialogGuessBinding.etVersionTrue.editText?.text.isNullOrEmpty()) throw MissingVersionException(
-                        "微信猜版需要填写真实版本号，否则无法猜测微信版本。"
-                    )
-                    else if (dialogGuessBinding.etVersion16code.editText?.text.isNullOrEmpty()) throw MissingVersionException(
-                        "微信猜版需要填写十六进制代码，否则无法猜测微信版本。"
-                    )
-                    else {
-                        versionTrue =
-                            dialogGuessBinding.etVersionTrue.editText?.text.toString().toInt()
-                        version16code = dialogGuessBinding.etVersion16code.editText?.text.toString()
-                        if (version16code != 0.toString()) DataStoreUtil.putStringAsync(
-                            "version16code", version16code
-                        )
-                        if (versionTrue != 0) DataStoreUtil.putIntAsync("versionTrue", versionTrue)
+                    MODE_WECHAT -> {
+                        if (dialogGuessBinding.etVersionTrue.editText?.text.isNullOrEmpty()) throw MissingVersionException(
+                            getString(R.string.missingWeixinTrueVersionWarning)
+                        ) else if (dialogGuessBinding.etVersion16code.editText?.text.isNullOrEmpty()) throw MissingVersionException(
+                            getString(R.string.missingWeixin16CodeWarning)
+                        ) else {
+                            versionTrue =
+                                dialogGuessBinding.etVersionTrue.editText?.text.toString()
+                                    .toInt()
+                            version16code =
+                                dialogGuessBinding.etVersion16code.editText?.text.toString()
+                            if (version16code != 0.toString()) DataStoreUtil.putStringAsync(
+                                "version16code", version16code
+                            )
+                            if (versionTrue != 0) DataStoreUtil.putIntAsync(
+                                "versionTrue", versionTrue
+                            )
+                        }
                     }
                 }
                 guessUrl(versionBig, versionSmall, versionTrue, version16code, mode)
@@ -1123,55 +1133,62 @@ class MainActivity : AppCompatActivity() {
                 var sIndex = 0
                 while (true) when (status) {
                     STATUS_ONGOING -> {
-                        if (mode == MODE_TEST) {
-                            if (link == "" || !guessTestExtend) {
-                                link =
-                                    "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}${stList[sIndex]}.apk"
-                                if (guessTestExtend) sIndex += 1
-                            } else {
-                                link =
-                                    "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}.${vSmall}${stList[sIndex]}.apk"
-                                sIndex += 1
-                            }
-                        } else if (mode == MODE_UNOFFICIAL) link =
-                            "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android%20$versionBig.${vSmall}%2064.apk"
-                        else if (mode == MODE_OFFICIAL) {
-                            val soListPre = listOf(
-                                "_64",
-                                "_64_HB",
-                                "_64_HB1",
-                                "_64_HB2",
-                                "_64_HB3",
-                                "_HB_64",
-                                "_HB1_64",
-                                "_HB2_64",
-                                "_HB3_64",
-                                "_64_BBPJ",
-                                "_BBPJ_64"
-                            )
-                            val soList =
-                                if (defineSufList != listOf("")) soListPre + defineSufList else soListPre
-                            if (link == "") {
-                                link =
-                                    "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}${soList[sIndex]}.apk"
-                                sIndex += 1
-                            } else if (sIndex == (soList.size)) {
-                                status = STATUS_END
-                                showToast("未猜测到包")
-                                continue
-                            } else {
-                                link =
-                                    "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}${soList[sIndex]}.apk"
-                                sIndex += 1
+                        when (mode) {
+                            MODE_TEST -> {
+                                if (link == "" || !guessTestExtend) {
+                                    link =
+                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}${stList[sIndex]}.apk"
+                                    if (guessTestExtend) sIndex += 1
+                                } else {
+                                    link =
+                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}.${vSmall}${stList[sIndex]}.apk"
+                                    sIndex += 1
+                                }
                             }
 
-                        } else if (mode == MODE_WECHAT) {
-                            // https://dldir1.qq.com/weixin/android/weixin8049android2600_0x2800318a_arm64.apk
-                            link =
-                                "https://dldir1.qq.com/weixin/android/weixin${versionBig}android${versionTrue}_0x${v16codeStr}_arm64.apk"
+                            MODE_UNOFFICIAL -> link =
+                                "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android%20$versionBig.${vSmall}%2064.apk"
+
+                            MODE_OFFICIAL -> {
+                                val soListPre = listOf(
+                                    "_64",
+                                    "_64_HB",
+                                    "_64_HB1",
+                                    "_64_HB2",
+                                    "_64_HB3",
+                                    "_HB_64",
+                                    "_HB1_64",
+                                    "_HB2_64",
+                                    "_HB3_64",
+                                    "_64_BBPJ",
+                                    "_BBPJ_64"
+                                )
+                                val soList =
+                                    if (defineSufList != listOf("")) soListPre + defineSufList else soListPre
+                                if (link == "") {
+                                    link =
+                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}${soList[sIndex]}.apk"
+                                    sIndex += 1
+                                } else if (sIndex == (soList.size)) {
+                                    status = STATUS_END
+                                    showToast("未猜测到包")
+                                    continue
+                                } else {
+                                    link =
+                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}${soList[sIndex]}.apk"
+                                    sIndex += 1
+                                }
+
+                            }
+
+                            MODE_WECHAT -> {
+                                // https://dldir1.qq.com/weixin/android/weixin8049android2600_0x2800318a_arm64.apk
+                                link =
+                                    "https://dldir1.qq.com/weixin/android/weixin${versionBig}android${versionTrue}_0x${v16codeStr}_arm64.apk"
+                            }
                         }
                         runOnUiThread {
-                            updateProgressDialogMessage("正在猜测下载地址：$link")
+                            updateProgressDialogMessage("${getString(R.string.enumeratingDownloadLink)}$link")
                         }
                         val okHttpClient = OkHttpClient()
                         val request = Request.Builder().url(link).head().build()
@@ -1190,13 +1207,18 @@ class MainActivity : AppCompatActivity() {
                                 }
 
                                 val successMaterialDialog = MaterialAlertDialogBuilder(this)
-                                    .setTitle("猜测成功")
-                                    .setMessage("下载地址：$link")
+                                    .setTitle(R.string.acceptedEnumerateVersion)
                                     .setIcon(R.drawable.check_circle)
                                     .setView(successButtonBinding.root)
-                                    .setCancelable(false).apply {
-                                        setMessage("下载地址：$link\n\n大小：$appSize MB")
-                                    }.show()
+                                    .setCancelable(false)
+                                    .setMessage(
+                                        "${getString(R.string.downloadLink)}$link\n\n${
+                                            getString(
+                                                R.string.fileSize
+                                            )
+                                        }$appSize MB"
+                                    )
+                                    .show()
 
 
                                 // 复制并停止按钮点击事件
@@ -1235,15 +1257,37 @@ class MainActivity : AppCompatActivity() {
                                         putExtra(
                                             Intent.EXTRA_TEXT,
                                             when (mode) {
-                                                MODE_OFFICIAL -> "Android QQ $versionBig 正式版（大小：$appSize MB）\n\n下载地址：$link"
-                                                MODE_WECHAT -> "Android 微信 $versionBig（$vSmall）（大小：$appSize MB）\n\n下载地址：$link"
-                                                else -> "Android QQ $versionBig.$vSmall 测试版（大小：$appSize MB）\n\n下载地址：$link\n\n鉴于 QQ 测试版可能存在不可预知的稳定性问题，您在下载及使用该测试版本之前，必须明确并确保自身具备足够的风险识别和承受能力。"
+                                                MODE_OFFICIAL -> "Android QQ $versionBig ${
+                                                    getString(
+                                                        R.string.stableVersion
+                                                    )
+                                                }（${getString(R.string.fileSize)}$appSize MB）\n\n${
+                                                    getString(
+                                                        R.string.downloadLink
+                                                    )
+                                                }$link"
+
+                                                MODE_WECHAT -> "Android 微信 $versionBig（$vSmall）（${
+                                                    getString(
+                                                        R.string.fileSize
+                                                    )
+                                                }$appSize MB）\n\n${getString(R.string.downloadLink)}$link"
+
+                                                else -> "Android QQ $versionBig.$vSmall ${
+                                                    getString(
+                                                        R.string.previewVersion
+                                                    )
+                                                }（${getString(R.string.fileSize)}$appSize MB）\n\n${
+                                                    getString(
+                                                        R.string.downloadLink
+                                                    )
+                                                }$link\n\n鉴于 QQ 测试版可能存在不可预知的稳定性问题，您在下载及使用该测试版本之前，必须明确并确保自身具备足够的风险识别和承受能力。"
                                             }
                                         )
                                     }
                                     startActivity(
                                         Intent.createChooser(
-                                            shareIntent, "分享到"
+                                            shareIntent, getString(R.string.shareTo)
                                         )
                                     )
                                     status = STATUS_END
@@ -1297,14 +1341,18 @@ class MainActivity : AppCompatActivity() {
                             }
 
                         } else {
-                            if (mode == MODE_TEST && (!guessTestExtend || sIndex == (stList.size)) // 测试版情况下，未打开扩展猜版或扩展猜版到最后一步时执行小版本号的递增
-                            ) {
-                                vSmall += if (!guessNot5) 5 else 1
-                                sIndex = 0
-                            } else if (mode == MODE_UNOFFICIAL) vSmall += if (!guessNot5) 5 else 1
-                            else if (mode == MODE_WECHAT) {
-                                val version16code = v16codeStr.toInt(16) + 1
-                                v16codeStr = version16code.toString(16)
+                            when {
+                                mode == MODE_TEST && (!guessTestExtend || sIndex == (stList.size)) // 测试版情况下，未打开扩展猜版或扩展猜版到最后一步时执行小版本号的递增
+                                -> {
+                                    vSmall += if (!guessNot5) 5 else 1
+                                    sIndex = 0
+                                }
+
+                                mode == MODE_UNOFFICIAL -> vSmall += if (!guessNot5) 5 else 1
+                                mode == MODE_WECHAT -> {
+                                    val version16code = v16codeStr.toInt(16) + 1
+                                    v16codeStr = version16code.toString(16)
+                                }
                             }
                         }
                     }
@@ -1314,7 +1362,7 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     STATUS_END -> {
-                        if (mode != MODE_OFFICIAL) showToast("已停止猜测")
+                        if (mode != MODE_OFFICIAL) showToast(getString(R.string.enumHasBeenStopped))
                         sIndex = 0
                         progressDialog.dismiss()
                         break
@@ -1325,7 +1373,7 @@ class MainActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 e.printStackTrace()
                 dialogError(e)
-                showToast("已停止猜测")
+                showToast(getString(R.string.enumHasBeenStopped))
                 progressDialog.dismiss()
             }
         }
@@ -1410,25 +1458,30 @@ class MainActivity : AppCompatActivity() {
                             dialogShiplyBackBinding.apply {
                                 MaterialAlertDialogBuilder(this@MainActivity).setView(
                                     dialogShiplyBackBinding.root
-                                ).setTitle("Shiply 平台返回内容").setIcon(R.drawable.flask_line)
+                                ).setTitle(R.string.contentReturnedByShiplyPlatform)
+                                    .setIcon(R.drawable.flask_line)
                                     .show().apply {
                                         shiplyUrlRecyclerView.layoutManager =
                                             LinearLayoutManager(this@MainActivity)
-                                        if (shiplyApkUrl != null) {
-                                            shiplyUrlBackTitle.visibility = View.VISIBLE
-                                            shiplyUrlRecyclerView.visibility = View.VISIBLE
-                                            shiplyUrlRecyclerView.adapter =
-                                                ShiplyUrlListAdapter(shiplyApkUrl)
-                                        } else {
-                                            shiplyUrlBackTitle.visibility = View.GONE
-                                            shiplyUrlRecyclerView.visibility = View.GONE
+                                        when {
+                                            shiplyApkUrl != null -> {
+                                                shiplyUrlBackTitle.visibility = View.VISIBLE
+                                                shiplyUrlRecyclerView.visibility = View.VISIBLE
+                                                shiplyUrlRecyclerView.adapter =
+                                                    ShiplyUrlListAdapter(shiplyApkUrl)
+                                            }
+
+                                            else -> {
+                                                shiplyUrlBackTitle.visibility = View.GONE
+                                                shiplyUrlRecyclerView.visibility = View.GONE
+                                            }
                                         }
                                         shiplyBackText.text =
                                             shiplyDecodeStringJson.toPrettyFormat()
                                     }
                             }
                         }
-                    } else throw MissingCipherTextException("TDS 腾讯端服务 Shiply 发布平台返回 JSON 内容中未包含 \"cipher_text\" 键值对。")
+                    } else throw MissingCipherTextException(getString(R.string.missingCipherWarning))
                 }
             } catch (e: MissingCipherTextException) {
                 e.printStackTrace()
@@ -1447,14 +1500,20 @@ class MainActivity : AppCompatActivity() {
 
 
     companion object {
+        @SuppressLint("StaticFieldLeak")
+        private lateinit var context: Context
+
+        fun setContext(newContext: Context) {
+            this.context = newContext
+        }
+
         const val STATUS_ONGOING = 0
         const val STATUS_PAUSE = 1
         const val STATUS_END = 2
 
-        const val MODE_TEST = "测试版"
-        const val MODE_OFFICIAL = "正式版"
-        const val MODE_UNOFFICIAL = "空格猜版"
-        const val MODE_WECHAT = "微信猜版"
+        val MODE_TEST: String by lazy { context.getString(R.string.previewVersion) }
+        val MODE_OFFICIAL: String by lazy { context.getString(R.string.stableVersion) }
+        val MODE_UNOFFICIAL: String by lazy { context.getString(R.string.spaceEnumerateVersion) }
+        val MODE_WECHAT: String by lazy { context.getString(R.string.weixinEnumerateVersion) }
     }
-
 }
