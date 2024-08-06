@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <!--
     QQ Versions Tool for Android™
     Copyright (C) 2023 klxiaoniu
@@ -103,6 +104,4 @@
     <string name="versionCardsDisplaysPackageSizeIndicator">Version cards displays the ratio of current package size to the historical maximum package size indicator</string>
     <string name="customVersionEnumSuffix">Custom Version Enum. Suffix</string>
     <string name="customVersionEnumSuffixHelpText">Please separate using \&quot;, \&quot; (comma + space).</string>
-
-
 </resources>
