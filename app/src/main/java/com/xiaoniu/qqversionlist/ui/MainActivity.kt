@@ -263,7 +263,8 @@ class MainActivity : AppCompatActivity() {
                                 "${getString(R.string.aboutContributor)}Col_or、bggRGjQaUbCoE、GMerge\n" +
                                 "${getString(R.string.aboutSpecialThanksTo)}owo233\n" +
                                 "${getString(R.string.aboutOpenSourceRepo)}GitHub\n" +
-                                "${getString(R.string.aboutGetUpdate)}GitHub Releases、Obtainium、九七通知中心\n\n" +
+                                "${getString(R.string.aboutGetUpdate)}GitHub Releases、Obtainium、九七通知中心\n" +
+                                "${getString(R.string.facilitateI18n)}Crowdin\n\n"+
                                 "Since 2023.8.9"
                     ).apply {
                         setSpan(
@@ -324,6 +325,12 @@ class MainActivity : AppCompatActivity() {
                             URLSpan("https://github.com/klxiaoniu/QQVersionList/blob/master/ReadmeAssets/Get-it-on-JiuQi-NotifCenter-WeChatMiniProgram.md"),
                             indexOf("九七通知中心"),
                             indexOf("九七通知中心") + "九七通知中心".length,
+                            SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
+                        )
+                        setSpan(
+                            URLSpan("https://crowdin.com/project/qqversionstool"),
+                            indexOf("Crowdin"),
+                            indexOf("Crowdin") + "Crowdin".length,
                             SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
                         )
                     }
