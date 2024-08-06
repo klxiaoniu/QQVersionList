@@ -104,4 +104,5 @@
     <string name="versionCardsDisplaysPackageSizeIndicator">版本卡片展示額定包大小佔比歷史最大包指示條</string>
     <string name="customVersionEnumSuffix">自定義猜版後綴</string>
     <string name="customVersionEnumSuffixHelpText">請使用“, ”（西文逗號+空格）分割</string>
+    <string name="facilitateI18n">協助翻譯：</string>
 </resources>

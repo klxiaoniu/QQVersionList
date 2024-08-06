@@ -104,4 +104,5 @@
     <string name="versionCardsDisplaysPackageSizeIndicator">Version cards displays the ratio of current package size to the historical maximum package size indicator</string>
     <string name="customVersionEnumSuffix">Custom Version Enum. Suffix</string>
     <string name="customVersionEnumSuffixHelpText">Please separate using \&quot;, \&quot; (comma + space).</string>
+    <string name="facilitateI18n">Facilitate I18n:&#160;</string>
 </resources>
