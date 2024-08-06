@@ -156,8 +156,8 @@ QQ 版本列表实用工具 for Android 是一个使用 Material 3 组件库构�
 
 > [!important]
 > 2024 年 8 月 2 日，[九七公司「通知中心」微信小程序被微信公众平台以“无实质服务内容引导跳转”暂停服务](https://mp.weixin.qq.com/s/ITU6H_UjA804srGeE2-FOA)。下方“九七公司「通知中心」微信小程序”方案可能在一段时间内不可用。
-
-<a href='/ReadmeAssets/Get-it-on-JiuQi-NotifCenter-WeChatMiniProgram.md'><img src='https://raw.githubusercontent.com/klxiaoniu/QQVersionList/master/ReadmeAssets/JiuQi-NotifCenter-Badge-Dark-zh-Hans.png' width="300" alt="Get it on Notif Center"></a>
+> 
+> <a href='/ReadmeAssets/Get-it-on-JiuQi-NotifCenter-WeChatMiniProgram.md'><img src='https://raw.githubusercontent.com/klxiaoniu/QQVersionList/master/ReadmeAssets/JiuQi-NotifCenter-Badge-Dark-zh-Hans.png' width="300" alt="Get it on Notif Center"></a>
 
 ## 常见问题
 
