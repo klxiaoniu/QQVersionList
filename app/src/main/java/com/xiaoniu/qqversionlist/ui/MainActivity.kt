@@ -264,7 +264,7 @@ class MainActivity : AppCompatActivity() {
                                 "${getString(R.string.aboutSpecialThanksTo)}owo233\n" +
                                 "${getString(R.string.aboutOpenSourceRepo)}GitHub\n" +
                                 "${getString(R.string.aboutGetUpdate)}GitHub Releases、Obtainium、九七通知中心\n" +
-                                "${getString(R.string.facilitateI18n)}Crowdin\n\n"+
+                                "${getString(R.string.facilitateI18n)}Crowdin\n\n" +
                                 "Since 2023.8.9"
                     ).apply {
                         setSpan(
@@ -755,7 +755,10 @@ class MainActivity : AppCompatActivity() {
         if (memVersion == MODE_TEST || memVersion == MODE_UNOFFICIAL || memVersion == MODE_OFFICIAL || memVersion == MODE_WECHAT) dialogGuessBinding.spinnerVersion.setText(
             memVersion,
             false
-        )
+        ) else {
+            dialogGuessBinding.spinnerVersion.setText(MODE_OFFICIAL, false)
+            DataStoreUtil.putStringAsync("versionSelect", MODE_OFFICIAL)
+        }
         if (dialogGuessBinding.spinnerVersion.text.toString() == MODE_TEST || dialogGuessBinding.spinnerVersion.text.toString() == MODE_UNOFFICIAL
         ) dialogGuessBinding.apply {
             etVersionSmall.isEnabled = true
