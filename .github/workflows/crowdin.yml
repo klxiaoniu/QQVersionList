@@ -28,7 +28,7 @@ jobs:
           pull_request_labels: '本地化（I18n）'
           pull_request_assignees: 'crowdin-bot'
           pull_request_base_branch_name: 'master'
-          import_eq_suggestions: true
+          auto_approve_imported: true
         env:
           # A classic GitHub Personal Access Token with the 'repo' scope selected (the user should have write access to the repository).
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
