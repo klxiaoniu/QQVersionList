@@ -41,7 +41,7 @@ QQ 版本列表实用工具的源代码依据经过开源促进会（[Open Sourc
 ## 注意事项：使用前须知
 
 > [!WARNING]
-> 请确保您在使用前充分审慎阅读了[用户协议](/UserAgreement.md)。鉴于 QQ 测试版可能存在不可预知的稳定性问题，您在下载及使用该测试版本之前，必须明确并确保自身具备足够的风险识别和承受能力。根据相关条款，您使用本软件时应当已了解并同意，因下载或使用 QQ 测试版而可能产生的任何直接或间接损失、损害以及其他不利后果，均由您自行承担全部责任。
+> 请确保您在使用前充分审慎阅读了[用户协议](https://github.com/klxiaoniu/QQVersionList/blob/master/UserAgreement.md)。鉴于 QQ 测试版可能存在不可预知的稳定性问题，您在下载及使用该测试版本之前，必须明确并确保自身具备足够的风险识别和承受能力。根据相关条款，您使用本软件时应当已了解并同意，因下载或使用 QQ 测试版而可能产生的任何直接或间接损失、损害以及其他不利后果，均由您自行承担全部责任。
 
 > [!WARNING]
 > QQ 版本列表实用工具提供的所有服务及内容均旨在促进合法的学习交流活动，严禁用户将其用于任何非法、违规或侵犯他人权益的目的。敬请所有用户严格遵守相关法律法规，在使用本应用的过程中秉持合法、正当与诚信原则，切勿涉足任何违法用途。如有违反，相关法律责任将由行为人自负，同时，本应用亦保留采取一切必要措施的权利，包括但不限于暂停或终止服务，并追究其法律责任。
@@ -152,12 +152,12 @@ QQ 版本列表实用工具 for Android 是一个使用 Material 3 组件库构�
 
 <a href='https://github.com/klxiaoniu/QQVersionList/releases'><img src='https://raw.githubusercontent.com/klxiaoniu/QQVersionList/master/ReadmeAssets/GitHub-Badge.png' width="300" alt="Get it on GitHub"></a>
 
-<a href='/ReadmeAssets/Get-it-on-Obtainium.md'><img src='https://raw.githubusercontent.com/ImranR98/Obtainium/main/assets/graphics/badge_obtainium.png' width="300" alt="Obtanium"></a>
+<a href='https://github.com/klxiaoniu/QQVersionList/blob/master/ReadmeAssets/Get-it-on-Obtainium.md'><img src='https://raw.githubusercontent.com/ImranR98/Obtainium/main/assets/graphics/badge_obtainium.png' width="300" alt="Obtanium"></a>
 
 > [!important]
 > 2024 年 8 月 2 日，[九七公司「通知中心」微信小程序被微信公众平台以“无实质服务内容引导跳转”暂停服务](https://mp.weixin.qq.com/s/ITU6H_UjA804srGeE2-FOA)。下方“九七公司「通知中心」微信小程序”方案可能在一段时间内不可用。
 > 
-> <a href='/ReadmeAssets/Get-it-on-JiuQi-NotifCenter-WeChatMiniProgram.md'><img src='https://raw.githubusercontent.com/klxiaoniu/QQVersionList/master/ReadmeAssets/JiuQi-NotifCenter-Badge-Dark-zh-Hans.png' width="300" alt="Get it on Notif Center"></a>
+> <a href='https://github.com/klxiaoniu/QQVersionList/blob/master/ReadmeAssets/Get-it-on-JiuQi-NotifCenter-WeChatMiniProgram.md'><img src='https://raw.githubusercontent.com/klxiaoniu/QQVersionList/master/ReadmeAssets/JiuQi-NotifCenter-Badge-Dark-zh-Hans.png' width="300" alt="Get it on Notif Center"></a>
 
 ## 常见问题
 
@@ -204,7 +204,7 @@ QQ 版本列表实用工具不能实现“检测到新版本自动提醒您”�
 
 ## 开源相关
 
-QQ 版本列表实用工具采用 [GNU Affero General Public License Version 3](/LICENSE) 开源许可。
+QQ 版本列表实用工具采用 [GNU Affero General Public License Version 3](https://github.com/klxiaoniu/QQVersionList/blob/master/LICENSE) 开源许可。
 
 QQ 版本列表实用工具的诞生离不开以下开源项目，感谢以下开源项目的作者和贡献者：
 
