@@ -1,6 +1,6 @@
 # QQ 版本列表实用工具 for Android
 
-![QQ 版本列表实用工具 Banner](/QQVerToolBanner.png)
+![QQ 版本列表实用工具 Banner](https://raw.githubusercontent.com/klxiaoniu/QQVersionList/master/QQVerToolBanner.png)
 
 <div align="center">
 
