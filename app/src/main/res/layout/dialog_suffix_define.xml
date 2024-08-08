@@ -295,6 +295,25 @@
                         android:text="_HD1HB_64" />
 
                 </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/suffix_define_checkbox_group10"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/suffix_define_checkbox_group8">
+
+                    <CheckBox
+                        android:id="@+id/suffix_define_checkbox_test"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="_test" />
+
+                </LinearLayout>
             </LinearLayout>
 
         </ScrollView>

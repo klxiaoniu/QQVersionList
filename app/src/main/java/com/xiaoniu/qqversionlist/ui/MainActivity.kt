@@ -492,45 +492,46 @@ class MainActivity : AppCompatActivity() {
                             constraintSet.applyTo(dialogSuffixDefine.dialogSuffixDefineContainer)
 
                             dialogSuffixDefine.apply {
-                                suffixDefineCheckbox64hb.isChecked =
-                                    DataStoreUtil.getBoolean("suffix64HB", true)
-                                suffixDefineCheckboxHb64.isChecked =
-                                    DataStoreUtil.getBoolean("suffixHB64", true)
-                                suffixDefineCheckbox64hb1.isChecked =
-                                    DataStoreUtil.getBoolean("suffix64HB1", true)
-                                suffixDefineCheckboxHb164.isChecked =
-                                    DataStoreUtil.getBoolean("suffixHB164", true)
-                                suffixDefineCheckbox64hb2.isChecked =
-                                    DataStoreUtil.getBoolean("suffix64HB2", true)
-                                suffixDefineCheckboxHb264.isChecked =
-                                    DataStoreUtil.getBoolean("suffixHB264", true)
-                                suffixDefineCheckbox64hb3.isChecked =
-                                    DataStoreUtil.getBoolean("suffix64HB3", true)
-                                suffixDefineCheckboxHb364.isChecked =
-                                    DataStoreUtil.getBoolean("suffixHB364", true)
-
-                                suffixDefineCheckbox64hd.isChecked =
-                                    DataStoreUtil.getBoolean("suffix64HD", true)
-                                suffixDefineCheckboxHd64.isChecked =
-                                    DataStoreUtil.getBoolean("suffixHD64", true)
-                                suffixDefineCheckbox64hd1.isChecked =
-                                    DataStoreUtil.getBoolean("suffix64HD1", true)
-                                suffixDefineCheckboxHd164.isChecked =
-                                    DataStoreUtil.getBoolean("suffixHD164", true)
-                                suffixDefineCheckbox64hd2.isChecked =
-                                    DataStoreUtil.getBoolean("suffix64HD2", true)
-                                suffixDefineCheckboxHd264.isChecked =
-                                    DataStoreUtil.getBoolean("suffixHD264", true)
-                                suffixDefineCheckbox64hd3.isChecked =
-                                    DataStoreUtil.getBoolean("suffix64HD3", true)
-                                suffixDefineCheckboxHd364.isChecked =
-                                    DataStoreUtil.getBoolean("suffixHD364", true)
-
-                                suffixDefineCheckbox64hd1hb.isChecked =
-                                    DataStoreUtil.getBoolean("suffix64HD1HB", true)
-                                suffixDefineCheckboxHd1hb64.isChecked =
-                                    DataStoreUtil.getBoolean("suffixHD1HB64", true)
-
+                                DataStoreUtil.apply {
+                                    suffixDefineCheckbox64hb.isChecked =
+                                        getBoolean("suffix64HB", true)
+                                    suffixDefineCheckboxHb64.isChecked =
+                                        getBoolean("suffixHB64", true)
+                                    suffixDefineCheckbox64hb1.isChecked =
+                                        getBoolean("suffix64HB1", true)
+                                    suffixDefineCheckboxHb164.isChecked =
+                                        getBoolean("suffixHB164", true)
+                                    suffixDefineCheckbox64hb2.isChecked =
+                                        getBoolean("suffix64HB2", true)
+                                    suffixDefineCheckboxHb264.isChecked =
+                                        getBoolean("suffixHB264", true)
+                                    suffixDefineCheckbox64hb3.isChecked =
+                                        getBoolean("suffix64HB3", true)
+                                    suffixDefineCheckboxHb364.isChecked =
+                                        getBoolean("suffixHB364", true)
+                                    suffixDefineCheckbox64hd.isChecked =
+                                        getBoolean("suffix64HD", true)
+                                    suffixDefineCheckboxHd64.isChecked =
+                                        getBoolean("suffixHD64", true)
+                                    suffixDefineCheckbox64hd1.isChecked =
+                                        getBoolean("suffix64HD1", true)
+                                    suffixDefineCheckboxHd164.isChecked =
+                                        getBoolean("suffixHD164", true)
+                                    suffixDefineCheckbox64hd2.isChecked =
+                                        getBoolean("suffix64HD2", true)
+                                    suffixDefineCheckboxHd264.isChecked =
+                                        getBoolean("suffixHD264", true)
+                                    suffixDefineCheckbox64hd3.isChecked =
+                                        getBoolean("suffix64HD3", true)
+                                    suffixDefineCheckboxHd364.isChecked =
+                                        getBoolean("suffixHD364", true)
+                                    suffixDefineCheckbox64hd1hb.isChecked =
+                                        getBoolean("suffix64HD1HB", true)
+                                    suffixDefineCheckboxHd1hb64.isChecked =
+                                        getBoolean("suffixHD1HB64", true)
+                                    suffixDefineCheckboxTest.isChecked =
+                                        getBoolean("suffixTest", true)
+                                }
 
                                 dialogSuffix.show()
 
@@ -558,7 +559,6 @@ class MainActivity : AppCompatActivity() {
                                     val suffixDefine = settingSuffixDefine.editText?.text.toString()
                                     DataStoreUtil.apply {
                                         putStringAsync("suffixDefine", suffixDefine)
-
                                         putBooleanAsync(
                                             "suffix64HB", suffixDefineCheckbox64hb.isChecked
                                         )
@@ -583,7 +583,6 @@ class MainActivity : AppCompatActivity() {
                                         putBooleanAsync(
                                             "suffixHB364", suffixDefineCheckboxHb364.isChecked
                                         )
-
                                         putBooleanAsync(
                                             "suffix64HD", suffixDefineCheckbox64hd.isChecked
                                         )
@@ -608,12 +607,14 @@ class MainActivity : AppCompatActivity() {
                                         putBooleanAsync(
                                             "suffixHD364", suffixDefineCheckboxHd364.isChecked
                                         )
-
                                         putBooleanAsync(
                                             "suffixHD1HB64", suffixDefineCheckboxHd1hb64.isChecked
                                         )
                                         putBooleanAsync(
                                             "suffix64HD1HB", suffixDefineCheckbox64hd1hb.isChecked
+                                        )
+                                        putBooleanAsync(
+                                            "suffixTest", suffixDefineCheckboxTest.isChecked
                                         )
                                     }
 
@@ -1096,6 +1097,8 @@ class MainActivity : AppCompatActivity() {
                     "suffixHD1HB64", true
                 )
             ) listOf("_HD1HB_64") else emptyList()
+            val sufTest =
+                if (DataStoreUtil.getBoolean("suffixTest", true)) listOf("_test") else emptyList()
 
             val stListPre = listOf("_64") + arrayListOf(
                 suf64hb,
@@ -1115,7 +1118,8 @@ class MainActivity : AppCompatActivity() {
                 sufHd164,
                 sufHd264,
                 sufHd364,
-                sufHd1hb64
+                sufHd1hb64,
+                sufTest
             ).flatten()
 
             /*
