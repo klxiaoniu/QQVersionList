@@ -53,4 +53,4 @@ jobs:
         with:
           path: ${{github.workspace}}/app/build/outputs/mapping/release/mapping.txt
           name: QQVersionList-release-${{ github.event.head_commit.id }}-mapping
-          retention-days: 30
+          retention-days: 90
