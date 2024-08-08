@@ -40,6 +40,8 @@ import android.util.Base64
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowInsets
+import android.view.WindowInsetsController
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -49,7 +51,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.text.method.LinkMovementMethodCompat
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
 import androidx.lifecycle.lifecycleScope
@@ -127,13 +131,9 @@ class MainActivity : AppCompatActivity() {
         // 不加这段代码的话 Google 可能会在系统栏加遮罩
         if (SDK_INT >= Build.VERSION_CODES.Q) window.apply {
             isNavigationBarContrastEnforced = false
-            isStatusBarContrastEnforced = false
         }
 
-        if (SDK_INT <= Build.VERSION_CODES.Q) window.apply {
-            statusBarColor = Color.TRANSPARENT
-            navigationBarColor = Color.TRANSPARENT
-        }
+        WindowCompat.setDecorFitsSystemWindows(window, false)
 
         versionAdapter = VersionAdapter()
         binding.rvContent.apply {
@@ -943,7 +943,7 @@ class MainActivity : AppCompatActivity() {
             try {
                 // 识别本机 Android QQ 版本并放进持久化存储
                 val QQPackageInfo = packageManager.getPackageInfo("com.tencent.mobileqq", 0)
-                val QQVersionInstall = QQPackageInfo.versionName
+                val QQVersionInstall = QQPackageInfo.versionName.toString()
                 if (QQVersionInstall != DataStoreUtil.getString(
                         "QQVersionInstall",
                         ""
