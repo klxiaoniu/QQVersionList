@@ -67,10 +67,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="6dp"
                     android:backgroundTint="?attr/colorSecondaryContainer"
-                    app:cardCornerRadius="4dp"
                     app:layout_constraintBottom_toBottomOf="@id/tv_version"
                     app:layout_constraintStart_toEndOf="@id/tv_version"
-                    app:layout_constraintTop_toTopOf="@id/tv_version">
+                    app:layout_constraintTop_toTopOf="@id/tv_version"
+                    app:shapeAppearance="?attr/shapeAppearanceCornerExtraSmall">
 
                     <TextView
                         android:id="@+id/tv_install"
@@ -94,10 +94,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:backgroundTint="?attr/colorSecondaryContainer"
-                    app:cardCornerRadius="4dp"
                     app:layout_constraintBottom_toBottomOf="@id/tv_version"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/tv_version">
+                    app:layout_constraintTop_toTopOf="@id/tv_version"
+                    app:shapeAppearance="?attr/shapeAppearanceCornerExtraSmall">
 
                     <TextView
                         android:id="@+id/tv_per_size_text"
@@ -122,10 +122,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="6dp"
                     android:backgroundTint="?attr/colorSecondaryContainer"
-                    app:cardCornerRadius="4dp"
                     app:layout_constraintBottom_toBottomOf="@id/tv_version"
                     app:layout_constraintEnd_toStartOf="@id/tv_per_size_card"
-                    app:layout_constraintTop_toTopOf="@id/tv_version">
+                    app:layout_constraintTop_toTopOf="@id/tv_version"
+                    app:shapeAppearance="?attr/shapeAppearanceCornerExtraSmall">
 
                     <TextView
                         android:id="@+id/tv_size"
