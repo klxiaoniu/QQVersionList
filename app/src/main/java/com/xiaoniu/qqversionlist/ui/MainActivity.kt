@@ -942,7 +942,7 @@ class MainActivity : AppCompatActivity() {
             try {
                 // 识别本机 Android QQ 版本并放进持久化存储
                 val QQPackageInfo = packageManager.getPackageInfo("com.tencent.mobileqq", 0)
-                val QQVersionInstall = QQPackageInfo.versionName
+                val QQVersionInstall = QQPackageInfo.versionName.toString()
                 if (QQVersionInstall != DataStoreUtil.getString(
                         "QQVersionInstall",
                         ""
