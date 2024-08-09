@@ -74,11 +74,20 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
+            <com.google.android.material.materialswitch.MaterialSwitch
+                android:id="@+id/switch_shiply_advanced_configurations"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:paddingBottom="6dp"
+                android:text="@string/shiplyAdvancedConfigurations" />
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/shiply_appid"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="6dp"
                 android:hint="@string/appidOptional"
                 app:helperText="@string/appidOptionalHelpText"
                 app:helperTextEnabled="true">
@@ -98,6 +107,7 @@
                 style="?attr/materialCardViewOutlinedStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
                 android:backgroundTint="?android:colorBackground">
 
                 <TextView

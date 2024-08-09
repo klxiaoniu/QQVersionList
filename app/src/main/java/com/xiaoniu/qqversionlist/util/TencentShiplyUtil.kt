@@ -18,6 +18,7 @@
 
 package com.xiaoniu.qqversionlist.util
 
+import android.os.Build
 import android.util.Base64
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
@@ -37,6 +38,7 @@ import java.security.MessageDigest
 import java.security.PublicKey
 import java.security.SecureRandom
 import java.security.spec.X509EncodedKeySpec
+import java.util.Locale
 import java.util.UUID
 import java.util.zip.GZIPInputStream
 import javax.crypto.Cipher
@@ -61,15 +63,15 @@ object TencentShiplyUtil {
             "pullParams" to mapOf(
                 "properties" to mapOf(
                     "platform" to 2,
-                    "language" to "zh",
+                    "language" to Locale.getDefault().language,
                     "sdkVersion" to "1.3.35-RC03",
                     "guid" to uin,
                     "appVersion" to appVersion,
-                    "osVersion" to "34",
+                    "osVersion" to Build.VERSION.SDK_INT.toString(),
                     "is64Bit" to true,
                     "bundleId" to "com.tencent.mobileqq",
                     "uniqueId" to UUID.randomUUID().toString(),
-                    "model" to "2304FPN6DC"
+                    "model" to Build.MODEL
                 ), "isDebugPackage" to false, "customProperties" to mapOf("appid" to appid)
             ),
             "taskChecksum" to "0",

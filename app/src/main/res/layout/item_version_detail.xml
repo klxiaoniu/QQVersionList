@@ -222,7 +222,8 @@
             android:layout_height="wrap_content"
             app:icon="@drawable/ic_up"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:contentDescription="@string/versionCardCollapseButtonContentDescription"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

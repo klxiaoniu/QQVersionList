@@ -105,4 +105,7 @@
     <string name="customVersionEnumSuffix">自定义猜版后缀</string>
     <string name="customVersionEnumSuffixHelpText">请使用“, ”（西文逗号+空格）分割</string>
     <string name="facilitateI18n">协助翻译：</string>
+    <string name="versionCardExpandButtonContentDescription">展开详情</string>
+    <string name="versionCardCollapseButtonContentDescription">收起详情</string>
+    <string name="shiplyAdvancedConfigurations">进阶配置</string>
 </resources>

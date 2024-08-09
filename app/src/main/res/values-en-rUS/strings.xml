@@ -105,4 +105,7 @@
     <string name="customVersionEnumSuffix">Custom Version Enum. Suffix</string>
     <string name="customVersionEnumSuffixHelpText">Please separate using \&quot;, \&quot; (comma + space).</string>
     <string name="facilitateI18n">Facilitate I18n:&#160;</string>
+    <string name="versionCardExpandButtonContentDescription">Expand details</string>
+    <string name="versionCardCollapseButtonContentDescription">Collapse details</string>
+    <string name="shiplyAdvancedConfigurations">Advanced Configurations</string>
 </resources>

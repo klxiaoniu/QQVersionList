@@ -25,7 +25,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.content.res.Resources
-import android.graphics.Color
 import android.graphics.Rect
 import android.net.Uri
 import android.os.Build
@@ -40,8 +39,6 @@ import android.util.Base64
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowInsets
-import android.view.WindowInsetsController
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -53,7 +50,6 @@ import androidx.core.text.method.LinkMovementMethodCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
 import androidx.lifecycle.lifecycleScope
@@ -635,6 +631,12 @@ class MainActivity : AppCompatActivity() {
                     val dialogTencentShiplyBinding =
                         DialogTencentShiplyBinding.inflate(layoutInflater)
 
+                    if (DataStoreUtil.getBoolean("shiplyAdvancedConfigurations", false)) {
+                        dialogTencentShiplyBinding.shiplyAppid.visibility = View.VISIBLE
+                    } else {
+                        dialogTencentShiplyBinding.shiplyAppid.visibility = View.GONE
+                    }
+
                     val shiplyDialog = MaterialAlertDialogBuilder(this)
                         .setTitle(R.string.getUpdateFromShiplyPlatform)
                         .setIcon(R.drawable.flask_line)
@@ -649,6 +651,17 @@ class MainActivity : AppCompatActivity() {
                             shiplyVersion.editText?.setText(
                                 getString("shiplyVersion", "")
                             )
+                            switchShiplyAdvancedConfigurations.isChecked =
+                                getBoolean("shiplyAdvancedConfigurations", false)
+                        }
+
+                        switchShiplyAdvancedConfigurations.setOnCheckedChangeListener { _, isChecked ->
+                            DataStoreUtil.putBooleanAsync("shiplyAdvancedConfigurations", isChecked)
+                            if (isChecked) {
+                                shiplyAppid.visibility = View.VISIBLE
+                            } else {
+                                shiplyAppid.visibility = View.GONE
+                            }
                         }
 
                         btnShiplyCancel.setOnClickListener {
@@ -689,12 +702,14 @@ class MainActivity : AppCompatActivity() {
                                 ) throw MissingParameterException("请求 TDS 腾讯端服务 Shiply 发布平台需要 QQ 版本号参数，缺失版本号参数将无法获取 Shiply 平台返回数据。")
 
                                 if (shiplyVersion.editText?.text.toString()
-                                        .isEmpty()
+                                        .isEmpty() || !DataStoreUtil.getBoolean(
+                                        "shiplyAdvancedConfigurations",
+                                        false
+                                    )
                                 ) {
                                     DataStoreUtil.apply {
                                         putString(
-                                            "shiplyVersion",
-                                            shiplyVersion.editText?.text.toString()
+                                            "shiplyVersion", shiplyVersion.editText?.text.toString()
                                         )
                                         putString("shiplyUin", shiplyUin.editText?.text.toString())
                                     }
@@ -706,12 +721,10 @@ class MainActivity : AppCompatActivity() {
                                 } else {
                                     DataStoreUtil.apply {
                                         putString(
-                                            "shiplyVersion",
-                                            shiplyVersion.editText?.text.toString()
+                                            "shiplyVersion", shiplyVersion.editText?.text.toString()
                                         )
                                         putString(
-                                            "shiplyAppid",
-                                            shiplyAppid.editText?.text.toString()
+                                            "shiplyAppid", shiplyAppid.editText?.text.toString()
                                         )
                                         putString("shiplyUin", shiplyUin.editText?.text.toString())
                                     }
