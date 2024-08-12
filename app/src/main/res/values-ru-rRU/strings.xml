@@ -95,7 +95,7 @@
     <string name="trueVersion">真实版本号</string>
     <string name="trueVersionHelpText">填写真实版本号（版本码），仅微信猜版使用</string>
     <string name="appidOptional">appid（非必填）</string>
-    <string name="appidOptionalHelpText">填写用于请求 Shiply 平台的 Android QQ appid</string>
+    <string name="shiplyGeneralOptionalHelpText">默认值：</string>
     <string name="shiplyVersion">版本</string>
     <string name="shiplyVersionHelpText">填写用于请求 Shiply 平台的 Android QQ 版本号</string>
     <string name="uinHelpText">填写用于请求 Shiply 平台的对象 QQ 号</string>
@@ -109,4 +109,8 @@
     <string name="versionCardExpandButtonContentDescription">展开详情</string>
     <string name="versionCardCollapseButtonContentDescription">收起详情</string>
     <string name="shiplyAdvancedConfigurations">进阶配置</string>
+    <string name="shiplySdkVersionOptional">sdkVersion（非必填）</string>
+    <string name="shiplyOsVersionOptional">osVersion（非必填）</string>
+    <string name="shiplyModelOptional">model（非必填）</string>
+    <string name="shiplyLanguageOptional">language（非必填）</string>
 </resources>

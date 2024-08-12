@@ -25,7 +25,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.content.res.Resources
-import android.graphics.Rect
 import android.net.Uri
 import android.os.Build
 import android.os.Build.VERSION.SDK_INT
@@ -65,6 +64,8 @@ import com.google.gson.GsonBuilder
 import com.google.gson.JsonElement
 import com.xiaoniu.qqversionlist.BuildConfig
 import com.xiaoniu.qqversionlist.R
+import com.xiaoniu.qqversionlist.TipTimeApplication.Companion.SHIPLY_DEFAULT_APPID
+import com.xiaoniu.qqversionlist.TipTimeApplication.Companion.SHIPLY_DEFAULT_SDK_VERSION
 import com.xiaoniu.qqversionlist.data.QQVersionBean
 import com.xiaoniu.qqversionlist.databinding.ActivityMainBinding
 import com.xiaoniu.qqversionlist.databinding.DialogGuessBinding
@@ -95,6 +96,7 @@ import java.io.BufferedReader
 import java.io.ByteArrayInputStream
 import java.io.InputStreamReader
 import java.lang.Thread.sleep
+import java.util.Locale
 import java.util.zip.GZIPInputStream
 
 
@@ -154,60 +156,22 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-    private class VerticalSpaceItemDecoration(private val space: Int) :
-        RecyclerView.ItemDecoration() {
-        override fun getItemOffsets(
-            outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State
-        ) {
-            with(outRect) {
-                // 对于每一项都添加底部间距
-                bottom = space
-                // 如果不是第一行，则添加顶部间距
-                if (parent.getChildAdapterPosition(view) != 0) top = space
-            }
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        binding.rvContent.apply {
+            adapter = versionAdapter
+            val screenWidthDp = (Resources.getSystem().displayMetrics.widthPixels).pxToDp
+            layoutManager = if (screenWidthDp in 600..840) StaggeredGridLayoutManager(
+                2,
+                StaggeredGridLayoutManager.VERTICAL
+            )
+            else if (screenWidthDp > 840) StaggeredGridLayoutManager(
+                3,
+                StaggeredGridLayoutManager.VERTICAL
+            )
+            else LinearLayoutManager(this@MainActivity)
         }
     }
-
-    private class GridSpaceItemDecoration(
-        private val horizontalSpace: Int,
-        private val verticalSpace: Int
-    ) : RecyclerView.ItemDecoration() {
-
-        override fun getItemOffsets(
-            outRect: Rect,
-            view: View,
-            parent: RecyclerView,
-            state: RecyclerView.State
-        ) {
-            super.getItemOffsets(outRect, view, parent, state)
-
-            val position = parent.getChildAdapterPosition(view)
-            val spanCount = 2
-
-            val column = position % spanCount
-
-            if (column == 0) {
-                outRect.left = horizontalSpace
-            } else {
-                outRect.left = 0
-            }
-
-            if (column == spanCount - 1) {
-                outRect.right = horizontalSpace
-            } else {
-                outRect.right = 0
-            }
-
-            if (position < spanCount) { // top
-                outRect.top = verticalSpace
-            } else {
-                outRect.top = 0
-            }
-
-            outRect.bottom = verticalSpace // item bottom
-        }
-    }
-
 
     private fun showUADialog(agreed: Boolean, UATarget: Int) {
 
@@ -556,10 +520,6 @@ class MainActivity : AppCompatActivity() {
 
                                 dialogSuffix.show()
 
-//                            dialogSuffixDefine.settingSuffixDefine.editText?.setText(
-//                                DataStoreUtil.getStringAsync("suffixDefine", "")
-//                            )
-
                                 // 异步读取字符串，防止超长字符串造成阻塞
                                 settingSuffixDefine.apply {
                                     isEnabled = false
@@ -656,10 +616,31 @@ class MainActivity : AppCompatActivity() {
                     val dialogTencentShiplyBinding =
                         DialogTencentShiplyBinding.inflate(layoutInflater)
 
-                    if (DataStoreUtil.getBoolean("shiplyAdvancedConfigurations", false)) {
-                        dialogTencentShiplyBinding.shiplyAppid.visibility = View.VISIBLE
-                    } else {
-                        dialogTencentShiplyBinding.shiplyAppid.visibility = View.GONE
+                    dialogTencentShiplyBinding.apply {
+                        if (DataStoreUtil.getBoolean("shiplyAdvancedConfigurations", false)) {
+                            shiplyAppid.visibility = View.VISIBLE
+                            shiplyModel.visibility = View.VISIBLE
+                            shiplyOsVersion.visibility = View.VISIBLE
+                            shiplySdkVersion.visibility = View.VISIBLE
+                            shiplyLanguage.visibility = View.VISIBLE
+                        } else {
+                            shiplyAppid.visibility = View.GONE
+                            shiplyModel.visibility = View.GONE
+                            shiplyOsVersion.visibility = View.GONE
+                            shiplySdkVersion.visibility = View.GONE
+                            shiplyLanguage.visibility = View.GONE
+                        }
+
+                        shiplyAppid.helperText =
+                            getString(R.string.shiplyGeneralOptionalHelpText) + SHIPLY_DEFAULT_APPID
+                        shiplyModel.helperText =
+                            getString(R.string.shiplyGeneralOptionalHelpText) + Build.MODEL.toString()
+                        shiplyOsVersion.helperText =
+                            getString(R.string.shiplyGeneralOptionalHelpText) + SDK_INT.toString()
+                        shiplySdkVersion.helperText =
+                            getString(R.string.shiplyGeneralOptionalHelpText) + SHIPLY_DEFAULT_SDK_VERSION
+                        shiplyLanguage.helperText =
+                            getString(R.string.shiplyGeneralOptionalHelpText) + Locale.getDefault().language.toString()
                     }
 
                     val shiplyDialog = MaterialAlertDialogBuilder(this)
@@ -672,9 +653,19 @@ class MainActivity : AppCompatActivity() {
                     dialogTencentShiplyBinding.apply {
                         DataStoreUtil.apply {
                             shiplyUin.editText?.setText(getString("shiplyUin", ""))
-                            shiplyAppid.editText?.setText(getString("shiplyAppid", ""))
                             shiplyVersion.editText?.setText(
                                 getString("shiplyVersion", "")
+                            )
+                            shiplyAppid.editText?.setText(getString("shiplyAppid", ""))
+                            shiplyOsVersion.editText?.setText(
+                                getString("shiplyOsVersion", "")
+                            )
+                            shiplyModel.editText?.setText(getString("shiplyModel", ""))
+                            shiplySdkVersion.editText?.setText(
+                                getString("shiplySdkVersion", "")
+                            )
+                            shiplyLanguage.editText?.setText(
+                                getString("shiplyLanguage", "")
                             )
                             switchShiplyAdvancedConfigurations.isChecked =
                                 getBoolean("shiplyAdvancedConfigurations", false)
@@ -682,11 +673,22 @@ class MainActivity : AppCompatActivity() {
 
                         switchShiplyAdvancedConfigurations.setOnCheckedChangeListener { _, isChecked ->
                             DataStoreUtil.putBooleanAsync("shiplyAdvancedConfigurations", isChecked)
-                            if (isChecked) {
-                                shiplyAppid.visibility = View.VISIBLE
-                            } else {
-                                shiplyAppid.visibility = View.GONE
+                            dialogTencentShiplyBinding.apply {
+                                if (isChecked) {
+                                    shiplyAppid.visibility = View.VISIBLE
+                                    shiplyModel.visibility = View.VISIBLE
+                                    shiplyOsVersion.visibility = View.VISIBLE
+                                    shiplySdkVersion.visibility = View.VISIBLE
+                                    shiplyLanguage.visibility = View.VISIBLE
+                                } else {
+                                    shiplyAppid.visibility = View.GONE
+                                    shiplyModel.visibility = View.GONE
+                                    shiplyOsVersion.visibility = View.GONE
+                                    shiplySdkVersion.visibility = View.GONE
+                                    shiplyLanguage.visibility = View.GONE
+                                }
                             }
+
                         }
 
                         btnShiplyCancel.setOnClickListener {
@@ -697,6 +699,10 @@ class MainActivity : AppCompatActivity() {
                             shiplyUin.clearFocus()
                             shiplyAppid.clearFocus()
                             shiplyVersion.clearFocus()
+                            shiplyModel.clearFocus()
+                            shiplyOsVersion.clearFocus()
+                            shiplySdkVersion.clearFocus()
+                            shiplyLanguage.clearFocus()
 
                             val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
                             imm.hideSoftInputFromWindow(shiplyVersion.windowToken, 0)
@@ -726,17 +732,20 @@ class MainActivity : AppCompatActivity() {
                                         .isEmpty()
                                 ) throw MissingParameterException("请求 TDS 腾讯端服务 Shiply 发布平台需要 QQ 版本号参数，缺失版本号参数将无法获取 Shiply 平台返回数据。")
 
-                                if (shiplyVersion.editText?.text.toString()
-                                        .isEmpty() || !DataStoreUtil.getBoolean(
+                                if (!DataStoreUtil.getBoolean(
                                         "shiplyAdvancedConfigurations",
                                         false
                                     )
                                 ) {
                                     DataStoreUtil.apply {
-                                        putString(
-                                            "shiplyVersion", shiplyVersion.editText?.text.toString()
+                                        putStringAsync(
+                                            "shiplyVersion",
+                                            shiplyVersion.editText?.text.toString()
                                         )
-                                        putString("shiplyUin", shiplyUin.editText?.text.toString())
+                                        putStringAsync(
+                                            "shiplyUin",
+                                            shiplyUin.editText?.text.toString()
+                                        )
                                     }
                                     tencentShiplyStart(
                                         btnShiplyStart,
@@ -745,19 +754,45 @@ class MainActivity : AppCompatActivity() {
                                     )
                                 } else {
                                     DataStoreUtil.apply {
-                                        putString(
+                                        putStringAsync(
                                             "shiplyVersion", shiplyVersion.editText?.text.toString()
                                         )
-                                        putString(
+                                        putStringAsync(
+                                            "shiplyUin", shiplyUin.editText?.text.toString()
+                                        )
+                                        putStringAsync(
                                             "shiplyAppid", shiplyAppid.editText?.text.toString()
                                         )
-                                        putString("shiplyUin", shiplyUin.editText?.text.toString())
+                                        putStringAsync(
+                                            "shiplyOsVersion",
+                                            shiplyOsVersion.editText?.text.toString()
+                                        )
+                                        putStringAsync(
+                                            "shiplyModel", shiplyModel.editText?.text.toString()
+                                        )
+                                        putStringAsync(
+                                            "shiplySdkVersion",
+                                            shiplySdkVersion.editText?.text.toString()
+                                        )
+                                        putStringAsync(
+                                            "shiplyLanguage",
+                                            shiplyLanguage.editText?.text.toString()
+                                        )
                                     }
                                     tencentShiplyStart(
                                         btnShiplyStart,
                                         shiplyVersion.editText?.text.toString(),
                                         shiplyUin.editText?.text.toString(),
                                         shiplyAppid.editText?.text.toString()
+                                            .ifEmpty { SHIPLY_DEFAULT_APPID },
+                                        shiplyOsVersion.editText?.text.toString()
+                                            .ifEmpty { SDK_INT.toString() },
+                                        shiplyModel.editText?.text.toString()
+                                            .ifEmpty { Build.MODEL.toString() },
+                                        shiplySdkVersion.editText?.text.toString()
+                                            .ifEmpty { SHIPLY_DEFAULT_SDK_VERSION },
+                                        shiplyLanguage.editText?.text.toString()
+                                            .ifEmpty { Locale.getDefault().language.toString() }
                                     )
                                 }
                             } catch (e: MissingParameterException) {
@@ -1401,8 +1436,6 @@ class MainActivity : AppCompatActivity() {
                         break
                     }
                 }
-
-
             } catch (e: Exception) {
                 e.printStackTrace()
                 dialogError(e)
@@ -1423,7 +1456,11 @@ class MainActivity : AppCompatActivity() {
         btn: MaterialButton,
         shiplyVersion: String,
         shiplyUin: String,
-        shiplyAppid: String = "537230561"
+        shiplyAppid: String = SHIPLY_DEFAULT_APPID,
+        shiplyOsVersion: String = SDK_INT.toString(),
+        shiplyModel: String = Build.MODEL.toString(),
+        shiplySdkVersion: String = SHIPLY_DEFAULT_SDK_VERSION,
+        shiplyLanguage: String = Locale.getDefault().language.toString()
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             class MissingCipherTextException(message: String) : Exception(message)
@@ -1431,8 +1468,17 @@ class MainActivity : AppCompatActivity() {
                 // 参考：https://github.com/callng/GQUL
                 val shiplyKey = TencentShiplyUtil.generateAESKey()
                 val shiplyData = TencentShiplyUtil.generateJsonString(
-                    shiplyVersion, shiplyUin, shiplyAppid
+                    shiplyVersion,
+                    shiplyUin,
+                    shiplyAppid,
+                    shiplyOsVersion,
+                    shiplyModel,
+                    shiplySdkVersion,
+                    shiplyLanguage
                 )
+                runOnUiThread {
+                    copyText(shiplyData)
+                }
                 val shiplyEncode = TencentShiplyUtil.aesEncrypt(shiplyData, shiplyKey)
                 val shiplyRsaPublicKey =
                     TencentShiplyUtil.base64ToRsaPublicKey("MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC/rT6ULqXC32dgz4t/Vv4WS9pTks5Z2fPmbTHIXEVeiOEnjOpPBHOi1AUz+Ykqjk11ZyjidUwDyIaC/VtaC5Z7Bt/W+CFluDer7LiiDa6j77if5dbcvWUrJbgvhKqaEhWnMDXT1pAG2KxL/pNFAYguSLpOh9pK97G8umUMkkwWkwIDAQAB")

@@ -24,6 +24,9 @@ import com.google.android.material.color.DynamicColors
 class TipTimeApplication : Application() {
     companion object {
         lateinit var instance: TipTimeApplication
+
+        const val SHIPLY_DEFAULT_APPID = "537230561"
+        const val SHIPLY_DEFAULT_SDK_VERSION = "1.3.36-RC01"
     }
 
     override fun onCreate() {

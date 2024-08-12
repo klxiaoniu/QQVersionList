@@ -18,7 +18,6 @@
 
 package com.xiaoniu.qqversionlist.util
 
-import android.os.Build
 import android.util.Base64
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
@@ -38,7 +37,6 @@ import java.security.MessageDigest
 import java.security.PublicKey
 import java.security.SecureRandom
 import java.security.spec.X509EncodedKeySpec
-import java.util.Locale
 import java.util.UUID
 import java.util.zip.GZIPInputStream
 import javax.crypto.Cipher
@@ -47,7 +45,15 @@ import javax.crypto.spec.SecretKeySpec
 
 object TencentShiplyUtil {
 
-    fun generateJsonString(appVersion: String, uin: String, appid: String): String {
+    fun generateJsonString(
+        appVersion: String,
+        uin: String,
+        appid: String,
+        osVersion: String,
+        model: String,
+        sdkVersion: String,
+        language: String
+    ): String {
         val timestamp = System.currentTimeMillis() / 1000L
         val data = mapOf(
             "systemID" to "10016",
@@ -63,16 +69,16 @@ object TencentShiplyUtil {
             "pullParams" to mapOf(
                 "properties" to mapOf(
                     "platform" to 2,
-                    "language" to Locale.getDefault().language.toString(),
-                    "sdkVersion" to "1.3.36-RC01",
+                    "language" to language, // Locale.getDefault().language.toString()
+                    "sdkVersion" to sdkVersion, // "1.3.36-RC01"
                     "guid" to uin,
                     "appVersion" to appVersion,
-                    "osVersion" to Build.VERSION.SDK_INT.toString(),
+                    "osVersion" to osVersion, // Build.VERSION.SDK_INT.toString()
                     "is64Bit" to true,
                     "bundleId" to "com.tencent.mobileqq",
                     "uniqueId" to UUID.randomUUID().toString(),
-                    "model" to Build.MODEL.toString()
-                ), "isDebugPackage" to false, "customProperties" to mapOf("appid" to appid)
+                    "model" to model // Build.MODEL.toString()
+                ), "isDebugPackage" to false, "customProperties" to mapOf("appid" to appid) // "537230561"
             ),
             "taskChecksum" to "0",
             "context" to "H4sIAAAAAAAA/+Li5ni5T1WIVaBT1INRS8HS0MwyMdnCwMzQMCklxdQ81cTC1MzIIDnV0DIxydLYGAAAAP//AQAA//+OoFcLLwAAAA=="
@@ -176,5 +182,4 @@ object TencentShiplyUtil {
             } ?: throw IOException("Response body is null")
         }
     }
-
 }
