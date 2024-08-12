@@ -22,6 +22,7 @@
     style="?attr/materialCardViewElevatedStyle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_margin="5dp"
     android:backgroundTint="?android:colorBackground"
     android:clickable="true"
     android:focusable="true">
@@ -215,15 +216,15 @@
 
         </HorizontalScrollView>
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/ib_collapse"
             style="?attr/materialIconButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/versionCardCollapseButtonContentDescription"
             app:icon="@drawable/ic_up"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:contentDescription="@string/versionCardCollapseButtonContentDescription"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -31,6 +31,7 @@
     <string name="agree">Agree</string>
     <string name="disagreeAndExit">Disagree and Exit</string>
     <string name="withdrawConsentAndExit">Withdraw Consent and Exit</string>
+    <string name="withdrawConsentUA">Withdraw User Agreement Consent</string>
     <string name="userAgreement">User Agreement</string>
     <string name="enumerateVersionsFAB">Enum. Ver.</string>
     <string name="enumerateVersionsDialogTitle">Enumerate Versions</string>

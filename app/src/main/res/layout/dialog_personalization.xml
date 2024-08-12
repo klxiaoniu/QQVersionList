@@ -60,7 +60,7 @@
                 android:paddingBottom="8dp"
                 android:text="@string/versionNumberFontUsesTCloudNumber" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_personalization_ok"
                 style="@style/Widget.Material3.Button.TonalButton"
                 android:layout_width="match_parent"

@@ -29,6 +29,7 @@
     <string name="refresh">刷新</string>
     <string name="agree">同意</string>
     <string name="disagreeAndExit">不同意并退出</string>
+    <string name="withdrawConsentUA">撤回同意用户协议</string>
     <string name="withdrawConsentAndExit">撤回同意并退出</string>
     <string name="userAgreement">用户协议</string>
     <string name="enumerateVersionsFAB">猜版</string>

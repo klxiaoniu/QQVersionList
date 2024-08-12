@@ -55,6 +55,7 @@ import androidx.core.view.updatePadding
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.progressindicator.CircularProgressIndicatorSpec
@@ -82,6 +83,7 @@ import com.xiaoniu.qqversionlist.util.InfoUtil.showToast
 import com.xiaoniu.qqversionlist.util.StringUtil.getAllAPKUrl
 import com.xiaoniu.qqversionlist.util.StringUtil.toPrettyFormat
 import com.xiaoniu.qqversionlist.util.TencentShiplyUtil
+import com.xiaoniu.qqversionlist.util.pxToDp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -134,8 +136,16 @@ class MainActivity : AppCompatActivity() {
         versionAdapter = VersionAdapter()
         binding.rvContent.apply {
             adapter = versionAdapter
-            layoutManager = LinearLayoutManager(this@MainActivity)
-            addItemDecoration(VerticalSpaceItemDecoration(dpToPx(5)))
+            val screenWidthDp = (Resources.getSystem().displayMetrics.widthPixels).pxToDp
+            layoutManager = if (screenWidthDp in 600..840) StaggeredGridLayoutManager(
+                2,
+                StaggeredGridLayoutManager.VERTICAL
+            )
+            else if (screenWidthDp > 840) StaggeredGridLayoutManager(
+                3,
+                StaggeredGridLayoutManager.VERTICAL
+            )
+            else LinearLayoutManager(this@MainActivity)
         }
         initButtons()
 
@@ -144,17 +154,8 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-    private fun Context.dpToPx(dp: Int): Int {
-        return (dp * resources.displayMetrics.density).toInt()
-    }
-
-// 未来可期的 px to dp 函数
-//    private fun Context.pxToDp(px: Int): Int {
-//        return (px / resources.displayMetrics.density).toInt()
-//    }
-
-
-    class VerticalSpaceItemDecoration(private val space: Int) : RecyclerView.ItemDecoration() {
+    private class VerticalSpaceItemDecoration(private val space: Int) :
+        RecyclerView.ItemDecoration() {
         override fun getItemOffsets(
             outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State
         ) {
@@ -164,6 +165,46 @@ class MainActivity : AppCompatActivity() {
                 // 如果不是第一行，则添加顶部间距
                 if (parent.getChildAdapterPosition(view) != 0) top = space
             }
+        }
+    }
+
+    private class GridSpaceItemDecoration(
+        private val horizontalSpace: Int,
+        private val verticalSpace: Int
+    ) : RecyclerView.ItemDecoration() {
+
+        override fun getItemOffsets(
+            outRect: Rect,
+            view: View,
+            parent: RecyclerView,
+            state: RecyclerView.State
+        ) {
+            super.getItemOffsets(outRect, view, parent, state)
+
+            val position = parent.getChildAdapterPosition(view)
+            val spanCount = 2
+
+            val column = position % spanCount
+
+            if (column == 0) {
+                outRect.left = horizontalSpace
+            } else {
+                outRect.left = 0
+            }
+
+            if (column == spanCount - 1) {
+                outRect.right = horizontalSpace
+            } else {
+                outRect.right = 0
+            }
+
+            if (position < spanCount) { // top
+                outRect.top = verticalSpace
+            } else {
+                outRect.top = 0
+            }
+
+            outRect.bottom = verticalSpace // item bottom
         }
     }
 
@@ -355,7 +396,7 @@ class MainActivity : AppCompatActivity() {
                         .setMessage(message)
                         .setView(linearLayout)
                         .setPositiveButton(R.string.done, null)
-                        .setNegativeButton(R.string.withdrawConsentAndExit) { _, _ ->
+                        .setNegativeButton(R.string.withdrawConsentUA) { _, _ ->
                             showUADialog(true, judgeUATarget)
                         }.show().apply {
                             findViewById<TextView>(android.R.id.message)?.movementMethod =
@@ -470,22 +511,6 @@ class MainActivity : AppCompatActivity() {
                                 .setView(dialogSuffixDefine.root)
                                 .setCancelable(false)
                                 .create()
-
-                            val screenHeight = Resources.getSystem().displayMetrics.heightPixels
-
-                            val constraintSet = ConstraintSet()
-                            constraintSet.clone(dialogSuffixDefine.dialogSuffixDefineContainer)
-
-                            // 屏幕方向判断，不同方向分别设置相应的约束布局滚动列表子项高度
-                            val currentConfig = resources.configuration
-                            if (currentConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) constraintSet.constrainHeight(
-                                R.id.suffix_define_check_group_all, screenHeight / 6
-                            )
-                            else if (currentConfig.orientation == Configuration.ORIENTATION_PORTRAIT) constraintSet.constrainHeight(
-                                R.id.suffix_define_check_group_all, screenHeight / 3
-                            )
-
-                            constraintSet.applyTo(dialogSuffixDefine.dialogSuffixDefineContainer)
 
                             dialogSuffixDefine.apply {
                                 DataStoreUtil.apply {
@@ -1044,8 +1069,7 @@ class MainActivity : AppCompatActivity() {
             val guessNot5 = DataStoreUtil.getBoolean("guessNot5", false)
             val guessTestExtend = DataStoreUtil.getBoolean("guessTestExtend", false)
             val downloadOnSystemManager = DataStoreUtil.getBoolean("downloadOnSystemManager", false)
-            val defineSuf = DataStoreUtil.getString("suffixDefine", "")
-            val defineSufList = defineSuf.split(", ")
+            val defineSufList = DataStoreUtil.getString("suffixDefine", "").split(", ")
             val suf64hb =
                 if (DataStoreUtil.getBoolean("suffix64HB", true)) listOf("_64_HB") else emptyList()
             val sufHb64 =
@@ -1135,26 +1159,8 @@ class MainActivity : AppCompatActivity() {
                 sufTest
             ).flatten()
 
-            /*
-                "_64_HB",
-                "_64_HB1",
-                "_64_HB2",
-                "_64_HB3",
-                "_64_HD",
-                "_64_HD1",
-                "_64_HD2",
-                "_64_HD3",
-                "_64_HD1HB",
-                "_HB_64",
-                "_HB1_64",
-                "_HB2_64",
-                "_HB3_64",
-                "_HD_64",
-                "_HD1_64",
-                "_HD2_64",
-                "_HD3_64",
-                "_HD1HB_64"
-             */
+            // ["_64", "_64_HB", "_64_HB1", "_64_HB2", "_64_HB3", "_64_HD", "_64_HD1", "_64_HD2", "_64_HD3", "_64_HD1HB", "_HB_64", "_HB1_64", "_HB2_64", "_HB3_64", "_HD_64", "_HD1_64", "_HD2_64", "_HD3_64", "_HD1HB_64", "_test"]
+
             val stList = if (defineSufList != listOf("")) stListPre + defineSufList else stListPre
             try {
                 var sIndex = 0

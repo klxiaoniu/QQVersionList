@@ -63,15 +63,15 @@ object TencentShiplyUtil {
             "pullParams" to mapOf(
                 "properties" to mapOf(
                     "platform" to 2,
-                    "language" to Locale.getDefault().language,
-                    "sdkVersion" to "1.3.35-RC03",
+                    "language" to Locale.getDefault().language.toString(),
+                    "sdkVersion" to "1.3.36-RC01",
                     "guid" to uin,
                     "appVersion" to appVersion,
                     "osVersion" to Build.VERSION.SDK_INT.toString(),
                     "is64Bit" to true,
                     "bundleId" to "com.tencent.mobileqq",
                     "uniqueId" to UUID.randomUUID().toString(),
-                    "model" to Build.MODEL
+                    "model" to Build.MODEL.toString()
                 ), "isDebugPackage" to false, "customProperties" to mapOf("appid" to appid)
             ),
             "taskChecksum" to "0",

@@ -131,7 +131,7 @@
                 android:orientation="horizontal"
                 android:weightSum="2">
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_shiply_cancel"
                     style="@style/Widget.Material3.Button.TonalButton"
                     android:layout_width="0dp"

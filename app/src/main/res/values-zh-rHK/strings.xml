@@ -31,6 +31,7 @@
     <string name="agree">同意</string>
     <string name="disagreeAndExit">不同意並退出</string>
     <string name="withdrawConsentAndExit">撤回同意並退出</string>
+    <string name="withdrawConsentUA">撤回同意用戶協議</string>
     <string name="userAgreement">用戶協議</string>
     <string name="enumerateVersionsFAB">猜版</string>
     <string name="enumerateVersionsDialogTitle">猜版 Extended</string>

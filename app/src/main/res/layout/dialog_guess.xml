@@ -169,7 +169,7 @@
                 android:orientation="horizontal"
                 android:weightSum="2">
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_guess_cancel"
                     style="@style/Widget.Material3.Button.TonalButton"
                     android:layout_width="0dp"
@@ -179,7 +179,7 @@
                     android:layout_weight="1"
                     android:text="@string/cancel" />
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_guess_start"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"

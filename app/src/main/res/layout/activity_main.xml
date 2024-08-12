@@ -31,9 +31,9 @@
         android:clipToPadding="false"
         android:fillViewport="true"
         android:nestedScrollingEnabled="true"
-        android:paddingLeft="16dp"
-        android:paddingTop="16dp"
-        android:paddingRight="16dp"
+        android:paddingLeft="11dp"
+        android:paddingTop="11dp"
+        android:paddingRight="11dp"
         android:paddingBottom="100dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:layout_constrainedHeight="true" />
