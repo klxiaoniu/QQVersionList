@@ -1476,9 +1476,6 @@ class MainActivity : AppCompatActivity() {
                     shiplySdkVersion,
                     shiplyLanguage
                 )
-                runOnUiThread {
-                    copyText(shiplyData)
-                }
                 val shiplyEncode = TencentShiplyUtil.aesEncrypt(shiplyData, shiplyKey)
                 val shiplyRsaPublicKey =
                     TencentShiplyUtil.base64ToRsaPublicKey("MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC/rT6ULqXC32dgz4t/Vv4WS9pTks5Z2fPmbTHIXEVeiOEnjOpPBHOi1AUz+Ykqjk11ZyjidUwDyIaC/VtaC5Z7Bt/W+CFluDer7LiiDa6j77if5dbcvWUrJbgvhKqaEhWnMDXT1pAG2KxL/pNFAYguSLpOh9pK97G8umUMkkwWkwIDAQAB")
