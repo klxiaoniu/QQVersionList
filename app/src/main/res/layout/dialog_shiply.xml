@@ -90,7 +90,7 @@
                 android:paddingStart="12dp"
                 android:paddingEnd="12dp"
                 android:paddingTop="8dp"
-                android:paddingBottom="8dp"
+                android:paddingBottom="16dp"
                 android:text="@string/shiplyAdvancedConfigurations"
                 android:textColor="?attr/colorOnSurface"
                 app:drawableEndCompat="@drawable/arrow_right_s_line" />

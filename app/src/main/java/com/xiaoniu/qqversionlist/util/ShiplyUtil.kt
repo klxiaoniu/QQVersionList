@@ -43,7 +43,7 @@ import javax.crypto.Cipher
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
 
-object TencentShiplyUtil {
+object ShiplyUtil {
 
     fun generateJsonString(
         appVersion: String,

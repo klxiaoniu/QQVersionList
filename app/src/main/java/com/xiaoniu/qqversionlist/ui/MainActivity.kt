@@ -57,6 +57,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.airbnb.paris.extensions.style
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -79,17 +80,17 @@ import com.xiaoniu.qqversionlist.databinding.DialogLoadingBinding
 import com.xiaoniu.qqversionlist.databinding.DialogPersonalizationBinding
 import com.xiaoniu.qqversionlist.databinding.DialogSettingBinding
 import com.xiaoniu.qqversionlist.databinding.DialogShiplyBackBinding
+import com.xiaoniu.qqversionlist.databinding.DialogShiplyBinding
 import com.xiaoniu.qqversionlist.databinding.DialogSuffixDefineBinding
-import com.xiaoniu.qqversionlist.databinding.DialogTencentShiplyBinding
 import com.xiaoniu.qqversionlist.databinding.SuccessButtonBinding
 import com.xiaoniu.qqversionlist.databinding.UserAgreementBinding
 import com.xiaoniu.qqversionlist.util.ClipboardUtil.copyText
 import com.xiaoniu.qqversionlist.util.DataStoreUtil
 import com.xiaoniu.qqversionlist.util.InfoUtil.dialogError
 import com.xiaoniu.qqversionlist.util.InfoUtil.showToast
+import com.xiaoniu.qqversionlist.util.ShiplyUtil
 import com.xiaoniu.qqversionlist.util.StringUtil.getAllAPKUrl
 import com.xiaoniu.qqversionlist.util.StringUtil.toPrettyFormat
-import com.xiaoniu.qqversionlist.util.TencentShiplyUtil
 import com.xiaoniu.qqversionlist.util.pxToDp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -672,18 +673,18 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.btn_tencent_shiply -> {
-                    val dialogTencentShiplyBinding =
-                        DialogTencentShiplyBinding.inflate(layoutInflater)
+                    val dialogShiplyBinding =
+                        DialogShiplyBinding.inflate(layoutInflater)
 
 
                     val shiplyDialog = MaterialAlertDialogBuilder(this)
                         .setTitle(R.string.getUpdateFromShiplyPlatform)
                         .setIcon(R.drawable.flask_line)
-                        .setView(dialogTencentShiplyBinding.root)
+                        .setView(dialogShiplyBinding.root)
                         .setCancelable(false)
                         .show()
 
-                    dialogTencentShiplyBinding.apply {
+                    dialogShiplyBinding.apply {
                         DataStoreUtil.apply {
                             shiplyUin.editText?.setText(getString("shiplyUin", ""))
                             shiplyVersion.editText?.setText(
@@ -730,6 +731,7 @@ class MainActivity : AppCompatActivity() {
                                     )
 
                                 btnShiplyStart.isEnabled = false
+                                btnShiplyStart.style(com.google.android.material.R.style.Widget_Material3_Button_Icon)
                                 btnShiplyStart.icon = progressIndicatorDrawable
 
                                 if (shiplyUin.editText?.text.toString()
@@ -1458,8 +1460,8 @@ class MainActivity : AppCompatActivity() {
             class MissingCipherTextException(message: String) : Exception(message)
             try {
                 // 参考：https://github.com/callng/GQUL
-                val shiplyKey = TencentShiplyUtil.generateAESKey()
-                val shiplyData = TencentShiplyUtil.generateJsonString(
+                val shiplyKey = ShiplyUtil.generateAESKey()
+                val shiplyData = ShiplyUtil.generateJsonString(
                     shiplyVersion,
                     shiplyUin,
                     shiplyAppid,
@@ -1468,12 +1470,12 @@ class MainActivity : AppCompatActivity() {
                     shiplySdkVersion,
                     shiplyLanguage
                 )
-                val shiplyEncode = TencentShiplyUtil.aesEncrypt(shiplyData, shiplyKey)
+                val shiplyEncode = ShiplyUtil.aesEncrypt(shiplyData, shiplyKey)
                 val shiplyRsaPublicKey =
-                    TencentShiplyUtil.base64ToRsaPublicKey("MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC/rT6ULqXC32dgz4t/Vv4WS9pTks5Z2fPmbTHIXEVeiOEnjOpPBHOi1AUz+Ykqjk11ZyjidUwDyIaC/VtaC5Z7Bt/W+CFluDer7LiiDa6j77if5dbcvWUrJbgvhKqaEhWnMDXT1pAG2KxL/pNFAYguSLpOh9pK97G8umUMkkwWkwIDAQAB")
+                    ShiplyUtil.base64ToRsaPublicKey("MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC/rT6ULqXC32dgz4t/Vv4WS9pTks5Z2fPmbTHIXEVeiOEnjOpPBHOi1AUz+Ykqjk11ZyjidUwDyIaC/VtaC5Z7Bt/W+CFluDer7LiiDa6j77if5dbcvWUrJbgvhKqaEhWnMDXT1pAG2KxL/pNFAYguSLpOh9pK97G8umUMkkwWkwIDAQAB")
                 if (shiplyRsaPublicKey == null) runOnUiThread { showToast("生成 RSA 公钥失败") } // 应该不会失败吧
                 else {
-                    val shiplyEncode2 = TencentShiplyUtil.rsaEncrypt(
+                    val shiplyEncode2 = ShiplyUtil.rsaEncrypt(
                         shiplyKey, shiplyRsaPublicKey
                     )
                     val shiplyPost = mapOf(
@@ -1487,12 +1489,12 @@ class MainActivity : AppCompatActivity() {
                             )
                         )
                     )
-                    val shiplyResult = TencentShiplyUtil.postJsonWithOkHttp(
+                    val shiplyResult = ShiplyUtil.postJsonWithOkHttp(
                         "https://rdelivery.qq.com/v3/config/batchpull", shiplyPost
                     )
-                    val shiplyText = TencentShiplyUtil.getCipherText(shiplyResult)
+                    val shiplyText = ShiplyUtil.getCipherText(shiplyResult)
                     if (!shiplyText.isNullOrEmpty()) {
-                        val shiplyDecode = TencentShiplyUtil.aesDecrypt(
+                        val shiplyDecode = ShiplyUtil.aesDecrypt(
                             Base64.decode(shiplyText, Base64.NO_WRAP), shiplyKey
                         )
                         val gzipInputStream = GZIPInputStream(
@@ -1559,6 +1561,7 @@ class MainActivity : AppCompatActivity() {
                 dialogError(e)
             } finally {
                 runOnUiThread {
+                    btn.style(com.google.android.material.R.style.Widget_Material3_Button)
                     btn.icon = null
                     btn.isEnabled = true
                 }
@@ -1635,14 +1638,16 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 btnShiplyConfigBack.setOnClickListener {
-                    val imm = requireContext().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                    val imm =
+                        requireContext().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
                     imm.hideSoftInputFromWindow(shiplyLanguage.windowToken, 0)
                     this@ShiplyAdvancedConfigSheet.isCancelable = true
                     shiplyAdvancedConfigSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                 }
 
                 dragHandleView.setOnClickListener {
-                    val imm = requireContext().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                    val imm =
+                        requireContext().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
                     imm.hideSoftInputFromWindow(shiplyLanguage.windowToken, 0)
                     this@ShiplyAdvancedConfigSheet.isCancelable = true
                     shiplyAdvancedConfigSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
