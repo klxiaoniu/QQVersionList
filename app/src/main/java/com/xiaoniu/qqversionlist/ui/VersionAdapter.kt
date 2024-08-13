@@ -52,6 +52,8 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
 
     private var getProgressSize = DataStoreUtil.getBoolean("progressSize", false)
     private var getVersionTCloud = DataStoreUtil.getBoolean("versionTCloud", true)
+    private var getVersionTCloudThickness =
+        DataStoreUtil.getString("versionTCloudThickness", "System")
 
     class ViewHolder(val binding: ItemVersionBinding, val context: Context) :
         RecyclerView.ViewHolder(binding.root)
@@ -131,15 +133,10 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
                     tvVersion.text = bean.versionNumber
                     tvSize.text = bean.size + " MB"
                     bindProgress(
-                        listProgressLine,
-                        null,
-                        tvPerSizeText,
-                        tvPerSizeCard,
-                        tvSizeCard,
-                        bean
+                        listProgressLine, null, tvPerSizeText, tvPerSizeCard, tvSizeCard, bean
                     )
                     bindDisplayInstall(tvInstall, tvInstallCard, bean)
-                    bindVersionTCloud(tvVersion, bean, holder.context)
+                    bindVersionTCloud(tvVersion, holder.context)
                 }
             }
 
@@ -158,15 +155,17 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
                     }
                     tvOldVersion.text = bean.versionNumber
                     tvOldSize.text = bean.size + " MB"
-                    tvDetailVersion.text = holder.itemView.context.getString(R.string.version) + bean.versionNumber
-                    tvDetailSize.text = holder.itemView.context.getString(R.string.reatedFileSize) + bean.size + " MB"
+                    tvDetailVersion.text =
+                        holder.itemView.context.getString(R.string.version) + bean.versionNumber
+                    tvDetailSize.text =
+                        holder.itemView.context.getString(R.string.reatedFileSize) + bean.size + " MB"
                     tvTitle.text = bean.featureTitle
                     tvDesc.text = bean.summary.joinToString(separator = "\n- ", prefix = "- ")
 
                     tvTitle.isVisible = tvTitle.text != ""
 
                     bindDisplayInstall(tvOldInstall, tvOldInstallCard, bean)
-                    bindVersionTCloud(tvOldVersion, bean, holder.context)
+                    bindVersionTCloud(tvOldVersion, holder.context)
 
                     bindProgress(
                         listDetailProgressLine,
@@ -206,7 +205,11 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
                 listProgressLine.progress = (bean.size.toFloat() * 10).toInt()
 
                 tvPerSize?.text =
-                    "${tvPerSizeCard.context.getString(R.string.currentSizeVsLargestHistoricalPackage)}${(currentList.maxByOrNull { it.size.toFloat() }?.size?.toFloat() ?: 0f)} MB${tvPerSizeCard.context.getString(R.string.endParenthesis)}${
+                    "${tvPerSizeCard.context.getString(R.string.currentSizeVsLargestHistoricalPackage)}${(currentList.maxByOrNull { it.size.toFloat() }?.size?.toFloat() ?: 0f)} MB${
+                        tvPerSizeCard.context.getString(
+                            R.string.endParenthesis
+                        )
+                    }${
                         "%.2f".format(
                             bean.size.toFloat() / (currentList.maxByOrNull { it.size.toFloat() }?.size?.toFloat() ?: 0f) * 100
                         )
@@ -231,10 +234,20 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
     }
 
     private fun bindVersionTCloud(
-        tvVersion: TextView, bean: QQVersionBean, context: Context
+        tvVersion: TextView, context: Context
     ) {
         if (getVersionTCloud) {
-            val TCloudFont = ResourcesCompat.getFont(context, R.font.tcloud_number_vf)
+            val TCloudFont: Typeface
+            when (getVersionTCloudThickness) {
+                "Light" -> TCloudFont =
+                    ResourcesCompat.getFont(context, R.font.tcloud_number_light)!!
+
+                "Regular" -> TCloudFont =
+                    ResourcesCompat.getFont(context, R.font.tcloud_number_regular)!!
+
+                "Bold" -> TCloudFont = ResourcesCompat.getFont(context, R.font.tcloud_number_bold)!!
+                else -> TCloudFont = ResourcesCompat.getFont(context, R.font.tcloud_number_vf)!!
+            }
             tvVersion.typeface = TCloudFont
         } else {
             tvVersion.setTypeface(null, Typeface.NORMAL)
@@ -300,11 +313,11 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
                 "isTCloud" -> {
                     if (holder is ViewHolder) {
                         bindVersionTCloud(
-                            holder.binding.tvVersion, bean, holder.context
+                            holder.binding.tvVersion, holder.context
                         )
                     } else if (holder is ViewHolderDetail) {
                         bindVersionTCloud(
-                            holder.binding.tvOldVersion, bean, holder.context
+                            holder.binding.tvOldVersion, holder.context
                         )
                     }
                 }
@@ -321,6 +334,8 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
 
             "isTCloud" -> {
                 getVersionTCloud = DataStoreUtil.getBoolean("versionTCloud", true)
+                getVersionTCloudThickness =
+                    DataStoreUtil.getString("versionTCloudThickness", "System")
                 notifyItemRangeChanged(0, currentList.size, "isTCloud")
             }
         }

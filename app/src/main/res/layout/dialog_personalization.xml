@@ -60,6 +60,14 @@
                 android:paddingBottom="8dp"
                 android:text="@string/versionNumberFontUsesTCloudNumber" />
 
+            <com.google.android.material.slider.Slider
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:id="@+id/version_tcloud_thickness"
+                android:stepSize="1.0"
+                android:valueFrom="1.0"
+                android:valueTo="4.0" />
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_personalization_ok"
                 style="@style/Widget.Material3.Button.TonalButton"

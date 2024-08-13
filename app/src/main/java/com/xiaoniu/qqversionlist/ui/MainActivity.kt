@@ -408,6 +408,21 @@ class MainActivity : AppCompatActivity() {
                                 }
                             }
 
+                            dialogPersonalization.versionTcloudThickness.setEnabled(
+                                DataStoreUtil.getBoolean(
+                                    "versionTCloud",
+                                    true
+                                )
+                            )
+
+                            dialogPersonalization.versionTcloudThickness.value =
+                                when (DataStoreUtil.getString("versionTCloudThickness", "System")) {
+                                    "Light" -> 1.0f
+                                    "Regular" -> 2.0f
+                                    "Bold" -> 3.0f
+                                    else -> 4.0f
+                                }
+
                             val dialogPer = MaterialAlertDialogBuilder(this@MainActivity)
                                 .setTitle(R.string.personalization)
                                 .setIcon(R.drawable.palette_line)
@@ -433,16 +448,55 @@ class MainActivity : AppCompatActivity() {
                                     versionAdapter.submitList(qqVersion)
 
                                 }
+
+                                // 下两个设置不能异步持久化存储，否则视图更新读不到更新值
                                 progressSize.setOnCheckedChangeListener { _, isChecked ->
                                     DataStoreUtil.putBoolean("progressSize", isChecked)
                                     versionAdapter.updateItemProperty("isShowProgressSize")
                                 }
                                 versionTcloud.setOnCheckedChangeListener { _, isChecked ->
                                     DataStoreUtil.putBoolean("versionTCloud", isChecked)
+                                    dialogPersonalization.versionTcloudThickness.setEnabled(
+                                        isChecked
+                                    )
                                     versionAdapter.updateItemProperty("isTCloud")
                                 }
                                 btnPersonalizationOk.setOnClickListener {
                                     dialogPer.dismiss()
+                                }
+
+                                versionTcloudThickness.setLabelFormatter {
+                                    return@setLabelFormatter when (it) {
+                                        1.0f -> "Light"
+                                        2.0f -> "Regular"
+                                        3.0f -> "Bold"
+                                        else -> "System"
+                                    }
+                                }
+
+                                versionTcloudThickness.addOnChangeListener { _, value, _ ->
+                                    when (value) {
+                                        1.0f -> DataStoreUtil.putString(
+                                            "versionTCloudThickness",
+                                            "Light"
+                                        )
+
+                                        2.0f -> DataStoreUtil.putString(
+                                            "versionTCloudThickness",
+                                            "Regular"
+                                        )
+
+                                        3.0f -> DataStoreUtil.putString(
+                                            "versionTCloudThickness",
+                                            "Bold"
+                                        )
+
+                                        else -> DataStoreUtil.putString(
+                                            "versionTCloudThickness",
+                                            "System"
+                                        )
+                                    }
+                                    versionAdapter.updateItemProperty("isTCloud")
                                 }
                             }
 
