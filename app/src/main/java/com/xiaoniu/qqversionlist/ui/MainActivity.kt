@@ -698,10 +698,10 @@ class MainActivity : AppCompatActivity() {
                         }
 
                         shiplyAdvancedConfigurationsClick.setOnClickListener {
-                            ShiplyAdvancedConfigSheet().show(
-                                supportFragmentManager,
-                                ShiplyAdvancedConfigSheet.TAG
-                            )
+                            ShiplyAdvancedConfigSheet().apply {
+                                isCancelable = false
+                                show(supportFragmentManager, ShiplyAdvancedConfigSheet.TAG)
+                            }
                         }
 
                         btnShiplyCancel.setOnClickListener {
@@ -1629,15 +1629,22 @@ class MainActivity : AppCompatActivity() {
                             "shiplyLanguage", shiplyLanguage.editText?.text.toString()
                         )
                         Toast.makeText(requireContext(), R.string.saved, Toast.LENGTH_SHORT).show()
+                        this@ShiplyAdvancedConfigSheet.isCancelable = true
                         shiplyAdvancedConfigSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                     }
                 }
 
                 btnShiplyConfigBack.setOnClickListener {
+                    val imm = requireContext().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.hideSoftInputFromWindow(shiplyLanguage.windowToken, 0)
+                    this@ShiplyAdvancedConfigSheet.isCancelable = true
                     shiplyAdvancedConfigSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                 }
 
                 dragHandleView.setOnClickListener {
+                    val imm = requireContext().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.hideSoftInputFromWindow(shiplyLanguage.windowToken, 0)
+                    this@ShiplyAdvancedConfigSheet.isCancelable = true
                     shiplyAdvancedConfigSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                 }
             }
