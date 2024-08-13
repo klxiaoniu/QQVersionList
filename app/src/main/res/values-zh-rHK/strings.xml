@@ -113,4 +113,7 @@
     <string name="shiplyOsVersionOptional">osVersion（非必填）</string>
     <string name="shiplyModelOptional">model（非必填）</string>
     <string name="shiplyLanguageOptional">language（非必填）</string>
+    <string name="thicknessFollowSystem">跟隨系統</string>
+    <string name="back">返回</string>
+    <string name="shiplyUseAdvancedConfigurations">使用進階配置</string>
 </resources>

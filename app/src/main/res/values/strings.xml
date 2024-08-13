@@ -112,4 +112,7 @@
     <string name="shiplySdkVersionOptional">sdkVersion（非必填）</string>
     <string name="shiplyModelOptional">model（非必填）</string>
     <string name="shiplyLanguageOptional">language（非必填）</string>
+    <string name="thicknessFollowSystem">跟随系统</string>
+    <string name="back">返回</string>
+    <string name="shiplyUseAdvancedConfigurations">使用进阶配置</string>
 </resources>

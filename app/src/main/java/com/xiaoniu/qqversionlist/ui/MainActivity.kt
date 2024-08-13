@@ -36,12 +36,14 @@ import android.text.TextWatcher
 import android.text.style.URLSpan
 import android.util.Base64
 import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintSet
@@ -55,6 +57,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.progressindicator.CircularProgressIndicatorSpec
@@ -68,6 +73,7 @@ import com.xiaoniu.qqversionlist.TipTimeApplication.Companion.SHIPLY_DEFAULT_APP
 import com.xiaoniu.qqversionlist.TipTimeApplication.Companion.SHIPLY_DEFAULT_SDK_VERSION
 import com.xiaoniu.qqversionlist.data.QQVersionBean
 import com.xiaoniu.qqversionlist.databinding.ActivityMainBinding
+import com.xiaoniu.qqversionlist.databinding.BottomsheetShiplyAdvancedConfigBinding
 import com.xiaoniu.qqversionlist.databinding.DialogGuessBinding
 import com.xiaoniu.qqversionlist.databinding.DialogLoadingBinding
 import com.xiaoniu.qqversionlist.databinding.DialogPersonalizationBinding
@@ -400,27 +406,27 @@ class MainActivity : AppCompatActivity() {
                         }
                         dialogPersonalization.setOnClickListener {
                             val dialogPersonalization =
-                                DialogPersonalizationBinding.inflate(layoutInflater)
+                                DialogPersonalizationBinding.inflate(layoutInflater).apply {
+                                    root.parent?.let { parent ->
+                                        if (parent is ViewGroup) {
+                                            parent.removeView(root)
+                                        }
+                                    }
 
-                            dialogPersonalization.root.parent?.let { parent ->
-                                if (parent is ViewGroup) {
-                                    parent.removeView(dialogPersonalization.root)
-                                }
-                            }
+                                    versionTcloudThickness.setEnabled(
+                                        DataStoreUtil.getBoolean(
+                                            "versionTCloud", true
+                                        )
+                                    )
 
-                            dialogPersonalization.versionTcloudThickness.setEnabled(
-                                DataStoreUtil.getBoolean(
-                                    "versionTCloud",
-                                    true
-                                )
-                            )
-
-                            dialogPersonalization.versionTcloudThickness.value =
-                                when (DataStoreUtil.getString("versionTCloudThickness", "System")) {
-                                    "Light" -> 1.0f
-                                    "Regular" -> 2.0f
-                                    "Bold" -> 3.0f
-                                    else -> 4.0f
+                                    versionTcloudThickness.value = when (DataStoreUtil.getString(
+                                        "versionTCloudThickness", "System"
+                                    )) {
+                                        "Light" -> 1.0f
+                                        "Regular" -> 2.0f
+                                        "Bold" -> 3.0f
+                                        else -> 4.0f
+                                    }
                                 }
 
                             val dialogPer = MaterialAlertDialogBuilder(this@MainActivity)
@@ -470,7 +476,7 @@ class MainActivity : AppCompatActivity() {
                                         1.0f -> "Light"
                                         2.0f -> "Regular"
                                         3.0f -> "Bold"
-                                        else -> "System"
+                                        else -> getString(R.string.thicknessFollowSystem)
                                     }
                                 }
 
@@ -499,7 +505,6 @@ class MainActivity : AppCompatActivity() {
                                     versionAdapter.updateItemProperty("isTCloud")
                                 }
                             }
-
                         }
 
                         switchGuessTestExtend.setOnCheckedChangeListener { _, isChecked ->
@@ -670,32 +675,6 @@ class MainActivity : AppCompatActivity() {
                     val dialogTencentShiplyBinding =
                         DialogTencentShiplyBinding.inflate(layoutInflater)
 
-                    dialogTencentShiplyBinding.apply {
-                        if (DataStoreUtil.getBoolean("shiplyAdvancedConfigurations", false)) {
-                            shiplyAppid.visibility = View.VISIBLE
-                            shiplyModel.visibility = View.VISIBLE
-                            shiplyOsVersion.visibility = View.VISIBLE
-                            shiplySdkVersion.visibility = View.VISIBLE
-                            shiplyLanguage.visibility = View.VISIBLE
-                        } else {
-                            shiplyAppid.visibility = View.GONE
-                            shiplyModel.visibility = View.GONE
-                            shiplyOsVersion.visibility = View.GONE
-                            shiplySdkVersion.visibility = View.GONE
-                            shiplyLanguage.visibility = View.GONE
-                        }
-
-                        shiplyAppid.helperText =
-                            getString(R.string.shiplyGeneralOptionalHelpText) + SHIPLY_DEFAULT_APPID
-                        shiplyModel.helperText =
-                            getString(R.string.shiplyGeneralOptionalHelpText) + Build.MODEL.toString()
-                        shiplyOsVersion.helperText =
-                            getString(R.string.shiplyGeneralOptionalHelpText) + SDK_INT.toString()
-                        shiplySdkVersion.helperText =
-                            getString(R.string.shiplyGeneralOptionalHelpText) + SHIPLY_DEFAULT_SDK_VERSION
-                        shiplyLanguage.helperText =
-                            getString(R.string.shiplyGeneralOptionalHelpText) + Locale.getDefault().language.toString()
-                    }
 
                     val shiplyDialog = MaterialAlertDialogBuilder(this)
                         .setTitle(R.string.getUpdateFromShiplyPlatform)
@@ -710,39 +689,19 @@ class MainActivity : AppCompatActivity() {
                             shiplyVersion.editText?.setText(
                                 getString("shiplyVersion", "")
                             )
-                            shiplyAppid.editText?.setText(getString("shiplyAppid", ""))
-                            shiplyOsVersion.editText?.setText(
-                                getString("shiplyOsVersion", "")
-                            )
-                            shiplyModel.editText?.setText(getString("shiplyModel", ""))
-                            shiplySdkVersion.editText?.setText(
-                                getString("shiplySdkVersion", "")
-                            )
-                            shiplyLanguage.editText?.setText(
-                                getString("shiplyLanguage", "")
-                            )
                             switchShiplyAdvancedConfigurations.isChecked =
                                 getBoolean("shiplyAdvancedConfigurations", false)
                         }
 
                         switchShiplyAdvancedConfigurations.setOnCheckedChangeListener { _, isChecked ->
                             DataStoreUtil.putBooleanAsync("shiplyAdvancedConfigurations", isChecked)
-                            dialogTencentShiplyBinding.apply {
-                                if (isChecked) {
-                                    shiplyAppid.visibility = View.VISIBLE
-                                    shiplyModel.visibility = View.VISIBLE
-                                    shiplyOsVersion.visibility = View.VISIBLE
-                                    shiplySdkVersion.visibility = View.VISIBLE
-                                    shiplyLanguage.visibility = View.VISIBLE
-                                } else {
-                                    shiplyAppid.visibility = View.GONE
-                                    shiplyModel.visibility = View.GONE
-                                    shiplyOsVersion.visibility = View.GONE
-                                    shiplySdkVersion.visibility = View.GONE
-                                    shiplyLanguage.visibility = View.GONE
-                                }
-                            }
+                        }
 
+                        shiplyAdvancedConfigurationsClick.setOnClickListener {
+                            ShiplyAdvancedConfigSheet().show(
+                                supportFragmentManager,
+                                ShiplyAdvancedConfigSheet.TAG
+                            )
                         }
 
                         btnShiplyCancel.setOnClickListener {
@@ -751,12 +710,7 @@ class MainActivity : AppCompatActivity() {
 
                         btnShiplyStart.setOnClickListener {
                             shiplyUin.clearFocus()
-                            shiplyAppid.clearFocus()
                             shiplyVersion.clearFocus()
-                            shiplyModel.clearFocus()
-                            shiplyOsVersion.clearFocus()
-                            shiplySdkVersion.clearFocus()
-                            shiplyLanguage.clearFocus()
 
                             val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
                             imm.hideSoftInputFromWindow(shiplyVersion.windowToken, 0)
@@ -772,8 +726,7 @@ class MainActivity : AppCompatActivity() {
                                 )
                                 val progressIndicatorDrawable =
                                     IndeterminateDrawable.createCircularDrawable(
-                                        this@MainActivity,
-                                        spec
+                                        this@MainActivity, spec
                                     )
 
                                 btnShiplyStart.isEnabled = false
@@ -787,26 +740,9 @@ class MainActivity : AppCompatActivity() {
                                 ) throw MissingParameterException("请求 TDS 腾讯端服务 Shiply 发布平台需要 QQ 版本号参数，缺失版本号参数将无法获取 Shiply 平台返回数据。")
 
                                 if (!DataStoreUtil.getBoolean(
-                                        "shiplyAdvancedConfigurations",
-                                        false
+                                        "shiplyAdvancedConfigurations", false
                                     )
                                 ) {
-                                    DataStoreUtil.apply {
-                                        putStringAsync(
-                                            "shiplyVersion",
-                                            shiplyVersion.editText?.text.toString()
-                                        )
-                                        putStringAsync(
-                                            "shiplyUin",
-                                            shiplyUin.editText?.text.toString()
-                                        )
-                                    }
-                                    tencentShiplyStart(
-                                        btnShiplyStart,
-                                        shiplyVersion.editText?.text.toString(),
-                                        shiplyUin.editText?.text.toString()
-                                    )
-                                } else {
                                     DataStoreUtil.apply {
                                         putStringAsync(
                                             "shiplyVersion", shiplyVersion.editText?.text.toString()
@@ -814,40 +750,42 @@ class MainActivity : AppCompatActivity() {
                                         putStringAsync(
                                             "shiplyUin", shiplyUin.editText?.text.toString()
                                         )
-                                        putStringAsync(
-                                            "shiplyAppid", shiplyAppid.editText?.text.toString()
-                                        )
-                                        putStringAsync(
-                                            "shiplyOsVersion",
-                                            shiplyOsVersion.editText?.text.toString()
-                                        )
-                                        putStringAsync(
-                                            "shiplyModel", shiplyModel.editText?.text.toString()
-                                        )
-                                        putStringAsync(
-                                            "shiplySdkVersion",
-                                            shiplySdkVersion.editText?.text.toString()
-                                        )
-                                        putStringAsync(
-                                            "shiplyLanguage",
-                                            shiplyLanguage.editText?.text.toString()
-                                        )
                                     }
                                     tencentShiplyStart(
                                         btnShiplyStart,
                                         shiplyVersion.editText?.text.toString(),
-                                        shiplyUin.editText?.text.toString(),
-                                        shiplyAppid.editText?.text.toString()
-                                            .ifEmpty { SHIPLY_DEFAULT_APPID },
-                                        shiplyOsVersion.editText?.text.toString()
-                                            .ifEmpty { SDK_INT.toString() },
-                                        shiplyModel.editText?.text.toString()
-                                            .ifEmpty { Build.MODEL.toString() },
-                                        shiplySdkVersion.editText?.text.toString()
-                                            .ifEmpty { SHIPLY_DEFAULT_SDK_VERSION },
-                                        shiplyLanguage.editText?.text.toString()
-                                            .ifEmpty { Locale.getDefault().language.toString() }
+                                        shiplyUin.editText?.text.toString()
                                     )
+                                } else DataStoreUtil.apply {
+                                    putStringAsync(
+                                        "shiplyVersion", shiplyVersion.editText?.text.toString()
+                                    )
+                                    putStringAsync(
+                                        "shiplyUin", shiplyUin.editText?.text.toString()
+                                    )
+                                    tencentShiplyStart(btnShiplyStart,
+                                        shiplyVersion.editText?.text.toString(),
+                                        shiplyUin.editText?.text.toString(),
+                                        getString(
+                                            "shiplyAppid",
+                                            ""
+                                        ).ifEmpty { SHIPLY_DEFAULT_APPID },
+                                        getString(
+                                            "shiplyOsVersion",
+                                            ""
+                                        ).ifEmpty { SDK_INT.toString() },
+                                        getString(
+                                            "shiplyModel",
+                                            ""
+                                        ).ifEmpty { Build.MODEL.toString() },
+                                        getString(
+                                            "shiplySdkVersion",
+                                            ""
+                                        ).ifEmpty { SHIPLY_DEFAULT_SDK_VERSION },
+                                        getString(
+                                            "shiplyLanguage",
+                                            ""
+                                        ).ifEmpty { Locale.getDefault().language.toString() })
                                 }
                             } catch (e: MissingParameterException) {
                                 dialogError(e, true)
@@ -1628,6 +1566,87 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    class ShiplyAdvancedConfigSheet : BottomSheetDialogFragment() {
+        private lateinit var shiplyAdvancedConfigSheetBinding: BottomsheetShiplyAdvancedConfigBinding
+
+        override fun onCreateView(
+            inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        ): View = inflater.inflate(R.layout.bottomsheet_shiply_advanced_config, container, false)
+
+        override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+            super.onViewCreated(view, savedInstanceState)
+            dialog?.setCanceledOnTouchOutside(false)
+            shiplyAdvancedConfigSheetBinding = BottomsheetShiplyAdvancedConfigBinding.bind(view)
+            val shiplyAdvancedConfigSheetBehavior = (this.dialog as BottomSheetDialog).behavior
+            shiplyAdvancedConfigSheetBehavior.isDraggable = false
+            shiplyAdvancedConfigSheetBinding.apply {
+                shiplyAppid.helperText =
+                    getString(R.string.shiplyGeneralOptionalHelpText) + SHIPLY_DEFAULT_APPID
+                shiplyModel.helperText =
+                    getString(R.string.shiplyGeneralOptionalHelpText) + Build.MODEL.toString()
+                shiplyOsVersion.helperText =
+                    getString(R.string.shiplyGeneralOptionalHelpText) + SDK_INT.toString()
+                shiplySdkVersion.helperText =
+                    getString(R.string.shiplyGeneralOptionalHelpText) + SHIPLY_DEFAULT_SDK_VERSION
+                shiplyLanguage.helperText =
+                    getString(R.string.shiplyGeneralOptionalHelpText) + Locale.getDefault().language.toString()
+
+                DataStoreUtil.apply {
+                    shiplyAppid.editText?.setText(getString("shiplyAppid", ""))
+                    shiplyOsVersion.editText?.setText(
+                        getString("shiplyOsVersion", "")
+                    )
+                    shiplyModel.editText?.setText(getString("shiplyModel", ""))
+                    shiplySdkVersion.editText?.setText(
+                        getString("shiplySdkVersion", "")
+                    )
+                    shiplyLanguage.editText?.setText(
+                        getString("shiplyLanguage", "")
+                    )
+
+                    btnShiplyConfigSave.setOnClickListener {
+                        shiplyAppid.clearFocus()
+                        shiplyOsVersion.clearFocus()
+                        shiplyModel.clearFocus()
+                        shiplySdkVersion.clearFocus()
+                        shiplyLanguage.clearFocus()
+                        val imm =
+                            requireContext().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                        imm.hideSoftInputFromWindow(shiplyLanguage.windowToken, 0)
+                        putStringAsync(
+                            "shiplyAppid", shiplyAppid.editText?.text.toString()
+                        )
+                        putStringAsync(
+                            "shiplyOsVersion", shiplyOsVersion.editText?.text.toString()
+                        )
+                        putStringAsync(
+                            "shiplyModel", shiplyModel.editText?.text.toString()
+                        )
+                        putStringAsync(
+                            "shiplySdkVersion", shiplySdkVersion.editText?.text.toString()
+                        )
+                        putStringAsync(
+                            "shiplyLanguage", shiplyLanguage.editText?.text.toString()
+                        )
+                        Toast.makeText(requireContext(), R.string.saved, Toast.LENGTH_SHORT).show()
+                        shiplyAdvancedConfigSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                    }
+                }
+
+                btnShiplyConfigBack.setOnClickListener {
+                    shiplyAdvancedConfigSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                }
+
+                dragHandleView.setOnClickListener {
+                    shiplyAdvancedConfigSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                }
+            }
+        }
+
+        companion object {
+            const val TAG = "ShiplyAdvancedConfigSheet"
+        }
+    }
 
     companion object {
         @SuppressLint("StaticFieldLeak")

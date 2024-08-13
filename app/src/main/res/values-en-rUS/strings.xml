@@ -113,4 +113,7 @@
     <string name="shiplyOsVersionOptional">osVersion (optional)</string>
     <string name="shiplyModelOptional">model (optional)</string>
     <string name="shiplyLanguageOptional">language (optional)</string>
+    <string name="thicknessFollowSystem">Follow System</string>
+    <string name="back">Back</string>
+    <string name="shiplyUseAdvancedConfigurations">Use Advanced Configurations</string>
 </resources>

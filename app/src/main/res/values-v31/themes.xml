@@ -16,14 +16,23 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="Base.Theme.QQVersionList" parent="Theme.Material3.DynamicColors.Light.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowSplashScreenBackground">?attr/colorPrimaryContainer</item>
-        <item name="android:windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground_splash</item>
-        <item name="android:windowSplashScreenIconBackgroundColor">?attr/colorPrimaryContainer</item>
+        <item name="android:windowSplashScreenAnimatedIcon">
+            @drawable/ic_launcher_foreground_splash
+        </item>
+        <item name="android:windowSplashScreenIconBackgroundColor">?attr/colorPrimaryContainer
+        </item>
+        <item name="bottomSheetDialogTheme">@style/ThemeOverlay.App.BottomSheetDialog</item>
+    </style>
+
+    <style name="ThemeOverlay.App.BottomSheetDialog" parent="ThemeOverlay.Material3.BottomSheetDialog">
+        <item name="android:navigationBarColor" tools:ignore="NewApi">@android:color/transparent
+        </item>
     </style>
 </resources>
