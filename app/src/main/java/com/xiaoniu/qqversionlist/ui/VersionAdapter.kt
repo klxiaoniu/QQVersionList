@@ -24,6 +24,7 @@ import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
@@ -145,7 +146,10 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
                     linearImages.removeAllViews()
                     bean.imgs.forEach {
                         val iv = ImageView(holder.itemView.context).apply {
-                            setPadding(0, 0, 10, 0)
+                            setPadding(0, 0, 4.dp, 0)
+                            layoutParams = LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.WRAP_CONTENT, 150.dp
+                            )
                         }
                         linearImages.addView(iv)
                         iv.load(it) {
