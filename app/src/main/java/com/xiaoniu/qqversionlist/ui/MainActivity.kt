@@ -143,19 +143,7 @@ class MainActivity : AppCompatActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         versionAdapter = VersionAdapter()
-        binding.rvContent.apply {
-            adapter = versionAdapter
-            val screenWidthDp = (Resources.getSystem().displayMetrics.widthPixels).pxToDp
-            layoutManager = if (screenWidthDp in 600..840) StaggeredGridLayoutManager(
-                2,
-                StaggeredGridLayoutManager.VERTICAL
-            )
-            else if (screenWidthDp > 840) StaggeredGridLayoutManager(
-                3,
-                StaggeredGridLayoutManager.VERTICAL
-            )
-            else LinearLayoutManager(this@MainActivity)
-        }
+        versionListStaggeredGridLayout()
         initButtons()
 
         if (!BuildConfig.VERSION_NAME.endsWith("Release")) binding.materialToolbar.setNavigationIcon(
@@ -165,18 +153,27 @@ class MainActivity : AppCompatActivity() {
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
+        versionListStaggeredGridLayout()
+    }
+
+    private fun versionListStaggeredGridLayout() {
         binding.rvContent.apply {
             adapter = versionAdapter
             val screenWidthDp = (Resources.getSystem().displayMetrics.widthPixels).pxToDp
-            layoutManager = if (screenWidthDp in 600..840) StaggeredGridLayoutManager(
-                2,
-                StaggeredGridLayoutManager.VERTICAL
-            )
-            else if (screenWidthDp > 840) StaggeredGridLayoutManager(
-                3,
-                StaggeredGridLayoutManager.VERTICAL
-            )
-            else LinearLayoutManager(this@MainActivity)
+            val screenHeightDp = (Resources.getSystem().displayMetrics.heightPixels).pxToDp
+            layoutManager = if (screenHeightDp >= 600) {
+                when {
+                    screenWidthDp in 600..840 -> StaggeredGridLayoutManager(
+                        2, StaggeredGridLayoutManager.VERTICAL
+                    )
+
+                    screenWidthDp > 840 -> StaggeredGridLayoutManager(
+                        3, StaggeredGridLayoutManager.VERTICAL
+                    )
+
+                    else -> LinearLayoutManager(this@MainActivity)
+                }
+            } else LinearLayoutManager(this@MainActivity)
         }
     }
 
@@ -1582,6 +1579,9 @@ class MainActivity : AppCompatActivity() {
             shiplyAdvancedConfigSheetBinding = BottomsheetShiplyAdvancedConfigBinding.bind(view)
             val shiplyAdvancedConfigSheetBehavior = (this.dialog as BottomSheetDialog).behavior
             shiplyAdvancedConfigSheetBehavior.isDraggable = false
+            this@ShiplyAdvancedConfigSheet.isCancelable = true
+            shiplyAdvancedConfigSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            this@ShiplyAdvancedConfigSheet.isCancelable = false
             shiplyAdvancedConfigSheetBinding.apply {
                 shiplyAppid.helperText =
                     getString(R.string.shiplyGeneralOptionalHelpText) + SHIPLY_DEFAULT_APPID
