@@ -1252,10 +1252,10 @@ class MainActivity : AppCompatActivity() {
                         val okHttpClient = OkHttpClient()
                         val request = Request.Builder().url(link).head().build()
                         val response = okHttpClient.newCall(request).execute()
-                        if (response.isSuccessful) {
+                        val responseContentType = response.header("Content-Type")
+                        if (response.isSuccessful && (responseContentType == "application/octet-stream" || responseContentType == "application/vnd.android.package-archive")) {
                             val appSize = "%.2f".format(
-                                response.header("Content-Length")?.toDoubleOrNull()
-                                    ?.div(1024 * 1024)
+                                response.header("Content-Length")!!.toDouble().div(1024 * 1024)
                             )
                             status = STATUS_PAUSE
                             runOnUiThread {
@@ -1326,7 +1326,7 @@ class MainActivity : AppCompatActivity() {
                                                     )
                                                 }$link"
 
-                                                MODE_WECHAT -> "Android 微信 $versionBig（$vSmall）（${
+                                                MODE_WECHAT -> "Android 微信 $versionBig（$versionTrue）（${
                                                     getString(
                                                         R.string.fileSize
                                                     )
