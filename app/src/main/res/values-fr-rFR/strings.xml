@@ -30,8 +30,8 @@
     <string name="refresh">刷新</string>
     <string name="agree">同意</string>
     <string name="disagreeAndExit">不同意并退出</string>
-    <string name="withdrawConsentAndExit">撤回同意并退出</string>
     <string name="withdrawConsentUA">撤回同意用户协议</string>
+    <string name="withdrawConsentAndExit">撤回同意并退出</string>
     <string name="userAgreement">用户协议</string>
     <string name="enumerateVersionsFAB">猜版</string>
     <string name="enumerateVersionsDialogTitle">猜版 Extended</string>
@@ -109,8 +109,8 @@
     <string name="versionCardExpandButtonContentDescription">展开详情</string>
     <string name="versionCardCollapseButtonContentDescription">收起详情</string>
     <string name="shiplyAdvancedConfigurations">进阶配置</string>
-    <string name="shiplySdkVersionOptional">sdkVersion（非必填）</string>
     <string name="shiplyOsVersionOptional">osVersion（非必填）</string>
+    <string name="shiplySdkVersionOptional">sdkVersion（非必填）</string>
     <string name="shiplyModelOptional">model（非必填）</string>
     <string name="shiplyLanguageOptional">language（非必填）</string>
     <string name="thicknessFollowSystem">跟随系统</string>
