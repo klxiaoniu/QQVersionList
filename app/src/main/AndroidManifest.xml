@@ -36,7 +36,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.QQVersionList"
         android:usesCleartextTraffic="true"
-        tools:targetApi="34">
+        tools:targetApi="35">
         <activity
             android:name=".ui.MainActivity"
             android:configChanges="orientation|screenSize"

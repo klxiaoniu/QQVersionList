@@ -110,6 +110,7 @@ QQ 版本列表实用工具 for Android 是一个使用 Material 3 组件库构�
     - `https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_<主版本号>.<小版本号>_HD3_64.apk`
     - `https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_<主版本号>.<小版本号>_64_HD1HB.apk`
     - `https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_<主版本号>.<小版本号>_HD1HB_64.apk`
+    - `https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_<主版本号>.<小版本号>_test.apk`
     </details>
 
     若当次访问未果，默认情况下将按照设置逻辑自动递增小版本号后再次尝试访问，直到访问成功为止。
@@ -137,7 +138,9 @@ QQ 版本列表实用工具 for Android 是一个使用 Material 3 组件库构�
 
 在 QQ 版本列表实用工具界面，点击底部锥形瓶按钮即可进入“Shiply 平台更新获取（实验性）”对话框。
 
-对话框含有三个输入框，分别是“uin”、“版本”和“appid（非必填）”。请在“uin”输入框填写收到官方升级弹窗提醒的 QQ 号，在“版本”输入框填写收到官方升级弹窗提醒时正在使用的 QQ 版本。可选填收到官方升级弹窗提醒时正在使用的 QQ 的 appid。
+对话框含有两个输入框，分别是“uin”和“版本”。请在“uin”输入框填写收到官方升级弹窗提醒的 QQ 号，在“版本”输入框填写收到官方升级弹窗提醒时正在使用的 QQ 版本。
+
+在“进阶配置”中可配置“appid（非必填）”等可选参数。
 
 填写完毕后，点击“开始”，QQ 版本列表实用工具将会尝试根据填写参数构造内容并以此向 Shiply 平台发送 POST 请求。
 
@@ -220,6 +223,7 @@ QQ 版本列表实用工具的诞生离不开以下开源项目，感谢以下�
 - [JetBrains Runtime](https://github.com/JetBrains/JetBrainsRuntime)，Licensed under [GNU General Public License, version 2](https://github.com/JetBrains/JetBrainsRuntime/blob/main/LICENSE)
 - [Kotlin Serialization](https://github.com/Kotlin/kotlinx.serialization)，Licensed under [Apache License Version 2.0](https://github.com/Kotlin/kotlinx.serialization/blob/master/LICENSE.txt)
 - [Get QQ Update Link（owo233）](https://github.com/callng/GQUL)，Licensed under [The Unlicense](https://github.com/callng/GQUL/blob/master/LICENSE)
+- [Paris（Airbnb）](https://github.com/airbnb/paris)，Licensed under [Apache License Version 2.0](https://github.com/airbnb/paris/blob/master/LICENSE)
 
 ## 孪生项目
 

@@ -243,7 +243,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/ua_button_agree"
             style="@style/Widget.Material3.Button.TonalButton"
             android:layout_width="match_parent"
@@ -251,7 +251,7 @@
             android:layout_marginTop="8dp"
             android:text="@string/agree" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/ua_button_disagree"
             style="@style/Widget.Material3.Button.TonalButton"
             android:layout_width="match_parent"

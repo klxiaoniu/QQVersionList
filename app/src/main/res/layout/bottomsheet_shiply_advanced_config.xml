@@ -20,13 +20,23 @@
     android:id="@+id/ll_tencent_shiply"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:paddingStart="20dp"
-    android:paddingTop="6dp"
-    android:paddingEnd="20dp">
+    android:paddingStart="32dp"
+    android:paddingEnd="32dp">
+
+    <ImageView
+        android:id="@+id/drag_handle_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/back"
+        android:minWidth="48dp"
+        android:minHeight="48dp"
+        android:paddingBottom="20dp"
+        android:scaleType="center"
+        android:src="@drawable/bottom_sheet_drag_handle" />
 
     <ScrollView
-        android:id="@+id/shiply_back_text_scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="none">
@@ -34,117 +44,122 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingTop="12dp">
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/shiply_uin"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:hint="uin"
-                app:helperText="@string/uinHelpText"
-                app:helperTextEnabled="true">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:imeOptions="actionNext"
-                    android:inputType="number"
-                    android:singleLine="true" />
-
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/shiply_version"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:hint="@string/shiplyVersion"
-                app:helperText="@string/shiplyVersionHelpText"
-                app:helperTextEnabled="true">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:imeOptions="actionNext"
-                    android:singleLine="true" />
-
-
-            </com.google.android.material.textfield.TextInputLayout>
+            android:orientation="vertical">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/shiply_appid"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="8dp"
                 android:hint="@string/appidOptional"
-                app:helperText="@string/appidOptionalHelpText"
+                app:helperText="@string/shiplyGeneralOptionalHelpText"
+                app:helperTextEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionNext"
+                    android:singleLine="true" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/shiply_os_version"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:hint="@string/shiplyOsVersionOptional"
+                app:helperText="@string/shiplyGeneralOptionalHelpText"
+                app:helperTextEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionNext"
+                    android:singleLine="true" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/shiply_model"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:hint="@string/shiplyModelOptional"
+                app:helperText="@string/shiplyGeneralOptionalHelpText"
+                app:helperTextEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionNext"
+                    android:singleLine="true" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/shiply_sdk_version"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:hint="@string/shiplySdkVersionOptional"
+                app:helperText="@string/shiplyGeneralOptionalHelpText"
+                app:helperTextEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionNext"
+                    android:singleLine="true" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/shiply_language"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"
+                android:hint="@string/shiplyLanguageOptional"
+                app:helperText="@string/shiplyGeneralOptionalHelpText"
                 app:helperTextEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:imeOptions="actionDone"
-                    android:inputType="number"
                     android:singleLine="true" />
 
-
             </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/shiply_warning_card"
-                style="?attr/materialCardViewOutlinedStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:backgroundTint="?android:colorBackground">
-
-                <TextView
-                    android:id="@+id/shiply_warning_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="4dp"
-                    android:drawablePadding="4dp"
-                    android:paddingStart="3dp"
-                    android:paddingEnd="0dp"
-                    android:text="@string/shiplyWarning"
-                    android:textColor="?attr/colorPrimary"
-                    android:textSize="10sp"
-                    app:drawableStartCompat="@drawable/error_warning_fill" />
-            </com.google.android.material.card.MaterialCardView>
 
             <LinearLayout
                 style="?android:attr/buttonBarStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:paddingBottom="32dp"
                 android:weightSum="2">
 
-                <Button
-                    android:id="@+id/btn_shiply_cancel"
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_shiply_config_back"
                     style="@style/Widget.Material3.Button.TonalButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="20dp"
                     android:layout_weight="1"
-                    android:text="@string/cancel" />
+                    android:text="@string/back" />
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_shiply_start"
+                    android:id="@+id/btn_shiply_config_save"
                     style="@style/Widget.Material3.Button"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:layout_weight="1"
-                    android:text="@string/start" />
+                    android:text="@string/save" />
 
             </LinearLayout>
-
         </LinearLayout>
     </ScrollView>
-
 </LinearLayout>

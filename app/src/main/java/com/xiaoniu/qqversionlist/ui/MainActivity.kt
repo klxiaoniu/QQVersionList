@@ -25,8 +25,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.content.res.Resources
-import android.graphics.Color
-import android.graphics.Rect
 import android.net.Uri
 import android.os.Build
 import android.os.Build.VERSION.SDK_INT
@@ -38,23 +36,31 @@ import android.text.TextWatcher
 import android.text.style.URLSpan
 import android.util.Base64
 import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.text.method.LinkMovementMethodCompat
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.airbnb.paris.extensions.style
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.progressindicator.CircularProgressIndicatorSpec
@@ -64,24 +70,28 @@ import com.google.gson.GsonBuilder
 import com.google.gson.JsonElement
 import com.xiaoniu.qqversionlist.BuildConfig
 import com.xiaoniu.qqversionlist.R
+import com.xiaoniu.qqversionlist.TipTimeApplication.Companion.SHIPLY_DEFAULT_APPID
+import com.xiaoniu.qqversionlist.TipTimeApplication.Companion.SHIPLY_DEFAULT_SDK_VERSION
 import com.xiaoniu.qqversionlist.data.QQVersionBean
 import com.xiaoniu.qqversionlist.databinding.ActivityMainBinding
+import com.xiaoniu.qqversionlist.databinding.BottomsheetShiplyAdvancedConfigBinding
 import com.xiaoniu.qqversionlist.databinding.DialogGuessBinding
 import com.xiaoniu.qqversionlist.databinding.DialogLoadingBinding
 import com.xiaoniu.qqversionlist.databinding.DialogPersonalizationBinding
 import com.xiaoniu.qqversionlist.databinding.DialogSettingBinding
 import com.xiaoniu.qqversionlist.databinding.DialogShiplyBackBinding
+import com.xiaoniu.qqversionlist.databinding.DialogShiplyBinding
 import com.xiaoniu.qqversionlist.databinding.DialogSuffixDefineBinding
-import com.xiaoniu.qqversionlist.databinding.DialogTencentShiplyBinding
 import com.xiaoniu.qqversionlist.databinding.SuccessButtonBinding
 import com.xiaoniu.qqversionlist.databinding.UserAgreementBinding
 import com.xiaoniu.qqversionlist.util.ClipboardUtil.copyText
 import com.xiaoniu.qqversionlist.util.DataStoreUtil
 import com.xiaoniu.qqversionlist.util.InfoUtil.dialogError
 import com.xiaoniu.qqversionlist.util.InfoUtil.showToast
+import com.xiaoniu.qqversionlist.util.ShiplyUtil
 import com.xiaoniu.qqversionlist.util.StringUtil.getAllAPKUrl
 import com.xiaoniu.qqversionlist.util.StringUtil.toPrettyFormat
-import com.xiaoniu.qqversionlist.util.TencentShiplyUtil
+import com.xiaoniu.qqversionlist.util.pxToDp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -93,6 +103,7 @@ import java.io.BufferedReader
 import java.io.ByteArrayInputStream
 import java.io.InputStreamReader
 import java.lang.Thread.sleep
+import java.util.Locale
 import java.util.zip.GZIPInputStream
 
 
@@ -127,20 +138,12 @@ class MainActivity : AppCompatActivity() {
         // 不加这段代码的话 Google 可能会在系统栏加遮罩
         if (SDK_INT >= Build.VERSION_CODES.Q) window.apply {
             isNavigationBarContrastEnforced = false
-            isStatusBarContrastEnforced = false
         }
 
-        if (SDK_INT <= Build.VERSION_CODES.Q) window.apply {
-            statusBarColor = Color.TRANSPARENT
-            navigationBarColor = Color.TRANSPARENT
-        }
+        WindowCompat.setDecorFitsSystemWindows(window, false)
 
         versionAdapter = VersionAdapter()
-        binding.rvContent.apply {
-            adapter = versionAdapter
-            layoutManager = LinearLayoutManager(this@MainActivity)
-            addItemDecoration(VerticalSpaceItemDecoration(dpToPx(5)))
-        }
+        versionListStaggeredGridLayout()
         initButtons()
 
         if (!BuildConfig.VERSION_NAME.endsWith("Release")) binding.materialToolbar.setNavigationIcon(
@@ -148,29 +151,31 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-    private fun Context.dpToPx(dp: Int): Int {
-        return (dp * resources.displayMetrics.density).toInt()
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        versionListStaggeredGridLayout()
     }
 
-// 未来可期的 px to dp 函数
-//    private fun Context.pxToDp(px: Int): Int {
-//        return (px / resources.displayMetrics.density).toInt()
-//    }
+    private fun versionListStaggeredGridLayout() {
+        binding.rvContent.apply {
+            adapter = versionAdapter
+            val screenWidthDp = (Resources.getSystem().displayMetrics.widthPixels).pxToDp
+            val screenHeightDp = (Resources.getSystem().displayMetrics.heightPixels).pxToDp
+            layoutManager = if (screenHeightDp >= 600) {
+                when {
+                    screenWidthDp in 600..840 -> StaggeredGridLayoutManager(
+                        2, StaggeredGridLayoutManager.VERTICAL
+                    )
 
+                    screenWidthDp > 840 -> StaggeredGridLayoutManager(
+                        3, StaggeredGridLayoutManager.VERTICAL
+                    )
 
-    class VerticalSpaceItemDecoration(private val space: Int) : RecyclerView.ItemDecoration() {
-        override fun getItemOffsets(
-            outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State
-        ) {
-            with(outRect) {
-                // 对于每一项都添加底部间距
-                bottom = space
-                // 如果不是第一行，则添加顶部间距
-                if (parent.getChildAdapterPosition(view) != 0) top = space
-            }
+                    else -> LinearLayoutManager(this@MainActivity)
+                }
+            } else LinearLayoutManager(this@MainActivity)
         }
     }
-
 
     private fun showUADialog(agreed: Boolean, UATarget: Int) {
 
@@ -359,7 +364,7 @@ class MainActivity : AppCompatActivity() {
                         .setMessage(message)
                         .setView(linearLayout)
                         .setPositiveButton(R.string.done, null)
-                        .setNegativeButton(R.string.withdrawConsentAndExit) { _, _ ->
+                        .setNegativeButton(R.string.withdrawConsentUA) { _, _ ->
                             showUADialog(true, judgeUATarget)
                         }.show().apply {
                             findViewById<TextView>(android.R.id.message)?.movementMethod =
@@ -399,13 +404,28 @@ class MainActivity : AppCompatActivity() {
                         }
                         dialogPersonalization.setOnClickListener {
                             val dialogPersonalization =
-                                DialogPersonalizationBinding.inflate(layoutInflater)
+                                DialogPersonalizationBinding.inflate(layoutInflater).apply {
+                                    root.parent?.let { parent ->
+                                        if (parent is ViewGroup) {
+                                            parent.removeView(root)
+                                        }
+                                    }
 
-                            dialogPersonalization.root.parent?.let { parent ->
-                                if (parent is ViewGroup) {
-                                    parent.removeView(dialogPersonalization.root)
+                                    versionTcloudThickness.setEnabled(
+                                        DataStoreUtil.getBoolean(
+                                            "versionTCloud", true
+                                        )
+                                    )
+
+                                    versionTcloudThickness.value = when (DataStoreUtil.getString(
+                                        "versionTCloudThickness", "System"
+                                    )) {
+                                        "Light" -> 1.0f
+                                        "Regular" -> 2.0f
+                                        "Bold" -> 3.0f
+                                        else -> 4.0f
+                                    }
                                 }
-                            }
 
                             val dialogPer = MaterialAlertDialogBuilder(this@MainActivity)
                                 .setTitle(R.string.personalization)
@@ -432,19 +452,57 @@ class MainActivity : AppCompatActivity() {
                                     versionAdapter.submitList(qqVersion)
 
                                 }
+
+                                // 下两个设置不能异步持久化存储，否则视图更新读不到更新值
                                 progressSize.setOnCheckedChangeListener { _, isChecked ->
                                     DataStoreUtil.putBoolean("progressSize", isChecked)
                                     versionAdapter.updateItemProperty("isShowProgressSize")
                                 }
                                 versionTcloud.setOnCheckedChangeListener { _, isChecked ->
                                     DataStoreUtil.putBoolean("versionTCloud", isChecked)
+                                    dialogPersonalization.versionTcloudThickness.setEnabled(
+                                        isChecked
+                                    )
                                     versionAdapter.updateItemProperty("isTCloud")
                                 }
                                 btnPersonalizationOk.setOnClickListener {
                                     dialogPer.dismiss()
                                 }
-                            }
 
+                                versionTcloudThickness.setLabelFormatter {
+                                    return@setLabelFormatter when (it) {
+                                        1.0f -> "Light"
+                                        2.0f -> "Regular"
+                                        3.0f -> "Bold"
+                                        else -> getString(R.string.thicknessFollowSystem)
+                                    }
+                                }
+
+                                versionTcloudThickness.addOnChangeListener { _, value, _ ->
+                                    when (value) {
+                                        1.0f -> DataStoreUtil.putString(
+                                            "versionTCloudThickness",
+                                            "Light"
+                                        )
+
+                                        2.0f -> DataStoreUtil.putString(
+                                            "versionTCloudThickness",
+                                            "Regular"
+                                        )
+
+                                        3.0f -> DataStoreUtil.putString(
+                                            "versionTCloudThickness",
+                                            "Bold"
+                                        )
+
+                                        else -> DataStoreUtil.putString(
+                                            "versionTCloudThickness",
+                                            "System"
+                                        )
+                                    }
+                                    versionAdapter.updateItemProperty("isTCloud")
+                                }
+                            }
                         }
 
                         switchGuessTestExtend.setOnCheckedChangeListener { _, isChecked ->
@@ -475,68 +533,49 @@ class MainActivity : AppCompatActivity() {
                                 .setCancelable(false)
                                 .create()
 
-                            val screenHeight = Resources.getSystem().displayMetrics.heightPixels
-
-                            val constraintSet = ConstraintSet()
-                            constraintSet.clone(dialogSuffixDefine.dialogSuffixDefineContainer)
-
-                            // 屏幕方向判断，不同方向分别设置相应的约束布局滚动列表子项高度
-                            val currentConfig = resources.configuration
-                            if (currentConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) constraintSet.constrainHeight(
-                                R.id.suffix_define_check_group_all, screenHeight / 6
-                            )
-                            else if (currentConfig.orientation == Configuration.ORIENTATION_PORTRAIT) constraintSet.constrainHeight(
-                                R.id.suffix_define_check_group_all, screenHeight / 3
-                            )
-
-                            constraintSet.applyTo(dialogSuffixDefine.dialogSuffixDefineContainer)
-
                             dialogSuffixDefine.apply {
-                                suffixDefineCheckbox64hb.isChecked =
-                                    DataStoreUtil.getBoolean("suffix64HB", true)
-                                suffixDefineCheckboxHb64.isChecked =
-                                    DataStoreUtil.getBoolean("suffixHB64", true)
-                                suffixDefineCheckbox64hb1.isChecked =
-                                    DataStoreUtil.getBoolean("suffix64HB1", true)
-                                suffixDefineCheckboxHb164.isChecked =
-                                    DataStoreUtil.getBoolean("suffixHB164", true)
-                                suffixDefineCheckbox64hb2.isChecked =
-                                    DataStoreUtil.getBoolean("suffix64HB2", true)
-                                suffixDefineCheckboxHb264.isChecked =
-                                    DataStoreUtil.getBoolean("suffixHB264", true)
-                                suffixDefineCheckbox64hb3.isChecked =
-                                    DataStoreUtil.getBoolean("suffix64HB3", true)
-                                suffixDefineCheckboxHb364.isChecked =
-                                    DataStoreUtil.getBoolean("suffixHB364", true)
-
-                                suffixDefineCheckbox64hd.isChecked =
-                                    DataStoreUtil.getBoolean("suffix64HD", true)
-                                suffixDefineCheckboxHd64.isChecked =
-                                    DataStoreUtil.getBoolean("suffixHD64", true)
-                                suffixDefineCheckbox64hd1.isChecked =
-                                    DataStoreUtil.getBoolean("suffix64HD1", true)
-                                suffixDefineCheckboxHd164.isChecked =
-                                    DataStoreUtil.getBoolean("suffixHD164", true)
-                                suffixDefineCheckbox64hd2.isChecked =
-                                    DataStoreUtil.getBoolean("suffix64HD2", true)
-                                suffixDefineCheckboxHd264.isChecked =
-                                    DataStoreUtil.getBoolean("suffixHD264", true)
-                                suffixDefineCheckbox64hd3.isChecked =
-                                    DataStoreUtil.getBoolean("suffix64HD3", true)
-                                suffixDefineCheckboxHd364.isChecked =
-                                    DataStoreUtil.getBoolean("suffixHD364", true)
-
-                                suffixDefineCheckbox64hd1hb.isChecked =
-                                    DataStoreUtil.getBoolean("suffix64HD1HB", true)
-                                suffixDefineCheckboxHd1hb64.isChecked =
-                                    DataStoreUtil.getBoolean("suffixHD1HB64", true)
-
+                                DataStoreUtil.apply {
+                                    suffixDefineCheckbox64hb.isChecked =
+                                        getBoolean("suffix64HB", true)
+                                    suffixDefineCheckboxHb64.isChecked =
+                                        getBoolean("suffixHB64", true)
+                                    suffixDefineCheckbox64hb1.isChecked =
+                                        getBoolean("suffix64HB1", true)
+                                    suffixDefineCheckboxHb164.isChecked =
+                                        getBoolean("suffixHB164", true)
+                                    suffixDefineCheckbox64hb2.isChecked =
+                                        getBoolean("suffix64HB2", true)
+                                    suffixDefineCheckboxHb264.isChecked =
+                                        getBoolean("suffixHB264", true)
+                                    suffixDefineCheckbox64hb3.isChecked =
+                                        getBoolean("suffix64HB3", true)
+                                    suffixDefineCheckboxHb364.isChecked =
+                                        getBoolean("suffixHB364", true)
+                                    suffixDefineCheckbox64hd.isChecked =
+                                        getBoolean("suffix64HD", true)
+                                    suffixDefineCheckboxHd64.isChecked =
+                                        getBoolean("suffixHD64", true)
+                                    suffixDefineCheckbox64hd1.isChecked =
+                                        getBoolean("suffix64HD1", true)
+                                    suffixDefineCheckboxHd164.isChecked =
+                                        getBoolean("suffixHD164", true)
+                                    suffixDefineCheckbox64hd2.isChecked =
+                                        getBoolean("suffix64HD2", true)
+                                    suffixDefineCheckboxHd264.isChecked =
+                                        getBoolean("suffixHD264", true)
+                                    suffixDefineCheckbox64hd3.isChecked =
+                                        getBoolean("suffix64HD3", true)
+                                    suffixDefineCheckboxHd364.isChecked =
+                                        getBoolean("suffixHD364", true)
+                                    suffixDefineCheckbox64hd1hb.isChecked =
+                                        getBoolean("suffix64HD1HB", true)
+                                    suffixDefineCheckboxHd1hb64.isChecked =
+                                        getBoolean("suffixHD1HB64", true)
+                                    suffixDefineCheckboxTest.isChecked =
+                                        getBoolean("suffixTest", true)
+                                }
 
                                 dialogSuffix.show()
-
-//                            dialogSuffixDefine.settingSuffixDefine.editText?.setText(
-//                                DataStoreUtil.getStringAsync("suffixDefine", "")
-//                            )
 
                                 // 异步读取字符串，防止超长字符串造成阻塞
                                 settingSuffixDefine.apply {
@@ -558,7 +597,6 @@ class MainActivity : AppCompatActivity() {
                                     val suffixDefine = settingSuffixDefine.editText?.text.toString()
                                     DataStoreUtil.apply {
                                         putStringAsync("suffixDefine", suffixDefine)
-
                                         putBooleanAsync(
                                             "suffix64HB", suffixDefineCheckbox64hb.isChecked
                                         )
@@ -583,7 +621,6 @@ class MainActivity : AppCompatActivity() {
                                         putBooleanAsync(
                                             "suffixHB364", suffixDefineCheckboxHb364.isChecked
                                         )
-
                                         putBooleanAsync(
                                             "suffix64HD", suffixDefineCheckbox64hd.isChecked
                                         )
@@ -608,12 +645,14 @@ class MainActivity : AppCompatActivity() {
                                         putBooleanAsync(
                                             "suffixHD364", suffixDefineCheckboxHd364.isChecked
                                         )
-
                                         putBooleanAsync(
                                             "suffixHD1HB64", suffixDefineCheckboxHd1hb64.isChecked
                                         )
                                         putBooleanAsync(
                                             "suffix64HD1HB", suffixDefineCheckbox64hd1hb.isChecked
+                                        )
+                                        putBooleanAsync(
+                                            "suffixTest", suffixDefineCheckboxTest.isChecked
                                         )
                                     }
 
@@ -631,23 +670,36 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.btn_tencent_shiply -> {
-                    val dialogTencentShiplyBinding =
-                        DialogTencentShiplyBinding.inflate(layoutInflater)
+                    val dialogShiplyBinding =
+                        DialogShiplyBinding.inflate(layoutInflater)
+
 
                     val shiplyDialog = MaterialAlertDialogBuilder(this)
                         .setTitle(R.string.getUpdateFromShiplyPlatform)
                         .setIcon(R.drawable.flask_line)
-                        .setView(dialogTencentShiplyBinding.root)
+                        .setView(dialogShiplyBinding.root)
                         .setCancelable(false)
                         .show()
 
-                    dialogTencentShiplyBinding.apply {
+                    dialogShiplyBinding.apply {
                         DataStoreUtil.apply {
                             shiplyUin.editText?.setText(getString("shiplyUin", ""))
-                            shiplyAppid.editText?.setText(getString("shiplyAppid", ""))
                             shiplyVersion.editText?.setText(
                                 getString("shiplyVersion", "")
                             )
+                            switchShiplyAdvancedConfigurations.isChecked =
+                                getBoolean("shiplyAdvancedConfigurations", false)
+                        }
+
+                        switchShiplyAdvancedConfigurations.setOnCheckedChangeListener { _, isChecked ->
+                            DataStoreUtil.putBooleanAsync("shiplyAdvancedConfigurations", isChecked)
+                        }
+
+                        shiplyAdvancedConfigurationsClick.setOnClickListener {
+                            ShiplyAdvancedConfigSheet().apply {
+                                isCancelable = false
+                                show(supportFragmentManager, ShiplyAdvancedConfigSheet.TAG)
+                            }
                         }
 
                         btnShiplyCancel.setOnClickListener {
@@ -656,7 +708,6 @@ class MainActivity : AppCompatActivity() {
 
                         btnShiplyStart.setOnClickListener {
                             shiplyUin.clearFocus()
-                            shiplyAppid.clearFocus()
                             shiplyVersion.clearFocus()
 
                             val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
@@ -673,11 +724,11 @@ class MainActivity : AppCompatActivity() {
                                 )
                                 val progressIndicatorDrawable =
                                     IndeterminateDrawable.createCircularDrawable(
-                                        this@MainActivity,
-                                        spec
+                                        this@MainActivity, spec
                                     )
 
                                 btnShiplyStart.isEnabled = false
+                                btnShiplyStart.style(com.google.android.material.R.style.Widget_Material3_Button_Icon)
                                 btnShiplyStart.icon = progressIndicatorDrawable
 
                                 if (shiplyUin.editText?.text.toString()
@@ -687,39 +738,53 @@ class MainActivity : AppCompatActivity() {
                                         .isEmpty()
                                 ) throw MissingParameterException("请求 TDS 腾讯端服务 Shiply 发布平台需要 QQ 版本号参数，缺失版本号参数将无法获取 Shiply 平台返回数据。")
 
-                                if (shiplyVersion.editText?.text.toString()
-                                        .isEmpty()
+                                if (!DataStoreUtil.getBoolean(
+                                        "shiplyAdvancedConfigurations", false
+                                    )
                                 ) {
                                     DataStoreUtil.apply {
-                                        putString(
-                                            "shiplyVersion",
-                                            shiplyVersion.editText?.text.toString()
+                                        putStringAsync(
+                                            "shiplyVersion", shiplyVersion.editText?.text.toString()
                                         )
-                                        putString("shiplyUin", shiplyUin.editText?.text.toString())
+                                        putStringAsync(
+                                            "shiplyUin", shiplyUin.editText?.text.toString()
+                                        )
                                     }
                                     tencentShiplyStart(
                                         btnShiplyStart,
                                         shiplyVersion.editText?.text.toString(),
                                         shiplyUin.editText?.text.toString()
                                     )
-                                } else {
-                                    DataStoreUtil.apply {
-                                        putString(
-                                            "shiplyVersion",
-                                            shiplyVersion.editText?.text.toString()
-                                        )
-                                        putString(
-                                            "shiplyAppid",
-                                            shiplyAppid.editText?.text.toString()
-                                        )
-                                        putString("shiplyUin", shiplyUin.editText?.text.toString())
-                                    }
-                                    tencentShiplyStart(
-                                        btnShiplyStart,
+                                } else DataStoreUtil.apply {
+                                    putStringAsync(
+                                        "shiplyVersion", shiplyVersion.editText?.text.toString()
+                                    )
+                                    putStringAsync(
+                                        "shiplyUin", shiplyUin.editText?.text.toString()
+                                    )
+                                    tencentShiplyStart(btnShiplyStart,
                                         shiplyVersion.editText?.text.toString(),
                                         shiplyUin.editText?.text.toString(),
-                                        shiplyAppid.editText?.text.toString()
-                                    )
+                                        getString(
+                                            "shiplyAppid",
+                                            ""
+                                        ).ifEmpty { SHIPLY_DEFAULT_APPID },
+                                        getString(
+                                            "shiplyOsVersion",
+                                            ""
+                                        ).ifEmpty { SDK_INT.toString() },
+                                        getString(
+                                            "shiplyModel",
+                                            ""
+                                        ).ifEmpty { Build.MODEL.toString() },
+                                        getString(
+                                            "shiplySdkVersion",
+                                            ""
+                                        ).ifEmpty { SHIPLY_DEFAULT_SDK_VERSION },
+                                        getString(
+                                            "shiplyLanguage",
+                                            ""
+                                        ).ifEmpty { Locale.getDefault().language.toString() })
                                 }
                             } catch (e: MissingParameterException) {
                                 dialogError(e, true)
@@ -1030,8 +1095,7 @@ class MainActivity : AppCompatActivity() {
             val guessNot5 = DataStoreUtil.getBoolean("guessNot5", false)
             val guessTestExtend = DataStoreUtil.getBoolean("guessTestExtend", false)
             val downloadOnSystemManager = DataStoreUtil.getBoolean("downloadOnSystemManager", false)
-            val defineSuf = DataStoreUtil.getString("suffixDefine", "")
-            val defineSufList = defineSuf.split(", ")
+            val defineSufList = DataStoreUtil.getString("suffixDefine", "").split(", ")
             val suf64hb =
                 if (DataStoreUtil.getBoolean("suffix64HB", true)) listOf("_64_HB") else emptyList()
             val sufHb64 =
@@ -1096,6 +1160,8 @@ class MainActivity : AppCompatActivity() {
                     "suffixHD1HB64", true
                 )
             ) listOf("_HD1HB_64") else emptyList()
+            val sufTest =
+                if (DataStoreUtil.getBoolean("suffixTest", true)) listOf("_test") else emptyList()
 
             val stListPre = listOf("_64") + arrayListOf(
                 suf64hb,
@@ -1115,29 +1181,12 @@ class MainActivity : AppCompatActivity() {
                 sufHd164,
                 sufHd264,
                 sufHd364,
-                sufHd1hb64
+                sufHd1hb64,
+                sufTest
             ).flatten()
 
-            /*
-                "_64_HB",
-                "_64_HB1",
-                "_64_HB2",
-                "_64_HB3",
-                "_64_HD",
-                "_64_HD1",
-                "_64_HD2",
-                "_64_HD3",
-                "_64_HD1HB",
-                "_HB_64",
-                "_HB1_64",
-                "_HB2_64",
-                "_HB3_64",
-                "_HD_64",
-                "_HD1_64",
-                "_HD2_64",
-                "_HD3_64",
-                "_HD1HB_64"
-             */
+            // ["_64", "_64_HB", "_64_HB1", "_64_HB2", "_64_HB3", "_64_HD", "_64_HD1", "_64_HD2", "_64_HD3", "_64_HD1HB", "_HB_64", "_HB1_64", "_HB2_64", "_HB3_64", "_HD_64", "_HD1_64", "_HD2_64", "_HD3_64", "_HD1HB_64", "_test"]
+
             val stList = if (defineSufList != listOf("")) stListPre + defineSufList else stListPre
             try {
                 var sIndex = 0
@@ -1203,10 +1252,10 @@ class MainActivity : AppCompatActivity() {
                         val okHttpClient = OkHttpClient()
                         val request = Request.Builder().url(link).head().build()
                         val response = okHttpClient.newCall(request).execute()
-                        if (response.isSuccessful) {
+                        val responseContentType = response.header("Content-Type")
+                        if (response.isSuccessful && (responseContentType == "application/octet-stream" || responseContentType == "application/vnd.android.package-archive")) {
                             val appSize = "%.2f".format(
-                                response.header("Content-Length")?.toDoubleOrNull()
-                                    ?.div(1024 * 1024)
+                                response.header("Content-Length")!!.toDouble().div(1024 * 1024)
                             )
                             status = STATUS_PAUSE
                             runOnUiThread {
@@ -1277,7 +1326,7 @@ class MainActivity : AppCompatActivity() {
                                                     )
                                                 }$link"
 
-                                                MODE_WECHAT -> "Android 微信 $versionBig（$vSmall）（${
+                                                MODE_WECHAT -> "Android 微信 $versionBig（$versionTrue）（${
                                                     getString(
                                                         R.string.fileSize
                                                     )
@@ -1378,8 +1427,6 @@ class MainActivity : AppCompatActivity() {
                         break
                     }
                 }
-
-
             } catch (e: Exception) {
                 e.printStackTrace()
                 dialogError(e)
@@ -1400,22 +1447,32 @@ class MainActivity : AppCompatActivity() {
         btn: MaterialButton,
         shiplyVersion: String,
         shiplyUin: String,
-        shiplyAppid: String = "537230561"
+        shiplyAppid: String = SHIPLY_DEFAULT_APPID,
+        shiplyOsVersion: String = SDK_INT.toString(),
+        shiplyModel: String = Build.MODEL.toString(),
+        shiplySdkVersion: String = SHIPLY_DEFAULT_SDK_VERSION,
+        shiplyLanguage: String = Locale.getDefault().language.toString()
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             class MissingCipherTextException(message: String) : Exception(message)
             try {
                 // 参考：https://github.com/callng/GQUL
-                val shiplyKey = TencentShiplyUtil.generateAESKey()
-                val shiplyData = TencentShiplyUtil.generateJsonString(
-                    shiplyVersion, shiplyUin, shiplyAppid
+                val shiplyKey = ShiplyUtil.generateAESKey()
+                val shiplyData = ShiplyUtil.generateJsonString(
+                    shiplyVersion,
+                    shiplyUin,
+                    shiplyAppid,
+                    shiplyOsVersion,
+                    shiplyModel,
+                    shiplySdkVersion,
+                    shiplyLanguage
                 )
-                val shiplyEncode = TencentShiplyUtil.aesEncrypt(shiplyData, shiplyKey)
+                val shiplyEncode = ShiplyUtil.aesEncrypt(shiplyData, shiplyKey)
                 val shiplyRsaPublicKey =
-                    TencentShiplyUtil.base64ToRsaPublicKey("MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC/rT6ULqXC32dgz4t/Vv4WS9pTks5Z2fPmbTHIXEVeiOEnjOpPBHOi1AUz+Ykqjk11ZyjidUwDyIaC/VtaC5Z7Bt/W+CFluDer7LiiDa6j77if5dbcvWUrJbgvhKqaEhWnMDXT1pAG2KxL/pNFAYguSLpOh9pK97G8umUMkkwWkwIDAQAB")
+                    ShiplyUtil.base64ToRsaPublicKey("MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC/rT6ULqXC32dgz4t/Vv4WS9pTks5Z2fPmbTHIXEVeiOEnjOpPBHOi1AUz+Ykqjk11ZyjidUwDyIaC/VtaC5Z7Bt/W+CFluDer7LiiDa6j77if5dbcvWUrJbgvhKqaEhWnMDXT1pAG2KxL/pNFAYguSLpOh9pK97G8umUMkkwWkwIDAQAB")
                 if (shiplyRsaPublicKey == null) runOnUiThread { showToast("生成 RSA 公钥失败") } // 应该不会失败吧
                 else {
-                    val shiplyEncode2 = TencentShiplyUtil.rsaEncrypt(
+                    val shiplyEncode2 = ShiplyUtil.rsaEncrypt(
                         shiplyKey, shiplyRsaPublicKey
                     )
                     val shiplyPost = mapOf(
@@ -1429,12 +1486,12 @@ class MainActivity : AppCompatActivity() {
                             )
                         )
                     )
-                    val shiplyResult = TencentShiplyUtil.postJsonWithOkHttp(
+                    val shiplyResult = ShiplyUtil.postJsonWithOkHttp(
                         "https://rdelivery.qq.com/v3/config/batchpull", shiplyPost
                     )
-                    val shiplyText = TencentShiplyUtil.getCipherText(shiplyResult)
+                    val shiplyText = ShiplyUtil.getCipherText(shiplyResult)
                     if (!shiplyText.isNullOrEmpty()) {
-                        val shiplyDecode = TencentShiplyUtil.aesDecrypt(
+                        val shiplyDecode = ShiplyUtil.aesDecrypt(
                             Base64.decode(shiplyText, Base64.NO_WRAP), shiplyKey
                         )
                         val gzipInputStream = GZIPInputStream(
@@ -1501,6 +1558,7 @@ class MainActivity : AppCompatActivity() {
                 dialogError(e)
             } finally {
                 runOnUiThread {
+                    btn.style(com.google.android.material.R.style.Widget_Material3_Button)
                     btn.icon = null
                     btn.isEnabled = true
                 }
@@ -1508,6 +1566,99 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    class ShiplyAdvancedConfigSheet : BottomSheetDialogFragment() {
+        private lateinit var shiplyAdvancedConfigSheetBinding: BottomsheetShiplyAdvancedConfigBinding
+
+        override fun onCreateView(
+            inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        ): View = inflater.inflate(R.layout.bottomsheet_shiply_advanced_config, container, false)
+
+        override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+            super.onViewCreated(view, savedInstanceState)
+            dialog?.setCanceledOnTouchOutside(false)
+            shiplyAdvancedConfigSheetBinding = BottomsheetShiplyAdvancedConfigBinding.bind(view)
+            val shiplyAdvancedConfigSheetBehavior = (this.dialog as BottomSheetDialog).behavior
+            shiplyAdvancedConfigSheetBehavior.isDraggable = false
+            this@ShiplyAdvancedConfigSheet.isCancelable = true
+            shiplyAdvancedConfigSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            this@ShiplyAdvancedConfigSheet.isCancelable = false
+            shiplyAdvancedConfigSheetBinding.apply {
+                shiplyAppid.helperText =
+                    getString(R.string.shiplyGeneralOptionalHelpText) + SHIPLY_DEFAULT_APPID
+                shiplyModel.helperText =
+                    getString(R.string.shiplyGeneralOptionalHelpText) + Build.MODEL.toString()
+                shiplyOsVersion.helperText =
+                    getString(R.string.shiplyGeneralOptionalHelpText) + SDK_INT.toString()
+                shiplySdkVersion.helperText =
+                    getString(R.string.shiplyGeneralOptionalHelpText) + SHIPLY_DEFAULT_SDK_VERSION
+                shiplyLanguage.helperText =
+                    getString(R.string.shiplyGeneralOptionalHelpText) + Locale.getDefault().language.toString()
+
+                DataStoreUtil.apply {
+                    shiplyAppid.editText?.setText(getString("shiplyAppid", ""))
+                    shiplyOsVersion.editText?.setText(
+                        getString("shiplyOsVersion", "")
+                    )
+                    shiplyModel.editText?.setText(getString("shiplyModel", ""))
+                    shiplySdkVersion.editText?.setText(
+                        getString("shiplySdkVersion", "")
+                    )
+                    shiplyLanguage.editText?.setText(
+                        getString("shiplyLanguage", "")
+                    )
+
+                    btnShiplyConfigSave.setOnClickListener {
+                        shiplyAppid.clearFocus()
+                        shiplyOsVersion.clearFocus()
+                        shiplyModel.clearFocus()
+                        shiplySdkVersion.clearFocus()
+                        shiplyLanguage.clearFocus()
+                        val imm =
+                            requireContext().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                        imm.hideSoftInputFromWindow(shiplyLanguage.windowToken, 0)
+                        putStringAsync(
+                            "shiplyAppid", shiplyAppid.editText?.text.toString()
+                        )
+                        putStringAsync(
+                            "shiplyOsVersion", shiplyOsVersion.editText?.text.toString()
+                        )
+                        putStringAsync(
+                            "shiplyModel", shiplyModel.editText?.text.toString()
+                        )
+                        putStringAsync(
+                            "shiplySdkVersion", shiplySdkVersion.editText?.text.toString()
+                        )
+                        putStringAsync(
+                            "shiplyLanguage", shiplyLanguage.editText?.text.toString()
+                        )
+                        Toast.makeText(requireContext(), R.string.saved, Toast.LENGTH_SHORT).show()
+                        this@ShiplyAdvancedConfigSheet.isCancelable = true
+                        shiplyAdvancedConfigSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                    }
+                }
+
+                btnShiplyConfigBack.setOnClickListener {
+                    val imm =
+                        requireContext().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.hideSoftInputFromWindow(shiplyLanguage.windowToken, 0)
+                    this@ShiplyAdvancedConfigSheet.isCancelable = true
+                    shiplyAdvancedConfigSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                }
+
+                dragHandleView.setOnClickListener {
+                    val imm =
+                        requireContext().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.hideSoftInputFromWindow(shiplyLanguage.windowToken, 0)
+                    this@ShiplyAdvancedConfigSheet.isCancelable = true
+                    shiplyAdvancedConfigSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+                }
+            }
+        }
+
+        companion object {
+            const val TAG = "ShiplyAdvancedConfigSheet"
+        }
+    }
 
     companion object {
         @SuppressLint("StaticFieldLeak")

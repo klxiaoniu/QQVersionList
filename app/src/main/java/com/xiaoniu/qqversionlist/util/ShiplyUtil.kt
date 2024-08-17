@@ -43,9 +43,17 @@ import javax.crypto.Cipher
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
 
-object TencentShiplyUtil {
+object ShiplyUtil {
 
-    fun generateJsonString(appVersion: String, uin: String, appid: String): String {
+    fun generateJsonString(
+        appVersion: String,
+        uin: String,
+        appid: String,
+        osVersion: String,
+        model: String,
+        sdkVersion: String,
+        language: String
+    ): String {
         val timestamp = System.currentTimeMillis() / 1000L
         val data = mapOf(
             "systemID" to "10016",
@@ -61,16 +69,16 @@ object TencentShiplyUtil {
             "pullParams" to mapOf(
                 "properties" to mapOf(
                     "platform" to 2,
-                    "language" to "zh",
-                    "sdkVersion" to "1.3.35-RC03",
+                    "language" to language, // Locale.getDefault().language.toString()
+                    "sdkVersion" to sdkVersion, // "1.3.36-RC01"
                     "guid" to uin,
                     "appVersion" to appVersion,
-                    "osVersion" to "34",
+                    "osVersion" to osVersion, // Build.VERSION.SDK_INT.toString()
                     "is64Bit" to true,
                     "bundleId" to "com.tencent.mobileqq",
                     "uniqueId" to UUID.randomUUID().toString(),
-                    "model" to "2304FPN6DC"
-                ), "isDebugPackage" to false, "customProperties" to mapOf("appid" to appid)
+                    "model" to model // Build.MODEL.toString()
+                ), "isDebugPackage" to false, "customProperties" to mapOf("appid" to appid) // "537230561"
             ),
             "taskChecksum" to "0",
             "context" to "H4sIAAAAAAAA/+Li5ni5T1WIVaBT1INRS8HS0MwyMdnCwMzQMCklxdQ81cTC1MzIIDnV0DIxydLYGAAAAP//AQAA//+OoFcLLwAAAA=="
@@ -174,5 +182,4 @@ object TencentShiplyUtil {
             } ?: throw IOException("Response body is null")
         }
     }
-
 }

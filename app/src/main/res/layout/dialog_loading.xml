@@ -44,7 +44,7 @@
         android:textAlignment="viewStart"
         android:textSize="13sp" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_cancel"
         style="?attr/materialIconButtonFilledTonalStyle"
         android:layout_width="wrap_content"

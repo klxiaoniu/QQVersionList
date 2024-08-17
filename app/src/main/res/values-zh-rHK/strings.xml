@@ -31,6 +31,7 @@
     <string name="agree">同意</string>
     <string name="disagreeAndExit">不同意並退出</string>
     <string name="withdrawConsentAndExit">撤回同意並退出</string>
+    <string name="withdrawConsentUA">撤回同意用戶協議</string>
     <string name="userAgreement">用戶協議</string>
     <string name="enumerateVersionsFAB">猜版</string>
     <string name="enumerateVersionsDialogTitle">猜版 Extended</string>
@@ -94,7 +95,7 @@
     <string name="trueVersion">真實版本號</string>
     <string name="trueVersionHelpText">填寫真實版本號（版本碼），僅微信猜版使用</string>
     <string name="appidOptional">appid（非必填）</string>
-    <string name="appidOptionalHelpText">填寫用於請求 Shiply 平台的 Android QQ appid</string>
+    <string name="shiplyGeneralOptionalHelpText">預設值：</string>
     <string name="shiplyVersion">版本</string>
     <string name="shiplyVersionHelpText">填寫用於請求 Shiply 平台的 Android QQ 版本號</string>
     <string name="uinHelpText">填寫用於請求 Shiply 平台的對象 QQ 號</string>
@@ -105,4 +106,14 @@
     <string name="customVersionEnumSuffix">自定義猜版後綴</string>
     <string name="customVersionEnumSuffixHelpText">請使用“, ”（西文逗號+空格）分割</string>
     <string name="facilitateI18n">協助翻譯：</string>
+    <string name="versionCardExpandButtonContentDescription">展開詳情</string>
+    <string name="versionCardCollapseButtonContentDescription">收起詳情</string>
+    <string name="shiplyAdvancedConfigurations">進階配置</string>
+    <string name="shiplySdkVersionOptional">sdkVersion（非必填）</string>
+    <string name="shiplyOsVersionOptional">osVersion（非必填）</string>
+    <string name="shiplyModelOptional">model（非必填）</string>
+    <string name="shiplyLanguageOptional">language（非必填）</string>
+    <string name="thicknessFollowSystem">跟隨系統</string>
+    <string name="back">返回</string>
+    <string name="shiplyUseAdvancedConfigurations">使用進階配置</string>
 </resources>

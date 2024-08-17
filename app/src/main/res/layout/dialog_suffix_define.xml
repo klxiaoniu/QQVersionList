@@ -15,76 +15,87 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/dialog_suffix_define_container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingStart="20dp"
-    android:paddingTop="12dp"
-    android:paddingEnd="20dp"
-    android:paddingBottom="20dp">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/setting_suffix_define"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:hint="@string/customVersionEnumSuffix"
-        app:helperText="@string/customVersionEnumSuffixHelpText"
-        app:helperTextEnabled="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none">
 
-        <com.google.android.material.textfield.TextInputEditText
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/dialog_suffix_define_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:singleLine="true" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:paddingStart="14dp"
+            android:paddingTop="12dp"
+            android:paddingEnd="14dp"
+            android:paddingBottom="20dp">
 
-    <LinearLayout
-        android:id="@+id/suffix_define_check_group_all"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/suffix_define_button_group"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/setting_suffix_define">
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/setting_suffix_define"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:hint="@string/customVersionEnumSuffix"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp"
+                app:helperText="@string/customVersionEnumSuffixHelpText"
+                app:helperTextEnabled="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbarStyle="insideOverlay">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <LinearLayout
+                android:id="@+id/suffix_define_check_group_all"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                app:layout_constraintBottom_toTopOf="@id/suffix_define_button_group"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/setting_suffix_define">
 
                 <LinearLayout
                     android:id="@+id/suffix_define_checkbox_group1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:weightSum="2"
+                    android:weightSum="3"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/setting_suffix_define">
 
                     <CheckBox
                         android:id="@+id/suffix_define_checkbox_64hb"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="_64_HB" />
 
                     <CheckBox
                         android:id="@+id/suffix_define_checkbox_hb64"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="_HB_64" />
+
+                    <CheckBox
+                        android:id="@+id/suffix_define_checkbox_64hb1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="_64_HB1" />
 
                 </LinearLayout>
 
@@ -92,48 +103,30 @@
                     android:id="@+id/suffix_define_checkbox_group2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:weightSum="2"
+                    android:weightSum="3"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/suffix_define_checkbox_group1">
 
                     <CheckBox
-                        android:id="@+id/suffix_define_checkbox_64hb1"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="_64_HB1" />
-
-                    <CheckBox
                         android:id="@+id/suffix_define_checkbox_hb164"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="_HB1_64" />
 
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/suffix_define_checkbox_group3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="2"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/suffix_define_checkbox_group2">
-
                     <CheckBox
                         android:id="@+id/suffix_define_checkbox_64hb2"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="_64_HB2" />
 
                     <CheckBox
                         android:id="@+id/suffix_define_checkbox_hb264"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="_HB2_64" />
@@ -141,77 +134,67 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/suffix_define_checkbox_group4"
+                    android:id="@+id/suffix_define_checkbox_group3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:weightSum="2"
+                    android:weightSum="3"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/suffix_define_checkbox_group3">
+                    app:layout_constraintTop_toBottomOf="@id/suffix_define_checkbox_group2">
 
                     <CheckBox
                         android:id="@+id/suffix_define_checkbox_64hb3"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="_64_HB3" />
 
                     <CheckBox
                         android:id="@+id/suffix_define_checkbox_hb364"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="_HB3_64" />
 
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/suffix_define_checkbox_group5"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="2"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/suffix_define_checkbox_group4">
-
                     <CheckBox
                         android:id="@+id/suffix_define_checkbox_64hd"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="_64_HD" />
 
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/suffix_define_checkbox_group4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:weightSum="3"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/suffix_define_checkbox_group3">
+
                     <CheckBox
                         android:id="@+id/suffix_define_checkbox_hd64"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="_HD_64" />
 
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/suffix_define_checkbox_group6"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="2"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/suffix_define_checkbox_group5">
-
                     <CheckBox
                         android:id="@+id/suffix_define_checkbox_64hd1"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="_64_HD1" />
 
                     <CheckBox
                         android:id="@+id/suffix_define_checkbox_hd164"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="_HD1_64" />
@@ -219,9 +202,71 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/suffix_define_checkbox_group5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:weightSum="3"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/suffix_define_checkbox_group4">
+
+                    <CheckBox
+                        android:id="@+id/suffix_define_checkbox_64hd2"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="_64_HD2" />
+
+                    <CheckBox
+                        android:id="@+id/suffix_define_checkbox_hd264"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="_HD2_64" />
+
+                    <CheckBox
+                        android:id="@+id/suffix_define_checkbox_64hd3"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="_64_HD3" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/suffix_define_checkbox_group6"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/suffix_define_checkbox_group5">
+
+                    <CheckBox
+                        android:id="@+id/suffix_define_checkbox_hd364"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="_HD3_64" />
+
+                    <CheckBox
+                        android:id="@+id/suffix_define_checkbox_64hd1hb"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="_64_HD1HB" />
+
+                </LinearLayout>
+
+                <LinearLayout
                     android:id="@+id/suffix_define_checkbox_group7"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:weightSum="2"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -229,108 +274,56 @@
                     app:layout_constraintTop_toBottomOf="@id/suffix_define_checkbox_group6">
 
                     <CheckBox
-                        android:id="@+id/suffix_define_checkbox_64hd2"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="_64_HD2" />
-
-                    <CheckBox
-                        android:id="@+id/suffix_define_checkbox_hd264"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="_HD2_64" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/suffix_define_checkbox_group8"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="2"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/suffix_define_checkbox_group7">
-
-                    <CheckBox
-                        android:id="@+id/suffix_define_checkbox_64hd3"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="_64_HD3" />
-
-                    <CheckBox
-                        android:id="@+id/suffix_define_checkbox_hd364"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="_HD3_64" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/suffix_define_checkbox_group9"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="2"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/suffix_define_checkbox_group8">
-
-                    <CheckBox
-                        android:id="@+id/suffix_define_checkbox_64hd1hb"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="_64_HD1HB" />
-
-                    <CheckBox
                         android:id="@+id/suffix_define_checkbox_hd1hb64"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="_HD1HB_64" />
 
+                    <CheckBox
+                        android:id="@+id/suffix_define_checkbox_test"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="_test" />
+
                 </LinearLayout>
             </LinearLayout>
 
-        </ScrollView>
-    </LinearLayout>
+            <LinearLayout
+                android:id="@+id/suffix_define_button_group"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp"
+                android:weightSum="2"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/suffix_define_check_group_all">
 
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_suffix_cancel"
+                    style="@style/Widget.Material3.Button.TonalButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:text="@string/cancel" />
 
-    <LinearLayout
-        android:id="@+id/suffix_define_button_group"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="2"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/suffix_define_check_group_all">
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_suffix_save"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_weight="1"
+                    android:text="@string/save" />
 
-        <Button
-            android:id="@+id/btn_suffix_cancel"
-            style="@style/Widget.Material3.Button.TonalButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_weight="1"
-            android:text="@string/cancel" />
+            </LinearLayout>
 
-        <Button
-            android:id="@+id/btn_suffix_save"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_weight="1"
-            android:text="@string/save" />
-
-    </LinearLayout>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</LinearLayout>

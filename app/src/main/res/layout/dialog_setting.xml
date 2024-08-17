@@ -93,7 +93,7 @@
                 android:paddingBottom="16dp"
                 android:text="@string/removeMultiplesOf5ForQQPreviewVersions" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_setting_ok"
                 style="@style/Widget.Material3.Button.TonalButton"
                 android:layout_width="match_parent"

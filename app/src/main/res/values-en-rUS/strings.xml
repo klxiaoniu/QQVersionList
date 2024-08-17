@@ -31,6 +31,7 @@
     <string name="agree">Agree</string>
     <string name="disagreeAndExit">Disagree and Exit</string>
     <string name="withdrawConsentAndExit">Withdraw Consent and Exit</string>
+    <string name="withdrawConsentUA">Withdraw User Agreement Consent</string>
     <string name="userAgreement">User Agreement</string>
     <string name="enumerateVersionsFAB">Enum. Ver.</string>
     <string name="enumerateVersionsDialogTitle">Enumerate Versions</string>
@@ -94,7 +95,7 @@
     <string name="trueVersion">Actual Version Number</string>
     <string name="trueVersionHelpText">Enter the actual version number (versionCode), used only for enumerating Weixin versions.</string>
     <string name="appidOptional">appid (optional)</string>
-    <string name="appidOptionalHelpText">Enter the Android QQ appid, used for requesting the Shiply Platform.</string>
+    <string name="shiplyGeneralOptionalHelpText">Default:&#160;</string>
     <string name="shiplyVersion">Version</string>
     <string name="shiplyVersionHelpText">Enter the Android QQ version number, used for requesting the Shiply Platform.</string>
     <string name="uinHelpText">Enter the target QQ account number, used for requesting the Shiply Platform.</string>
@@ -105,4 +106,14 @@
     <string name="customVersionEnumSuffix">Custom Version Enum. Suffix</string>
     <string name="customVersionEnumSuffixHelpText">Please separate using \&quot;, \&quot; (comma + space).</string>
     <string name="facilitateI18n">Facilitate I18n:&#160;</string>
+    <string name="versionCardExpandButtonContentDescription">Expand details</string>
+    <string name="versionCardCollapseButtonContentDescription">Collapse details</string>
+    <string name="shiplyAdvancedConfigurations">Advanced Configurations</string>
+    <string name="shiplySdkVersionOptional">sdkVersion (optional)</string>
+    <string name="shiplyOsVersionOptional">osVersion (optional)</string>
+    <string name="shiplyModelOptional">model (optional)</string>
+    <string name="shiplyLanguageOptional">language (optional)</string>
+    <string name="thicknessFollowSystem">Follow System</string>
+    <string name="back">Back</string>
+    <string name="shiplyUseAdvancedConfigurations">Use Advanced Configurations</string>
 </resources>

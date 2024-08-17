@@ -22,6 +22,7 @@
     style="?attr/materialCardViewElevatedStyle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_margin="5dp"
     android:backgroundTint="?android:colorBackground"
     android:clickable="true"
     android:focusable="true">
@@ -62,17 +63,19 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="6dp"
                 android:backgroundTint="?attr/colorSecondaryContainer"
-                app:cardCornerRadius="4dp"
                 app:layout_constraintBottom_toBottomOf="@id/tv_old_version"
                 app:layout_constraintStart_toEndOf="@id/tv_old_version"
-                app:layout_constraintTop_toTopOf="@id/tv_old_version">
+                app:layout_constraintTop_toTopOf="@id/tv_old_version"
+                app:shapeAppearance="?attr/shapeAppearanceCornerExtraSmall">
 
                 <TextView
                     android:id="@+id/tv_old_install"
+                    style="?attr/textAppearanceLabelSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="2dp"
                     android:layout_marginEnd="2dp"
+                    android:letterSpacing="0"
                     android:padding="4dp"
                     android:textColor="?attr/colorOnSecondaryContainer"
                     android:textSize="10sp"
@@ -89,17 +92,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="?attr/colorSecondaryContainer"
-                app:cardCornerRadius="4dp"
                 app:layout_constraintBottom_toBottomOf="@id/tv_old_version"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/tv_old_version">
+                app:layout_constraintTop_toTopOf="@id/tv_old_version"
+                app:shapeAppearance="?attr/shapeAppearanceCornerExtraSmall">
 
                 <TextView
                     android:id="@+id/tv_old_per_size_text"
+                    style="?attr/textAppearanceLabelSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="2dp"
                     android:layout_marginEnd="2dp"
+                    android:letterSpacing="0"
                     android:padding="4dp"
                     android:textColor="?attr/colorOnSecondaryContainer"
                     android:textSize="10sp"
@@ -117,17 +122,19 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="6dp"
                 android:backgroundTint="?attr/colorSecondaryContainer"
-                app:cardCornerRadius="4dp"
                 app:layout_constraintBottom_toBottomOf="@id/tv_old_version"
                 app:layout_constraintEnd_toStartOf="@id/tv_old_per_size_card"
-                app:layout_constraintTop_toTopOf="@id/tv_old_version">
+                app:layout_constraintTop_toTopOf="@id/tv_old_version"
+                app:shapeAppearance="?attr/shapeAppearanceCornerExtraSmall">
 
                 <TextView
                     android:id="@+id/tv_old_size"
+                    style="?attr/textAppearanceLabelSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="2dp"
                     android:layout_marginEnd="2dp"
+                    android:letterSpacing="0"
                     android:padding="4dp"
                     android:textColor="?attr/colorOnSecondaryContainer"
                     android:textSize="10sp"
@@ -215,11 +222,12 @@
 
         </HorizontalScrollView>
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/ib_collapse"
             style="?attr/materialIconButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/versionCardCollapseButtonContentDescription"
             app:icon="@drawable/ic_up"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

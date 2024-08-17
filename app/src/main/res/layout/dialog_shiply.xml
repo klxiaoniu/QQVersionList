@@ -17,7 +17,7 @@
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/ll_guess"
+    android:id="@+id/ll_tencent_shiply"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -35,82 +35,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingTop="12dp"
-            android:paddingBottom="20dp">
+            android:paddingTop="12dp">
 
-            <LinearLayout
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/shiply_uin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:baselineAligned="false"
-                android:orientation="horizontal">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/et_version_big"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_weight="1"
-                    android:hint="@string/majorVersion"
-                    app:helperText="@string/enumQQMajorVersionHelpText"
-                    app:helperTextEnabled="true">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:imeOptions="actionNext"
-                        android:singleLine="true" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/spinner_layout"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_weight="1"
-                    android:hint="@string/enumType"
-                    app:helperText="@string/enumTypeHelpText"
-                    app:helperTextEnabled="true">
-
-                    <AutoCompleteTextView
-                        android:id="@+id/spinner_version"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:imeOptions="actionNext"
-                        android:inputType="none"
-                        android:singleLine="true"
-                        app:simpleItems="@array/version" />
-
-                </com.google.android.material.textfield.TextInputLayout>
-            </LinearLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/et_version_small"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:hint="@string/initialMinorVersion"
-                app:helperText="@string/initialMinorVersionHelpText"
-                app:helperTextEnabled="true">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:imeOptions="actionDone"
-                    android:inputType="number"
-                    android:singleLine="true" />
-
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/et_version_true"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:hint="@string/trueVersion"
-                app:helperText="@string/trueVersionHelpText"
+                android:hint="uin"
+                app:helperText="@string/uinHelpText"
                 app:helperTextEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -120,18 +53,16 @@
                     android:inputType="number"
                     android:singleLine="true" />
 
-
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/et_version_16code"
+                android:id="@+id/shiply_version"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:hint="@string/hexadecimalCode"
-                app:helperText="@string/hexadecimalCodeHelpText"
-                app:helperTextEnabled="true"
-                app:prefixText="0x">
+                android:layout_marginBottom="8dp"
+                android:hint="@string/shiplyVersion"
+                app:helperText="@string/shiplyVersionHelpText"
+                app:helperTextEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
@@ -139,48 +70,74 @@
                     android:imeOptions="actionDone"
                     android:singleLine="true" />
 
-
             </com.google.android.material.textfield.TextInputLayout>
 
+            <com.google.android.material.materialswitch.MaterialSwitch
+                android:id="@+id/switch_shiply_advanced_configurations"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:paddingBottom="4dp"
+                android:text="@string/shiplyUseAdvancedConfigurations" />
+
+            <TextView
+                android:id="@+id/shiply_advanced_configurations_click"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="8dp"
+                android:gravity="center_vertical"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="16dp"
+                android:text="@string/shiplyAdvancedConfigurations"
+                android:textColor="?attr/colorOnSurface"
+                app:drawableEndCompat="@drawable/arrow_right_s_line" />
+
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/guess_dialog_warning"
+                android:id="@+id/shiply_warning_card"
                 style="?attr/materialCardViewOutlinedStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
                 android:backgroundTint="?android:colorBackground">
 
                 <TextView
-                    android:id="@+id/tv_warning"
+                    android:id="@+id/shiply_warning_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="4dp"
                     android:drawablePadding="4dp"
                     android:paddingStart="3dp"
                     android:paddingEnd="0dp"
-                    android:text="@string/enumQQPreviewWarning"
+                    android:text="@string/shiplyWarning"
                     android:textColor="?attr/colorPrimary"
                     android:textSize="10sp"
                     app:drawableStartCompat="@drawable/error_warning_fill" />
             </com.google.android.material.card.MaterialCardView>
 
             <LinearLayout
+                style="?android:attr/buttonBarStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:weightSum="2">
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_guess_cancel"
+                    android:id="@+id/btn_shiply_cancel"
                     style="@style/Widget.Material3.Button.TonalButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="20dp"
                     android:layout_weight="1"
                     android:text="@string/cancel" />
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_guess_start"
+                    android:id="@+id/btn_shiply_start"
+                    style="@style/Widget.Material3.Button"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
