@@ -46,11 +46,6 @@ import com.xiaoniu.qqversionlist.util.StringUtil.toPrettyFormat
 import com.xiaoniu.qqversionlist.util.dp
 
 class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(VersionDiffCallback()) {
-    // Extensions -> Number.dp
-    /*private fun Context.dpToPx(dp: Int): Int {
-        return (dp * resources.displayMetrics.density).toInt()
-    }*/
-
     private var getProgressSize = DataStoreUtil.getBoolean("progressSize", false)
     private var getVersionTCloud = DataStoreUtil.getBoolean("versionTCloud", true)
     private var getVersionTCloudThickness =

@@ -228,7 +228,7 @@ class MainActivity : AppCompatActivity() {
         // 删除 version Shared Preferences
         DataStoreUtil.deletePreferenceAsync("version")
 
-        //这里的“getInt: userAgreement”的值代表着用户协议修订版本，后续更新协议版本后也需要在下面一行把“judgeUARead”+1，以此类推
+        // 这里的“getInt: userAgreement”的值代表着用户协议修订版本，后续更新协议版本后也需要在下面一行把“judgeUARead”+1，以此类推
         val judgeUATarget = 2 // 2024.5.30 第二版
         if (DataStoreUtil.getInt("userAgreement", 0) < judgeUATarget) showUADialog(
             false, judgeUATarget
@@ -1240,11 +1240,9 @@ class MainActivity : AppCompatActivity() {
 
                             }
 
-                            MODE_WECHAT -> {
-                                // https://dldir1.qq.com/weixin/android/weixin8049android2600_0x2800318a_arm64.apk
-                                link =
-                                    "https://dldir1.qq.com/weixin/android/weixin${versionBig}android${versionTrue}_0x${v16codeStr}_arm64.apk"
-                            }
+                            MODE_WECHAT -> link =
+                                "https://dldir1.qq.com/weixin/android/weixin${versionBig}android${versionTrue}_0x${v16codeStr}_arm64.apk"
+                            // https://dldir1.qq.com/weixin/android/weixin8049android2600_0x2800318a_arm64.apk
                         }
                         runOnUiThread {
                             updateProgressDialogMessage("${getString(R.string.enumeratingDownloadLink)}$link")
@@ -1361,26 +1359,20 @@ class MainActivity : AppCompatActivity() {
                                             DownloadManager.Request(Uri.parse(link))
                                         requestDownload.apply {
                                             when (mode) {
-                                                MODE_TEST, MODE_UNOFFICIAL -> {
-                                                    setDestinationInExternalPublicDir(
-                                                        Environment.DIRECTORY_DOWNLOADS,
-                                                        "Android_QQ_${versionBig}.${vSmall}_64.apk"
-                                                    )
-                                                }
+                                                MODE_TEST, MODE_UNOFFICIAL -> setDestinationInExternalPublicDir(
+                                                    Environment.DIRECTORY_DOWNLOADS,
+                                                    "Android_QQ_${versionBig}.${vSmall}_64.apk"
+                                                )
 
-                                                MODE_OFFICIAL -> {
-                                                    setDestinationInExternalPublicDir(
-                                                        Environment.DIRECTORY_DOWNLOADS,
-                                                        "Android_QQ_${versionBig}_64.apk"
-                                                    )
-                                                }
+                                                MODE_OFFICIAL -> setDestinationInExternalPublicDir(
+                                                    Environment.DIRECTORY_DOWNLOADS,
+                                                    "Android_QQ_${versionBig}_64.apk"
+                                                )
 
-                                                MODE_WECHAT -> {
-                                                    setDestinationInExternalPublicDir(
-                                                        Environment.DIRECTORY_DOWNLOADS,
-                                                        "Android_微信_${versionBig}.${versionTrue}.apk"
-                                                    )
-                                                }
+                                                MODE_WECHAT -> setDestinationInExternalPublicDir(
+                                                    Environment.DIRECTORY_DOWNLOADS,
+                                                    "Android_微信_${versionBig}.${versionTrue}.apk"
+                                                )
                                             }
                                         }
                                         val downloadManager =
@@ -1401,8 +1393,7 @@ class MainActivity : AppCompatActivity() {
 
                         } else {
                             when {
-                                mode == MODE_TEST && (!guessTestExtend || sIndex == (stList.size)) // 测试版情况下，未打开扩展猜版或扩展猜版到最后一步时执行小版本号的递增
-                                -> {
+                                mode == MODE_TEST && (!guessTestExtend || sIndex == (stList.size)) -> { // 测试版情况下，未打开扩展猜版或扩展猜版到最后一步时执行小版本号的递增
                                     vSmall += if (!guessNot5) 5 else 1
                                     sIndex = 0
                                 }
@@ -1416,9 +1407,7 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
 
-                    STATUS_PAUSE -> {
-                        sleep(500)
-                    }
+                    STATUS_PAUSE -> sleep(500)
 
                     STATUS_END -> {
                         if (mode != MODE_OFFICIAL) showToast(getString(R.string.enumHasBeenStopped))
