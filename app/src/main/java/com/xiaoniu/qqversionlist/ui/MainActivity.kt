@@ -156,6 +156,11 @@ class MainActivity : AppCompatActivity() {
         versionListStaggeredGridLayout()
     }
 
+    override fun onMultiWindowModeChanged(isInMultiWindowMode: Boolean, newConfig: Configuration) {
+        super.onMultiWindowModeChanged(isInMultiWindowMode, newConfig)
+        versionListStaggeredGridLayout()
+    }
+
     private fun versionListStaggeredGridLayout() {
         binding.rvContent.apply {
             adapter = versionAdapter
