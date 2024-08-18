@@ -1009,7 +1009,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun getData() {
         binding.progressLine.show()
-        versionListStaggeredGridLayout()
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 // 识别本机 Android QQ 版本并放进持久化存储
