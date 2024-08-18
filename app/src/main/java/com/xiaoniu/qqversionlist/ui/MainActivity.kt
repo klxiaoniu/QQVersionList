@@ -117,12 +117,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        val viewRoot = binding.root
+        setContentView(viewRoot)
 
         setContext(this)
 
         if (SDK_INT <= Build.VERSION_CODES.Q) {
-            ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, windowInsets ->
+            ViewCompat.setOnApplyWindowInsetsListener(viewRoot) { view, windowInsets ->
                 val insets = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars())
                 view.setPadding(insets.left, 0, insets.right, 0)
                 binding.apply {
@@ -1008,6 +1009,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun getData() {
         binding.progressLine.show()
+        versionListStaggeredGridLayout()
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 // 识别本机 Android QQ 版本并放进持久化存储
