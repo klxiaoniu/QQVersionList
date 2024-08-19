@@ -139,15 +139,15 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
             is ViewHolderDetail -> {
                 holder.binding.apply {
                     linearImages.removeAllViews()
-                    bean.imgs.forEach {
+                    bean.imgs.forEachIndexed { index, s ->
                         val iv = ImageView(holder.itemView.context).apply {
-                            setPadding(0, 0, 4.dp, 0)
+                            setPadding(0, 0, if (index == bean.imgs.size - 1) 0 else 4.dp, 0)
                             layoutParams = LinearLayout.LayoutParams(
                                 LinearLayout.LayoutParams.WRAP_CONTENT, 150.dp
                             )
                         }
                         linearImages.addView(iv)
-                        iv.load(it) {
+                        iv.load(s) {
                             crossfade(true)
                             transformations(RoundedCornersTransformation(2.dp.toFloat()))
                         }
