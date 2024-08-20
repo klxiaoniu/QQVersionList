@@ -23,6 +23,7 @@ import android.annotation.SuppressLint
 import android.app.DownloadManager
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.net.Uri
@@ -55,7 +56,6 @@ import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.airbnb.paris.extensions.style
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -248,13 +248,10 @@ class MainActivity : AppCompatActivity() {
             hideAnimationBehavior = LinearProgressIndicator.HIDE_ESCAPE
         }
 
-        binding.rvContent.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                if (dy > 0) binding.btnGuess.shrink()
-                else if (dy < 0) binding.btnGuess.extend()
-            }
-        })
+        binding.rvScroll.setOnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
+            if (scrollY > oldScrollY) binding.btnGuess.shrink()
+            else if (scrollY < oldScrollY) binding.btnGuess.extend()
+        }
 
 
         binding.bottomAppBar.setOnMenuItemClickListener { menuItem ->
@@ -1007,63 +1004,173 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+    @SuppressLint("SetTextI18n")
     private fun getData() {
         binding.progressLine.show()
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 // 识别本机 Android QQ 版本并放进持久化存储
-                val QQPackageInfo = packageManager.getPackageInfo("com.tencent.mobileqq", 0)
-                val QQVersionInstall = QQPackageInfo.versionName.toString()
+                val QQVersionInstall =
+                    packageManager.getPackageInfo("com.tencent.mobileqq", 0).versionName.toString()
+                val QQVersionCodeInstall =
+                    if (SDK_INT >= Build.VERSION_CODES.P) packageManager.getPackageInfo(
+                        "com.tencent.mobileqq", 0
+                    ).longVersionCode.toString() else ""
+                val QQAppSettingParamsInstall = packageManager.getPackageInfo(
+                    "com.tencent.mobileqq", PackageManager.GET_META_DATA
+                ).applicationInfo?.metaData?.getString("AppSetting_params")
+                val QQRdmUUIDInstall = packageManager.getPackageInfo(
+                    "com.tencent.mobileqq", PackageManager.GET_META_DATA
+                ).applicationInfo?.metaData?.getString("com.tencent.rdm.uuid")
                 if (QQVersionInstall != DataStoreUtil.getString(
-                        "QQVersionInstall",
-                        ""
+                        "QQVersionInstall", ""
                     )
                 ) DataStoreUtil.putString("QQVersionInstall", QQVersionInstall)
-            } catch (e: Exception) {
-                DataStoreUtil.putStringAsync("QQVersionInstall", "")
+                if (QQVersionCodeInstall != DataStoreUtil.getString(
+                        "QQVersionCodeInstall", ""
+                    )
+                ) DataStoreUtil.putString("QQVersionCodeInstall", QQVersionCodeInstall)
+                if (QQAppSettingParamsInstall != null && QQAppSettingParamsInstall != DataStoreUtil.getString(
+                        "QQAppSettingParamsInstall", ""
+                    )
+                ) DataStoreUtil.putString("QQAppSettingParamsInstall", QQAppSettingParamsInstall)
+                if (QQRdmUUIDInstall != null && QQRdmUUIDInstall != DataStoreUtil.getString(
+                        "QQRdmUUIDInstall", ""
+                    )
+                ) DataStoreUtil.putString("QQRdmUUIDInstall", QQRdmUUIDInstall)
+            } catch (_: Exception) {
+                DataStoreUtil.putString("QQVersionInstall", "")
+                DataStoreUtil.putString("QQVersionCodeInstall", "")
+                DataStoreUtil.putString("QQAppSettingParamsInstall", "")
             } finally {
                 try {
-                    val okHttpClient = OkHttpClient()
-                    val request =
-                        Request.Builder().url("https://im.qq.com/rainbow/androidQQVersionList")
-                            .build()
-                    val response = okHttpClient.newCall(request).execute()
-                    val responseData = response.body?.string()
-                    if (responseData != null) {
-                        val start = (responseData.indexOf("versions64\":[")) + 12
-                        val end = (responseData.indexOf(";\n" + "      typeof"))
-                        val totalJson = responseData.substring(start, end)
-                        qqVersion = totalJson.split("},{").reversed().map {
-                            val pstart = it.indexOf("{\"versions")
-                            val pend = it.indexOf(",\"length")
-                            val json = it.substring(pstart, pend)
-                            Json.decodeFromString<QQVersionBean>(json).apply {
-                                jsonString = json
-                                // 标记本机 Android QQ 版本
-                                this.displayInstall = (DataStoreUtil.getString(
+                    // 识别本机 Android QQ 版本并放进持久化存储
+                    val TIMVersionInstall =
+                        packageManager.getPackageInfo("com.tencent.tim", 0).versionName.toString()
+                    val TIMVersionCodeInstall =
+                        if (SDK_INT >= Build.VERSION_CODES.P) packageManager.getPackageInfo(
+                            "com.tencent.tim", 0
+                        ).longVersionCode.toString() else ""
+                    val TIMAppSettingParamsInstall = packageManager.getPackageInfo(
+                        "com.tencent.tim", PackageManager.GET_META_DATA
+                    ).applicationInfo?.metaData?.getString("AppSetting_params")
+                    val TIMRdmUUIDInstall = packageManager.getPackageInfo(
+                        "com.tencent.tim", PackageManager.GET_META_DATA
+                    ).applicationInfo?.metaData?.getString("com.tencent.rdm.uuid")
+                    if (TIMVersionInstall != DataStoreUtil.getString(
+                            "TIMVersionInstall", ""
+                        )
+                    ) DataStoreUtil.putString("TIMVersionInstall", TIMVersionInstall)
+                    if (TIMVersionCodeInstall != DataStoreUtil.getString(
+                            "TIMVersionCodeInstall", ""
+                        )
+                    ) DataStoreUtil.putString("TIMVersionCodeInstall", TIMVersionCodeInstall)
+                    if (TIMAppSettingParamsInstall != null && TIMAppSettingParamsInstall != DataStoreUtil.getString(
+                            "TIMAppSettingParamsInstall", ""
+                        )
+                    ) DataStoreUtil.putString(
+                        "TIMAppSettingParamsInstall",
+                        TIMAppSettingParamsInstall
+                    )
+                    if (TIMRdmUUIDInstall != null && TIMRdmUUIDInstall != DataStoreUtil.getString(
+                            "TIMRdmUUIDInstall", ""
+                        )
+                    ) DataStoreUtil.putString("TIMRdmUUIDInstall", TIMRdmUUIDInstall)
+                } catch (_: Exception) {
+                    DataStoreUtil.putString("TIMVersionInstall", "")
+                    DataStoreUtil.putString("TIMVersionCodeInstall", "")
+                    DataStoreUtil.putString("TIMAppSettingParamsInstall", "")
+                } finally {
+                    val QQVersionInstall2 = DataStoreUtil.getString("QQVersionInstall", "")
+                    val TIMVersionInstall2 = DataStoreUtil.getString("TIMVersionInstall", "")
+                    val QQVersionCodeInstall2 = DataStoreUtil.getString("QQVersionCodeInstall", "")
+                    val TIMVersionCodeInstall2 =
+                        DataStoreUtil.getString("TIMVersionCodeInstall", "")
+                    val QQAppSettingParamsInstall =
+                        DataStoreUtil.getString("QQAppSettingParamsInstall", "")
+                    val TIMAppSettingParamsInstall =
+                        DataStoreUtil.getString("TIMAppSettingParamsInstall", "")
+                    val QQRdmUUIDInstall = if (DataStoreUtil.getString(
+                            "QQRdmUUIDInstall",
+                            ""
+                        ) != ""
+                    ) ".${DataStoreUtil.getString("QQRdmUUIDInstall", "").split("_")[0]}" else ""
+                    val TIMRdmUUIDInstall = if (DataStoreUtil.getString(
+                            "TIMRdmUUIDInstall",
+                            ""
+                        ) != ""
+                    ) ".${DataStoreUtil.getString("TIMRdmUUIDInstall", "").split("_")[0]}" else ""
+                    val QQChannelInstall =
+                        if (QQAppSettingParamsInstall != "") DataStoreUtil.getString(
+                            "QQAppSettingParamsInstall", ""
+                        ).split("#")[3] else ""
+                    val TIMChannelInstall =
+                        if (TIMAppSettingParamsInstall != "") DataStoreUtil.getString(
+                            "TIMAppSettingParamsInstall", ""
+                        ).split("#")[3] else ""
+                    withContext(Dispatchers.Main) {
+                        if (QQVersionInstall2 != "") {
+                            binding.itemQqInstallText.text =
+                                if (QQChannelInstall != "") getString(R.string.localQQVersion) + DataStoreUtil.getString(
                                     "QQVersionInstall", ""
-                                ) == this.versionNumber)
+                                ) + QQRdmUUIDInstall + (if (QQVersionCodeInstall2 != "") " (${QQVersionCodeInstall2})" else "") + " - $QQChannelInstall" else getString(
+                                    R.string.localQQVersion
+                                ) + DataStoreUtil.getString("QQVersionInstall", "")
+                            binding.itemQqInstallCard.visibility = View.VISIBLE
+                        } else binding.itemQqInstallCard.visibility = View.GONE
+                        if (TIMVersionInstall2 != "") {
+                            binding.itemTimInstallText.text =
+                                if (TIMChannelInstall != "") getString(R.string.localTIMVersion) + DataStoreUtil.getString(
+                                    "TIMVersionInstall", ""
+                                ) + TIMRdmUUIDInstall + (if (TIMVersionCodeInstall2 != "") " (${TIMVersionCodeInstall2})" else "") + " - $TIMChannelInstall" else getString(
+                                    R.string.localTIMVersion
+                                ) + DataStoreUtil.getString("TIMVersionInstall", "")
+                            binding.itemTimInstallCard.visibility = View.VISIBLE
+                        } else binding.itemTimInstallCard.visibility = View.GONE
+                    }
+                    try {
+                        val okHttpClient = OkHttpClient()
+                        val request =
+                            Request.Builder().url("https://im.qq.com/rainbow/androidQQVersionList")
+                                .build()
+                        val response = okHttpClient.newCall(request).execute()
+                        val responseData = response.body?.string()
+                        if (responseData != null) {
+                            val start = (responseData.indexOf("versions64\":[")) + 12
+                            val end = (responseData.indexOf(";\n" + "      typeof"))
+                            val totalJson = responseData.substring(start, end)
+                            qqVersion = totalJson.split("},{").reversed().map {
+                                val pstart = it.indexOf("{\"versions")
+                                val pend = it.indexOf(",\"length")
+                                val json = it.substring(pstart, pend)
+                                Json.decodeFromString<QQVersionBean>(json).apply {
+                                    jsonString = json
+                                    // 标记本机 Android QQ 版本
+                                    this.displayInstall = (DataStoreUtil.getString(
+                                        "QQVersionInstall", ""
+                                    ) == this.versionNumber)
+                                }
+                            }
+                            if (DataStoreUtil.getBoolean(
+                                    "displayFirst", true
+                                )
+                            ) qqVersion[0].displayType = 1
+                            withContext(Dispatchers.Main) {
+                                versionAdapter.submitList(qqVersion)
+                                // 舍弃 currentQQVersion = qqVersion.first().versionNumber
+                                // 大版本号也放持久化存储了，否则猜版 Shortcut 因为加载过快而获取不到东西
+                                DataStoreUtil.putStringAsync(
+                                    "versionBig", qqVersion.first().versionNumber
+                                )
                             }
                         }
-                        if (DataStoreUtil.getBoolean(
-                                "displayFirst", true
-                            )
-                        ) qqVersion[0].displayType = 1
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        dialogError(e)
+                    } finally {
                         withContext(Dispatchers.Main) {
-                            versionAdapter.submitList(qqVersion)
-                            // 舍弃 currentQQVersion = qqVersion.first().versionNumber
-                            // 大版本号也放持久化存储了，否则猜版 Shortcut 因为加载过快而获取不到东西
-                            DataStoreUtil.putStringAsync(
-                                "versionBig", qqVersion.first().versionNumber
-                            )
+                            binding.progressLine.hide()
                         }
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    dialogError(e)
-                } finally {
-                    withContext(Dispatchers.Main) {
-                        binding.progressLine.hide()
                     }
                 }
             }

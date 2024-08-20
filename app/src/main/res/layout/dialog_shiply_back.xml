@@ -23,7 +23,7 @@
     android:paddingTop="8dp"
     android:paddingEnd="16dp">
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/shiply_back_text_scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -50,6 +50,7 @@
                 android:id="@+id/shiply_url_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
@@ -76,6 +77,6 @@
 
         </LinearLayout>
 
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

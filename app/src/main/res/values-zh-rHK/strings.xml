@@ -116,4 +116,8 @@
     <string name="thicknessFollowSystem">跟隨系統</string>
     <string name="back">返回</string>
     <string name="shiplyUseAdvancedConfigurations">使用進階配置</string>
+    <string name="localQQVersion">本機 QQ：</string>
+    <string name="bracketStart">（</string>
+    <string name="bracketEnd">）</string>
+    <string name="localTIMVersion">本機 TIM：</string>
 </resources>

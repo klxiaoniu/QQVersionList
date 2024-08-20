@@ -116,4 +116,8 @@
     <string name="thicknessFollowSystem">Follow System</string>
     <string name="back">Back</string>
     <string name="shiplyUseAdvancedConfigurations">Use Advanced Configurations</string>
+    <string name="localQQVersion">Local QQ:&#160;</string>
+    <string name="bracketStart">&#160;(</string>
+    <string name="bracketEnd">)</string>
+    <string name="localTIMVersion">Local TIM:&#160;</string>
 </resources>
