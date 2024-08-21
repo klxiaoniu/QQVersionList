@@ -1363,8 +1363,8 @@ class MainActivity : AppCompatActivity() {
                         val okHttpClient = OkHttpClient()
                         val request = Request.Builder().url(link).head().build()
                         val response = okHttpClient.newCall(request).execute()
-                        val responseContentType = response.header("Content-Type")
-                        if (response.isSuccessful && responseContentType!!.startsWith("application/")) {
+                        val responseContentType = response.header("Content-Type").toString()
+                        if (response.isSuccessful && responseContentType.startsWith("application/")) {
                             val appSize = "%.2f".format(
                                 response.header("Content-Length")!!.toDouble().div(1024 * 1024)
                             )
