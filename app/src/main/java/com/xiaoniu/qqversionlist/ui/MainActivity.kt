@@ -1364,7 +1364,7 @@ class MainActivity : AppCompatActivity() {
                         val request = Request.Builder().url(link).head().build()
                         val response = okHttpClient.newCall(request).execute()
                         val responseContentType = response.header("Content-Type")
-                        if (response.isSuccessful && (responseContentType == "application/octet-stream" || responseContentType == "application/vnd.android.package-archive")) {
+                        if (response.isSuccessful && responseContentType!!.startsWith("application/")) {
                             val appSize = "%.2f".format(
                                 response.header("Content-Length")!!.toDouble().div(1024 * 1024)
                             )
