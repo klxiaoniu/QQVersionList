@@ -78,13 +78,11 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
                             showDialog(
                                 it.context, currentList[adapterPosition].jsonString.toPrettyFormat()
                             )
-                        } else {
-                            Toast.makeText(
-                                it.context,
-                                R.string.longPressToViewJSONDetailsIsDisabledPleaseGoToSettingsToTurnItOn,
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
+                        } else Toast.makeText(
+                            it.context,
+                            R.string.longPressToViewSourceDetailsIsDisabledPleaseGoToSettingsToTurnItOn,
+                            Toast.LENGTH_SHORT
+                        ).show()
                         true
                     }
                 }
@@ -105,13 +103,12 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
                             showDialog(
                                 it.context, currentList[adapterPosition].jsonString.toPrettyFormat()
                             )
-                        } else {
-                            Toast.makeText(
-                                it.context,
-                                R.string.longPressToViewJSONDetailsIsDisabledPleaseGoToSettingsToTurnItOn,
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
+                        } else Toast.makeText(
+                            it.context,
+                            R.string.longPressToViewSourceDetailsIsDisabledPleaseGoToSettingsToTurnItOn,
+                            Toast.LENGTH_SHORT
+                        ).show()
+
                         true
                     }
                 }

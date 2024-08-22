@@ -193,12 +193,9 @@ class MainActivity : AppCompatActivity() {
 
         val userAgreementBinding = UserAgreementBinding.inflate(layoutInflater)
 
-        val dialogUA = MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.userAgreement)
-            .setIcon(R.drawable.file_text_line)
-            .setView(userAgreementBinding.root)
-            .setCancelable(false)
-            .create()
+        val dialogUA = MaterialAlertDialogBuilder(this).setTitle(R.string.userAgreement)
+            .setIcon(R.drawable.file_text_line).setView(userAgreementBinding.root)
+            .setCancelable(false).create()
 
         val constraintSet = ConstraintSet()
         constraintSet.clone(userAgreementBinding.userAgreement)
@@ -345,8 +342,7 @@ class MainActivity : AppCompatActivity() {
                     val linearLayout = LinearLayout(this).apply {
                         orientation = LinearLayout.VERTICAL
                         layoutParams = ViewGroup.LayoutParams(
-                            ViewGroup.LayoutParams.MATCH_PARENT,
-                            ViewGroup.LayoutParams.WRAP_CONTENT
+                            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT
                         )
                         setPadding(128, 64, 128, 0)
                         gravity = Gravity.CENTER_HORIZONTAL
@@ -361,12 +357,9 @@ class MainActivity : AppCompatActivity() {
                         LinearLayout.LayoutParams.WRAP_CONTENT
                     )
                     linearLayout.addView(imageView)
-                    MaterialAlertDialogBuilder(this)
-                        .setTitle(R.string.about)
-                        .setIcon(R.drawable.information_line)
-                        .setMessage(message)
-                        .setView(linearLayout)
-                        .setPositiveButton(R.string.done, null)
+                    MaterialAlertDialogBuilder(this).setTitle(R.string.about)
+                        .setIcon(R.drawable.information_line).setMessage(message)
+                        .setView(linearLayout).setPositiveButton(R.string.done, null)
                         .setNegativeButton(R.string.withdrawConsentUA) { _, _ ->
                             showUADialog(true, judgeUATarget)
                         }.show().apply {
@@ -389,11 +382,8 @@ class MainActivity : AppCompatActivity() {
                             DataStoreUtil.getBoolean("downloadOnSystemManager", false)
                     }
 
-                    val dialogSetting = MaterialAlertDialogBuilder(this)
-                        .setTitle(R.string.setting)
-                        .setIcon(R.drawable.settings_line)
-                        .setView(dialogSettingBinding.root)
-                        .show()
+                    val dialogSetting = MaterialAlertDialogBuilder(this).setTitle(R.string.setting)
+                        .setIcon(R.drawable.settings_line).setView(dialogSettingBinding.root).show()
 
                     dialogSettingBinding.apply {
                         btnSettingOk.setOnClickListener {
@@ -430,11 +420,10 @@ class MainActivity : AppCompatActivity() {
                                     }
                                 }
 
-                            val dialogPer = MaterialAlertDialogBuilder(this@MainActivity)
-                                .setTitle(R.string.personalization)
-                                .setIcon(R.drawable.palette_line)
-                                .setView(dialogPersonalization.root)
-                                .show()
+                            val dialogPer =
+                                MaterialAlertDialogBuilder(this@MainActivity).setTitle(R.string.personalization)
+                                    .setIcon(R.drawable.palette_line)
+                                    .setView(dialogPersonalization.root).show()
 
                             dialogPersonalization.apply {
                                 switchDisplayFirst.isChecked =
@@ -484,23 +473,19 @@ class MainActivity : AppCompatActivity() {
                                 versionTcloudThickness.addOnChangeListener { _, value, _ ->
                                     when (value) {
                                         1.0f -> DataStoreUtil.putString(
-                                            "versionTCloudThickness",
-                                            "Light"
+                                            "versionTCloudThickness", "Light"
                                         )
 
                                         2.0f -> DataStoreUtil.putString(
-                                            "versionTCloudThickness",
-                                            "Regular"
+                                            "versionTCloudThickness", "Regular"
                                         )
 
                                         3.0f -> DataStoreUtil.putString(
-                                            "versionTCloudThickness",
-                                            "Bold"
+                                            "versionTCloudThickness", "Bold"
                                         )
 
                                         else -> DataStoreUtil.putString(
-                                            "versionTCloudThickness",
-                                            "System"
+                                            "versionTCloudThickness", "System"
                                         )
                                     }
                                     versionAdapter.updateItemProperty("isTCloud")
@@ -529,12 +514,10 @@ class MainActivity : AppCompatActivity() {
                                 }
                             }
 
-                            val dialogSuffix = MaterialAlertDialogBuilder(this@MainActivity)
-                                .setTitle(R.string.enumerateVersionsSuffixSetting)
-                                .setIcon(R.drawable.settings_line)
-                                .setView(dialogSuffixDefine.root)
-                                .setCancelable(false)
-                                .create()
+                            val dialogSuffix =
+                                MaterialAlertDialogBuilder(this@MainActivity).setTitle(R.string.enumerateVersionsSuffixSetting)
+                                    .setIcon(R.drawable.settings_line)
+                                    .setView(dialogSuffixDefine.root).setCancelable(false).create()
 
                             dialogSuffixDefine.apply {
                                 DataStoreUtil.apply {
@@ -673,16 +656,13 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.btn_tencent_shiply -> {
-                    val dialogShiplyBinding =
-                        DialogShiplyBinding.inflate(layoutInflater)
+                    val dialogShiplyBinding = DialogShiplyBinding.inflate(layoutInflater)
 
 
-                    val shiplyDialog = MaterialAlertDialogBuilder(this)
-                        .setTitle(R.string.getUpdateFromShiplyPlatform)
-                        .setIcon(R.drawable.flask_line)
-                        .setView(dialogShiplyBinding.root)
-                        .setCancelable(false)
-                        .show()
+                    val shiplyDialog =
+                        MaterialAlertDialogBuilder(this).setTitle(R.string.getUpdateFromShiplyPlatform)
+                            .setIcon(R.drawable.flask_line).setView(dialogShiplyBinding.root)
+                            .setCancelable(false).show()
 
                     dialogShiplyBinding.apply {
                         DataStoreUtil.apply {
@@ -769,24 +749,19 @@ class MainActivity : AppCompatActivity() {
                                         shiplyVersion.editText?.text.toString(),
                                         shiplyUin.editText?.text.toString(),
                                         getString(
-                                            "shiplyAppid",
-                                            ""
+                                            "shiplyAppid", ""
                                         ).ifEmpty { SHIPLY_DEFAULT_APPID },
                                         getString(
-                                            "shiplyOsVersion",
-                                            ""
+                                            "shiplyOsVersion", ""
                                         ).ifEmpty { SDK_INT.toString() },
                                         getString(
-                                            "shiplyModel",
-                                            ""
+                                            "shiplyModel", ""
                                         ).ifEmpty { Build.MODEL.toString() },
                                         getString(
-                                            "shiplySdkVersion",
-                                            ""
+                                            "shiplySdkVersion", ""
                                         ).ifEmpty { SHIPLY_DEFAULT_SDK_VERSION },
                                         getString(
-                                            "shiplyLanguage",
-                                            ""
+                                            "shiplyLanguage", ""
                                         ).ifEmpty { Locale.getDefault().language.toString() })
                                 }
                             } catch (e: MissingParameterException) {
@@ -805,8 +780,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (intent.action == "android.intent.action.VIEW" && DataStoreUtil.getInt(
-                "userAgreement",
-                0
+                "userAgreement", 0
             ) >= judgeUATarget
         ) showGuessVersionDialog()
         binding.btnGuess.setOnClickListener {
@@ -821,14 +795,12 @@ class MainActivity : AppCompatActivity() {
         dialogGuessBinding.etVersionBig.editText?.setText(verBig)
         val memVersion = DataStoreUtil.getString("versionSelect", MODE_OFFICIAL)
         if (memVersion == MODE_TEST || memVersion == MODE_UNOFFICIAL || memVersion == MODE_OFFICIAL || memVersion == MODE_WECHAT) dialogGuessBinding.spinnerVersion.setText(
-            memVersion,
-            false
+            memVersion, false
         ) else {
             dialogGuessBinding.spinnerVersion.setText(MODE_OFFICIAL, false)
             DataStoreUtil.putStringAsync("versionSelect", MODE_OFFICIAL)
         }
-        if (dialogGuessBinding.spinnerVersion.text.toString() == MODE_TEST || dialogGuessBinding.spinnerVersion.text.toString() == MODE_UNOFFICIAL
-        ) dialogGuessBinding.apply {
+        if (dialogGuessBinding.spinnerVersion.text.toString() == MODE_TEST || dialogGuessBinding.spinnerVersion.text.toString() == MODE_UNOFFICIAL) dialogGuessBinding.apply {
             etVersionSmall.isEnabled = true
             etVersionSmall.visibility = View.VISIBLE
             guessDialogWarning.visibility = View.VISIBLE
@@ -905,12 +877,10 @@ class MainActivity : AppCompatActivity() {
 //            }
 
 
-        val dialogGuess = MaterialAlertDialogBuilder(this)
-            .setTitle(R.string.enumerateVersionsDialogTitle)
-            .setIcon(R.drawable.search_line)
-            .setView(dialogGuessBinding.root)
-            .setCancelable(false)
-            .show()
+        val dialogGuess =
+            MaterialAlertDialogBuilder(this).setTitle(R.string.enumerateVersionsDialogTitle)
+                .setIcon(R.drawable.search_line).setView(dialogGuessBinding.root)
+                .setCancelable(false).show()
 
         class MissingVersionException(message: String) : Exception(message)
         class InvalidMultipleException(message: String) : Exception(message)
@@ -941,8 +911,7 @@ class MainActivity : AppCompatActivity() {
                             getString(R.string.missingMajorVersionWarning)
                         ) else {
                             versionSmall =
-                                dialogGuessBinding.etVersionSmall.editText?.text.toString()
-                                    .toInt()
+                                dialogGuessBinding.etVersionSmall.editText?.text.toString().toInt()
                             if (versionSmall % 5 != 0 && !DataStoreUtil.getBoolean(
                                     "guessNot5", false
                                 )
@@ -961,8 +930,7 @@ class MainActivity : AppCompatActivity() {
                             getString(R.string.missingWeixin16CodeWarning)
                         ) else {
                             versionTrue =
-                                dialogGuessBinding.etVersionTrue.editText?.text.toString()
-                                    .toInt()
+                                dialogGuessBinding.etVersionTrue.editText?.text.toString().toInt()
                             version16code =
                                 dialogGuessBinding.etVersion16code.editText?.text.toString()
                             if (version16code != 0.toString()) DataStoreUtil.putStringAsync(
@@ -1069,8 +1037,7 @@ class MainActivity : AppCompatActivity() {
                             "TIMAppSettingParamsInstall", ""
                         )
                     ) DataStoreUtil.putString(
-                        "TIMAppSettingParamsInstall",
-                        TIMAppSettingParamsInstall
+                        "TIMAppSettingParamsInstall", TIMAppSettingParamsInstall
                     )
                     if (TIMRdmUUIDInstall != null && TIMRdmUUIDInstall != DataStoreUtil.getString(
                             "TIMRdmUUIDInstall", ""
@@ -1091,13 +1058,11 @@ class MainActivity : AppCompatActivity() {
                     val TIMAppSettingParamsInstall =
                         DataStoreUtil.getString("TIMAppSettingParamsInstall", "")
                     val QQRdmUUIDInstall = if (DataStoreUtil.getString(
-                            "QQRdmUUIDInstall",
-                            ""
+                            "QQRdmUUIDInstall", ""
                         ) != ""
                     ) ".${DataStoreUtil.getString("QQRdmUUIDInstall", "").split("_")[0]}" else ""
                     val TIMRdmUUIDInstall = if (DataStoreUtil.getString(
-                            "TIMRdmUUIDInstall",
-                            ""
+                            "TIMRdmUUIDInstall", ""
                         ) != ""
                     ) ".${DataStoreUtil.getString("TIMRdmUUIDInstall", "").split("_")[0]}" else ""
                     val QQChannelInstall =
@@ -1117,6 +1082,44 @@ class MainActivity : AppCompatActivity() {
                                     R.string.localQQVersion
                                 ) + DataStoreUtil.getString("QQVersionInstall", "")
                             binding.itemQqInstallCard.visibility = View.VISIBLE
+                            binding.itemQqInstallCard.setOnLongClickListener {
+                                if (DataStoreUtil.getBoolean("longPressCard", true)) {
+                                    val tv = TextView(this@MainActivity).apply {
+                                        text = "Version Name: ${
+                                            DataStoreUtil.getString(
+                                                "QQVersionInstall", ""
+                                            )
+                                        }" + (if (DataStoreUtil.getString(
+                                                "QQRdmUUIDInstall", ""
+                                            ) != ""
+                                        ) "\n\nRdm UUID: ${
+                                            DataStoreUtil.getString(
+                                                "QQRdmUUIDInstall", ""
+                                            )
+                                        }" else "") + (if (DataStoreUtil.getString(
+                                                "QQVersionCodeInstall", ""
+                                            ) != ""
+                                        ) "\n\nVersion Code: ${
+                                            DataStoreUtil.getString(
+                                                "QQVersionCodeInstall", ""
+                                            )
+                                        }" else "") + (if (DataStoreUtil.getString(
+                                                "QQAppSettingParamsInstall", ""
+                                            ) != ""
+                                        ) "\n\nAppSetting_params: ${
+                                            DataStoreUtil.getString(
+                                                "QQAppSettingParamsInstall", ""
+                                            )
+                                        }" else "")
+                                        setTextIsSelectable(true)
+                                        setPadding(96, 48, 96, 96)
+                                    }
+                                    MaterialAlertDialogBuilder(context).setView(tv)
+                                        .setTitle(R.string.localQQVersionDetails)
+                                        .setIcon(R.drawable.scan_line).show()
+                                } else showToast(getString(R.string.longPressToViewSourceDetailsIsDisabledPleaseGoToSettingsToTurnItOn))
+                                true
+                            }
                         } else binding.itemQqInstallCard.visibility = View.GONE
                         if (TIMVersionInstall2 != "") {
                             binding.itemTimInstallText.text =
@@ -1126,6 +1129,44 @@ class MainActivity : AppCompatActivity() {
                                     R.string.localTIMVersion
                                 ) + DataStoreUtil.getString("TIMVersionInstall", "")
                             binding.itemTimInstallCard.visibility = View.VISIBLE
+                            binding.itemTimInstallCard.setOnLongClickListener {
+                                if (DataStoreUtil.getBoolean("longPressCard", true)) {
+                                    val tv = TextView(this@MainActivity).apply {
+                                        text = "Version Name: ${
+                                            DataStoreUtil.getString(
+                                                "TIMVersionInstall", ""
+                                            )
+                                        }" + (if (DataStoreUtil.getString(
+                                                "TIMRdmUUIDInstall", ""
+                                            ) != ""
+                                        ) "\n\nRdm UUID: ${
+                                            DataStoreUtil.getString(
+                                                "TIMRdmUUIDInstall", ""
+                                            )
+                                        }" else "") + (if (DataStoreUtil.getString(
+                                                "TIMVersionCodeInstall", ""
+                                            ) != ""
+                                        ) "\n\nVersion Code: ${
+                                            DataStoreUtil.getString(
+                                                "TIMVersionCodeInstall", ""
+                                            )
+                                        }" else "") + (if (DataStoreUtil.getString(
+                                                "TIMAppSettingParamsInstall", ""
+                                            ) != ""
+                                        ) "\n\nAppSetting_params: ${
+                                            DataStoreUtil.getString(
+                                                "TIMAppSettingParamsInstall", ""
+                                            )
+                                        }" else "")
+                                        setTextIsSelectable(true)
+                                        setPadding(96, 48, 96, 96)
+                                    }
+                                    MaterialAlertDialogBuilder(context).setView(tv)
+                                        .setTitle(R.string.localTIMVersionDetails)
+                                        .setIcon(R.drawable.scan_line).show()
+                                } else showToast(getString(R.string.longPressToViewSourceDetailsIsDisabledPleaseGoToSettingsToTurnItOn))
+                                true
+                            }
                         } else binding.itemTimInstallCard.visibility = View.GONE
                     }
                     try {
@@ -1191,10 +1232,9 @@ class MainActivity : AppCompatActivity() {
 
         var status = STATUS_ONGOING
 
-        val progressDialog = MaterialAlertDialogBuilder(this)
-            .setView(dialogLoadingBinding.root)
-            .setCancelable(false)
-            .create()
+        val progressDialog =
+            MaterialAlertDialogBuilder(this).setView(dialogLoadingBinding.root).setCancelable(false)
+                .create()
 
         fun updateProgressDialogMessage(newMessage: String) {
             dialogLoadingBinding.loadingMessage.text = newMessage
@@ -1376,19 +1416,17 @@ class MainActivity : AppCompatActivity() {
                                     )
                                 }
 
-                                val successMaterialDialog = MaterialAlertDialogBuilder(this)
-                                    .setTitle(R.string.acceptedEnumerateVersion)
-                                    .setIcon(R.drawable.check_circle)
-                                    .setView(successButtonBinding.root)
-                                    .setCancelable(false)
-                                    .setMessage(
-                                        "${getString(R.string.downloadLink)}$link\n\n${
-                                            getString(
-                                                R.string.fileSize
-                                            )
-                                        }$appSize MB"
-                                    )
-                                    .show()
+                                val successMaterialDialog =
+                                    MaterialAlertDialogBuilder(this).setTitle(R.string.acceptedEnumerateVersion)
+                                        .setIcon(R.drawable.check_circle)
+                                        .setView(successButtonBinding.root).setCancelable(false)
+                                        .setMessage(
+                                            "${getString(R.string.downloadLink)}$link\n\n${
+                                                getString(
+                                                    R.string.fileSize
+                                                )
+                                            }$appSize MB"
+                                        ).show()
 
 
                                 // 复制并停止按钮点击事件
@@ -1425,8 +1463,7 @@ class MainActivity : AppCompatActivity() {
                                     val shareIntent = Intent(Intent.ACTION_SEND).apply {
                                         type = "text/plain"
                                         putExtra(
-                                            Intent.EXTRA_TEXT,
-                                            when (mode) {
+                                            Intent.EXTRA_TEXT, when (mode) {
                                                 MODE_OFFICIAL -> "Android QQ $versionBig ${
                                                     getString(
                                                         R.string.stableVersion
@@ -1628,8 +1665,7 @@ class MainActivity : AppCompatActivity() {
                                 MaterialAlertDialogBuilder(this@MainActivity).setView(
                                     dialogShiplyBackBinding.root
                                 ).setTitle(R.string.contentReturnedByShiplyPlatform)
-                                    .setIcon(R.drawable.flask_line)
-                                    .show().apply {
+                                    .setIcon(R.drawable.flask_line).show().apply {
                                         shiplyUrlRecyclerView.layoutManager =
                                             LinearLayoutManager(this@MainActivity)
                                         when {
