@@ -122,4 +122,10 @@
     <string name="localTIMVersion">本機 TIM：</string>
     <string name="localQQVersionDetails">本機 QQ 版本詳情</string>
     <string name="localTIMVersionDetails">本機 TIM 版本詳情</string>
+    <string name="accessibilityTag">6aiw6KiKIFFRIOW3suS4iue3muS4gOmgheeEoemanOekmeeUqOaItuWwiOWxrOWEquWMluaOquaWveabtOaWsOOAgueVtuenu+WLlee1guerr+ioreWCmeWVn+eUqOezu+e1seeEoemanOekmeiugOWxj+acjeWLme+8iOWmgiBBbmRyb2lkIFRhbGtiYWNr44CBaU9TIFZvaWNlT3Zlcu+8ie+8jOS4puS4lOWQjOaZguS9v+eUqOmosOioiiBRUSDnp7vli5XlrqLmiLbnq68gOS4wLjg1IOWPiuS7peS4iueJiOacrOaZgu+8jOmosOioiiBRUSDlsIfmnIPmuJvlsJHmiJblgZzmraLlkJHmraTpoZ4gUVEg5a6i5oi256uv55m86YCB5buj5ZGK44CC</string>
+    <string name="imageGallery">應用宣傳圖</string>
+    <string name="share">分享</string>
+    <string name="download">下載</string>
+    <string name="stop">停止</string>
+    <string name="skip">跳過</string>
 </resources>

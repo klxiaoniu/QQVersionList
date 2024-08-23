@@ -26,6 +26,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.content.res.Resources
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.os.Build.VERSION.SDK_INT
@@ -99,6 +100,7 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import org.apache.maven.artifact.versioning.DefaultArtifactVersion
 import java.io.BufferedReader
 import java.io.ByteArrayInputStream
 import java.io.InputStreamReader
@@ -366,7 +368,6 @@ class MainActivity : AppCompatActivity() {
                             findViewById<TextView>(android.R.id.message)?.movementMethod =
                                 LinkMovementMethodCompat.getInstance()
                         }
-
                     true
                 }
 
@@ -1190,6 +1191,10 @@ class MainActivity : AppCompatActivity() {
                                     this.displayInstall = (DataStoreUtil.getString(
                                         "QQVersionInstall", ""
                                     ) == this.versionNumber)
+                                    this.isAccessibility =
+                                        DefaultArtifactVersion(this.versionNumber) >= DefaultArtifactVersion(
+                                            "9.0.85"
+                                        )
                                 }
                             }
                             if (DataStoreUtil.getBoolean(

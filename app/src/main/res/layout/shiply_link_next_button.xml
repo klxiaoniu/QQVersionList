@@ -41,6 +41,7 @@
                 style="?attr/materialIconButtonFilledTonalStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:contentDescription="@string/share"
                 app:icon="@drawable/share_line" />
 
             <com.google.android.material.button.MaterialButton
@@ -48,6 +49,7 @@
                 style="?attr/materialIconButtonFilledTonalStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:contentDescription="@string/download"
                 app:icon="@drawable/download_line" />
 
         </LinearLayout>

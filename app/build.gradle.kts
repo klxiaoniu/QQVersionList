@@ -102,4 +102,5 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:1.1.1")
     implementation("com.google.code.gson:gson:2.11.0")
     implementation("com.airbnb.android:paris:2.0.2")
+    implementation("org.apache.maven:maven-artifact:3.9.9")
 }

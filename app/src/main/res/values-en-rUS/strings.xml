@@ -122,4 +122,10 @@
     <string name="localTIMVersion">Local TIM:&#160;</string>
     <string name="localQQVersionDetails">Local QQ Version Details</string>
     <string name="localTIMVersionDetails">Local TIM Version Details</string>
+    <string name="accessibilityTag">VGVuY2VudCBRUSBoYXMgbGF1bmNoZWQgYSBkZWRpY2F0ZWQgYWNjZXNzaWJpbGl0eSBvcHRpbWl6YXRpb24gdXBkYXRlIGZvciB1c2Vycy4gV2hlbiB0aGUgc3lzdGVtJ3Mgc2NyZWVuIHJlYWRlciBzZXJ2aWNlIChzdWNoIGFzIEFuZHJvaWQgVGFsa2JhY2ssIGlPUyBWb2ljZU92ZXIpIGlzIGVuYWJsZWQgb24gdGhlIG1vYmlsZSBkZXZpY2UgYW5kIFRlbmNlbnQgUVEgbW9iaWxlIGNsaWVudCB2ZXJzaW9uIDkuMC44NSBvciBsYXRlciBpcyB1c2VkLCBUZW5jZW50IFFRIHdpbGwgcmVkdWNlIG9yIHN0b3Agc2VydmluZyBhZHMgdG8gc3VjaCBRUSBjbGllbnRzLg==</string>
+    <string name="imageGallery">App Promotion Image</string>
+    <string name="share">Share</string>
+    <string name="download">Download</string>
+    <string name="stop">Stop</string>
+    <string name="skip">Skip</string>
 </resources>
