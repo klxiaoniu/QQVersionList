@@ -65,7 +65,7 @@
                     android:id="@+id/accessibility_tag"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="6dp"
+                    android:layout_marginStart="3dp"
                     android:layout_marginEnd="0dp"
                     android:contentDescription="@string/accessibilityTag"
                     android:focusable="true"

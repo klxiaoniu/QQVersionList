@@ -26,7 +26,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.content.res.Resources
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.os.Build.VERSION.SDK_INT
@@ -988,6 +987,9 @@ class MainActivity : AppCompatActivity() {
                 val QQAppSettingParamsInstall = packageManager.getPackageInfo(
                     "com.tencent.mobileqq", PackageManager.GET_META_DATA
                 ).applicationInfo?.metaData?.getString("AppSetting_params")
+                val QQAppSettingParamsPadInstall = packageManager.getPackageInfo(
+                    "com.tencent.mobileqq", PackageManager.GET_META_DATA
+                ).applicationInfo?.metaData?.getString("AppSetting_params_pad")
                 val QQRdmUUIDInstall = packageManager.getPackageInfo(
                     "com.tencent.mobileqq", PackageManager.GET_META_DATA
                 ).applicationInfo?.metaData?.getString("com.tencent.rdm.uuid")
@@ -1003,6 +1005,12 @@ class MainActivity : AppCompatActivity() {
                         "QQAppSettingParamsInstall", ""
                     )
                 ) DataStoreUtil.putString("QQAppSettingParamsInstall", QQAppSettingParamsInstall)
+                if (QQAppSettingParamsPadInstall != null && QQAppSettingParamsPadInstall != DataStoreUtil.getString(
+                        "QQAppSettingParamsPadInstall", ""
+                    )
+                ) DataStoreUtil.putString(
+                    "QQAppSettingParamsPadInstall", QQAppSettingParamsPadInstall
+                )
                 if (QQRdmUUIDInstall != null && QQRdmUUIDInstall != DataStoreUtil.getString(
                         "QQRdmUUIDInstall", ""
                     )
@@ -1056,6 +1064,8 @@ class MainActivity : AppCompatActivity() {
                         DataStoreUtil.getString("TIMVersionCodeInstall", "")
                     val QQAppSettingParamsInstall =
                         DataStoreUtil.getString("QQAppSettingParamsInstall", "")
+                    val QQAppSettingParamsPadInstall =
+                        DataStoreUtil.getString("QQAppSettingParamsPadInstall", "")
                     val TIMAppSettingParamsInstall =
                         DataStoreUtil.getString("TIMAppSettingParamsInstall", "")
                     val QQRdmUUIDInstall = if (DataStoreUtil.getString(
@@ -1110,6 +1120,14 @@ class MainActivity : AppCompatActivity() {
                                         ) "\n\nAppSetting_params: ${
                                             DataStoreUtil.getString(
                                                 "QQAppSettingParamsInstall", ""
+                                            )
+                                        }" else "") + (if (DataStoreUtil.getString(
+                                                "QQAppSettingParamsPadInstall",
+                                                ""
+                                            ) != ""
+                                        ) "\n\nAppSetting_params_pad: ${
+                                            DataStoreUtil.getString(
+                                                "QQAppSettingParamsPadInstall", ""
                                             )
                                         }" else "")
                                         setTextIsSelectable(true)

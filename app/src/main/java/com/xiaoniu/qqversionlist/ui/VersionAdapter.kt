@@ -227,6 +227,15 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
         if (bean.displayInstall) {
             tvInstallCard.isVisible = true
             tvInstall.text = tvInstall.context.getString(R.string.installed)
+            if (bean.isAccessibility) {
+                val marginLayoutParams = tvInstallCard.layoutParams as ViewGroup.MarginLayoutParams
+                marginLayoutParams.marginStart = 3.dp
+                tvInstallCard.layoutParams = marginLayoutParams
+            } else {
+                val marginLayoutParams = tvInstallCard.layoutParams as ViewGroup.MarginLayoutParams
+                marginLayoutParams.marginStart = 6.dp
+                tvInstallCard.layoutParams = marginLayoutParams
+            }
         } else tvInstallCard.isVisible = false
     }
 
