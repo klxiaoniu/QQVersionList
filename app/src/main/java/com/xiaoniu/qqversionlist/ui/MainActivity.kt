@@ -1083,116 +1083,129 @@ class MainActivity : AppCompatActivity() {
                             "TIMAppSettingParamsInstall", ""
                         ).split("#")[3] else ""
                     withContext(Dispatchers.Main) {
-                        if (QQVersionInstall2 != "") {
-                            binding.itemQqInstallText.text =
-                                if (QQChannelInstall != "") getString(R.string.localQQVersion) + DataStoreUtil.getString(
-                                    "QQVersionInstall", ""
-                                ) + QQRdmUUIDInstall + (if (QQVersionCodeInstall2 != "") " (${QQVersionCodeInstall2})" else "") + " - $QQChannelInstall" else getString(
-                                    R.string.localQQVersion
-                                ) + DataStoreUtil.getString("QQVersionInstall", "")
-                            binding.itemQqInstallCard.visibility = View.VISIBLE
-                            if (DefaultArtifactVersion(QQVersionInstall2) >= DefaultArtifactVersion(
-                                    "9.0.85"
+                        binding.apply {
+                            if (QQVersionInstall2 != "") {
+                                itemQqInstallText.text =
+                                    if (QQChannelInstall != "") getString(R.string.localQQVersion) + DataStoreUtil.getString(
+                                        "QQVersionInstall", ""
+                                    ) + QQRdmUUIDInstall + (if (QQVersionCodeInstall2 != "") " (${QQVersionCodeInstall2})" else "") + " - $QQChannelInstall" else getString(
+                                        R.string.localQQVersion
+                                    ) + DataStoreUtil.getString("QQVersionInstall", "")
+                                itemQqInstallCard.visibility = View.VISIBLE
+                                if (DefaultArtifactVersion(QQVersionInstall2) >= DefaultArtifactVersion(
+                                        "9.0.85"
+                                    )
+                                ) itemQqInstallText.setCompoundDrawablesWithIntrinsicBounds(
+                                    R.drawable.accessibility_new_24px, 0, 0, 0
+                                ) else itemQqInstallText.setCompoundDrawablesWithIntrinsicBounds(
+                                    R.drawable.scan_line, 0, 0, 0
                                 )
-                            ) binding.itemQqInstallText.setCompoundDrawablesWithIntrinsicBounds(
-                                R.drawable.accessibility_new_24px, 0, 0, 0
-                            ) else binding.itemQqInstallText.setCompoundDrawablesWithIntrinsicBounds(
-                                R.drawable.scan_line, 0, 0, 0
-                            )
-                            binding.itemQqInstallCard.setOnLongClickListener {
-                                if (DataStoreUtil.getBoolean("longPressCard", true)) {
-                                    val tv = TextView(this@MainActivity).apply {
-                                        text = "Version Name: ${
-                                            DataStoreUtil.getString(
-                                                "QQVersionInstall", ""
-                                            )
-                                        }" + (if (DataStoreUtil.getString(
-                                                "QQRdmUUIDInstall", ""
-                                            ) != ""
-                                        ) "\n\nRdm UUID: ${
-                                            DataStoreUtil.getString(
-                                                "QQRdmUUIDInstall", ""
-                                            )
-                                        }" else "") + (if (DataStoreUtil.getString(
-                                                "QQVersionCodeInstall", ""
-                                            ) != ""
-                                        ) "\n\nVersion Code: ${
-                                            DataStoreUtil.getString(
-                                                "QQVersionCodeInstall", ""
-                                            )
-                                        }" else "") + (if (DataStoreUtil.getString(
-                                                "QQAppSettingParamsInstall", ""
-                                            ) != ""
-                                        ) "\n\nAppSetting_params: ${
-                                            DataStoreUtil.getString(
-                                                "QQAppSettingParamsInstall", ""
-                                            )
-                                        }" else "") + (if (DataStoreUtil.getString(
-                                                "QQAppSettingParamsPadInstall",
-                                                ""
-                                            ) != ""
-                                        ) "\n\nAppSetting_params_pad: ${
-                                            DataStoreUtil.getString(
-                                                "QQAppSettingParamsPadInstall", ""
-                                            )
-                                        }" else "")
-                                        setTextIsSelectable(true)
-                                        setPadding(96, 48, 96, 96)
-                                    }
-                                    MaterialAlertDialogBuilder(context).setView(tv)
-                                        .setTitle(R.string.localQQVersionDetails)
-                                        .setIcon(R.drawable.scan_line).show()
-                                } else showToast(getString(R.string.longPressToViewSourceDetailsIsDisabledPleaseGoToSettingsToTurnItOn))
-                                true
-                            }
-                        } else binding.itemQqInstallCard.visibility = View.GONE
-                        if (TIMVersionInstall2 != "") {
-                            binding.itemTimInstallText.text =
-                                if (TIMChannelInstall != "") getString(R.string.localTIMVersion) + DataStoreUtil.getString(
-                                    "TIMVersionInstall", ""
-                                ) + TIMRdmUUIDInstall + (if (TIMVersionCodeInstall2 != "") " (${TIMVersionCodeInstall2})" else "") + " - $TIMChannelInstall" else getString(
-                                    R.string.localTIMVersion
-                                ) + DataStoreUtil.getString("TIMVersionInstall", "")
-                            binding.itemTimInstallCard.visibility = View.VISIBLE
-                            binding.itemTimInstallCard.setOnLongClickListener {
-                                if (DataStoreUtil.getBoolean("longPressCard", true)) {
-                                    val tv = TextView(this@MainActivity).apply {
-                                        text = "Version Name: ${
-                                            DataStoreUtil.getString(
-                                                "TIMVersionInstall", ""
-                                            )
-                                        }" + (if (DataStoreUtil.getString(
-                                                "TIMRdmUUIDInstall", ""
-                                            ) != ""
-                                        ) "\n\nRdm UUID: ${
-                                            DataStoreUtil.getString(
-                                                "TIMRdmUUIDInstall", ""
-                                            )
-                                        }" else "") + (if (DataStoreUtil.getString(
-                                                "TIMVersionCodeInstall", ""
-                                            ) != ""
-                                        ) "\n\nVersion Code: ${
-                                            DataStoreUtil.getString(
-                                                "TIMVersionCodeInstall", ""
-                                            )
-                                        }" else "") + (if (DataStoreUtil.getString(
-                                                "TIMAppSettingParamsInstall", ""
-                                            ) != ""
-                                        ) "\n\nAppSetting_params: ${
-                                            DataStoreUtil.getString(
-                                                "TIMAppSettingParamsInstall", ""
-                                            )
-                                        }" else "")
-                                        setTextIsSelectable(true)
-                                        setPadding(96, 48, 96, 96)
-                                    }
-                                    MaterialAlertDialogBuilder(context).setView(tv)
-                                        .setTitle(R.string.localTIMVersionDetails)
-                                        .setIcon(R.drawable.scan_line).show()
-                                } else showToast(getString(R.string.longPressToViewSourceDetailsIsDisabledPleaseGoToSettingsToTurnItOn))
-                                true
-                            }
-                        } else binding.itemTimInstallCard.visibility = View.GONE
+                                val oldItemQqInstallCardDescribe =
+                                    itemQqInstallText.text.toString()
+                                if (DefaultArtifactVersion(QQVersionInstall2) >= DefaultArtifactVersion(
+                                        "9.0.85"
+                                    )
+                                ) itemQqInstallCard.contentDescription =
+                                    "$oldItemQqInstallCardDescribe。" + String(
+                                        Base64.decode(
+                                            getString(R.string.accessibilityTag),
+                                            Base64.NO_WRAP
+                                        ), Charsets.UTF_8
+                                    )
+                                itemQqInstallCard.setOnLongClickListener {
+                                    if (DataStoreUtil.getBoolean("longPressCard", true)) {
+                                        val tv = TextView(this@MainActivity).apply {
+                                            text = "Version Name: ${
+                                                DataStoreUtil.getString(
+                                                    "QQVersionInstall", ""
+                                                )
+                                            }" + (if (DataStoreUtil.getString(
+                                                    "QQRdmUUIDInstall", ""
+                                                ) != ""
+                                            ) "\n\nRdm UUID: ${
+                                                DataStoreUtil.getString(
+                                                    "QQRdmUUIDInstall", ""
+                                                )
+                                            }" else "") + (if (DataStoreUtil.getString(
+                                                    "QQVersionCodeInstall", ""
+                                                ) != ""
+                                            ) "\n\nVersion Code: ${
+                                                DataStoreUtil.getString(
+                                                    "QQVersionCodeInstall", ""
+                                                )
+                                            }" else "") + (if (DataStoreUtil.getString(
+                                                    "QQAppSettingParamsInstall", ""
+                                                ) != ""
+                                            ) "\n\nAppSetting_params: ${
+                                                DataStoreUtil.getString(
+                                                    "QQAppSettingParamsInstall", ""
+                                                )
+                                            }" else "") + (if (DataStoreUtil.getString(
+                                                    "QQAppSettingParamsPadInstall", ""
+                                                ) != ""
+                                            ) "\n\nAppSetting_params_pad: ${
+                                                DataStoreUtil.getString(
+                                                    "QQAppSettingParamsPadInstall", ""
+                                                )
+                                            }" else "")
+                                            setTextIsSelectable(true)
+                                            setPadding(96, 48, 96, 96)
+                                        }
+                                        MaterialAlertDialogBuilder(context).setView(tv)
+                                            .setTitle(R.string.localQQVersionDetails)
+                                            .setIcon(R.drawable.scan_line).show()
+                                    } else showToast(getString(R.string.longPressToViewSourceDetailsIsDisabledPleaseGoToSettingsToTurnItOn))
+                                    true
+                                }
+                            } else itemQqInstallCard.visibility = View.GONE
+                            if (TIMVersionInstall2 != "") {
+                                itemTimInstallText.text =
+                                    if (TIMChannelInstall != "") getString(R.string.localTIMVersion) + DataStoreUtil.getString(
+                                        "TIMVersionInstall", ""
+                                    ) + TIMRdmUUIDInstall + (if (TIMVersionCodeInstall2 != "") " (${TIMVersionCodeInstall2})" else "") + " - $TIMChannelInstall" else getString(
+                                        R.string.localTIMVersion
+                                    ) + DataStoreUtil.getString("TIMVersionInstall", "")
+                                itemTimInstallCard.visibility = View.VISIBLE
+                                itemTimInstallCard.setOnLongClickListener {
+                                    if (DataStoreUtil.getBoolean("longPressCard", true)) {
+                                        val tv = TextView(this@MainActivity).apply {
+                                            text = "Version Name: ${
+                                                DataStoreUtil.getString(
+                                                    "TIMVersionInstall", ""
+                                                )
+                                            }" + (if (DataStoreUtil.getString(
+                                                    "TIMRdmUUIDInstall", ""
+                                                ) != ""
+                                            ) "\n\nRdm UUID: ${
+                                                DataStoreUtil.getString(
+                                                    "TIMRdmUUIDInstall", ""
+                                                )
+                                            }" else "") + (if (DataStoreUtil.getString(
+                                                    "TIMVersionCodeInstall", ""
+                                                ) != ""
+                                            ) "\n\nVersion Code: ${
+                                                DataStoreUtil.getString(
+                                                    "TIMVersionCodeInstall", ""
+                                                )
+                                            }" else "") + (if (DataStoreUtil.getString(
+                                                    "TIMAppSettingParamsInstall", ""
+                                                ) != ""
+                                            ) "\n\nAppSetting_params: ${
+                                                DataStoreUtil.getString(
+                                                    "TIMAppSettingParamsInstall", ""
+                                                )
+                                            }" else "")
+                                            setTextIsSelectable(true)
+                                            setPadding(96, 48, 96, 96)
+                                        }
+                                        MaterialAlertDialogBuilder(context).setView(tv)
+                                            .setTitle(R.string.localTIMVersionDetails)
+                                            .setIcon(R.drawable.scan_line).show()
+                                    } else showToast(getString(R.string.longPressToViewSourceDetailsIsDisabledPleaseGoToSettingsToTurnItOn))
+                                    true
+                                }
+                            } else itemTimInstallCard.visibility = View.GONE
+                        }
                     }
                     try {
                         val okHttpClient = OkHttpClient()
