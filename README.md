@@ -211,8 +211,8 @@ QQ 版本列表实用工具采用 [GNU Affero General Public License Version 3](
 
 QQ 版本列表实用工具的诞生离不开以下开源项目，感谢以下开源项目的作者和贡献者：
 
-- [Material Components for Android](https://github.com/material-components/material-components-android/)，Licensed under [Apache License Version 2.0](https://github.com/material-components/material-components-android/blob/master/LICENSE)
-- [Android Jetpack](https://github.com/androidx/androidx/)，Licensed under [Apache License Version 2.0](https://github.com/androidx/androidx/blob/androidx-main/LICENSE.txt)
+- [Material Components for Android（Android Open Source Project）](https://github.com/material-components/material-components-android/)，Licensed under [Apache License Version 2.0](https://github.com/material-components/material-components-android/blob/master/LICENSE)
+- [Android Jetpack（Android Open Source Project）](https://developer.android.com/jetpack)，Licensed under [Apache License Version 2.0](https://github.com/androidx/androidx/blob/androidx-main/LICENSE.txt)
 - [Remix Icon（Remix Design）](https://remixicon.com/)，Licensed under [Apache License Version 2.0](https://remixicon.com/license)
 - [OkHttp（Square）](https://square.github.io/okhttp/)，Licensed under [Apache License Version 2.0](https://github.com/square/okhttp/blob/master/LICENSE.txt)
 - [Kotlin（JetBrains）](https://kotlinlang.org/)，Licensed under [Apache License Version 2.0](https://github.com/JetBrains/kotlin/blob/master/license%2FREADME.md)
@@ -226,6 +226,7 @@ QQ 版本列表实用工具的诞生离不开以下开源项目，感谢以下�
 - [Paris（Airbnb）](https://github.com/airbnb/paris)，Licensed under [Apache License Version 2.0](https://github.com/airbnb/paris/blob/master/LICENSE)
 - [Apache Maven](https://maven.apache.org/)，Licensed under [Apache License Version 2.0](https://github.com/apache/maven/blob/master/LICENSE)
 - [Gradle](https://gradle.org/)，Licensed under [Apache License Version 2.0](https://github.com/gradle/gradle/blob/master/LICENSE)
+- [Material Symbols / Material Icons（Google）](https://fonts.google.com/icons)，Licensed under [Apache License Version 2.0](https://github.com/google/material-design-icons/blob/master/LICENSE)
 
 ## 孪生项目
 
