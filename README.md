@@ -218,7 +218,7 @@ QQ 版本列表实用工具的诞生离不开以下开源项目，感谢以下�
 - [Kotlin（JetBrains）](https://kotlinlang.org/)，Licensed under [Apache License Version 2.0](https://github.com/JetBrains/kotlin/blob/master/license%2FREADME.md)
 - [Gson（Google）](https://github.com/google/gson/)，Licensed under [Apache License Version 2.0](https://github.com/google/gson/blob/master/LICENSE)
 - [Coil](https://coil-kt.github.io/coil/)，Licensed under [Apache License Version 2.0](https://github.com/coil-kt/coil/blob/main/LICENSE.txt)
-- [Eclipse Temurin™](https://adoptium.net/zh-CN/temurin/)，Licensed under GNU General Public License, version 2 with the Classpath Exception
+- [Eclipse Temurin™](https://adoptium.net/temurin/)，Licensed under GNU General Public License, version 2 with the Classpath Exception
 - [Oracle JDK](https://www.oracle.com/java/technologies/downloads/)，Licensed under [Oracle No-Fee Terms and Conditions](https://www.java.com/freeuselicense)
 - [JetBrains Runtime](https://github.com/JetBrains/JetBrainsRuntime)，Licensed under [GNU General Public License Version 2](https://github.com/JetBrains/JetBrainsRuntime/blob/main/LICENSE)
 - [Kotlin Serialization](https://github.com/Kotlin/kotlinx.serialization)，Licensed under [Apache License Version 2.0](https://github.com/Kotlin/kotlinx.serialization/blob/master/LICENSE.txt)
