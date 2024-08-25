@@ -45,8 +45,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
                 android:layout_marginTop="5dp"
+                android:layout_marginEnd="16dp"
                 android:layout_marginBottom="5dp"
                 android:backgroundTint="?attr/colorSecondaryContainer"
                 android:clickable="true"
@@ -67,7 +67,8 @@
                     android:paddingEnd="0dp"
                     android:text="@string/localQQVersion"
                     android:textColor="?attr/colorOnSecondaryContainer"
-                    app:drawableStartCompat="@drawable/scan_line" />
+                    app:drawableStartCompat="@drawable/scan_line"
+                    app:drawableTint="?attr/colorOnSecondaryContainer" />
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
@@ -76,8 +77,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
                 android:layout_marginTop="5dp"
+                android:layout_marginEnd="16dp"
                 android:layout_marginBottom="5dp"
                 android:backgroundTint="?attr/colorSecondaryContainer"
                 android:clickable="true"
@@ -98,7 +99,8 @@
                     android:paddingEnd="0dp"
                     android:text="@string/localTIMVersion"
                     android:textColor="?attr/colorOnSecondaryContainer"
-                    app:drawableStartCompat="@drawable/scan_line" />
+                    app:drawableStartCompat="@drawable/scan_line"
+                    app:drawableTint="?attr/colorOnSecondaryContainer" />
             </com.google.android.material.card.MaterialCardView>
 
             <androidx.recyclerview.widget.RecyclerView

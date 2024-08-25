@@ -1064,8 +1064,6 @@ class MainActivity : AppCompatActivity() {
                         DataStoreUtil.getString("TIMVersionCodeInstall", "")
                     val QQAppSettingParamsInstall =
                         DataStoreUtil.getString("QQAppSettingParamsInstall", "")
-                    val QQAppSettingParamsPadInstall =
-                        DataStoreUtil.getString("QQAppSettingParamsPadInstall", "")
                     val TIMAppSettingParamsInstall =
                         DataStoreUtil.getString("TIMAppSettingParamsInstall", "")
                     val QQRdmUUIDInstall = if (DataStoreUtil.getString(
@@ -1093,6 +1091,14 @@ class MainActivity : AppCompatActivity() {
                                     R.string.localQQVersion
                                 ) + DataStoreUtil.getString("QQVersionInstall", "")
                             binding.itemQqInstallCard.visibility = View.VISIBLE
+                            if (DefaultArtifactVersion(QQVersionInstall2) >= DefaultArtifactVersion(
+                                    "9.0.85"
+                                )
+                            ) binding.itemQqInstallText.setCompoundDrawablesWithIntrinsicBounds(
+                                R.drawable.accessibility_new_24px, 0, 0, 0
+                            ) else binding.itemQqInstallText.setCompoundDrawablesWithIntrinsicBounds(
+                                R.drawable.scan_line, 0, 0, 0
+                            )
                             binding.itemQqInstallCard.setOnLongClickListener {
                                 if (DataStoreUtil.getBoolean("longPressCard", true)) {
                                     val tv = TextView(this@MainActivity).apply {
