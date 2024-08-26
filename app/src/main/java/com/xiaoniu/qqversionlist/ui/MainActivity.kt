@@ -70,6 +70,7 @@ import com.google.gson.GsonBuilder
 import com.google.gson.JsonElement
 import com.xiaoniu.qqversionlist.BuildConfig
 import com.xiaoniu.qqversionlist.R
+import com.xiaoniu.qqversionlist.TipTimeApplication.Companion.EARLIEST_ACCESSIBILITY_VERSION
 import com.xiaoniu.qqversionlist.TipTimeApplication.Companion.SHIPLY_DEFAULT_APPID
 import com.xiaoniu.qqversionlist.TipTimeApplication.Companion.SHIPLY_DEFAULT_SDK_VERSION
 import com.xiaoniu.qqversionlist.data.QQVersionBean
@@ -1092,8 +1093,10 @@ class MainActivity : AppCompatActivity() {
                                         R.string.localQQVersion
                                     ) + DataStoreUtil.getString("QQVersionInstall", "")
                                 itemQqInstallCard.visibility = View.VISIBLE
-                                if (DefaultArtifactVersion(QQVersionInstall2) >= DefaultArtifactVersion(
-                                        "9.0.85"
+
+                                // 无障碍标记
+                                /*if (DefaultArtifactVersion(QQVersionInstall2) >= DefaultArtifactVersion(
+                                        EARLIEST_ACCESSIBILITY_VERSION
                                     )
                                 ) itemQqInstallText.setCompoundDrawablesWithIntrinsicBounds(
                                     R.drawable.accessibility_new_24px, 0, 0, 0
@@ -1103,7 +1106,7 @@ class MainActivity : AppCompatActivity() {
                                 val oldItemQqInstallCardDescribe =
                                     itemQqInstallText.text.toString()
                                 if (DefaultArtifactVersion(QQVersionInstall2) >= DefaultArtifactVersion(
-                                        "9.0.85"
+                                        EARLIEST_ACCESSIBILITY_VERSION
                                     )
                                 ) itemQqInstallCard.contentDescription =
                                     "$oldItemQqInstallCardDescribe。" + String(
@@ -1111,7 +1114,7 @@ class MainActivity : AppCompatActivity() {
                                             getString(R.string.accessibilityTag),
                                             Base64.NO_WRAP
                                         ), Charsets.UTF_8
-                                    )
+                                    )*/
                                 itemQqInstallCard.setOnLongClickListener {
                                     if (DataStoreUtil.getBoolean("longPressCard", true)) {
                                         val tv = TextView(this@MainActivity).apply {
@@ -1228,10 +1231,12 @@ class MainActivity : AppCompatActivity() {
                                     this.displayInstall = (DataStoreUtil.getString(
                                         "QQVersionInstall", ""
                                     ) == this.versionNumber)
-                                    this.isAccessibility =
-                                        DefaultArtifactVersion(this.versionNumber) >= DefaultArtifactVersion(
-                                            "9.0.85"
-                                        )
+                                    this.isAccessibility = false
+                                    
+                                    // 无障碍标记
+                                        /*DefaultArtifactVersion(this.versionNumber) >= DefaultArtifactVersion(
+                                            EARLIEST_ACCESSIBILITY_VERSION
+                                        )*/
                                 }
                             }
                             if (DataStoreUtil.getBoolean(
