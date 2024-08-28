@@ -70,7 +70,6 @@ import com.google.gson.GsonBuilder
 import com.google.gson.JsonElement
 import com.xiaoniu.qqversionlist.BuildConfig
 import com.xiaoniu.qqversionlist.R
-import com.xiaoniu.qqversionlist.TipTimeApplication.Companion.EARLIEST_ACCESSIBILITY_VERSION
 import com.xiaoniu.qqversionlist.TipTimeApplication.Companion.SHIPLY_DEFAULT_APPID
 import com.xiaoniu.qqversionlist.TipTimeApplication.Companion.SHIPLY_DEFAULT_SDK_VERSION
 import com.xiaoniu.qqversionlist.data.QQVersionBean
@@ -100,7 +99,6 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import org.apache.maven.artifact.versioning.DefaultArtifactVersion
 import java.io.BufferedReader
 import java.io.ByteArrayInputStream
 import java.io.InputStreamReader
@@ -195,9 +193,12 @@ class MainActivity : AppCompatActivity() {
 
         val userAgreementBinding = UserAgreementBinding.inflate(layoutInflater)
 
-        val dialogUA = MaterialAlertDialogBuilder(this).setTitle(R.string.userAgreement)
-            .setIcon(R.drawable.file_text_line).setView(userAgreementBinding.root)
-            .setCancelable(false).create()
+        val dialogUA = MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.userAgreement)
+            .setIcon(R.drawable.file_text_line)
+            .setView(userAgreementBinding.root)
+            .setCancelable(false)
+            .create()
 
         val constraintSet = ConstraintSet()
         constraintSet.clone(userAgreementBinding.userAgreement)
@@ -359,9 +360,12 @@ class MainActivity : AppCompatActivity() {
                         LinearLayout.LayoutParams.WRAP_CONTENT
                     )
                     linearLayout.addView(imageView)
-                    MaterialAlertDialogBuilder(this).setTitle(R.string.about)
-                        .setIcon(R.drawable.information_line).setMessage(message)
-                        .setView(linearLayout).setPositiveButton(R.string.done, null)
+                    MaterialAlertDialogBuilder(this)
+                        .setTitle(R.string.about)
+                        .setIcon(R.drawable.information_line)
+                        .setMessage(message)
+                        .setView(linearLayout)
+                        .setPositiveButton(R.string.done, null)
                         .setNegativeButton(R.string.withdrawConsentUA) { _, _ ->
                             showUADialog(true, judgeUATarget)
                         }.show().apply {
@@ -383,8 +387,11 @@ class MainActivity : AppCompatActivity() {
                             DataStoreUtil.getBoolean("downloadOnSystemManager", false)
                     }
 
-                    val dialogSetting = MaterialAlertDialogBuilder(this).setTitle(R.string.setting)
-                        .setIcon(R.drawable.settings_line).setView(dialogSettingBinding.root).show()
+                    val dialogSetting = MaterialAlertDialogBuilder(this)
+                        .setTitle(R.string.setting)
+                        .setIcon(R.drawable.settings_line)
+                        .setView(dialogSettingBinding.root)
+                        .show()
 
                     dialogSettingBinding.apply {
                         btnSettingOk.setOnClickListener {
@@ -421,10 +428,11 @@ class MainActivity : AppCompatActivity() {
                                     }
                                 }
 
-                            val dialogPer =
-                                MaterialAlertDialogBuilder(this@MainActivity).setTitle(R.string.personalization)
-                                    .setIcon(R.drawable.palette_line)
-                                    .setView(dialogPersonalization.root).show()
+                            val dialogPer = MaterialAlertDialogBuilder(this@MainActivity)
+                                .setTitle(R.string.personalization)
+                                .setIcon(R.drawable.palette_line)
+                                .setView(dialogPersonalization.root)
+                                .show()
 
                             dialogPersonalization.apply {
                                 switchDisplayFirst.isChecked =
@@ -515,10 +523,12 @@ class MainActivity : AppCompatActivity() {
                                 }
                             }
 
-                            val dialogSuffix =
-                                MaterialAlertDialogBuilder(this@MainActivity).setTitle(R.string.enumerateVersionsSuffixSetting)
-                                    .setIcon(R.drawable.settings_line)
-                                    .setView(dialogSuffixDefine.root).setCancelable(false).create()
+                            val dialogSuffix = MaterialAlertDialogBuilder(this@MainActivity)
+                                .setTitle(R.string.enumerateVersionsSuffixSetting)
+                                .setIcon(R.drawable.settings_line)
+                                .setView(dialogSuffixDefine.root)
+                                .setCancelable(false)
+                                .create()
 
                             dialogSuffixDefine.apply {
                                 DataStoreUtil.apply {
@@ -660,10 +670,12 @@ class MainActivity : AppCompatActivity() {
                     val dialogShiplyBinding = DialogShiplyBinding.inflate(layoutInflater)
 
 
-                    val shiplyDialog =
-                        MaterialAlertDialogBuilder(this).setTitle(R.string.getUpdateFromShiplyPlatform)
-                            .setIcon(R.drawable.flask_line).setView(dialogShiplyBinding.root)
-                            .setCancelable(false).show()
+                    val shiplyDialog = MaterialAlertDialogBuilder(this)
+                        .setTitle(R.string.getUpdateFromShiplyPlatform)
+                        .setIcon(R.drawable.flask_line)
+                        .setView(dialogShiplyBinding.root)
+                        .setCancelable(false)
+                        .show()
 
                     dialogShiplyBinding.apply {
                         DataStoreUtil.apply {
@@ -878,10 +890,12 @@ class MainActivity : AppCompatActivity() {
 //            }
 
 
-        val dialogGuess =
-            MaterialAlertDialogBuilder(this).setTitle(R.string.enumerateVersionsDialogTitle)
-                .setIcon(R.drawable.search_line).setView(dialogGuessBinding.root)
-                .setCancelable(false).show()
+        val dialogGuess = MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.enumerateVersionsDialogTitle)
+            .setIcon(R.drawable.search_line)
+            .setView(dialogGuessBinding.root)
+            .setCancelable(false)
+            .show()
 
         class MissingVersionException(message: String) : Exception(message)
         class InvalidMultipleException(message: String) : Exception(message)
@@ -1154,9 +1168,11 @@ class MainActivity : AppCompatActivity() {
                                             setTextIsSelectable(true)
                                             setPadding(96, 48, 96, 96)
                                         }
-                                        MaterialAlertDialogBuilder(context).setView(tv)
+                                        MaterialAlertDialogBuilder(context)
+                                            .setView(tv)
                                             .setTitle(R.string.localQQVersionDetails)
-                                            .setIcon(R.drawable.scan_line).show()
+                                            .setIcon(R.drawable.scan_line)
+                                            .show()
                                     } else showToast(getString(R.string.longPressToViewSourceDetailsIsDisabledPleaseGoToSettingsToTurnItOn))
                                     true
                                 }
@@ -1201,9 +1217,11 @@ class MainActivity : AppCompatActivity() {
                                             setTextIsSelectable(true)
                                             setPadding(96, 48, 96, 96)
                                         }
-                                        MaterialAlertDialogBuilder(context).setView(tv)
+                                        MaterialAlertDialogBuilder(context)
+                                            .setView(tv)
                                             .setTitle(R.string.localTIMVersionDetails)
-                                            .setIcon(R.drawable.scan_line).show()
+                                            .setIcon(R.drawable.scan_line)
+                                            .show()
                                     } else showToast(getString(R.string.longPressToViewSourceDetailsIsDisabledPleaseGoToSettingsToTurnItOn))
                                     true
                                 }
@@ -1232,11 +1250,11 @@ class MainActivity : AppCompatActivity() {
                                         "QQVersionInstall", ""
                                     ) == this.versionNumber)
                                     this.isAccessibility = false
-                                    
+
                                     // 无障碍标记
-                                        /*DefaultArtifactVersion(this.versionNumber) >= DefaultArtifactVersion(
-                                            EARLIEST_ACCESSIBILITY_VERSION
-                                        )*/
+                                    /*DefaultArtifactVersion(this.versionNumber) >= DefaultArtifactVersion(
+                                        EARLIEST_ACCESSIBILITY_VERSION
+                                    )*/
                                 }
                             }
                             if (DataStoreUtil.getBoolean(
@@ -1279,9 +1297,10 @@ class MainActivity : AppCompatActivity() {
 
         var status = STATUS_ONGOING
 
-        val progressDialog =
-            MaterialAlertDialogBuilder(this).setView(dialogLoadingBinding.root).setCancelable(false)
-                .create()
+        val progressDialog = MaterialAlertDialogBuilder(this)
+            .setView(dialogLoadingBinding.root)
+            .setCancelable(false)
+            .create()
 
         fun updateProgressDialogMessage(newMessage: String) {
             dialogLoadingBinding.loadingMessage.text = newMessage
@@ -1463,17 +1482,18 @@ class MainActivity : AppCompatActivity() {
                                     )
                                 }
 
-                                val successMaterialDialog =
-                                    MaterialAlertDialogBuilder(this).setTitle(R.string.acceptedEnumerateVersion)
-                                        .setIcon(R.drawable.check_circle)
-                                        .setView(successButtonBinding.root).setCancelable(false)
-                                        .setMessage(
-                                            "${getString(R.string.downloadLink)}$link\n\n${
-                                                getString(
-                                                    R.string.fileSize
-                                                )
-                                            }$appSize MB"
-                                        ).show()
+                                val successMaterialDialog = MaterialAlertDialogBuilder(this)
+                                    .setTitle(R.string.acceptedEnumerateVersion)
+                                    .setIcon(R.drawable.check_circle)
+                                    .setView(successButtonBinding.root)
+                                    .setCancelable(false)
+                                    .setMessage(
+                                        "${getString(R.string.downloadLink)}$link\n\n${
+                                            getString(
+                                                R.string.fileSize
+                                            )
+                                        }$appSize MB"
+                                    ).show()
 
 
                                 // 复制并停止按钮点击事件
@@ -1709,10 +1729,12 @@ class MainActivity : AppCompatActivity() {
                                 shiplyDecodeStringJson.toPrettyFormat().getAllAPKUrl()
 
                             dialogShiplyBackBinding.apply {
-                                MaterialAlertDialogBuilder(this@MainActivity).setView(
-                                    dialogShiplyBackBinding.root
-                                ).setTitle(R.string.contentReturnedByShiplyPlatform)
-                                    .setIcon(R.drawable.flask_line).show().apply {
+                                MaterialAlertDialogBuilder(this@MainActivity)
+                                    .setView(
+                                        dialogShiplyBackBinding.root
+                                    ).setTitle(R.string.contentReturnedByShiplyPlatform)
+                                    .setIcon(R.drawable.flask_line)
+                                    .show().apply {
                                         shiplyUrlRecyclerView.layoutManager =
                                             LinearLayoutManager(this@MainActivity)
                                         when {
