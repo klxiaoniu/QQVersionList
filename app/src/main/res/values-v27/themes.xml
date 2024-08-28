@@ -13,23 +13,16 @@
     GNU Affero General Public License for more details.
 
     You should have received a copy of the GNU Affero General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+    along with this program.  If not, see <https://www.gnu.org/licenses/>
 -->
-
 <resources xmlns:tools="http://schemas.android.com/tools">
-
+    <!-- Base application theme. -->
     <style name="Base.Theme.QQVersionList" parent="Theme.Material3.DynamicColors.Light.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
         <item name="android:windowLightStatusBar">true</item>
-        <item name="android:windowSplashScreenBackground">?attr/colorPrimaryContainer</item>
-        <item name="android:windowSplashScreenAnimatedIcon">
-            @drawable/ic_launcher_foreground_splash
-        </item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
-        <item name="android:windowSplashScreenIconBackgroundColor">?attr/colorPrimaryContainer
-        </item>
         <item name="bottomSheetDialogTheme">@style/ThemeOverlay.App.BottomSheetDialog</item>
     </style>
 
@@ -37,4 +30,6 @@
         <item name="android:navigationBarColor" tools:ignore="NewApi">@android:color/transparent
         </item>
     </style>
+
+    <style name="Theme.QQVersionList" parent="Base.Theme.QQVersionList" />
 </resources>

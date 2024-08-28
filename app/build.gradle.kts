@@ -46,8 +46,13 @@ android {
         minSdk = 24
         targetSdk = 35
         versionCode = gitCommitCount
-        versionName = "1.3.5-$gitCommitHash"
+        versionName = "1.3.6-$gitCommitHash"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        externalNativeBuild {
+            cmake {
+                arguments += listOf("-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON")
+            }
+        }
     }
 
     signingConfigs {
@@ -102,4 +107,5 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:1.1.1")
     implementation("com.google.code.gson:gson:2.11.0")
     implementation("com.airbnb.android:paris:2.0.2")
+    implementation("org.apache.maven:maven-artifact:3.9.9")
 }

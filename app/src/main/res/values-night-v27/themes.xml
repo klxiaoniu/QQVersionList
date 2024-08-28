@@ -18,18 +18,12 @@
 
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="Base.Theme.QQVersionList" parent="Theme.Material3.DynamicColors.Light.NoActionBar">
+    <style name="Base.Theme.QQVersionList" parent="Theme.Material3.DynamicColors.Dark.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
-        <item name="android:windowLightStatusBar">true</item>
-        <item name="android:windowSplashScreenBackground">?attr/colorPrimaryContainer</item>
-        <item name="android:windowSplashScreenAnimatedIcon">
-            @drawable/ic_launcher_foreground_splash
-        </item>
+        <item name="android:windowLightStatusBar">false</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
-        <item name="android:windowSplashScreenIconBackgroundColor">?attr/colorPrimaryContainer
-        </item>
         <item name="bottomSheetDialogTheme">@style/ThemeOverlay.App.BottomSheetDialog</item>
     </style>
 

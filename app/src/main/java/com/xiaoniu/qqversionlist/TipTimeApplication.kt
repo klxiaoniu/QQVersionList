@@ -27,6 +27,8 @@ class TipTimeApplication : Application() {
 
         const val SHIPLY_DEFAULT_APPID = "537230561"
         const val SHIPLY_DEFAULT_SDK_VERSION = "1.3.36-RC01"
+
+        const val EARLIEST_ACCESSIBILITY_VERSION = false
     }
 
     override fun onCreate() {

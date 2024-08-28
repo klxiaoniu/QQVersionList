@@ -63,10 +63,10 @@
     <string name="reatedFileSize">額定大小：</string>
     <string name="sourceJSON">源 JSON</string>
     <string name="recommendations">建議的內容</string>
-    <string name="longPressTheVersionCardToViewSourceJSONDetails">長按版本卡片查看源 JSON 詳情</string>
+    <string name="longPressTheVersionCardToViewSourceDetails">長按版本卡片查看源詳情</string>
     <string name="useTheSystemDownloadManagerToTakeOverTheDownloadIntent">使用系統下載管理器接管下載意圖</string>
     <string name="removeMultiplesOf5ForQQPreviewVersions">解除 QQ 測試版猜版小版本號遵循 5 的倍數限制</string>
-    <string name="longPressToViewJSONDetailsIsDisabledPleaseGoToSettingsToTurnItOn">未開啟長按查看 JSON 詳情功能，請前往設定開啟</string>
+    <string name="longPressToViewSourceDetailsIsDisabledPleaseGoToSettingsToTurnItOn">未開啟長按查看源詳情功能，請前往設定開啟</string>
     <string name="currentSizeVsLargestHistoricalPackage">占比歷史最大包（</string>
     <string name="endParenthesis">）：</string>
     <string name="extendTheSuffixForDirectDownloadLinksOfEnumeratedPreviewVersions">擴展測試版猜版直鏈後綴</string>
@@ -116,4 +116,16 @@
     <string name="thicknessFollowSystem">跟隨系統</string>
     <string name="back">返回</string>
     <string name="shiplyUseAdvancedConfigurations">使用進階配置</string>
+    <string name="localQQVersion">本機 QQ：</string>
+    <string name="bracketStart">（</string>
+    <string name="bracketEnd">）</string>
+    <string name="localTIMVersion">本機 TIM：</string>
+    <string name="localQQVersionDetails">本機 QQ 版本詳情</string>
+    <string name="localTIMVersionDetails">本機 TIM 版本詳情</string>
+    <string name="accessibilityTag">6aiw6KiKIFFRIOW3suS4iue3muS4gOmgheeEoemanOekmeeUqOaItuWwiOWxrOWEquWMluaOquaWveabtOaWsOOAgueVtuenu+WLlee1guerr+ioreWCmeWVn+eUqOezu+e1seeEoemanOekmeiugOWxj+acjeWLme+8iOWmgiBBbmRyb2lkIFRhbGtiYWNr44CBaU9TIFZvaWNlT3Zlcu+8ie+8jOS4puS4lOWQjOaZguS9v+eUqOmosOioiiBRUSDnp7vli5XlrqLmiLbnq68gOS4wLjg1IOWPiuS7peS4iueJiOacrOaZgu+8jOmosOioiiBRUSDlsIfmnIPmuJvlsJHmiJblgZzmraLlkJHmraTpoZ4gUVEg5a6i5oi256uv55m86YCB5buj5ZGK44CC</string>
+    <string name="imageGallery">應用宣傳圖</string>
+    <string name="share">分享</string>
+    <string name="download">下載</string>
+    <string name="stop">停止</string>
+    <string name="skip">跳過</string>
 </resources>

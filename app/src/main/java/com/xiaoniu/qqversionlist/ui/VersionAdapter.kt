@@ -21,6 +21,7 @@ package com.xiaoniu.qqversionlist.ui
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Typeface
+import android.util.Base64
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -46,11 +47,6 @@ import com.xiaoniu.qqversionlist.util.StringUtil.toPrettyFormat
 import com.xiaoniu.qqversionlist.util.dp
 
 class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(VersionDiffCallback()) {
-    // Extensions -> Number.dp
-    /*private fun Context.dpToPx(dp: Int): Int {
-        return (dp * resources.displayMetrics.density).toInt()
-    }*/
-
     private var getProgressSize = DataStoreUtil.getBoolean("progressSize", false)
     private var getVersionTCloud = DataStoreUtil.getBoolean("versionTCloud", true)
     private var getVersionTCloudThickness =
@@ -83,13 +79,11 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
                             showDialog(
                                 it.context, currentList[adapterPosition].jsonString.toPrettyFormat()
                             )
-                        } else {
-                            Toast.makeText(
-                                it.context,
-                                R.string.longPressToViewJSONDetailsIsDisabledPleaseGoToSettingsToTurnItOn,
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
+                        } else Toast.makeText(
+                            it.context,
+                            R.string.longPressToViewSourceDetailsIsDisabledPleaseGoToSettingsToTurnItOn,
+                            Toast.LENGTH_SHORT
+                        ).show()
                         true
                     }
                 }
@@ -110,13 +104,12 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
                             showDialog(
                                 it.context, currentList[adapterPosition].jsonString.toPrettyFormat()
                             )
-                        } else {
-                            Toast.makeText(
-                                it.context,
-                                R.string.longPressToViewJSONDetailsIsDisabledPleaseGoToSettingsToTurnItOn,
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
+                        } else Toast.makeText(
+                            it.context,
+                            R.string.longPressToViewSourceDetailsIsDisabledPleaseGoToSettingsToTurnItOn,
+                            Toast.LENGTH_SHORT
+                        ).show()
+
                         true
                     }
                 }
@@ -138,21 +131,22 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
                     )
                     bindDisplayInstall(tvInstall, tvInstallCard, bean)
                     bindVersionTCloud(tvVersion, holder.context)
+                    bindAccessibilityTag(accessibilityTag, holder.context, bean)
                 }
             }
 
             is ViewHolderDetail -> {
                 holder.binding.apply {
                     linearImages.removeAllViews()
-                    bean.imgs.forEach {
+                    bean.imgs.forEachIndexed { index, s ->
                         val iv = ImageView(holder.itemView.context).apply {
-                            setPadding(0, 0, 4.dp, 0)
+                            setPadding(0, 0, if (index == bean.imgs.size - 1) 0 else 4.dp, 0)
                             layoutParams = LinearLayout.LayoutParams(
                                 LinearLayout.LayoutParams.WRAP_CONTENT, 150.dp
                             )
                         }
                         linearImages.addView(iv)
-                        iv.load(it) {
+                        iv.load(s) {
                             crossfade(true)
                             transformations(RoundedCornersTransformation(2.dp.toFloat()))
                         }
@@ -170,6 +164,7 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
 
                     bindDisplayInstall(tvOldInstall, tvOldInstallCard, bean)
                     bindVersionTCloud(tvOldVersion, holder.context)
+                    bindAccessibilityTag(accessibilityOldTag, holder.context, bean)
 
                     bindProgress(
                         listDetailProgressLine,
@@ -232,30 +227,43 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
         if (bean.displayInstall) {
             tvInstallCard.isVisible = true
             tvInstall.text = tvInstall.context.getString(R.string.installed)
-        } else {
-            tvInstallCard.isVisible = false
-        }
+            if (bean.isAccessibility) {
+                val marginLayoutParams = tvInstallCard.layoutParams as ViewGroup.MarginLayoutParams
+                marginLayoutParams.marginStart = 3.dp
+                tvInstallCard.layoutParams = marginLayoutParams
+            } else {
+                val marginLayoutParams = tvInstallCard.layoutParams as ViewGroup.MarginLayoutParams
+                marginLayoutParams.marginStart = 6.dp
+                tvInstallCard.layoutParams = marginLayoutParams
+            }
+        } else tvInstallCard.isVisible = false
+    }
+
+    private fun bindAccessibilityTag(
+        accessibilityTag: ImageView, context: Context, bean: QQVersionBean
+    ) {
+        if (bean.isAccessibility) {
+            accessibilityTag.contentDescription = String(
+                Base64.decode(
+                    context.getString(R.string.accessibilityTag), Base64.NO_WRAP
+                ), Charsets.UTF_8
+            )
+            accessibilityTag.isVisible = true
+        } else accessibilityTag.isVisible = false
     }
 
     private fun bindVersionTCloud(
         tvVersion: TextView, context: Context
     ) {
         if (getVersionTCloud) {
-            val TCloudFont: Typeface
-            when (getVersionTCloudThickness) {
-                "Light" -> TCloudFont =
-                    ResourcesCompat.getFont(context, R.font.tcloud_number_light)!!
-
-                "Regular" -> TCloudFont =
-                    ResourcesCompat.getFont(context, R.font.tcloud_number_regular)!!
-
-                "Bold" -> TCloudFont = ResourcesCompat.getFont(context, R.font.tcloud_number_bold)!!
-                else -> TCloudFont = ResourcesCompat.getFont(context, R.font.tcloud_number_vf)!!
+            val TCloudFont: Typeface = when (getVersionTCloudThickness) {
+                "Light" -> ResourcesCompat.getFont(context, R.font.tcloud_number_light)!!
+                "Regular" -> ResourcesCompat.getFont(context, R.font.tcloud_number_regular)!!
+                "Bold" -> ResourcesCompat.getFont(context, R.font.tcloud_number_bold)!!
+                else -> ResourcesCompat.getFont(context, R.font.tcloud_number_vf)!!
             }
             tvVersion.typeface = TCloudFont
-        } else {
-            tvVersion.setTypeface(null, Typeface.NORMAL)
-        }
+        } else tvVersion.setTypeface(null, Typeface.NORMAL)
     }
 
     private fun showDialog(context: Context, s: String) {
@@ -271,9 +279,8 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
     override fun onBindViewHolder(
         holder: RecyclerView.ViewHolder, position: Int, payloads: MutableList<Any>
     ) {
-        if (payloads.isEmpty()) {
-            onBindViewHolder(holder, position)
-        } else {
+        if (payloads.isEmpty()) onBindViewHolder(holder, position)
+        else {
             val bean = currentList[position]
             when (payloads[0]) {
                 "displayType" -> {

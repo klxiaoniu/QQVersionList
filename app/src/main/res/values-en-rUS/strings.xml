@@ -63,10 +63,10 @@
     <string name="reatedFileSize">Reated File Size:&#160;</string>
     <string name="sourceJSON">Source JSON</string>
     <string name="recommendations">Recommendations</string>
-    <string name="longPressTheVersionCardToViewSourceJSONDetails">Long press the version card to view source JSON details</string>
+    <string name="longPressTheVersionCardToViewSourceDetails">Long press the version card to view source details</string>
     <string name="useTheSystemDownloadManagerToTakeOverTheDownloadIntent">Use the system download manager to take over the download intent</string>
     <string name="removeMultiplesOf5ForQQPreviewVersions">Remove the restriction of adhering to multiples of 5 when enumerating minor version numbers for QQ preview versions</string>
-    <string name="longPressToViewJSONDetailsIsDisabledPleaseGoToSettingsToTurnItOn">Long press to view JSON details is disabled. Please go to settings to turn it on.</string>
+    <string name="longPressToViewSourceDetailsIsDisabledPleaseGoToSettingsToTurnItOn">Long press to view source details is disabled. Please go to settings to turn it on.</string>
     <string name="currentSizeVsLargestHistoricalPackage">Current Size VS Largest Historical Package(</string>
     <string name="endParenthesis">):&#160;</string>
     <string name="extendTheSuffixForDirectDownloadLinksOfEnumeratedPreviewVersions">Extend the suffix for direct download links of enumerated preview versions</string>
@@ -116,4 +116,16 @@
     <string name="thicknessFollowSystem">Follow System</string>
     <string name="back">Back</string>
     <string name="shiplyUseAdvancedConfigurations">Use Advanced Configurations</string>
+    <string name="localQQVersion">Local QQ:&#160;</string>
+    <string name="bracketStart">&#160;(</string>
+    <string name="bracketEnd">)</string>
+    <string name="localTIMVersion">Local TIM:&#160;</string>
+    <string name="localQQVersionDetails">Local QQ Version Details</string>
+    <string name="localTIMVersionDetails">Local TIM Version Details</string>
+    <string name="accessibilityTag">VGVuY2VudCBRUSBoYXMgbGF1bmNoZWQgYSBkZWRpY2F0ZWQgYWNjZXNzaWJpbGl0eSBvcHRpbWl6YXRpb24gdXBkYXRlIGZvciB1c2Vycy4gV2hlbiB0aGUgc3lzdGVtJ3Mgc2NyZWVuIHJlYWRlciBzZXJ2aWNlIChzdWNoIGFzIEFuZHJvaWQgVGFsa2JhY2ssIGlPUyBWb2ljZU92ZXIpIGlzIGVuYWJsZWQgb24gdGhlIG1vYmlsZSBkZXZpY2UgYW5kIFRlbmNlbnQgUVEgbW9iaWxlIGNsaWVudCB2ZXJzaW9uIDkuMC44NSBvciBsYXRlciBpcyB1c2VkLCBUZW5jZW50IFFRIHdpbGwgcmVkdWNlIG9yIHN0b3Agc2VydmluZyBhZHMgdG8gc3VjaCBRUSBjbGllbnRzLg==</string>
+    <string name="imageGallery">App Promotion Image</string>
+    <string name="share">Share</string>
+    <string name="download">Download</string>
+    <string name="stop">Stop</string>
+    <string name="skip">Skip</string>
 </resources>

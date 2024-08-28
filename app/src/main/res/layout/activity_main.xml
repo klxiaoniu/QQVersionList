@@ -24,19 +24,97 @@
     android:fitsSystemWindows="true"
     tools:context=".ui.MainActivity">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_content"
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/rv_scroll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clipToPadding="false"
         android:fillViewport="true"
-        android:nestedScrollingEnabled="true"
-        android:paddingLeft="11dp"
-        android:paddingTop="11dp"
-        android:paddingRight="11dp"
-        android:paddingBottom="100dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        app:layout_constrainedHeight="true" />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="11dp"
+            app:layout_constrainedHeight="true">
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/item_qq_install_card"
+                style="?attr/materialCardViewElevatedStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="5dp"
+                android:backgroundTint="?attr/colorSecondaryContainer"
+                android:clickable="true"
+                android:focusable="true"
+                android:visibility="gone"
+                app:layout_constraintTop_toTopOf="parent"
+                app:strokeColor="?attr/colorSecondaryContainer"
+                app:strokeWidth="0dp">
+
+                <TextView
+                    android:id="@+id/item_qq_install_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:drawablePadding="6dp"
+                    android:gravity="center_vertical"
+                    android:paddingStart="3dp"
+                    android:paddingEnd="0dp"
+                    android:text="@string/localQQVersion"
+                    android:textColor="?attr/colorOnSecondaryContainer"
+                    app:drawableStartCompat="@drawable/scan_line"
+                    app:drawableTint="?attr/colorOnSecondaryContainer" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/item_tim_install_card"
+                style="?attr/materialCardViewElevatedStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="5dp"
+                android:backgroundTint="?attr/colorSecondaryContainer"
+                android:clickable="true"
+                android:focusable="true"
+                android:visibility="gone"
+                app:layout_constraintTop_toTopOf="parent"
+                app:strokeColor="?attr/colorSecondaryContainer"
+                app:strokeWidth="0dp">
+
+                <TextView
+                    android:id="@+id/item_tim_install_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:drawablePadding="6dp"
+                    android:gravity="center_vertical"
+                    android:paddingStart="3dp"
+                    android:paddingEnd="0dp"
+                    android:text="@string/localTIMVersion"
+                    android:textColor="?attr/colorOnSecondaryContainer"
+                    app:drawableStartCompat="@drawable/scan_line"
+                    app:drawableTint="?attr/colorOnSecondaryContainer" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                android:paddingLeft="11dp"
+                android:paddingRight="11dp"
+                android:paddingBottom="100dp"
+                app:layout_constrainedHeight="true" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/topAppBar"
@@ -57,7 +135,7 @@
                 android:layout_height="?attr/actionBarSize"
                 android:elevation="0dp"
                 app:layout_collapseMode="pin"
-                app:title="@string/appTitle"/>
+                app:title="@string/appTitle" />
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
     </com.google.android.material.appbar.AppBarLayout>

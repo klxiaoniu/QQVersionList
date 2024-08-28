@@ -23,6 +23,7 @@ import android.annotation.SuppressLint
 import android.app.DownloadManager
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.net.Uri
@@ -55,7 +56,6 @@ import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.airbnb.paris.extensions.style
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -117,12 +117,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        val viewRoot = binding.root
+        setContentView(viewRoot)
 
         setContext(this)
 
         if (SDK_INT <= Build.VERSION_CODES.Q) {
-            ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, windowInsets ->
+            ViewCompat.setOnApplyWindowInsetsListener(viewRoot) { view, windowInsets ->
                 val insets = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars())
                 view.setPadding(insets.left, 0, insets.right, 0)
                 binding.apply {
@@ -153,6 +154,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
+        versionListStaggeredGridLayout()
+    }
+
+    override fun onMultiWindowModeChanged(isInMultiWindowMode: Boolean, newConfig: Configuration) {
+        super.onMultiWindowModeChanged(isInMultiWindowMode, newConfig)
         versionListStaggeredGridLayout()
     }
 
@@ -228,7 +234,7 @@ class MainActivity : AppCompatActivity() {
         // 删除 version Shared Preferences
         DataStoreUtil.deletePreferenceAsync("version")
 
-        //这里的“getInt: userAgreement”的值代表着用户协议修订版本，后续更新协议版本后也需要在下面一行把“judgeUARead”+1，以此类推
+        // 这里的“getInt: userAgreement”的值代表着用户协议修订版本，后续更新协议版本后也需要在下面一行把“judgeUARead”+1，以此类推
         val judgeUATarget = 2 // 2024.5.30 第二版
         if (DataStoreUtil.getInt("userAgreement", 0) < judgeUATarget) showUADialog(
             false, judgeUATarget
@@ -242,13 +248,10 @@ class MainActivity : AppCompatActivity() {
             hideAnimationBehavior = LinearProgressIndicator.HIDE_ESCAPE
         }
 
-        binding.rvContent.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                if (dy > 0) binding.btnGuess.shrink()
-                else if (dy < 0) binding.btnGuess.extend()
-            }
-        })
+        binding.rvScroll.setOnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
+            if (scrollY > oldScrollY) binding.btnGuess.shrink()
+            else if (scrollY < oldScrollY) binding.btnGuess.extend()
+        }
 
 
         binding.bottomAppBar.setOnMenuItemClickListener { menuItem ->
@@ -342,8 +345,7 @@ class MainActivity : AppCompatActivity() {
                     val linearLayout = LinearLayout(this).apply {
                         orientation = LinearLayout.VERTICAL
                         layoutParams = ViewGroup.LayoutParams(
-                            ViewGroup.LayoutParams.MATCH_PARENT,
-                            ViewGroup.LayoutParams.WRAP_CONTENT
+                            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT
                         )
                         setPadding(128, 64, 128, 0)
                         gravity = Gravity.CENTER_HORIZONTAL
@@ -370,7 +372,6 @@ class MainActivity : AppCompatActivity() {
                             findViewById<TextView>(android.R.id.message)?.movementMethod =
                                 LinkMovementMethodCompat.getInstance()
                         }
-
                     true
                 }
 
@@ -481,23 +482,19 @@ class MainActivity : AppCompatActivity() {
                                 versionTcloudThickness.addOnChangeListener { _, value, _ ->
                                     when (value) {
                                         1.0f -> DataStoreUtil.putString(
-                                            "versionTCloudThickness",
-                                            "Light"
+                                            "versionTCloudThickness", "Light"
                                         )
 
                                         2.0f -> DataStoreUtil.putString(
-                                            "versionTCloudThickness",
-                                            "Regular"
+                                            "versionTCloudThickness", "Regular"
                                         )
 
                                         3.0f -> DataStoreUtil.putString(
-                                            "versionTCloudThickness",
-                                            "Bold"
+                                            "versionTCloudThickness", "Bold"
                                         )
 
                                         else -> DataStoreUtil.putString(
-                                            "versionTCloudThickness",
-                                            "System"
+                                            "versionTCloudThickness", "System"
                                         )
                                     }
                                     versionAdapter.updateItemProperty("isTCloud")
@@ -670,8 +667,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.btn_tencent_shiply -> {
-                    val dialogShiplyBinding =
-                        DialogShiplyBinding.inflate(layoutInflater)
+                    val dialogShiplyBinding = DialogShiplyBinding.inflate(layoutInflater)
 
 
                     val shiplyDialog = MaterialAlertDialogBuilder(this)
@@ -766,24 +762,19 @@ class MainActivity : AppCompatActivity() {
                                         shiplyVersion.editText?.text.toString(),
                                         shiplyUin.editText?.text.toString(),
                                         getString(
-                                            "shiplyAppid",
-                                            ""
+                                            "shiplyAppid", ""
                                         ).ifEmpty { SHIPLY_DEFAULT_APPID },
                                         getString(
-                                            "shiplyOsVersion",
-                                            ""
+                                            "shiplyOsVersion", ""
                                         ).ifEmpty { SDK_INT.toString() },
                                         getString(
-                                            "shiplyModel",
-                                            ""
+                                            "shiplyModel", ""
                                         ).ifEmpty { Build.MODEL.toString() },
                                         getString(
-                                            "shiplySdkVersion",
-                                            ""
+                                            "shiplySdkVersion", ""
                                         ).ifEmpty { SHIPLY_DEFAULT_SDK_VERSION },
                                         getString(
-                                            "shiplyLanguage",
-                                            ""
+                                            "shiplyLanguage", ""
                                         ).ifEmpty { Locale.getDefault().language.toString() })
                                 }
                             } catch (e: MissingParameterException) {
@@ -802,8 +793,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (intent.action == "android.intent.action.VIEW" && DataStoreUtil.getInt(
-                "userAgreement",
-                0
+                "userAgreement", 0
             ) >= judgeUATarget
         ) showGuessVersionDialog()
         binding.btnGuess.setOnClickListener {
@@ -818,14 +808,12 @@ class MainActivity : AppCompatActivity() {
         dialogGuessBinding.etVersionBig.editText?.setText(verBig)
         val memVersion = DataStoreUtil.getString("versionSelect", MODE_OFFICIAL)
         if (memVersion == MODE_TEST || memVersion == MODE_UNOFFICIAL || memVersion == MODE_OFFICIAL || memVersion == MODE_WECHAT) dialogGuessBinding.spinnerVersion.setText(
-            memVersion,
-            false
+            memVersion, false
         ) else {
             dialogGuessBinding.spinnerVersion.setText(MODE_OFFICIAL, false)
             DataStoreUtil.putStringAsync("versionSelect", MODE_OFFICIAL)
         }
-        if (dialogGuessBinding.spinnerVersion.text.toString() == MODE_TEST || dialogGuessBinding.spinnerVersion.text.toString() == MODE_UNOFFICIAL
-        ) dialogGuessBinding.apply {
+        if (dialogGuessBinding.spinnerVersion.text.toString() == MODE_TEST || dialogGuessBinding.spinnerVersion.text.toString() == MODE_UNOFFICIAL) dialogGuessBinding.apply {
             etVersionSmall.isEnabled = true
             etVersionSmall.visibility = View.VISIBLE
             guessDialogWarning.visibility = View.VISIBLE
@@ -938,8 +926,7 @@ class MainActivity : AppCompatActivity() {
                             getString(R.string.missingMajorVersionWarning)
                         ) else {
                             versionSmall =
-                                dialogGuessBinding.etVersionSmall.editText?.text.toString()
-                                    .toInt()
+                                dialogGuessBinding.etVersionSmall.editText?.text.toString().toInt()
                             if (versionSmall % 5 != 0 && !DataStoreUtil.getBoolean(
                                     "guessNot5", false
                                 )
@@ -958,8 +945,7 @@ class MainActivity : AppCompatActivity() {
                             getString(R.string.missingWeixin16CodeWarning)
                         ) else {
                             versionTrue =
-                                dialogGuessBinding.etVersionTrue.editText?.text.toString()
-                                    .toInt()
+                                dialogGuessBinding.etVersionTrue.editText?.text.toString().toInt()
                             version16code =
                                 dialogGuessBinding.etVersion16code.editText?.text.toString()
                             if (version16code != 0.toString()) DataStoreUtil.putStringAsync(
@@ -1001,63 +987,296 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+    @SuppressLint("SetTextI18n")
     private fun getData() {
         binding.progressLine.show()
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 // 识别本机 Android QQ 版本并放进持久化存储
-                val QQPackageInfo = packageManager.getPackageInfo("com.tencent.mobileqq", 0)
-                val QQVersionInstall = QQPackageInfo.versionName.toString()
+                val QQVersionInstall =
+                    packageManager.getPackageInfo("com.tencent.mobileqq", 0).versionName.toString()
+                val QQVersionCodeInstall =
+                    if (SDK_INT >= Build.VERSION_CODES.P) packageManager.getPackageInfo(
+                        "com.tencent.mobileqq", 0
+                    ).longVersionCode.toString() else ""
+                val QQAppSettingParamsInstall = packageManager.getPackageInfo(
+                    "com.tencent.mobileqq", PackageManager.GET_META_DATA
+                ).applicationInfo?.metaData?.getString("AppSetting_params")
+                val QQAppSettingParamsPadInstall = packageManager.getPackageInfo(
+                    "com.tencent.mobileqq", PackageManager.GET_META_DATA
+                ).applicationInfo?.metaData?.getString("AppSetting_params_pad")
+                val QQRdmUUIDInstall = packageManager.getPackageInfo(
+                    "com.tencent.mobileqq", PackageManager.GET_META_DATA
+                ).applicationInfo?.metaData?.getString("com.tencent.rdm.uuid")
                 if (QQVersionInstall != DataStoreUtil.getString(
-                        "QQVersionInstall",
-                        ""
+                        "QQVersionInstall", ""
                     )
                 ) DataStoreUtil.putString("QQVersionInstall", QQVersionInstall)
-            } catch (e: Exception) {
-                DataStoreUtil.putStringAsync("QQVersionInstall", "")
+                if (QQVersionCodeInstall != DataStoreUtil.getString(
+                        "QQVersionCodeInstall", ""
+                    )
+                ) DataStoreUtil.putString("QQVersionCodeInstall", QQVersionCodeInstall)
+                if (QQAppSettingParamsInstall != null && QQAppSettingParamsInstall != DataStoreUtil.getString(
+                        "QQAppSettingParamsInstall", ""
+                    )
+                ) DataStoreUtil.putString("QQAppSettingParamsInstall", QQAppSettingParamsInstall)
+                if (QQAppSettingParamsPadInstall != null && QQAppSettingParamsPadInstall != DataStoreUtil.getString(
+                        "QQAppSettingParamsPadInstall", ""
+                    )
+                ) DataStoreUtil.putString(
+                    "QQAppSettingParamsPadInstall", QQAppSettingParamsPadInstall
+                )
+                if (QQRdmUUIDInstall != null && QQRdmUUIDInstall != DataStoreUtil.getString(
+                        "QQRdmUUIDInstall", ""
+                    )
+                ) DataStoreUtil.putString("QQRdmUUIDInstall", QQRdmUUIDInstall)
+            } catch (_: Exception) {
+                DataStoreUtil.putString("QQVersionInstall", "")
+                DataStoreUtil.putString("QQVersionCodeInstall", "")
+                DataStoreUtil.putString("QQAppSettingParamsInstall", "")
             } finally {
                 try {
-                    val okHttpClient = OkHttpClient()
-                    val request =
-                        Request.Builder().url("https://im.qq.com/rainbow/androidQQVersionList")
-                            .build()
-                    val response = okHttpClient.newCall(request).execute()
-                    val responseData = response.body?.string()
-                    if (responseData != null) {
-                        val start = (responseData.indexOf("versions64\":[")) + 12
-                        val end = (responseData.indexOf(";\n" + "      typeof"))
-                        val totalJson = responseData.substring(start, end)
-                        qqVersion = totalJson.split("},{").reversed().map {
-                            val pstart = it.indexOf("{\"versions")
-                            val pend = it.indexOf(",\"length")
-                            val json = it.substring(pstart, pend)
-                            Json.decodeFromString<QQVersionBean>(json).apply {
-                                jsonString = json
-                                // 标记本机 Android QQ 版本
-                                this.displayInstall = (DataStoreUtil.getString(
-                                    "QQVersionInstall", ""
-                                ) == this.versionNumber)
-                            }
-                        }
-                        if (DataStoreUtil.getBoolean(
-                                "displayFirst", true
-                            )
-                        ) qqVersion[0].displayType = 1
-                        withContext(Dispatchers.Main) {
-                            versionAdapter.submitList(qqVersion)
-                            // 舍弃 currentQQVersion = qqVersion.first().versionNumber
-                            // 大版本号也放持久化存储了，否则猜版 Shortcut 因为加载过快而获取不到东西
-                            DataStoreUtil.putStringAsync(
-                                "versionBig", qqVersion.first().versionNumber
-                            )
+                    // 识别本机 Android QQ 版本并放进持久化存储
+                    val TIMVersionInstall =
+                        packageManager.getPackageInfo("com.tencent.tim", 0).versionName.toString()
+                    val TIMVersionCodeInstall =
+                        if (SDK_INT >= Build.VERSION_CODES.P) packageManager.getPackageInfo(
+                            "com.tencent.tim", 0
+                        ).longVersionCode.toString() else ""
+                    val TIMAppSettingParamsInstall = packageManager.getPackageInfo(
+                        "com.tencent.tim", PackageManager.GET_META_DATA
+                    ).applicationInfo?.metaData?.getString("AppSetting_params")
+                    val TIMRdmUUIDInstall = packageManager.getPackageInfo(
+                        "com.tencent.tim", PackageManager.GET_META_DATA
+                    ).applicationInfo?.metaData?.getString("com.tencent.rdm.uuid")
+                    if (TIMVersionInstall != DataStoreUtil.getString(
+                            "TIMVersionInstall", ""
+                        )
+                    ) DataStoreUtil.putString("TIMVersionInstall", TIMVersionInstall)
+                    if (TIMVersionCodeInstall != DataStoreUtil.getString(
+                            "TIMVersionCodeInstall", ""
+                        )
+                    ) DataStoreUtil.putString("TIMVersionCodeInstall", TIMVersionCodeInstall)
+                    if (TIMAppSettingParamsInstall != null && TIMAppSettingParamsInstall != DataStoreUtil.getString(
+                            "TIMAppSettingParamsInstall", ""
+                        )
+                    ) DataStoreUtil.putString(
+                        "TIMAppSettingParamsInstall", TIMAppSettingParamsInstall
+                    )
+                    if (TIMRdmUUIDInstall != null && TIMRdmUUIDInstall != DataStoreUtil.getString(
+                            "TIMRdmUUIDInstall", ""
+                        )
+                    ) DataStoreUtil.putString("TIMRdmUUIDInstall", TIMRdmUUIDInstall)
+                } catch (_: Exception) {
+                    DataStoreUtil.putString("TIMVersionInstall", "")
+                    DataStoreUtil.putString("TIMVersionCodeInstall", "")
+                    DataStoreUtil.putString("TIMAppSettingParamsInstall", "")
+                } finally {
+                    val QQVersionInstall2 = DataStoreUtil.getString("QQVersionInstall", "")
+                    val TIMVersionInstall2 = DataStoreUtil.getString("TIMVersionInstall", "")
+                    val QQVersionCodeInstall2 = DataStoreUtil.getString("QQVersionCodeInstall", "")
+                    val TIMVersionCodeInstall2 =
+                        DataStoreUtil.getString("TIMVersionCodeInstall", "")
+                    val QQAppSettingParamsInstall =
+                        DataStoreUtil.getString("QQAppSettingParamsInstall", "")
+                    val TIMAppSettingParamsInstall =
+                        DataStoreUtil.getString("TIMAppSettingParamsInstall", "")
+                    val QQRdmUUIDInstall = if (DataStoreUtil.getString(
+                            "QQRdmUUIDInstall", ""
+                        ) != ""
+                    ) ".${DataStoreUtil.getString("QQRdmUUIDInstall", "").split("_")[0]}" else ""
+                    val TIMRdmUUIDInstall = if (DataStoreUtil.getString(
+                            "TIMRdmUUIDInstall", ""
+                        ) != ""
+                    ) ".${DataStoreUtil.getString("TIMRdmUUIDInstall", "").split("_")[0]}" else ""
+                    val QQChannelInstall =
+                        if (QQAppSettingParamsInstall != "") DataStoreUtil.getString(
+                            "QQAppSettingParamsInstall", ""
+                        ).split("#")[3] else ""
+                    val TIMChannelInstall =
+                        if (TIMAppSettingParamsInstall != "") DataStoreUtil.getString(
+                            "TIMAppSettingParamsInstall", ""
+                        ).split("#")[3] else ""
+                    withContext(Dispatchers.Main) {
+                        binding.apply {
+                            if (QQVersionInstall2 != "") {
+                                itemQqInstallText.text =
+                                    if (QQChannelInstall != "") getString(R.string.localQQVersion) + DataStoreUtil.getString(
+                                        "QQVersionInstall", ""
+                                    ) + QQRdmUUIDInstall + (if (QQVersionCodeInstall2 != "") " (${QQVersionCodeInstall2})" else "") + " - $QQChannelInstall" else getString(
+                                        R.string.localQQVersion
+                                    ) + DataStoreUtil.getString("QQVersionInstall", "")
+                                itemQqInstallCard.visibility = View.VISIBLE
+
+                                // 无障碍标记
+                                /*if (DefaultArtifactVersion(QQVersionInstall2) >= DefaultArtifactVersion(
+                                        EARLIEST_ACCESSIBILITY_VERSION
+                                    )
+                                ) itemQqInstallText.setCompoundDrawablesWithIntrinsicBounds(
+                                    R.drawable.accessibility_new_24px, 0, 0, 0
+                                ) else itemQqInstallText.setCompoundDrawablesWithIntrinsicBounds(
+                                    R.drawable.scan_line, 0, 0, 0
+                                )
+                                val oldItemQqInstallCardDescribe =
+                                    itemQqInstallText.text.toString()
+                                if (DefaultArtifactVersion(QQVersionInstall2) >= DefaultArtifactVersion(
+                                        EARLIEST_ACCESSIBILITY_VERSION
+                                    )
+                                ) itemQqInstallCard.contentDescription =
+                                    "$oldItemQqInstallCardDescribe。" + String(
+                                        Base64.decode(
+                                            getString(R.string.accessibilityTag),
+                                            Base64.NO_WRAP
+                                        ), Charsets.UTF_8
+                                    )*/
+                                itemQqInstallCard.setOnLongClickListener {
+                                    if (DataStoreUtil.getBoolean("longPressCard", true)) {
+                                        val tv = TextView(this@MainActivity).apply {
+                                            text = "Version Name: ${
+                                                DataStoreUtil.getString(
+                                                    "QQVersionInstall", ""
+                                                )
+                                            }" + (if (DataStoreUtil.getString(
+                                                    "QQRdmUUIDInstall", ""
+                                                ) != ""
+                                            ) "\n\nRdm UUID: ${
+                                                DataStoreUtil.getString(
+                                                    "QQRdmUUIDInstall", ""
+                                                )
+                                            }" else "") + (if (DataStoreUtil.getString(
+                                                    "QQVersionCodeInstall", ""
+                                                ) != ""
+                                            ) "\n\nVersion Code: ${
+                                                DataStoreUtil.getString(
+                                                    "QQVersionCodeInstall", ""
+                                                )
+                                            }" else "") + (if (DataStoreUtil.getString(
+                                                    "QQAppSettingParamsInstall", ""
+                                                ) != ""
+                                            ) "\n\nAppSetting_params: ${
+                                                DataStoreUtil.getString(
+                                                    "QQAppSettingParamsInstall", ""
+                                                )
+                                            }" else "") + (if (DataStoreUtil.getString(
+                                                    "QQAppSettingParamsPadInstall", ""
+                                                ) != ""
+                                            ) "\n\nAppSetting_params_pad: ${
+                                                DataStoreUtil.getString(
+                                                    "QQAppSettingParamsPadInstall", ""
+                                                )
+                                            }" else "")
+                                            setTextIsSelectable(true)
+                                            setPadding(96, 48, 96, 96)
+                                        }
+                                        MaterialAlertDialogBuilder(context)
+                                            .setView(tv)
+                                            .setTitle(R.string.localQQVersionDetails)
+                                            .setIcon(R.drawable.scan_line)
+                                            .show()
+                                    } else showToast(getString(R.string.longPressToViewSourceDetailsIsDisabledPleaseGoToSettingsToTurnItOn))
+                                    true
+                                }
+                            } else itemQqInstallCard.visibility = View.GONE
+                            if (TIMVersionInstall2 != "") {
+                                itemTimInstallText.text =
+                                    if (TIMChannelInstall != "") getString(R.string.localTIMVersion) + DataStoreUtil.getString(
+                                        "TIMVersionInstall", ""
+                                    ) + TIMRdmUUIDInstall + (if (TIMVersionCodeInstall2 != "") " (${TIMVersionCodeInstall2})" else "") + " - $TIMChannelInstall" else getString(
+                                        R.string.localTIMVersion
+                                    ) + DataStoreUtil.getString("TIMVersionInstall", "")
+                                itemTimInstallCard.visibility = View.VISIBLE
+                                itemTimInstallCard.setOnLongClickListener {
+                                    if (DataStoreUtil.getBoolean("longPressCard", true)) {
+                                        val tv = TextView(this@MainActivity).apply {
+                                            text = "Version Name: ${
+                                                DataStoreUtil.getString(
+                                                    "TIMVersionInstall", ""
+                                                )
+                                            }" + (if (DataStoreUtil.getString(
+                                                    "TIMRdmUUIDInstall", ""
+                                                ) != ""
+                                            ) "\n\nRdm UUID: ${
+                                                DataStoreUtil.getString(
+                                                    "TIMRdmUUIDInstall", ""
+                                                )
+                                            }" else "") + (if (DataStoreUtil.getString(
+                                                    "TIMVersionCodeInstall", ""
+                                                ) != ""
+                                            ) "\n\nVersion Code: ${
+                                                DataStoreUtil.getString(
+                                                    "TIMVersionCodeInstall", ""
+                                                )
+                                            }" else "") + (if (DataStoreUtil.getString(
+                                                    "TIMAppSettingParamsInstall", ""
+                                                ) != ""
+                                            ) "\n\nAppSetting_params: ${
+                                                DataStoreUtil.getString(
+                                                    "TIMAppSettingParamsInstall", ""
+                                                )
+                                            }" else "")
+                                            setTextIsSelectable(true)
+                                            setPadding(96, 48, 96, 96)
+                                        }
+                                        MaterialAlertDialogBuilder(context)
+                                            .setView(tv)
+                                            .setTitle(R.string.localTIMVersionDetails)
+                                            .setIcon(R.drawable.scan_line)
+                                            .show()
+                                    } else showToast(getString(R.string.longPressToViewSourceDetailsIsDisabledPleaseGoToSettingsToTurnItOn))
+                                    true
+                                }
+                            } else itemTimInstallCard.visibility = View.GONE
                         }
                     }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    dialogError(e)
-                } finally {
-                    withContext(Dispatchers.Main) {
-                        binding.progressLine.hide()
+                    try {
+                        val okHttpClient = OkHttpClient()
+                        val request =
+                            Request.Builder().url("https://im.qq.com/rainbow/androidQQVersionList")
+                                .build()
+                        val response = okHttpClient.newCall(request).execute()
+                        val responseData = response.body?.string()
+                        if (responseData != null) {
+                            val start = (responseData.indexOf("versions64\":[")) + 12
+                            val end = (responseData.indexOf(";\n" + "      typeof"))
+                            val totalJson = responseData.substring(start, end)
+                            qqVersion = totalJson.split("},{").reversed().map {
+                                val pstart = it.indexOf("{\"versions")
+                                val pend = it.indexOf(",\"length")
+                                val json = it.substring(pstart, pend)
+                                Json.decodeFromString<QQVersionBean>(json).apply {
+                                    jsonString = json
+                                    // 标记本机 Android QQ 版本
+                                    this.displayInstall = (DataStoreUtil.getString(
+                                        "QQVersionInstall", ""
+                                    ) == this.versionNumber)
+                                    this.isAccessibility = false
+
+                                    // 无障碍标记
+                                    /*DefaultArtifactVersion(this.versionNumber) >= DefaultArtifactVersion(
+                                        EARLIEST_ACCESSIBILITY_VERSION
+                                    )*/
+                                }
+                            }
+                            if (DataStoreUtil.getBoolean(
+                                    "displayFirst", true
+                                )
+                            ) qqVersion[0].displayType = 1
+                            withContext(Dispatchers.Main) {
+                                versionAdapter.submitList(qqVersion)
+                                // 舍弃 currentQQVersion = qqVersion.first().versionNumber
+                                // 大版本号也放持久化存储了，否则猜版 Shortcut 因为加载过快而获取不到东西
+                                DataStoreUtil.putStringAsync(
+                                    "versionBig", qqVersion.first().versionNumber
+                                )
+                            }
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        dialogError(e)
+                    } finally {
+                        withContext(Dispatchers.Main) {
+                            binding.progressLine.hide()
+                        }
                     }
                 }
             }
@@ -1240,11 +1459,9 @@ class MainActivity : AppCompatActivity() {
 
                             }
 
-                            MODE_WECHAT -> {
-                                // https://dldir1.qq.com/weixin/android/weixin8049android2600_0x2800318a_arm64.apk
-                                link =
-                                    "https://dldir1.qq.com/weixin/android/weixin${versionBig}android${versionTrue}_0x${v16codeStr}_arm64.apk"
-                            }
+                            MODE_WECHAT -> link =
+                                "https://dldir1.qq.com/weixin/android/weixin${versionBig}android${versionTrue}_0x${v16codeStr}_arm64.apk"
+                            // https://dldir1.qq.com/weixin/android/weixin8049android2600_0x2800318a_arm64.apk
                         }
                         runOnUiThread {
                             updateProgressDialogMessage("${getString(R.string.enumeratingDownloadLink)}$link")
@@ -1252,8 +1469,8 @@ class MainActivity : AppCompatActivity() {
                         val okHttpClient = OkHttpClient()
                         val request = Request.Builder().url(link).head().build()
                         val response = okHttpClient.newCall(request).execute()
-                        val responseContentType = response.header("Content-Type")
-                        if (response.isSuccessful && (responseContentType == "application/octet-stream" || responseContentType == "application/vnd.android.package-archive")) {
+                        val responseContentType = response.header("Content-Type").toString()
+                        if (response.isSuccessful && responseContentType.startsWith("application/")) {
                             val appSize = "%.2f".format(
                                 response.header("Content-Length")!!.toDouble().div(1024 * 1024)
                             )
@@ -1276,8 +1493,7 @@ class MainActivity : AppCompatActivity() {
                                                 R.string.fileSize
                                             )
                                         }$appSize MB"
-                                    )
-                                    .show()
+                                    ).show()
 
 
                                 // 复制并停止按钮点击事件
@@ -1314,8 +1530,7 @@ class MainActivity : AppCompatActivity() {
                                     val shareIntent = Intent(Intent.ACTION_SEND).apply {
                                         type = "text/plain"
                                         putExtra(
-                                            Intent.EXTRA_TEXT,
-                                            when (mode) {
+                                            Intent.EXTRA_TEXT, when (mode) {
                                                 MODE_OFFICIAL -> "Android QQ $versionBig ${
                                                     getString(
                                                         R.string.stableVersion
@@ -1361,26 +1576,20 @@ class MainActivity : AppCompatActivity() {
                                             DownloadManager.Request(Uri.parse(link))
                                         requestDownload.apply {
                                             when (mode) {
-                                                MODE_TEST, MODE_UNOFFICIAL -> {
-                                                    setDestinationInExternalPublicDir(
-                                                        Environment.DIRECTORY_DOWNLOADS,
-                                                        "Android_QQ_${versionBig}.${vSmall}_64.apk"
-                                                    )
-                                                }
+                                                MODE_TEST, MODE_UNOFFICIAL -> setDestinationInExternalPublicDir(
+                                                    Environment.DIRECTORY_DOWNLOADS,
+                                                    "Android_QQ_${versionBig}.${vSmall}_64.apk"
+                                                )
 
-                                                MODE_OFFICIAL -> {
-                                                    setDestinationInExternalPublicDir(
-                                                        Environment.DIRECTORY_DOWNLOADS,
-                                                        "Android_QQ_${versionBig}_64.apk"
-                                                    )
-                                                }
+                                                MODE_OFFICIAL -> setDestinationInExternalPublicDir(
+                                                    Environment.DIRECTORY_DOWNLOADS,
+                                                    "Android_QQ_${versionBig}_64.apk"
+                                                )
 
-                                                MODE_WECHAT -> {
-                                                    setDestinationInExternalPublicDir(
-                                                        Environment.DIRECTORY_DOWNLOADS,
-                                                        "Android_微信_${versionBig}.${versionTrue}.apk"
-                                                    )
-                                                }
+                                                MODE_WECHAT -> setDestinationInExternalPublicDir(
+                                                    Environment.DIRECTORY_DOWNLOADS,
+                                                    "Android_微信_${versionBig}.${versionTrue}.apk"
+                                                )
                                             }
                                         }
                                         val downloadManager =
@@ -1401,8 +1610,7 @@ class MainActivity : AppCompatActivity() {
 
                         } else {
                             when {
-                                mode == MODE_TEST && (!guessTestExtend || sIndex == (stList.size)) // 测试版情况下，未打开扩展猜版或扩展猜版到最后一步时执行小版本号的递增
-                                -> {
+                                mode == MODE_TEST && (!guessTestExtend || sIndex == (stList.size)) -> { // 测试版情况下，未打开扩展猜版或扩展猜版到最后一步时执行小版本号的递增
                                     vSmall += if (!guessNot5) 5 else 1
                                     sIndex = 0
                                 }
@@ -1416,9 +1624,7 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
 
-                    STATUS_PAUSE -> {
-                        sleep(500)
-                    }
+                    STATUS_PAUSE -> sleep(500)
 
                     STATUS_END -> {
                         if (mode != MODE_OFFICIAL) showToast(getString(R.string.enumHasBeenStopped))
@@ -1523,9 +1729,10 @@ class MainActivity : AppCompatActivity() {
                                 shiplyDecodeStringJson.toPrettyFormat().getAllAPKUrl()
 
                             dialogShiplyBackBinding.apply {
-                                MaterialAlertDialogBuilder(this@MainActivity).setView(
-                                    dialogShiplyBackBinding.root
-                                ).setTitle(R.string.contentReturnedByShiplyPlatform)
+                                MaterialAlertDialogBuilder(this@MainActivity)
+                                    .setView(
+                                        dialogShiplyBackBinding.root
+                                    ).setTitle(R.string.contentReturnedByShiplyPlatform)
                                     .setIcon(R.drawable.flask_line)
                                     .show().apply {
                                         shiplyUrlRecyclerView.layoutManager =

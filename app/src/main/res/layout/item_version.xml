@@ -61,15 +61,30 @@
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="9.0.25" />
 
+                <ImageView
+                    android:id="@+id/accessibility_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="3dp"
+                    android:layout_marginEnd="0dp"
+                    android:contentDescription="@string/accessibilityTag"
+                    android:focusable="true"
+                    android:src="@drawable/accessibility_new_20px"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/tv_version"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="?attr/colorPrimary" />
+
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/tv_install_card"
                     style="?attr/materialCardViewFilledStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="6dp"
+                    android:layout_marginEnd="0dp"
                     android:backgroundTint="?attr/colorSecondaryContainer"
                     app:layout_constraintBottom_toBottomOf="@id/tv_version"
-                    app:layout_constraintStart_toEndOf="@id/tv_version"
+                    app:layout_constraintStart_toEndOf="@id/accessibility_tag"
                     app:layout_constraintTop_toTopOf="@id/tv_version"
                     app:shapeAppearance="?attr/shapeAppearanceCornerExtraSmall">
 

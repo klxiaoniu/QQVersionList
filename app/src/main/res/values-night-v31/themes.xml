@@ -28,6 +28,8 @@
         </item>
         <item name="android:windowSplashScreenIconBackgroundColor">?attr/colorPrimaryContainer
         </item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
         <item name="bottomSheetDialogTheme">@style/ThemeOverlay.App.BottomSheetDialog</item>
     </style>
 
