@@ -820,8 +820,7 @@ class MainActivity : AppCompatActivity() {
             etVersion16code.visibility = View.GONE
             etVersionTrue.visibility = View.GONE
             tvWarning.setText(R.string.enumQQPreviewWarning)
-            dialogGuessBinding.etVersionBig.helperText =
-                getString(R.string.enumQQMajorVersionHelpText)
+            etVersionBig.helperText = getString(R.string.enumQQMajorVersionHelpText)
         } else if (dialogGuessBinding.spinnerVersion.text.toString() == MODE_OFFICIAL) dialogGuessBinding.apply {
             etVersionSmall.isEnabled = false
             etVersionSmall.visibility = View.VISIBLE
