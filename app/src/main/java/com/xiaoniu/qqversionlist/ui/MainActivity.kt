@@ -36,13 +36,10 @@ import android.text.SpannableString
 import android.text.TextWatcher
 import android.text.style.URLSpan
 import android.util.Base64
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -75,6 +72,7 @@ import com.xiaoniu.qqversionlist.TipTimeApplication.Companion.SHIPLY_DEFAULT_SDK
 import com.xiaoniu.qqversionlist.data.QQVersionBean
 import com.xiaoniu.qqversionlist.databinding.ActivityMainBinding
 import com.xiaoniu.qqversionlist.databinding.BottomsheetShiplyAdvancedConfigBinding
+import com.xiaoniu.qqversionlist.databinding.DialogAboutBinding
 import com.xiaoniu.qqversionlist.databinding.DialogGuessBinding
 import com.xiaoniu.qqversionlist.databinding.DialogLoadingBinding
 import com.xiaoniu.qqversionlist.databinding.DialogPersonalizationBinding
@@ -263,115 +261,115 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.btn_about -> {
-                    val message = SpannableString(
-                        "${getString(R.string.aboutAppName)}\n\n" +
-                                "${getString(R.string.aboutDescription)}\n\n" +
-                                "${getString(R.string.version)}${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})\n" +
-                                "${getString(R.string.aboutAuthor)}快乐小牛、有鲫雪狐\n" +
-                                "${getString(R.string.aboutContributor)}Col_or、bggRGjQaUbCoE、GMerge\n" +
-                                "${getString(R.string.aboutSpecialThanksTo)}owo233\n" +
-                                "${getString(R.string.aboutOpenSourceRepo)}GitHub\n" +
-                                "${getString(R.string.aboutGetUpdate)}GitHub Releases、Obtainium、九七通知中心\n" +
-                                "${getString(R.string.facilitateI18n)}Crowdin\n\n" +
-                                "Since 2023.8.9"
-                    ).apply {
-                        setSpan(
-                            URLSpan("https://github.com/klxiaoniu"),
-                            indexOf("快乐小牛"),
-                            indexOf("快乐小牛") + "快乐小牛".length,
-                            SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-                        )
-                        setSpan(
-                            URLSpan("https://github.com/ArcticFoxPro"),
-                            indexOf("有鲫雪狐"),
-                            indexOf("有鲫雪狐") + "有鲫雪狐".length,
-                            SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-                        )
-                        setSpan(
-                            URLSpan("https://github.com/color597"),
-                            indexOf("Col_or"),
-                            indexOf("Col_or") + "Col_or".length,
-                            SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-                        )
-                        setSpan(
-                            URLSpan("https://github.com/bggRGjQaUbCoE"),
-                            indexOf("bggRGjQaUbCoE"),
-                            indexOf("bggRGjQaUbCoE") + "bggRGjQaUbCoE".length,
-                            SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-                        )
-                        setSpan(
-                            URLSpan("https://github.com/egmsia01"),
-                            indexOf("GMerge"),
-                            indexOf("GMerge") + "GMerge".length,
-                            SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-                        )
-                        setSpan(
-                            URLSpan("https://github.com/callng"),
-                            indexOf("owo233"),
-                            indexOf("owo233") + "owo233".length,
-                            SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-                        )
-                        setSpan(
-                            URLSpan("https://github.com/klxiaoniu/QQVersionList"),
-                            indexOf("GitHub"),
-                            indexOf("GitHub") + "GitHub".length,
-                            SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-                        )
-                        setSpan(
-                            URLSpan("https://github.com/klxiaoniu/QQVersionList/releases"),
-                            indexOf("GitHub Releases"),
-                            indexOf("GitHub Releases") + "GitHub Releases".length,
-                            SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-                        )
-                        setSpan(
-                            URLSpan("https://github.com/klxiaoniu/QQVersionList/blob/master/ReadmeAssets/Get-it-on-Obtainium.md"),
-                            indexOf("Obtainium"),
-                            indexOf("Obtainium") + "Obtainium".length,
-                            SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-                        )
-                        setSpan(
-                            URLSpan("https://github.com/klxiaoniu/QQVersionList/blob/master/ReadmeAssets/Get-it-on-JiuQi-NotifCenter-WeChatMiniProgram.md"),
-                            indexOf("九七通知中心"),
-                            indexOf("九七通知中心") + "九七通知中心".length,
-                            SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-                        )
-                        setSpan(
-                            URLSpan("https://crowdin.com/project/qqversionstool"),
-                            indexOf("Crowdin"),
-                            indexOf("Crowdin") + "Crowdin".length,
-                            SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-                        )
-                    }
-                    val linearLayout = LinearLayout(this).apply {
-                        orientation = LinearLayout.VERTICAL
-                        layoutParams = ViewGroup.LayoutParams(
-                            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT
-                        )
-                        setPadding(128, 64, 128, 0)
-                        gravity = Gravity.CENTER_HORIZONTAL
-                    }
-                    val imageView = ImageView(this).apply {
-                        setImageResource(R.drawable.built_with_material_licensed_under_agpl_v3)
-                        scaleType = ImageView.ScaleType.CENTER_INSIDE
-                        adjustViewBounds = true
-                    }
-                    imageView.layoutParams = LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT
-                    )
-                    linearLayout.addView(imageView)
-                    MaterialAlertDialogBuilder(this)
-                        .setTitle(R.string.about)
-                        .setIcon(R.drawable.information_line)
-                        .setMessage(message)
-                        .setView(linearLayout)
-                        .setPositiveButton(R.string.done, null)
-                        .setNegativeButton(R.string.withdrawConsentUA) { _, _ ->
+                    val dialogAboutBinding = DialogAboutBinding.inflate(layoutInflater)
+
+                    dialogAboutBinding.apply {
+
+                        val aboutDialog = MaterialAlertDialogBuilder(this@MainActivity)
+                            .setTitle(R.string.about)
+                            .setIcon(R.drawable.information_line)
+                            .setView(root)
+                            .show().apply {
+                                aboutText.movementMethod =
+                                    LinkMovementMethodCompat.getInstance()
+
+                                aboutText.text = SpannableString(
+                                    "${getString(R.string.aboutAppName)}\n\n" +
+                                            "${getString(R.string.aboutDescription)}\n\n" +
+                                            "${getString(R.string.version)}${BuildConfig.VERSION_NAME}(${BuildConfig.VERSION_CODE})\n" +
+                                            "${getString(R.string.aboutAuthor)}快乐小牛、有鲫雪狐\n" +
+                                            "${getString(R.string.aboutContributor)}Col_or、bggRGjQaUbCoE、GMerge、zwJimRaynor\n" +
+                                            "${getString(R.string.aboutSpecialThanksTo)}owo233\n" +
+                                            "${getString(R.string.aboutOpenSourceRepo)}GitHub\n" +
+                                            "${getString(R.string.aboutGetUpdate)}GitHub Releases、Obtainium、九七通知中心\n" +
+                                            "${getString(R.string.facilitateI18n)}Crowdin\n\n" +
+                                            "Since 2023.8.9"
+                                ).apply {
+                                    setSpan(
+                                        URLSpan("https://github.com/klxiaoniu"),
+                                        indexOf("快乐小牛"),
+                                        indexOf("快乐小牛") + "快乐小牛".length,
+                                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
+                                    )
+                                    setSpan(
+                                        URLSpan("https://github.com/ArcticFoxPro"),
+                                        indexOf("有鲫雪狐"),
+                                        indexOf("有鲫雪狐") + "有鲫雪狐".length,
+                                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
+                                    )
+                                    setSpan(
+                                        URLSpan("https://github.com/color597"),
+                                        indexOf("Col_or"),
+                                        indexOf("Col_or") + "Col_or".length,
+                                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
+                                    )
+                                    setSpan(
+                                        URLSpan("https://github.com/bggRGjQaUbCoE"),
+                                        indexOf("bggRGjQaUbCoE"),
+                                        indexOf("bggRGjQaUbCoE") + "bggRGjQaUbCoE".length,
+                                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
+                                    )
+                                    setSpan(
+                                        URLSpan("https://github.com/egmsia01"),
+                                        indexOf("GMerge"),
+                                        indexOf("GMerge") + "GMerge".length,
+                                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
+                                    )
+                                    setSpan(
+                                        URLSpan("https://github.com/zwJimRaynor"),
+                                        indexOf("zwJimRaynor"),
+                                        indexOf("zwJimRaynor") + "zwJimRaynor".length,
+                                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
+                                    )
+                                    setSpan(
+                                        URLSpan("https://github.com/callng"),
+                                        indexOf("owo233"),
+                                        indexOf("owo233") + "owo233".length,
+                                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
+                                    )
+                                    setSpan(
+                                        URLSpan("https://github.com/klxiaoniu/QQVersionList"),
+                                        indexOf("GitHub"),
+                                        indexOf("GitHub") + "GitHub".length,
+                                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
+                                    )
+                                    setSpan(
+                                        URLSpan("https://github.com/klxiaoniu/QQVersionList/releases"),
+                                        indexOf("GitHub Releases"),
+                                        indexOf("GitHub Releases") + "GitHub Releases".length,
+                                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
+                                    )
+                                    setSpan(
+                                        URLSpan("https://github.com/klxiaoniu/QQVersionList/blob/master/ReadmeAssets/Get-it-on-Obtainium.md"),
+                                        indexOf("Obtainium"),
+                                        indexOf("Obtainium") + "Obtainium".length,
+                                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
+                                    )
+                                    setSpan(
+                                        URLSpan("https://github.com/klxiaoniu/QQVersionList/blob/master/ReadmeAssets/Get-it-on-JiuQi-NotifCenter-WeChatMiniProgram.md"),
+                                        indexOf("九七通知中心"),
+                                        indexOf("九七通知中心") + "九七通知中心".length,
+                                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
+                                    )
+                                    setSpan(
+                                        URLSpan("https://crowdin.com/project/qqversionstool"),
+                                        indexOf("Crowdin"),
+                                        indexOf("Crowdin") + "Crowdin".length,
+                                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
+                                    )
+                                }
+                            }
+
+                        btnAboutWithdrawConsentUA.setOnClickListener {
                             showUADialog(true, judgeUATarget)
-                        }.show().apply {
-                            findViewById<TextView>(android.R.id.message)?.movementMethod =
-                                LinkMovementMethodCompat.getInstance()
+                            aboutDialog.dismiss()
                         }
+
+                        btnAboutOk.setOnClickListener {
+                            aboutDialog.dismiss()
+                        }
+                    }
+
                     true
                 }
 
@@ -802,6 +800,41 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    private fun modeTestView(dialogGuessBinding: DialogGuessBinding) {
+        dialogGuessBinding.apply {
+            etVersionSmall.isEnabled = true
+            etVersionSmall.visibility = View.VISIBLE
+            guessDialogWarning.visibility = View.VISIBLE
+            etVersion16code.visibility = View.GONE
+            etVersionTrue.visibility = View.GONE
+            tvWarning.setText(R.string.enumQQPreviewWarning)
+            etVersionBig.helperText = getString(R.string.enumQQMajorVersionHelpText)
+        }
+    }
+
+    private fun modeOfficialView(dialogGuessBinding: DialogGuessBinding) {
+        dialogGuessBinding.apply {
+            etVersionSmall.isEnabled = false
+            etVersionSmall.visibility = View.VISIBLE
+            guessDialogWarning.visibility = View.GONE
+            etVersion16code.visibility = View.GONE
+            etVersionTrue.visibility = View.GONE
+            etVersionBig.helperText = getString(R.string.enumQQMajorVersionHelpText)
+        }
+    }
+
+    private fun modeWeChatView(dialogGuessBinding: DialogGuessBinding) {
+        dialogGuessBinding.apply {
+            etVersionSmall.isEnabled = false
+            guessDialogWarning.visibility = View.VISIBLE
+            etVersionSmall.visibility = View.GONE
+            etVersionTrue.visibility = View.VISIBLE
+            etVersion16code.visibility = View.VISIBLE
+            tvWarning.setText(R.string.enumWeixinWarning)
+            etVersionBig.helperText = getString(R.string.enumWeixinMajorVersionHelpText)
+        }
+    }
+
     private fun showGuessVersionDialog() {
         val dialogGuessBinding = DialogGuessBinding.inflate(layoutInflater)
         val verBig = DataStoreUtil.getString("versionBig", "")
@@ -813,30 +846,11 @@ class MainActivity : AppCompatActivity() {
             dialogGuessBinding.spinnerVersion.setText(MODE_OFFICIAL, false)
             DataStoreUtil.putStringAsync("versionSelect", MODE_OFFICIAL)
         }
-        if (dialogGuessBinding.spinnerVersion.text.toString() == MODE_TEST || dialogGuessBinding.spinnerVersion.text.toString() == MODE_UNOFFICIAL) dialogGuessBinding.apply {
-            etVersionSmall.isEnabled = true
-            etVersionSmall.visibility = View.VISIBLE
-            guessDialogWarning.visibility = View.VISIBLE
-            etVersion16code.visibility = View.GONE
-            etVersionTrue.visibility = View.GONE
-            tvWarning.setText(R.string.enumQQPreviewWarning)
-            dialogGuessBinding.etVersionBig.helperText =
-                getString(R.string.enumQQMajorVersionHelpText)
-        } else if (dialogGuessBinding.spinnerVersion.text.toString() == MODE_OFFICIAL) dialogGuessBinding.apply {
-            etVersionSmall.isEnabled = false
-            etVersionSmall.visibility = View.VISIBLE
-            guessDialogWarning.visibility = View.GONE
-            etVersion16code.visibility = View.GONE
-            etVersionTrue.visibility = View.GONE
-            etVersionBig.helperText = getString(R.string.enumQQMajorVersionHelpText)
-        } else if (dialogGuessBinding.spinnerVersion.text.toString() == MODE_WECHAT) dialogGuessBinding.apply {
-            etVersionSmall.isEnabled = false
-            guessDialogWarning.visibility = View.VISIBLE
-            etVersionSmall.visibility = View.GONE
-            etVersionTrue.visibility = View.VISIBLE
-            etVersion16code.visibility = View.VISIBLE
-            tvWarning.setText(R.string.enumWeixinWarning)
-            etVersionBig.helperText = getString(R.string.enumWeixinMajorVersionHelpText)
+
+        when (dialogGuessBinding.spinnerVersion.text.toString()) {
+            MODE_TEST, MODE_UNOFFICIAL -> modeTestView(dialogGuessBinding)
+            MODE_OFFICIAL -> modeOfficialView(dialogGuessBinding)
+            MODE_WECHAT -> modeWeChatView(dialogGuessBinding)
         }
 
 
@@ -845,34 +859,9 @@ class MainActivity : AppCompatActivity() {
                 val judgeVerSelect = dialogGuessBinding.spinnerVersion.text.toString()
                 DataStoreUtil.putStringAsync("versionSelect", judgeVerSelect)
                 when (judgeVerSelect) {
-                    MODE_TEST, MODE_UNOFFICIAL -> dialogGuessBinding.apply {
-                        etVersionSmall.isEnabled = true
-                        etVersionSmall.visibility = View.VISIBLE
-                        guessDialogWarning.visibility = View.VISIBLE
-                        etVersion16code.visibility = View.GONE
-                        etVersionTrue.visibility = View.GONE
-                        tvWarning.setText(R.string.enumQQPreviewWarning)
-                        etVersionBig.helperText = getString(R.string.enumQQMajorVersionHelpText)
-                    }
-
-                    MODE_OFFICIAL -> dialogGuessBinding.apply {
-                        etVersionSmall.visibility = View.VISIBLE
-                        etVersionSmall.isEnabled = false
-                        guessDialogWarning.visibility = View.GONE
-                        etVersion16code.visibility = View.GONE
-                        etVersionTrue.visibility = View.GONE
-                        etVersionBig.helperText = getString(R.string.enumQQMajorVersionHelpText)
-                    }
-
-                    MODE_WECHAT -> dialogGuessBinding.apply {
-                        etVersionSmall.isEnabled = false
-                        etVersionSmall.visibility = View.GONE
-                        guessDialogWarning.visibility = View.VISIBLE
-                        etVersion16code.visibility = View.VISIBLE
-                        etVersionTrue.visibility = View.VISIBLE
-                        tvWarning.setText(R.string.enumWeixinWarning)
-                        etVersionBig.helperText = getString(R.string.enumWeixinMajorVersionHelpText)
-                    }
+                    MODE_TEST, MODE_UNOFFICIAL -> modeTestView(dialogGuessBinding)
+                    MODE_OFFICIAL -> modeOfficialView(dialogGuessBinding)
+                    MODE_WECHAT -> modeWeChatView(dialogGuessBinding)
                 }
             }
 
@@ -892,7 +881,7 @@ class MainActivity : AppCompatActivity() {
 
         val dialogGuess = MaterialAlertDialogBuilder(this)
             .setTitle(R.string.enumerateVersionsDialogTitle)
-            .setIcon(R.drawable.search_line)
+            .setIcon(R.drawable.scan_line)
             .setView(dialogGuessBinding.root)
             .setCancelable(false)
             .show()
@@ -1115,7 +1104,7 @@ class MainActivity : AppCompatActivity() {
                                 ) itemQqInstallText.setCompoundDrawablesWithIntrinsicBounds(
                                     R.drawable.accessibility_new_24px, 0, 0, 0
                                 ) else itemQqInstallText.setCompoundDrawablesWithIntrinsicBounds(
-                                    R.drawable.scan_line, 0, 0, 0
+                                    R.drawable.phone_find_line, 0, 0, 0
                                 )
                                 val oldItemQqInstallCardDescribe =
                                     itemQqInstallText.text.toString()
@@ -1171,7 +1160,7 @@ class MainActivity : AppCompatActivity() {
                                         MaterialAlertDialogBuilder(context)
                                             .setView(tv)
                                             .setTitle(R.string.localQQVersionDetails)
-                                            .setIcon(R.drawable.scan_line)
+                                            .setIcon(R.drawable.phone_find_line)
                                             .show()
                                     } else showToast(getString(R.string.longPressToViewSourceDetailsIsDisabledPleaseGoToSettingsToTurnItOn))
                                     true
@@ -1220,7 +1209,7 @@ class MainActivity : AppCompatActivity() {
                                         MaterialAlertDialogBuilder(context)
                                             .setView(tv)
                                             .setTitle(R.string.localTIMVersionDetails)
-                                            .setIcon(R.drawable.scan_line)
+                                            .setIcon(R.drawable.phone_find_line)
                                             .show()
                                     } else showToast(getString(R.string.longPressToViewSourceDetailsIsDisabledPleaseGoToSettingsToTurnItOn))
                                     true
