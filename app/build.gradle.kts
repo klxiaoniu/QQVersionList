@@ -46,7 +46,7 @@ android {
         minSdk = 24
         targetSdk = 35
         versionCode = gitCommitCount
-        versionName = "1.3.6-$gitCommitHash"
+        versionName = "1.3.7-$gitCommitHash"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
             cmake {
@@ -108,4 +108,5 @@ dependencies {
     implementation("com.google.code.gson:gson:2.11.0")
     implementation("com.airbnb.android:paris:2.0.2")
     implementation("org.apache.maven:maven-artifact:3.9.9")
+    implementation("androidx.recyclerview:recyclerview:1.3.2")
 }
