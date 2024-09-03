@@ -46,11 +46,11 @@ import com.xiaoniu.qqversionlist.util.DataStoreUtil
 import com.xiaoniu.qqversionlist.util.StringUtil.toPrettyFormat
 import com.xiaoniu.qqversionlist.util.dp
 
+private var getProgressSize = DataStoreUtil.getBoolean("progressSize", false)
+private var getVersionTCloud = DataStoreUtil.getBoolean("versionTCloud", true)
+private var getVersionTCloudThickness = DataStoreUtil.getString("versionTCloudThickness", "System")
+
 class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(VersionDiffCallback()) {
-    private var getProgressSize = DataStoreUtil.getBoolean("progressSize", false)
-    private var getVersionTCloud = DataStoreUtil.getBoolean("versionTCloud", true)
-    private var getVersionTCloudThickness =
-        DataStoreUtil.getString("versionTCloudThickness", "System")
 
     class ViewHolder(val binding: ItemVersionBinding, val context: Context) :
         RecyclerView.ViewHolder(binding.root)
@@ -71,13 +71,14 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
                     ), parent.context
                 ).apply {
                     binding.ibExpand.setOnClickListener {
-                        currentList[adapterPosition].displayType = 1
-                        notifyItemChanged(adapterPosition)
+                        currentList[bindingAdapterPosition].displayType = 1
+                        notifyItemChanged(bindingAdapterPosition)
                     }
                     binding.cardAll.setOnLongClickListener {
                         if (DataStoreUtil.getBoolean("longPressCard", true)) {
                             showDialog(
-                                it.context, currentList[adapterPosition].jsonString.toPrettyFormat()
+                                it.context,
+                                currentList[bindingAdapterPosition].jsonString.toPrettyFormat()
                             )
                         } else Toast.makeText(
                             it.context,
@@ -96,13 +97,14 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
                     ), parent.context
                 ).apply {
                     binding.ibCollapse.setOnClickListener {
-                        currentList[adapterPosition].displayType = 0
-                        notifyItemChanged(adapterPosition)
+                        currentList[bindingAdapterPosition].displayType = 0
+                        notifyItemChanged(bindingAdapterPosition)
                     }
                     binding.cardAllDetail.setOnLongClickListener {
                         if (DataStoreUtil.getBoolean("longPressCard", true)) {
                             showDialog(
-                                it.context, currentList[adapterPosition].jsonString.toPrettyFormat()
+                                it.context,
+                                currentList[bindingAdapterPosition].jsonString.toPrettyFormat()
                             )
                         } else Toast.makeText(
                             it.context,
@@ -198,25 +200,32 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
             tvSizeCard.layoutParams = layoutParams
 
             if (this) {
-                listProgressLine.max =
-                    ((currentList.maxByOrNull { it.size.toFloat() }?.size?.toFloat()
-                        ?: 0f) * 10).toInt()
-                listProgressLine.progress = (bean.size.toFloat() * 10).toInt()
+                val listMaxSize =
+                    currentList.maxByOrNull { it.size.toFloat() }?.size?.toFloat() ?: 0f
 
                 tvPerSize?.text =
-                    "${tvPerSizeCard.context.getString(R.string.currentSizeVsLargestHistoricalPackage)}${(currentList.maxByOrNull { it.size.toFloat() }?.size?.toFloat() ?: 0f)} MB${
+                    "${tvPerSizeCard.context.getString(R.string.currentSizeVsLargestHistoricalPackage)}${listMaxSize} MB${
                         tvPerSizeCard.context.getString(
                             R.string.endParenthesis
                         )
                     }${
-                        "%.2f".format(
-                            bean.size.toFloat() / (currentList.maxByOrNull { it.size.toFloat() }?.size?.toFloat() ?: 0f) * 100
+                        ("%.2f".format(bean.size.toFloat() / listMaxSize * 100)).replace(
+                            "100.00", "100"
                         )
                     }%"
+                tvPerSizeText.text = "${
+                    ("%.2f".format(bean.size.toFloat() / listMaxSize * 100)).replace(
+                        "100.00", "100"
+                    )
+                }%"
 
-                tvPerSizeText.text =
-                    "${"%.2f".format(bean.size.toFloat() / (currentList.maxByOrNull { it.size.toFloat() }?.size?.toFloat() ?: 0f) * 100)}%"
-
+                // 进度条这里不能直接用 listMaxSize
+                // 因为鬼知道 Material 上游的什么 Bug，导致这里要故意拖点时间让 Material 进度指示条视图加载完毕才能正确显示进度更新，否则会显示异常
+                listProgressLine.apply {
+                    max = ((currentList.maxByOrNull { it.size.toFloat() }?.size?.toFloat()
+                        ?: 0f) * 100).toInt()
+                    progress = (bean.size.toFloat() * 100).toInt()
+                }
             }
         }
     }
@@ -374,5 +383,4 @@ class VersionDiffCallback : DiffUtil.ItemCallback<QQVersionBean>() {
         else if (oldItem.displayInstall != newItem.displayInstall) "displayInstall"
         else null
     }
-
 }
