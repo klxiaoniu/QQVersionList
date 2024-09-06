@@ -53,6 +53,8 @@ import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -1623,12 +1625,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     class RecycleViewFragmentAdapter : Fragment() {
-        private lateinit var fragmentBinding: RecycleQqVersionBinding
+        private var _fragmentBinding: RecycleQqVersionBinding? = null
+        private val fragmentBinding get() = _fragmentBinding!!
         private lateinit var thisActivity: MainActivity
+
         override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
         ): View {
-            fragmentBinding = RecycleQqVersionBinding.inflate(inflater, container, false)
+            _fragmentBinding = RecycleQqVersionBinding.inflate(inflater, container, false)
             val view = fragmentBinding.root
             thisActivity = requireActivity() as MainActivity
             return view
@@ -1671,6 +1675,11 @@ class MainActivity : AppCompatActivity() {
         private fun handleScroll(dy: Int) {
             if (dy > 0) thisActivity.binding.btnGuess.shrink()
             else if (dy < 0) thisActivity.binding.btnGuess.extend()
+        }
+
+        override fun onDestroyView() {
+            super.onDestroyView()
+            _fragmentBinding = null
         }
     }
 
