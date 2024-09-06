@@ -51,11 +51,15 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import com.airbnb.paris.extensions.style
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -82,6 +86,7 @@ import com.xiaoniu.qqversionlist.databinding.DialogSettingBinding
 import com.xiaoniu.qqversionlist.databinding.DialogShiplyBackBinding
 import com.xiaoniu.qqversionlist.databinding.DialogShiplyBinding
 import com.xiaoniu.qqversionlist.databinding.DialogSuffixDefineBinding
+import com.xiaoniu.qqversionlist.databinding.RecycleQqVersionBinding
 import com.xiaoniu.qqversionlist.databinding.SuccessButtonBinding
 import com.xiaoniu.qqversionlist.databinding.UserAgreementBinding
 import com.xiaoniu.qqversionlist.util.ClipboardUtil.copyText
@@ -109,9 +114,11 @@ import java.util.zip.GZIPInputStream
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var versionAdapter: VersionAdapter
-    private lateinit var localQQAdapter: LocalQQAdapter
+    lateinit var versionAdapter: VersionAdapter
+    lateinit var localQQAdapter: LocalQQAdapter
     private lateinit var qqVersion: List<QQVersionBean>
+    private lateinit var recycleViewFragmentAdapter: RecycleViewFragmentAdapter
+    private lateinit var rvPagerAdapter: RecycleViewPagerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
@@ -146,44 +153,34 @@ class MainActivity : AppCompatActivity() {
 
         versionAdapter = VersionAdapter()
         localQQAdapter = LocalQQAdapter()
-        versionListStaggeredGridLayout()
+        binding.rvPager.adapter = RecycleViewPagerAdapter(this)
+        rvPagerAdapter = binding.rvPager.adapter as RecycleViewPagerAdapter
+        recycleViewFragmentAdapter = RecycleViewFragmentAdapter()
         initButtons()
+
+        binding.rvPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                recycleViewFragmentAdapter =
+                    rvPagerAdapter.getFragementAtPosition(position) as RecycleViewFragmentAdapter
+            }
+        })
 
         if (!BuildConfig.VERSION_NAME.endsWith("Release")) binding.materialToolbar.setNavigationIcon(
             R.drawable.git_commit_line
         )
+
+
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        versionListStaggeredGridLayout()
+        recycleViewFragmentAdapter.versionListStaggeredGridLayout()
     }
 
     override fun onMultiWindowModeChanged(isInMultiWindowMode: Boolean, newConfig: Configuration) {
         super.onMultiWindowModeChanged(isInMultiWindowMode, newConfig)
-        versionListStaggeredGridLayout()
-    }
-
-    private fun versionListStaggeredGridLayout() {
-        binding.rvContent.apply {
-            val concatenated = ConcatAdapter(localQQAdapter, versionAdapter)
-            adapter = concatenated
-            val screenWidthDp = (Resources.getSystem().displayMetrics.widthPixels).pxToDp
-            val screenHeightDp = (Resources.getSystem().displayMetrics.heightPixels).pxToDp
-            layoutManager = if (screenHeightDp >= 600) {
-                when {
-                    screenWidthDp in 600..840 -> StaggeredGridLayoutManager(
-                        2, StaggeredGridLayoutManager.VERTICAL
-                    )
-
-                    screenWidthDp > 840 -> StaggeredGridLayoutManager(
-                        3, StaggeredGridLayoutManager.VERTICAL
-                    )
-
-                    else -> LinearLayoutManager(this@MainActivity)
-                }
-            } else LinearLayoutManager(this@MainActivity)
-        }
+        recycleViewFragmentAdapter.versionListStaggeredGridLayout()
     }
 
     private fun showUADialog(agreed: Boolean, UATarget: Int) {
@@ -250,15 +247,6 @@ class MainActivity : AppCompatActivity() {
             showAnimationBehavior = LinearProgressIndicator.SHOW_NONE
             hideAnimationBehavior = LinearProgressIndicator.HIDE_ESCAPE
         }
-
-        binding.rvContent.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                if (dy > 0) binding.btnGuess.shrink()
-                else if (dy < 0) binding.btnGuess.extend()
-            }
-        })
-
 
         binding.bottomAppBar.setOnMenuItemClickListener { menuItem ->
             //底部左下角按钮动作
@@ -1615,6 +1603,74 @@ class MainActivity : AppCompatActivity() {
                     btn.isEnabled = true
                 }
             }
+        }
+    }
+
+    class RecycleViewPagerAdapter(private val context: Context) :
+        FragmentStateAdapter(context as FragmentActivity) {
+        override fun getItemCount(): Int = 1
+
+        override fun createFragment(position: Int): Fragment {
+            return RecycleViewFragmentAdapter()
+        }
+
+        fun getFragementAtPosition(position: Int): RecycleViewFragmentAdapter? {
+            return when (position) {
+                0 -> RecycleViewFragmentAdapter()
+                else -> null
+            }
+        }
+    }
+
+    class RecycleViewFragmentAdapter : Fragment() {
+        private lateinit var fragmentBinding: RecycleQqVersionBinding
+        private lateinit var thisActivity: MainActivity
+        override fun onCreateView(
+            inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        ): View {
+            fragmentBinding = RecycleQqVersionBinding.inflate(inflater, container, false)
+            val view = fragmentBinding.root
+            thisActivity = requireActivity() as MainActivity
+            return view
+        }
+
+        override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+            super.onViewCreated(view, savedInstanceState)
+            versionListStaggeredGridLayout()
+            fragmentBinding.rvContent.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    handleScroll(dy)
+                }
+            })
+        }
+
+        fun versionListStaggeredGridLayout() {
+            fragmentBinding.rvContent.apply {
+                val concatenated =
+                    ConcatAdapter(thisActivity.localQQAdapter, thisActivity.versionAdapter)
+                adapter = concatenated
+                val screenWidthDp = (Resources.getSystem().displayMetrics.widthPixels).pxToDp
+                val screenHeightDp = (Resources.getSystem().displayMetrics.heightPixels).pxToDp
+                layoutManager = if (screenHeightDp >= 600) {
+                    when {
+                        screenWidthDp in 600..840 -> StaggeredGridLayoutManager(
+                            2, StaggeredGridLayoutManager.VERTICAL
+                        )
+
+                        screenWidthDp > 840 -> StaggeredGridLayoutManager(
+                            3, StaggeredGridLayoutManager.VERTICAL
+                        )
+
+                        else -> LinearLayoutManager(thisActivity)
+                    }
+                } else LinearLayoutManager(thisActivity)
+            }
+        }
+
+        private fun handleScroll(dy: Int) {
+            if (dy > 0) thisActivity.binding.btnGuess.shrink()
+            else if (dy < 0) thisActivity.binding.btnGuess.extend()
         }
     }
 
