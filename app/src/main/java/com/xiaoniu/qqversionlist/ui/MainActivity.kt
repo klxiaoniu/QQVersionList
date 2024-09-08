@@ -36,12 +36,10 @@ import android.text.SpannableString
 import android.text.TextWatcher
 import android.text.style.URLSpan
 import android.util.Base64
-import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintSet
@@ -51,21 +49,10 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.airbnb.paris.extensions.style
-import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.progressindicator.CircularProgressIndicatorSpec
@@ -75,11 +62,11 @@ import com.google.gson.GsonBuilder
 import com.google.gson.JsonElement
 import com.xiaoniu.qqversionlist.BuildConfig
 import com.xiaoniu.qqversionlist.R
+import com.xiaoniu.qqversionlist.TipTimeApplication.Companion.EARLIEST_QQNT_FRAMEWORK_VERSION_STABLE
 import com.xiaoniu.qqversionlist.TipTimeApplication.Companion.SHIPLY_DEFAULT_APPID
 import com.xiaoniu.qqversionlist.TipTimeApplication.Companion.SHIPLY_DEFAULT_SDK_VERSION
 import com.xiaoniu.qqversionlist.data.QQVersionBean
 import com.xiaoniu.qqversionlist.databinding.ActivityMainBinding
-import com.xiaoniu.qqversionlist.databinding.BottomsheetShiplyAdvancedConfigBinding
 import com.xiaoniu.qqversionlist.databinding.DialogAboutBinding
 import com.xiaoniu.qqversionlist.databinding.DialogGuessBinding
 import com.xiaoniu.qqversionlist.databinding.DialogLoadingBinding
@@ -88,7 +75,6 @@ import com.xiaoniu.qqversionlist.databinding.DialogSettingBinding
 import com.xiaoniu.qqversionlist.databinding.DialogShiplyBackBinding
 import com.xiaoniu.qqversionlist.databinding.DialogShiplyBinding
 import com.xiaoniu.qqversionlist.databinding.DialogSuffixDefineBinding
-import com.xiaoniu.qqversionlist.databinding.RecycleQqVersionBinding
 import com.xiaoniu.qqversionlist.databinding.SuccessButtonBinding
 import com.xiaoniu.qqversionlist.databinding.UserAgreementBinding
 import com.xiaoniu.qqversionlist.util.ClipboardUtil.copyText
@@ -98,7 +84,6 @@ import com.xiaoniu.qqversionlist.util.InfoUtil.showToast
 import com.xiaoniu.qqversionlist.util.ShiplyUtil
 import com.xiaoniu.qqversionlist.util.StringUtil.getAllAPKUrl
 import com.xiaoniu.qqversionlist.util.StringUtil.toPrettyFormat
-import com.xiaoniu.qqversionlist.util.pxToDp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -106,6 +91,7 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import org.apache.maven.artifact.versioning.DefaultArtifactVersion
 import java.io.BufferedReader
 import java.io.ByteArrayInputStream
 import java.io.InputStreamReader
@@ -115,12 +101,12 @@ import java.util.zip.GZIPInputStream
 
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityMainBinding
+    lateinit var binding: ActivityMainBinding
     lateinit var versionAdapter: VersionAdapter
     lateinit var localQQAdapter: LocalQQAdapter
     private lateinit var qqVersion: List<QQVersionBean>
-    private lateinit var recycleViewFragmentAdapter: RecycleViewFragmentAdapter
-    private lateinit var rvPagerAdapter: RecycleViewPagerAdapter
+    private lateinit var recycleViewFragmentAdapter: QQVersionListFragmentAdapter
+    private lateinit var rvPagerAdapter: VersionListPagerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
@@ -155,16 +141,16 @@ class MainActivity : AppCompatActivity() {
 
         versionAdapter = VersionAdapter()
         localQQAdapter = LocalQQAdapter()
-        binding.rvPager.adapter = RecycleViewPagerAdapter(this)
-        rvPagerAdapter = binding.rvPager.adapter as RecycleViewPagerAdapter
-        recycleViewFragmentAdapter = RecycleViewFragmentAdapter()
+        binding.rvPager.adapter = VersionListPagerAdapter(this)
+        rvPagerAdapter = binding.rvPager.adapter as VersionListPagerAdapter
+        recycleViewFragmentAdapter = QQVersionListFragmentAdapter()
         initButtons()
 
         binding.rvPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 recycleViewFragmentAdapter =
-                    rvPagerAdapter.getFragementAtPosition(position) as RecycleViewFragmentAdapter
+                    rvPagerAdapter.getFragementAtPosition(position) as QQVersionListFragmentAdapter
             }
         })
 
@@ -688,9 +674,9 @@ class MainActivity : AppCompatActivity() {
                         }
 
                         shiplyAdvancedConfigurationsClick.setOnClickListener {
-                            ShiplyAdvancedConfigSheet().apply {
+                            ShiplyAdvancedConfigSheetFragment().apply {
                                 isCancelable = false
-                                show(supportFragmentManager, ShiplyAdvancedConfigSheet.TAG)
+                                show(supportFragmentManager, ShiplyAdvancedConfigSheetFragment.TAG)
                             }
                         }
 
@@ -1084,11 +1070,15 @@ class MainActivity : AppCompatActivity() {
                                         "QQVersionInstall", ""
                                     ) == this.versionNumber)
                                     this.isAccessibility = false
-
                                     // 无障碍标记
                                     /*DefaultArtifactVersion(this.versionNumber) >= DefaultArtifactVersion(
                                         EARLIEST_ACCESSIBILITY_VERSION
                                     )*/
+
+                                    this.isQQNTFramework =
+                                        DefaultArtifactVersion(this.versionNumber) >= DefaultArtifactVersion(
+                                            EARLIEST_QQNT_FRAMEWORK_VERSION_STABLE
+                                        )
                                 }
                             }
                             if (DataStoreUtil.getBoolean(
@@ -1605,175 +1595,6 @@ class MainActivity : AppCompatActivity() {
                     btn.isEnabled = true
                 }
             }
-        }
-    }
-
-    class RecycleViewPagerAdapter(private val context: Context) :
-        FragmentStateAdapter(context as FragmentActivity) {
-        override fun getItemCount(): Int = 1
-
-        override fun createFragment(position: Int): Fragment {
-            return RecycleViewFragmentAdapter()
-        }
-
-        fun getFragementAtPosition(position: Int): RecycleViewFragmentAdapter? {
-            return when (position) {
-                0 -> RecycleViewFragmentAdapter()
-                else -> null
-            }
-        }
-    }
-
-    class RecycleViewFragmentAdapter : Fragment() {
-        private var _fragmentBinding: RecycleQqVersionBinding? = null
-        private val fragmentBinding get() = _fragmentBinding!!
-        private lateinit var thisActivity: MainActivity
-
-        override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-        ): View {
-            _fragmentBinding = RecycleQqVersionBinding.inflate(inflater, container, false)
-            val view = fragmentBinding.root
-            thisActivity = requireActivity() as MainActivity
-            return view
-        }
-
-        override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-            super.onViewCreated(view, savedInstanceState)
-            versionListStaggeredGridLayout()
-            fragmentBinding.rvContent.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    super.onScrolled(recyclerView, dx, dy)
-                    handleScroll(dy)
-                }
-            })
-        }
-
-        fun versionListStaggeredGridLayout() {
-            fragmentBinding.rvContent.apply {
-                val concatenated =
-                    ConcatAdapter(thisActivity.localQQAdapter, thisActivity.versionAdapter)
-                adapter = concatenated
-                val screenWidthDp = (Resources.getSystem().displayMetrics.widthPixels).pxToDp
-                val screenHeightDp = (Resources.getSystem().displayMetrics.heightPixels).pxToDp
-                layoutManager = if (screenHeightDp >= 600) {
-                    when {
-                        screenWidthDp in 600..840 -> StaggeredGridLayoutManager(
-                            2, StaggeredGridLayoutManager.VERTICAL
-                        )
-
-                        screenWidthDp > 840 -> StaggeredGridLayoutManager(
-                            3, StaggeredGridLayoutManager.VERTICAL
-                        )
-
-                        else -> LinearLayoutManager(thisActivity)
-                    }
-                } else LinearLayoutManager(thisActivity)
-            }
-        }
-
-        private fun handleScroll(dy: Int) {
-            if (dy > 0) thisActivity.binding.btnGuess.shrink()
-            else if (dy < 0) thisActivity.binding.btnGuess.extend()
-        }
-
-        override fun onDestroyView() {
-            super.onDestroyView()
-            _fragmentBinding = null
-        }
-    }
-
-    class ShiplyAdvancedConfigSheet : BottomSheetDialogFragment() {
-        private lateinit var shiplyAdvancedConfigSheetBinding: BottomsheetShiplyAdvancedConfigBinding
-
-        override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-        ): View = inflater.inflate(R.layout.bottomsheet_shiply_advanced_config, container, false)
-
-        override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-            super.onViewCreated(view, savedInstanceState)
-            dialog?.setCanceledOnTouchOutside(false)
-            shiplyAdvancedConfigSheetBinding = BottomsheetShiplyAdvancedConfigBinding.bind(view)
-            val shiplyAdvancedConfigSheetBehavior = (this.dialog as BottomSheetDialog).behavior
-            shiplyAdvancedConfigSheetBehavior.isDraggable = false
-            this@ShiplyAdvancedConfigSheet.isCancelable = true
-            shiplyAdvancedConfigSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-            this@ShiplyAdvancedConfigSheet.isCancelable = false
-            shiplyAdvancedConfigSheetBinding.apply {
-                shiplyAppid.helperText =
-                    getString(R.string.shiplyGeneralOptionalHelpText) + SHIPLY_DEFAULT_APPID
-                shiplyModel.helperText =
-                    getString(R.string.shiplyGeneralOptionalHelpText) + Build.MODEL.toString()
-                shiplyOsVersion.helperText =
-                    getString(R.string.shiplyGeneralOptionalHelpText) + SDK_INT.toString()
-                shiplySdkVersion.helperText =
-                    getString(R.string.shiplyGeneralOptionalHelpText) + SHIPLY_DEFAULT_SDK_VERSION
-                shiplyLanguage.helperText =
-                    getString(R.string.shiplyGeneralOptionalHelpText) + Locale.getDefault().language.toString()
-
-                DataStoreUtil.apply {
-                    shiplyAppid.editText?.setText(getString("shiplyAppid", ""))
-                    shiplyOsVersion.editText?.setText(
-                        getString("shiplyOsVersion", "")
-                    )
-                    shiplyModel.editText?.setText(getString("shiplyModel", ""))
-                    shiplySdkVersion.editText?.setText(
-                        getString("shiplySdkVersion", "")
-                    )
-                    shiplyLanguage.editText?.setText(
-                        getString("shiplyLanguage", "")
-                    )
-
-                    btnShiplyConfigSave.setOnClickListener {
-                        shiplyAppid.clearFocus()
-                        shiplyOsVersion.clearFocus()
-                        shiplyModel.clearFocus()
-                        shiplySdkVersion.clearFocus()
-                        shiplyLanguage.clearFocus()
-                        val imm =
-                            requireContext().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-                        imm.hideSoftInputFromWindow(shiplyLanguage.windowToken, 0)
-                        putStringAsync(
-                            "shiplyAppid", shiplyAppid.editText?.text.toString()
-                        )
-                        putStringAsync(
-                            "shiplyOsVersion", shiplyOsVersion.editText?.text.toString()
-                        )
-                        putStringAsync(
-                            "shiplyModel", shiplyModel.editText?.text.toString()
-                        )
-                        putStringAsync(
-                            "shiplySdkVersion", shiplySdkVersion.editText?.text.toString()
-                        )
-                        putStringAsync(
-                            "shiplyLanguage", shiplyLanguage.editText?.text.toString()
-                        )
-                        Toast.makeText(requireContext(), R.string.saved, Toast.LENGTH_SHORT).show()
-                        this@ShiplyAdvancedConfigSheet.isCancelable = true
-                        shiplyAdvancedConfigSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-                    }
-                }
-
-                btnShiplyConfigBack.setOnClickListener {
-                    val imm =
-                        requireContext().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-                    imm.hideSoftInputFromWindow(shiplyLanguage.windowToken, 0)
-                    this@ShiplyAdvancedConfigSheet.isCancelable = true
-                    shiplyAdvancedConfigSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-                }
-
-                dragHandleView.setOnClickListener {
-                    val imm =
-                        requireContext().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-                    imm.hideSoftInputFromWindow(shiplyLanguage.windowToken, 0)
-                    this@ShiplyAdvancedConfigSheet.isCancelable = true
-                    shiplyAdvancedConfigSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-                }
-            }
-        }
-
-        companion object {
-            const val TAG = "ShiplyAdvancedConfigSheet"
         }
     }
 

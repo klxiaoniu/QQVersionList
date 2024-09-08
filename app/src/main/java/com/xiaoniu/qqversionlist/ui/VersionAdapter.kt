@@ -134,6 +134,7 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
                     bindDisplayInstall(tvInstall, tvInstallCard, bean)
                     bindVersionTCloud(tvVersion, holder.context)
                     bindAccessibilityTag(accessibilityTag, holder.context, bean)
+                    bindQQNTTag(qqntTag,bean)
                 }
             }
 
@@ -167,6 +168,7 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
                     bindDisplayInstall(tvOldInstall, tvOldInstallCard, bean)
                     bindVersionTCloud(tvOldVersion, holder.context)
                     bindAccessibilityTag(accessibilityOldTag, holder.context, bean)
+                    bindQQNTTag(qqntOldTag,bean)
 
                     bindProgress(
                         listDetailProgressLine,
@@ -236,7 +238,7 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
         if (bean.displayInstall) {
             tvInstallCard.isVisible = true
             tvInstall.text = tvInstall.context.getString(R.string.installed)
-            if (bean.isAccessibility) {
+            if (bean.isAccessibility|| bean.isQQNTFramework) {
                 val marginLayoutParams = tvInstallCard.layoutParams as ViewGroup.MarginLayoutParams
                 marginLayoutParams.marginStart = 3.dp
                 tvInstallCard.layoutParams = marginLayoutParams
@@ -259,6 +261,13 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
             )
             accessibilityTag.isVisible = true
         } else accessibilityTag.isVisible = false
+    }
+
+    private fun bindQQNTTag(
+        qqntTag: ImageView, bean: QQVersionBean
+    ){
+        if (bean.isQQNTFramework) qqntTag.isVisible = true
+        else qqntTag.isVisible = false
     }
 
     private fun bindVersionTCloud(

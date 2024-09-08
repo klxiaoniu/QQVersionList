@@ -62,6 +62,19 @@
                     tools:text="9.0.25" />
 
                 <ImageView
+                    android:id="@+id/qqnt_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="3dp"
+                    android:layout_marginEnd="0dp"
+                    android:contentDescription="@string/qqntTag"
+                    android:src="@drawable/qqnt_logo_unofficial"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/tv_version"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="?attr/colorPrimary" />
+
+                <ImageView
                     android:id="@+id/accessibility_tag"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -71,7 +84,7 @@
                     android:focusable="true"
                     android:src="@drawable/accessibility_new_20px"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/tv_version"
+                    app:layout_constraintStart_toEndOf="@id/qqnt_tag"
                     app:layout_constraintTop_toTopOf="parent"
                     app:tint="?attr/colorPrimary" />
 
@@ -174,7 +187,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/versionCardExpandButtonContentDescription"
-                app:icon="@drawable/ic_down"
+                app:icon="@drawable/arrow_down_s_line"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

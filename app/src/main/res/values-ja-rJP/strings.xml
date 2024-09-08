@@ -128,4 +128,5 @@
     <string name="download">下载</string>
     <string name="stop">停止</string>
     <string name="skip">跳过</string>
+    <string name="qqntTag">基于 QQNT 技术架构</string>
 </resources>

@@ -29,6 +29,7 @@ class TipTimeApplication : Application() {
         const val SHIPLY_DEFAULT_SDK_VERSION = "1.3.36-RC01"
 
         const val EARLIEST_ACCESSIBILITY_VERSION = false
+        const val EARLIEST_QQNT_FRAMEWORK_VERSION_STABLE = "8.9.63"
     }
 
     override fun onCreate() {
