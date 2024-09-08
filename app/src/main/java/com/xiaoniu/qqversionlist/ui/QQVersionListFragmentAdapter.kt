@@ -31,23 +31,24 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.xiaoniu.qqversionlist.databinding.RecycleQqVersionBinding
 import com.xiaoniu.qqversionlist.util.pxToDp
 
+// 将视图绑定放在 Fragment 前声明，否则在旋转屏幕时会导致 Fragment 里的数据销毁
+// 相信用户内存的力量（逃）
+private var _fragmentBinding: RecycleQqVersionBinding? = null
+
 class QQVersionListFragmentAdapter : Fragment() {
-    private var _fragmentBinding: RecycleQqVersionBinding? = null
     private val fragmentBinding get() = _fragmentBinding!!
-    private lateinit var thisActivity: MainActivity
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _fragmentBinding = RecycleQqVersionBinding.inflate(inflater, container, false)
         val view = fragmentBinding.root
-        thisActivity = requireActivity() as MainActivity
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        versionListStaggeredGridLayout()
+        versionListStaggeredGridLayout(requireActivity() as MainActivity)
         fragmentBinding.rvContent.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
@@ -56,13 +57,12 @@ class QQVersionListFragmentAdapter : Fragment() {
         })
     }
 
-    fun versionListStaggeredGridLayout() {
+    fun versionListStaggeredGridLayout(thisActivity: MainActivity) {
+        val concatenated = ConcatAdapter(thisActivity.localQQAdapter, thisActivity.versionAdapter)
+        val screenWidthDp = (Resources.getSystem().displayMetrics.widthPixels).pxToDp
+        val screenHeightDp = (Resources.getSystem().displayMetrics.heightPixels).pxToDp
         fragmentBinding.rvContent.apply {
-            val concatenated =
-                ConcatAdapter(thisActivity.localQQAdapter, thisActivity.versionAdapter)
             adapter = concatenated
-            val screenWidthDp = (Resources.getSystem().displayMetrics.widthPixels).pxToDp
-            val screenHeightDp = (Resources.getSystem().displayMetrics.heightPixels).pxToDp
             layoutManager = if (screenHeightDp >= 600) {
                 when {
                     screenWidthDp in 600..840 -> StaggeredGridLayoutManager(
@@ -80,6 +80,7 @@ class QQVersionListFragmentAdapter : Fragment() {
     }
 
     private fun handleScroll(dy: Int) {
+        val thisActivity = requireActivity() as MainActivity
         if (dy > 0) thisActivity.binding.btnGuess.shrink()
         else if (dy < 0) thisActivity.binding.btnGuess.extend()
     }

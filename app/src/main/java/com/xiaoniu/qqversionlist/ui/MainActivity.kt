@@ -163,12 +163,12 @@ class MainActivity : AppCompatActivity() {
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        recycleViewFragmentAdapter.versionListStaggeredGridLayout()
+        recycleViewFragmentAdapter.versionListStaggeredGridLayout(this)
     }
 
     override fun onMultiWindowModeChanged(isInMultiWindowMode: Boolean, newConfig: Configuration) {
         super.onMultiWindowModeChanged(isInMultiWindowMode, newConfig)
-        recycleViewFragmentAdapter.versionListStaggeredGridLayout()
+        recycleViewFragmentAdapter.versionListStaggeredGridLayout(this)
     }
 
     private fun showUADialog(agreed: Boolean, UATarget: Int) {
