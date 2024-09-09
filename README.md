@@ -58,6 +58,8 @@ QQ 版本列表实用工具 for Android 是一个使用 Material 3 组件库构�
 
 在进入 QQ 版本列表实用工具时，您首先会看到一系列显示“x.y.z”“xxx MB”的卡片，这些卡片组成的列表即为 Android QQ 的版本列表，卡片列表展示了已经或即将发布的 Android QQ 版本。版本信息来源：https://im.qq.com/rainbow/androidQQVersionList
 
+从右向左滑动版本列表，可切换到 TIM 版本列表。TIM 版本信息来源：https://im.qq.com/rainbow/TIMDownload
+
 通过点击卡片右侧箭头按钮，可展开卡片以查阅到更为详尽的信息。
 
 默认情况下，长按卡片文字会弹出展示卡片原始 JSON 字符串的对话框，长按对话框文字可选择复制字符串内容。可在设置中关闭此功能。

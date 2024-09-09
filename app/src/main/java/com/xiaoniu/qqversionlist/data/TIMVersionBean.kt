@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 data class TIMVersionBean(
     val version: String,
     val datetime: String,
-    val fix: List<String>,
+    val fix: String,
     val new: String,
 
     var jsonString: String = "",

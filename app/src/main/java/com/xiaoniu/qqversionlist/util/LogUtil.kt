@@ -21,6 +21,11 @@ package com.xiaoniu.qqversionlist.util
 import android.util.Log
 
 object LogUtil {
+    /**
+     * 打印对象的日志信息
+     *
+     * @return 返回调用此函数的对象实例，以便支持链式调用
+     */
     fun Any.log(): Any {
         Log.i("QQVersionList", this.toString())
         return this

@@ -23,14 +23,18 @@ object TIMVersionBeanUtil {
             TIMVersionBean(
                 version = androidVersion,
                 datetime = androidDatetime,
-                fix = "".split("<br/>"),
+                fix = "",
                 new = "",
                 jsonString = gson.toJson(JsonObject().apply {
                     addProperty("version", androidVersion)
                     addProperty("datetime", androidDatetime)
                     addProperty("fix", "")
                     addProperty("new", "")
-                }).toString()
+                }).toString(),
+                displayInstall = (DataStoreUtil.getString(
+                    "TIMVersionInstall",
+                    ""
+                ) == androidVersion)
             )
         )
 
@@ -48,14 +52,18 @@ object TIMVersionBeanUtil {
                     TIMVersionBean(
                         version = version,
                         datetime = datetime,
-                        fix = fix.split("<br/>"),
+                        fix = fix,
                         new = newFeature,
                         jsonString = gson.toJson(JsonObject().apply {
                             addProperty("version", version)
                             addProperty("datetime", datetime)
                             addProperty("fix", fix)
                             addProperty("new", newFeature)
-                        }).toString()
+                        }).toString(),
+                        displayInstall = (DataStoreUtil.getString(
+                            "QQVersionInstall",
+                            ""
+                        ) == version)
                     )
                 )
             }
@@ -77,14 +85,18 @@ object TIMVersionBeanUtil {
                         TIMVersionBean(
                             version = version,
                             datetime = datetime,
-                            fix = fix.split("<br/>"),
+                            fix = fix,
                             new = newFeature,
                             jsonString = gson.toJson(JsonObject().apply {
                                 addProperty("version", version)
                                 addProperty("datetime", datetime)
                                 addProperty("fix", fix)
                                 addProperty("new", newFeature)
-                            }).toString()
+                            }).toString(),
+                            displayInstall = (DataStoreUtil.getString(
+                                "QQVersionInstall",
+                                ""
+                            ) == version)
                         )
                     )
                 }
@@ -99,7 +111,7 @@ object TIMVersionBeanUtil {
             )
         ) thisActivity.timVersion[0].displayType = 1
         DataStoreUtil.putStringAsync(
-            "versionBig", thisActivity.timVersion.first().version
+            "TIMVersionBig", thisActivity.timVersion.first().version
         )
     }
 }

@@ -36,7 +36,6 @@ import android.text.SpannableString
 import android.text.TextWatcher
 import android.text.style.URLSpan
 import android.util.Base64
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
@@ -61,10 +60,10 @@ import com.google.android.material.progressindicator.IndeterminateDrawable
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonElement
+import com.xiaoniu.qqversionlist.Application.Companion.SHIPLY_DEFAULT_APPID
+import com.xiaoniu.qqversionlist.Application.Companion.SHIPLY_DEFAULT_SDK_VERSION
 import com.xiaoniu.qqversionlist.BuildConfig
 import com.xiaoniu.qqversionlist.R
-import com.xiaoniu.qqversionlist.TipTimeApplication.Companion.SHIPLY_DEFAULT_APPID
-import com.xiaoniu.qqversionlist.TipTimeApplication.Companion.SHIPLY_DEFAULT_SDK_VERSION
 import com.xiaoniu.qqversionlist.data.QQVersionBean
 import com.xiaoniu.qqversionlist.data.TIMVersionBean
 import com.xiaoniu.qqversionlist.databinding.ActivityMainBinding
@@ -104,10 +103,13 @@ import java.util.zip.GZIPInputStream
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     lateinit var qqVersionAdapter: QQVersionAdapter
+    lateinit var timVersionAdapter: TIMVersionAdapter
     lateinit var localQQAdapter: LocalQQAdapter
+    lateinit var localTIMAdapter: LocalTIMAdapter
     lateinit var qqVersion: List<QQVersionBean>
     lateinit var timVersion: List<TIMVersionBean>
     private lateinit var qqVersionListFragmentAdapter: QQVersionListFragmentAdapter
+    private lateinit var timVersionListFragmentAdapter: TIMVersionListFragmentAdapter
     private lateinit var rvPagerAdapter: VersionListPagerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -142,35 +144,46 @@ class MainActivity : AppCompatActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         qqVersionAdapter = QQVersionAdapter()
+        timVersionAdapter = TIMVersionAdapter()
         localQQAdapter = LocalQQAdapter()
+        localTIMAdapter = LocalTIMAdapter()
         binding.rvPager.adapter = VersionListPagerAdapter(this)
         rvPagerAdapter = binding.rvPager.adapter as VersionListPagerAdapter
         qqVersionListFragmentAdapter = QQVersionListFragmentAdapter()
+        timVersionListFragmentAdapter = TIMVersionListFragmentAdapter()
         initButtons()
-
-        binding.rvPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
-                qqVersionListFragmentAdapter =
-                    rvPagerAdapter.getFragementAtPosition(position) as QQVersionListFragmentAdapter
-            }
-        })
 
         if (!BuildConfig.VERSION_NAME.endsWith("Release")) binding.materialToolbar.setNavigationIcon(
             R.drawable.git_commit_line
         )
 
+        binding.rvPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                when (position) {
+                    0 -> binding.materialToolbar.apply {
+                        setTitle(R.string.appTitleTIM)
+                    }
+
+                    1 -> binding.materialToolbar.apply {
+                        setTitle(R.string.appTitleTIM)
+                    }
+                }
+            }
+        })
 
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         qqVersionListFragmentAdapter.versionListStaggeredGridLayout(this)
+        timVersionListFragmentAdapter.versionListStaggeredGridLayout(this)
     }
 
     override fun onMultiWindowModeChanged(isInMultiWindowMode: Boolean, newConfig: Configuration) {
         super.onMultiWindowModeChanged(isInMultiWindowMode, newConfig)
         qqVersionListFragmentAdapter.versionListStaggeredGridLayout(this)
+        timVersionListFragmentAdapter.versionListStaggeredGridLayout(this)
     }
 
     private fun showUADialog(agreed: Boolean, UATarget: Int) {
@@ -434,8 +447,14 @@ class MainActivity : AppCompatActivity() {
                                         )
                                         else qqVersionBean
                                     }
+                                    timVersion = timVersion.mapIndexed { index, timVersionBean ->
+                                        if (index == 0) timVersionBean.copy(
+                                            displayType = if (isChecked) 1 else 0
+                                        )
+                                        else timVersionBean
+                                    }
                                     qqVersionAdapter.submitList(qqVersion)
-
+                                    timVersionAdapter.submitList(timVersion)
                                 }
 
                                 // 下两个设置不能异步持久化存储，否则视图更新读不到更新值
@@ -449,6 +468,7 @@ class MainActivity : AppCompatActivity() {
                                         isChecked
                                     )
                                     qqVersionAdapter.updateItemProperty("isTCloud")
+                                    timVersionAdapter.updateItemProperty("isTCloud")
                                 }
                                 btnPersonalizationOk.setOnClickListener {
                                     dialogPer.dismiss()
@@ -482,6 +502,7 @@ class MainActivity : AppCompatActivity() {
                                         )
                                     }
                                     qqVersionAdapter.updateItemProperty("isTCloud")
+                                    timVersionAdapter.updateItemProperty("isTCloud")
                                 }
                             }
                         }
@@ -1049,7 +1070,9 @@ class MainActivity : AppCompatActivity() {
                     DataStoreUtil.putString("TIMVersionCodeInstall", "")
                     DataStoreUtil.putString("TIMAppSettingParamsInstall", "")
                 } finally {
-                    withContext(Dispatchers.Main) { localQQAdapter.refreshData() }
+                    withContext(Dispatchers.Main) { localQQAdapter.refreshData()
+                        localTIMAdapter.refreshData()
+                    }
                     try {
                         val okHttpClient = OkHttpClient()
                         val request =
@@ -1081,9 +1104,9 @@ class MainActivity : AppCompatActivity() {
                         val responseData = response.body?.string()
                         if (responseData != null) {
                             timVersionBeanUtil(this@MainActivity, responseData)
-                            // withContext(Dispatchers.Main) {
-                                // timVersionAdapter.submitList(timVersion)
-                            // }
+                            withContext(Dispatchers.Main) {
+                                timVersionAdapter.submitList(timVersion)
+                            }
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()

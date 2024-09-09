@@ -32,6 +32,21 @@ object InfoUtil {
         }
     }
 
+    /**
+     * 在 Activity 中显示错误对话框
+     *
+     * 此函数用于在应用程序中向用户显示错误信息对话框它可以在对话框中显示自定义的错误消息，
+     * 或者显示从异常对象中获取的堆栈跟踪信息对话框包含一个“完成”按钮和一个“复制”按钮，
+     * 用户可以通过“复制”按钮来复制错误信息
+     *
+     * 如何使用：
+     * 1. 将此函数作为 Activity 的一部分进行调用。
+     * 2. 传入一个 Exception 实例，通常是在捕获异常时传递。
+     * 3. 可选地，设置 `isCustomMessage` 为 `true` 以将其作为自定义错误消息而不显示跟踪堆栈。
+     *
+     * @param e 异常对象，包含了错误的信息和堆栈跟踪
+     * @param isCustomMessage 布尔值，表示是否使用自定义的错误消息，默认为false
+     */
     fun Activity.dialogError(e: Exception, isCustomMessage: Boolean = false) {
         runOnUiThread {
             val message = if (isCustomMessage) e.message else buildString {

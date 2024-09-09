@@ -1,13 +1,13 @@
 package com.xiaoniu.qqversionlist.util
 
-import com.xiaoniu.qqversionlist.TipTimeApplication.Companion.EARLIEST_QQNT_FRAMEWORK_VERSION_STABLE
+import com.xiaoniu.qqversionlist.Application.Companion.EARLIEST_QQNT_FRAMEWORK_QQ_VERSION_STABLE
 import com.xiaoniu.qqversionlist.data.QQVersionBean
 import com.xiaoniu.qqversionlist.ui.MainActivity
 import kotlinx.serialization.json.Json
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion
 
 object QQVersionBeanUtil {
-    fun qqVersionBeanUtil(thisActivity: MainActivity, responseData: String){
+    fun qqVersionBeanUtil(thisActivity: MainActivity, responseData: String) {
         val start = (responseData.indexOf("versions64\":[")) + 12
         val end = (responseData.indexOf(";\n" + "      typeof"))
         val totalJson = responseData.substring(start, end)
@@ -24,12 +24,12 @@ object QQVersionBeanUtil {
                 this.isAccessibility = false
                 // 无障碍标记
                 /*DefaultArtifactVersion(this.versionNumber) >= DefaultArtifactVersion(
-                    EARLIEST_ACCESSIBILITY_VERSION
+                    EARLIEST_ACCESSIBILITY_QQ_VERSION
                 )*/
 
                 this.isQQNTFramework =
                     DefaultArtifactVersion(this.versionNumber) >= DefaultArtifactVersion(
-                        EARLIEST_QQNT_FRAMEWORK_VERSION_STABLE
+                        EARLIEST_QQNT_FRAMEWORK_QQ_VERSION_STABLE
                     )
             }
         }

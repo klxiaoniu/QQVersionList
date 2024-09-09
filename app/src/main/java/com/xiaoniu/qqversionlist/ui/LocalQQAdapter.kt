@@ -33,31 +33,21 @@ class LocalQQAdapter : RecyclerView.Adapter<LocalQQAdapter.LocalQQViewHolder>() 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LocalQQViewHolder {
         val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.local_qq_list, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.local_qq, parent, false)
         return LocalQQViewHolder(view)
     }
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: LocalQQViewHolder, position: Int) {
         val QQVersionInstall2 = DataStoreUtil.getString("QQVersionInstall", "")
-        val TIMVersionInstall2 = DataStoreUtil.getString("TIMVersionInstall", "")
         val QQVersionCodeInstall2 = DataStoreUtil.getString("QQVersionCodeInstall", "")
-        val TIMVersionCodeInstall2 = DataStoreUtil.getString("TIMVersionCodeInstall", "")
         val QQAppSettingParamsInstall = DataStoreUtil.getString("QQAppSettingParamsInstall", "")
-        val TIMAppSettingParamsInstall = DataStoreUtil.getString("TIMAppSettingParamsInstall", "")
         val QQRdmUUIDInstall = if (DataStoreUtil.getString(
                 "QQRdmUUIDInstall", ""
             ) != ""
         ) ".${DataStoreUtil.getString("QQRdmUUIDInstall", "").split("_")[0]}" else ""
-        val TIMRdmUUIDInstall = if (DataStoreUtil.getString(
-                "TIMRdmUUIDInstall", ""
-            ) != ""
-        ) ".${DataStoreUtil.getString("TIMRdmUUIDInstall", "").split("_")[0]}" else ""
         val QQChannelInstall = if (QQAppSettingParamsInstall != "") DataStoreUtil.getString(
             "QQAppSettingParamsInstall", ""
-        ).split("#")[3] else ""
-        val TIMChannelInstall = if (TIMAppSettingParamsInstall != "") DataStoreUtil.getString(
-            "TIMAppSettingParamsInstall", ""
         ).split("#")[3] else ""
         holder.apply {
             if (QQVersionInstall2 != "") {
@@ -142,59 +132,6 @@ class LocalQQAdapter : RecyclerView.Adapter<LocalQQAdapter.LocalQQViewHolder>() 
                     true
                 }
             } else itemQqInstallCard.visibility = View.GONE
-            if (TIMVersionInstall2 != "") {
-                itemTimInstallText.text =
-                    if (TIMChannelInstall != "") itemView.context.getString(R.string.localTIMVersion) + DataStoreUtil.getString(
-                        "TIMVersionInstall", ""
-                    ) + TIMRdmUUIDInstall + (if (TIMVersionCodeInstall2 != "") " (${TIMVersionCodeInstall2})" else "") + " - $TIMChannelInstall" else itemView.context.getString(
-                        R.string.localTIMVersion
-                    ) + DataStoreUtil.getString("TIMVersionInstall", "")
-                itemTimInstallCard.visibility = View.VISIBLE
-                itemTimInstallCard.setOnLongClickListener {
-                    if (DataStoreUtil.getBoolean("longPressCard", true)) {
-                        val tv = TextView(itemView.context).apply {
-                            text = "Version Name: ${
-                                DataStoreUtil.getString(
-                                    "TIMVersionInstall", ""
-                                )
-                            }" + (if (DataStoreUtil.getString(
-                                    "TIMRdmUUIDInstall", ""
-                                ) != ""
-                            ) "\n\nRdm UUID: ${
-                                DataStoreUtil.getString(
-                                    "TIMRdmUUIDInstall", ""
-                                )
-                            }" else "") + (if (DataStoreUtil.getString(
-                                    "TIMVersionCodeInstall", ""
-                                ) != ""
-                            ) "\n\nVersion Code: ${
-                                DataStoreUtil.getString(
-                                    "TIMVersionCodeInstall", ""
-                                )
-                            }" else "") + (if (DataStoreUtil.getString(
-                                    "TIMAppSettingParamsInstall", ""
-                                ) != ""
-                            ) "\n\nAppSetting_params: ${
-                                DataStoreUtil.getString(
-                                    "TIMAppSettingParamsInstall", ""
-                                )
-                            }" else "")
-                            setTextIsSelectable(true)
-                            setPadding(96, 48, 96, 96)
-                        }
-                        MaterialAlertDialogBuilder(itemView.context)
-                            .setView(tv)
-                            .setTitle(R.string.localTIMVersionDetails)
-                            .setIcon(R.drawable.phone_find_line)
-                            .show()
-                    } else Toast.makeText(
-                        itemView.context,
-                        itemView.context.getString(R.string.longPressToViewSourceDetailsIsDisabledPleaseGoToSettingsToTurnItOn),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    true
-                }
-            } else itemTimInstallCard.visibility = View.GONE
         }
     }
 
@@ -207,10 +144,8 @@ class LocalQQAdapter : RecyclerView.Adapter<LocalQQAdapter.LocalQQViewHolder>() 
 
     @SuppressLint("SetTextI18n")
     inner class LocalQQViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val itemQqInstallText = itemView.findViewById<TextView>(R.id.item_qq_install_text)
-        val itemQqInstallCard = itemView.findViewById<View>(R.id.item_qq_install_card)
-        val itemTimInstallCard = itemView.findViewById<View>(R.id.item_tim_install_card)
-        val itemTimInstallText = itemView.findViewById<TextView>(R.id.item_tim_install_text)
+        val itemQqInstallText: TextView = itemView.findViewById(R.id.item_qq_install_text)
+        val itemQqInstallCard: View = itemView.findViewById(R.id.item_qq_install_card)
     }
 }
 

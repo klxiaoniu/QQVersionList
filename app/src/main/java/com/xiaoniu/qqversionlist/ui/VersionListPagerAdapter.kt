@@ -25,15 +25,21 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 
 class VersionListPagerAdapter(context: Context) :
     FragmentStateAdapter(context as FragmentActivity) {
-    override fun getItemCount(): Int = 1
+
+    override fun getItemCount(): Int = 2
 
     override fun createFragment(position: Int): Fragment {
-        return QQVersionListFragmentAdapter()
-    }
-
-    fun getFragementAtPosition(position: Int): QQVersionListFragmentAdapter? {
         return when (position) {
             0 -> QQVersionListFragmentAdapter()
+            1 -> TIMVersionListFragmentAdapter()
+            else -> throw IllegalArgumentException(position.toString())
+        }
+    }
+
+    fun getFragmentAtPosition(position: Int): Fragment? {
+        return when (position) {
+            0 -> QQVersionListFragmentAdapter()
+            1 -> TIMVersionListFragmentAdapter()
             else -> null
         }
     }

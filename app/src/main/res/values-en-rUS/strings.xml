@@ -129,4 +129,6 @@
     <string name="stop">Stop</string>
     <string name="skip">Skip</string>
     <string name="qqntTag">Powered by QQNT Framework</string>
+    <string name="releaseDateTIM">Release Date:&#160;</string>
+    <string name="appTitleTIM">TIM Version List</string>
 </resources>

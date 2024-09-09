@@ -25,6 +25,9 @@ import android.widget.Toast
 import com.xiaoniu.qqversionlist.R
 
 object ClipboardUtil {
+    /**
+     * @param text 将要被复制到剪贴板的具体文本字符串
+     */
     fun Context.copyText(text: String) {
         val clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         clipboardManager.setPrimaryClip(ClipData.newPlainText("", text))
