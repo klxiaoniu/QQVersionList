@@ -157,7 +157,7 @@ class MainActivity : AppCompatActivity() {
             R.drawable.git_commit_line
         )
 
-        binding.rvPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+        /*binding.rvPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 when (position) {
@@ -170,7 +170,7 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
-        })
+        })*/
 
     }
 
