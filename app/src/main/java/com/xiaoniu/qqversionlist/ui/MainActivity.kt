@@ -36,6 +36,7 @@ import android.text.SpannableString
 import android.text.TextWatcher
 import android.text.style.URLSpan
 import android.util.Base64
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
@@ -62,10 +63,10 @@ import com.google.gson.GsonBuilder
 import com.google.gson.JsonElement
 import com.xiaoniu.qqversionlist.BuildConfig
 import com.xiaoniu.qqversionlist.R
-import com.xiaoniu.qqversionlist.TipTimeApplication.Companion.EARLIEST_QQNT_FRAMEWORK_VERSION_STABLE
 import com.xiaoniu.qqversionlist.TipTimeApplication.Companion.SHIPLY_DEFAULT_APPID
 import com.xiaoniu.qqversionlist.TipTimeApplication.Companion.SHIPLY_DEFAULT_SDK_VERSION
 import com.xiaoniu.qqversionlist.data.QQVersionBean
+import com.xiaoniu.qqversionlist.data.TIMVersionBean
 import com.xiaoniu.qqversionlist.databinding.ActivityMainBinding
 import com.xiaoniu.qqversionlist.databinding.DialogAboutBinding
 import com.xiaoniu.qqversionlist.databinding.DialogGuessBinding
@@ -81,17 +82,17 @@ import com.xiaoniu.qqversionlist.util.ClipboardUtil.copyText
 import com.xiaoniu.qqversionlist.util.DataStoreUtil
 import com.xiaoniu.qqversionlist.util.InfoUtil.dialogError
 import com.xiaoniu.qqversionlist.util.InfoUtil.showToast
+import com.xiaoniu.qqversionlist.util.QQVersionBeanUtil.qqVersionBeanUtil
 import com.xiaoniu.qqversionlist.util.ShiplyUtil
 import com.xiaoniu.qqversionlist.util.StringUtil.getAllAPKUrl
 import com.xiaoniu.qqversionlist.util.StringUtil.toPrettyFormat
+import com.xiaoniu.qqversionlist.util.TIMVersionBeanUtil.timVersionBeanUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import org.apache.maven.artifact.versioning.DefaultArtifactVersion
 import java.io.BufferedReader
 import java.io.ByteArrayInputStream
 import java.io.InputStreamReader
@@ -102,10 +103,11 @@ import java.util.zip.GZIPInputStream
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
-    lateinit var versionAdapter: VersionAdapter
+    lateinit var qqVersionAdapter: QQVersionAdapter
     lateinit var localQQAdapter: LocalQQAdapter
-    private lateinit var qqVersion: List<QQVersionBean>
-    private lateinit var recycleViewFragmentAdapter: QQVersionListFragmentAdapter
+    lateinit var qqVersion: List<QQVersionBean>
+    lateinit var timVersion: List<TIMVersionBean>
+    private lateinit var qqVersionListFragmentAdapter: QQVersionListFragmentAdapter
     private lateinit var rvPagerAdapter: VersionListPagerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -139,17 +141,17 @@ class MainActivity : AppCompatActivity() {
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        versionAdapter = VersionAdapter()
+        qqVersionAdapter = QQVersionAdapter()
         localQQAdapter = LocalQQAdapter()
         binding.rvPager.adapter = VersionListPagerAdapter(this)
         rvPagerAdapter = binding.rvPager.adapter as VersionListPagerAdapter
-        recycleViewFragmentAdapter = QQVersionListFragmentAdapter()
+        qqVersionListFragmentAdapter = QQVersionListFragmentAdapter()
         initButtons()
 
         binding.rvPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
-                recycleViewFragmentAdapter =
+                qqVersionListFragmentAdapter =
                     rvPagerAdapter.getFragementAtPosition(position) as QQVersionListFragmentAdapter
             }
         })
@@ -163,12 +165,12 @@ class MainActivity : AppCompatActivity() {
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        recycleViewFragmentAdapter.versionListStaggeredGridLayout(this)
+        qqVersionListFragmentAdapter.versionListStaggeredGridLayout(this)
     }
 
     override fun onMultiWindowModeChanged(isInMultiWindowMode: Boolean, newConfig: Configuration) {
         super.onMultiWindowModeChanged(isInMultiWindowMode, newConfig)
-        recycleViewFragmentAdapter.versionListStaggeredGridLayout(this)
+        qqVersionListFragmentAdapter.versionListStaggeredGridLayout(this)
     }
 
     private fun showUADialog(agreed: Boolean, UATarget: Int) {
@@ -432,21 +434,21 @@ class MainActivity : AppCompatActivity() {
                                         )
                                         else qqVersionBean
                                     }
-                                    versionAdapter.submitList(qqVersion)
+                                    qqVersionAdapter.submitList(qqVersion)
 
                                 }
 
                                 // 下两个设置不能异步持久化存储，否则视图更新读不到更新值
                                 progressSize.setOnCheckedChangeListener { _, isChecked ->
                                     DataStoreUtil.putBoolean("progressSize", isChecked)
-                                    versionAdapter.updateItemProperty("isShowProgressSize")
+                                    qqVersionAdapter.updateItemProperty("isShowProgressSize")
                                 }
                                 versionTcloud.setOnCheckedChangeListener { _, isChecked ->
                                     DataStoreUtil.putBoolean("versionTCloud", isChecked)
                                     dialogPersonalization.versionTcloudThickness.setEnabled(
                                         isChecked
                                     )
-                                    versionAdapter.updateItemProperty("isTCloud")
+                                    qqVersionAdapter.updateItemProperty("isTCloud")
                                 }
                                 btnPersonalizationOk.setOnClickListener {
                                     dialogPer.dismiss()
@@ -479,7 +481,7 @@ class MainActivity : AppCompatActivity() {
                                             "versionTCloudThickness", "System"
                                         )
                                     }
-                                    versionAdapter.updateItemProperty("isTCloud")
+                                    qqVersionAdapter.updateItemProperty("isTCloud")
                                 }
                             }
                         }
@@ -1056,43 +1058,32 @@ class MainActivity : AppCompatActivity() {
                         val response = okHttpClient.newCall(request).execute()
                         val responseData = response.body?.string()
                         if (responseData != null) {
-                            val start = (responseData.indexOf("versions64\":[")) + 12
-                            val end = (responseData.indexOf(";\n" + "      typeof"))
-                            val totalJson = responseData.substring(start, end)
-                            qqVersion = totalJson.split("},{").reversed().map {
-                                val pstart = it.indexOf("{\"versions")
-                                val pend = it.indexOf(",\"length")
-                                val json = it.substring(pstart, pend)
-                                Json.decodeFromString<QQVersionBean>(json).apply {
-                                    jsonString = json
-                                    // 标记本机 Android QQ 版本
-                                    this.displayInstall = (DataStoreUtil.getString(
-                                        "QQVersionInstall", ""
-                                    ) == this.versionNumber)
-                                    this.isAccessibility = false
-                                    // 无障碍标记
-                                    /*DefaultArtifactVersion(this.versionNumber) >= DefaultArtifactVersion(
-                                        EARLIEST_ACCESSIBILITY_VERSION
-                                    )*/
-
-                                    this.isQQNTFramework =
-                                        DefaultArtifactVersion(this.versionNumber) >= DefaultArtifactVersion(
-                                            EARLIEST_QQNT_FRAMEWORK_VERSION_STABLE
-                                        )
-                                }
-                            }
-                            if (DataStoreUtil.getBoolean(
-                                    "displayFirst", true
-                                )
-                            ) qqVersion[0].displayType = 1
-                            // 舍弃 currentQQVersion = qqVersion.first().versionNumber
-                            // 大版本号也放持久化存储了，否则猜版 Shortcut 因为加载过快而获取不到东西
-                            DataStoreUtil.putStringAsync(
-                                "versionBig", qqVersion.first().versionNumber
-                            )
+                            qqVersionBeanUtil(this@MainActivity, responseData)
                             withContext(Dispatchers.Main) {
-                                versionAdapter.submitList(qqVersion)
+                                qqVersionAdapter.submitList(qqVersion)
                             }
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        dialogError(e)
+                    } finally {
+                        withContext(Dispatchers.Main) {
+                            binding.progressLine.hide()
+                            if (menu != null) menu.isEnabled = true
+                        }
+                    }
+                    try {
+                        val okHttpClient = OkHttpClient()
+                        val request =
+                            Request.Builder().url("https://im.qq.com/rainbow/TIMDownload/")
+                                .build()
+                        val response = okHttpClient.newCall(request).execute()
+                        val responseData = response.body?.string()
+                        if (responseData != null) {
+                            timVersionBeanUtil(this@MainActivity, responseData)
+                            // withContext(Dispatchers.Main) {
+                                // timVersionAdapter.submitList(timVersion)
+                            // }
                         }
                     } catch (e: Exception) {
                         e.printStackTrace()

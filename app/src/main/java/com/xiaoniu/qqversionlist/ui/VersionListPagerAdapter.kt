@@ -23,7 +23,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 
-class VersionListPagerAdapter(private val context: Context) :
+class VersionListPagerAdapter(context: Context) :
     FragmentStateAdapter(context as FragmentActivity) {
     override fun getItemCount(): Int = 1
 

@@ -45,7 +45,7 @@ class ShiplyUrlListAdapter(private val urlList: List<String>) :
     RecyclerView.Adapter<ShiplyUrlListAdapter.ShiplyUrlViewHolder>() {
 
     inner class ShiplyUrlViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val shiplyUrlText = itemView.findViewById<TextView>(R.id.shiply_url_text)
+        val shiplyUrlText: TextView = itemView.findViewById(R.id.shiply_url_text)
         var currentUrl: String? = null
 
         init {

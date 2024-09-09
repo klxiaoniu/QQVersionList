@@ -29,19 +29,19 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.xiaoniu.qqversionlist.databinding.RecycleQqVersionBinding
-import com.xiaoniu.qqversionlist.util.pxToDp
+import com.xiaoniu.qqversionlist.util.Extensions.pxToDp
 
 // 将视图绑定放在 Fragment 前声明，否则在旋转屏幕时会导致 Fragment 里的数据销毁
 // 相信用户内存的力量（逃）
-private var _fragmentBinding: RecycleQqVersionBinding? = null
+private var insideFragmentBinding: RecycleQqVersionBinding? = null
 
 class QQVersionListFragmentAdapter : Fragment() {
-    private val fragmentBinding get() = _fragmentBinding!!
+    private val fragmentBinding get() = insideFragmentBinding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        _fragmentBinding = RecycleQqVersionBinding.inflate(inflater, container, false)
+        insideFragmentBinding = RecycleQqVersionBinding.inflate(inflater, container, false)
         val view = fragmentBinding.root
         return view
     }
@@ -58,7 +58,7 @@ class QQVersionListFragmentAdapter : Fragment() {
     }
 
     fun versionListStaggeredGridLayout(thisActivity: MainActivity) {
-        val concatenated = ConcatAdapter(thisActivity.localQQAdapter, thisActivity.versionAdapter)
+        val concatenated = ConcatAdapter(thisActivity.localQQAdapter, thisActivity.qqVersionAdapter)
         val screenWidthDp = (Resources.getSystem().displayMetrics.widthPixels).pxToDp
         val screenHeightDp = (Resources.getSystem().displayMetrics.heightPixels).pxToDp
         fragmentBinding.rvContent.apply {
@@ -87,6 +87,6 @@ class QQVersionListFragmentAdapter : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _fragmentBinding = null
+        insideFragmentBinding = null
     }
 }

@@ -40,22 +40,22 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.xiaoniu.qqversionlist.R
 import com.xiaoniu.qqversionlist.data.QQVersionBean
-import com.xiaoniu.qqversionlist.databinding.ItemVersionBinding
-import com.xiaoniu.qqversionlist.databinding.ItemVersionDetailBinding
+import com.xiaoniu.qqversionlist.databinding.ItemQqVersionBinding
+import com.xiaoniu.qqversionlist.databinding.ItemQqVersionDetailBinding
 import com.xiaoniu.qqversionlist.util.DataStoreUtil
 import com.xiaoniu.qqversionlist.util.StringUtil.toPrettyFormat
-import com.xiaoniu.qqversionlist.util.dp
+import com.xiaoniu.qqversionlist.util.Extensions.dp
 
 private var getProgressSize = DataStoreUtil.getBoolean("progressSize", false)
 private var getVersionTCloud = DataStoreUtil.getBoolean("versionTCloud", true)
 private var getVersionTCloudThickness = DataStoreUtil.getString("versionTCloudThickness", "System")
 
-class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(VersionDiffCallback()) {
+class QQVersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(QQVersionDiffCallback()) {
 
-    class ViewHolder(val binding: ItemVersionBinding, val context: Context) :
+    class ViewHolder(val binding: ItemQqVersionBinding, val context: Context) :
         RecyclerView.ViewHolder(binding.root)
 
-    class ViewHolderDetail(val binding: ItemVersionDetailBinding, val context: Context) :
+    class ViewHolderDetail(val binding: ItemQqVersionDetailBinding, val context: Context) :
         RecyclerView.ViewHolder(binding.root)
 
     override fun getItemViewType(position: Int): Int {
@@ -66,7 +66,7 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
         return when (viewType) {
             0 -> {
                 ViewHolder(
-                    ItemVersionBinding.inflate(
+                    ItemQqVersionBinding.inflate(
                         LayoutInflater.from(parent.context), parent, false
                     ), parent.context
                 ).apply {
@@ -92,7 +92,7 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
 
             else -> {
                 ViewHolderDetail(
-                    ItemVersionDetailBinding.inflate(
+                    ItemQqVersionDetailBinding.inflate(
                         LayoutInflater.from(parent.context), parent, false
                     ), parent.context
                 ).apply {
@@ -370,26 +370,26 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
         }
     }
 
+    class QQVersionDiffCallback : DiffUtil.ItemCallback<QQVersionBean>() {
+        override fun areItemsTheSame(
+            oldItem: QQVersionBean, newItem: QQVersionBean
+        ): Boolean {
+            return oldItem.versions == newItem.versions
+        }
+
+        override fun areContentsTheSame(
+            oldItem: QQVersionBean, newItem: QQVersionBean
+        ): Boolean {
+            return oldItem.displayType == newItem.displayType && oldItem.displayInstall == newItem.displayInstall
+        }
+
+        override fun getChangePayload(
+            oldItem: QQVersionBean, newItem: QQVersionBean
+        ): Any? {
+            return if (oldItem.displayType != newItem.displayType) "displayType"
+            else if (oldItem.displayInstall != newItem.displayInstall) "displayInstall"
+            else null
+        }
+    }
 }
 
-class VersionDiffCallback : DiffUtil.ItemCallback<QQVersionBean>() {
-    override fun areItemsTheSame(
-        oldItem: QQVersionBean, newItem: QQVersionBean
-    ): Boolean {
-        return oldItem.versions == newItem.versions
-    }
-
-    override fun areContentsTheSame(
-        oldItem: QQVersionBean, newItem: QQVersionBean
-    ): Boolean {
-        return oldItem.displayType == newItem.displayType && oldItem.displayInstall == newItem.displayInstall
-    }
-
-    override fun getChangePayload(
-        oldItem: QQVersionBean, newItem: QQVersionBean
-    ): Any? {
-        return if (oldItem.displayType != newItem.displayType) "displayType"
-        else if (oldItem.displayInstall != newItem.displayInstall) "displayInstall"
-        else null
-    }
-}
