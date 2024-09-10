@@ -156,22 +156,6 @@ class MainActivity : AppCompatActivity() {
         if (!BuildConfig.VERSION_NAME.endsWith("Release")) binding.materialToolbar.setNavigationIcon(
             R.drawable.git_commit_line
         )
-
-        /*binding.rvPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
-                when (position) {
-                    0 -> binding.materialToolbar.apply {
-                        setTitle(R.string.appTitleTIM)
-                    }
-
-                    1 -> binding.materialToolbar.apply {
-                        setTitle(R.string.appTitleTIM)
-                    }
-                }
-            }
-        })*/
-
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -673,7 +657,6 @@ class MainActivity : AppCompatActivity() {
 
                 R.id.btn_tencent_shiply -> {
                     val dialogShiplyBinding = DialogShiplyBinding.inflate(layoutInflater)
-
 
                     val shiplyDialog = MaterialAlertDialogBuilder(this)
                         .setTitle(R.string.getUpdateFromShiplyPlatform)

@@ -102,7 +102,7 @@
     <string name="shiplyWarning">騰訊 QQ 使用 TDS 腾訊端服務 Shiply 發布平台，根據 QQ 號（uin）及其終端資訊分發小範圍灰度測試安裝包。此功能並非每次請求都能成功獲取到更新資料，無法獲取更新資料則表示填寫的參數不在 Shiply 平台認可與分發範圍內。QQ 版本列表實用工具不對此功能及其任何後果作出任何可靠性保證。請明確並確保自身具備足夠的風險辨識和承受能力。</string>
     <string name="defaultDisplayOfFirstListItemDetails">版本列表首項卡片默認顯示詳情</string>
     <string name="versionNumberFontUsesTCloudNumber">版本號字體使用 TCloudNumber</string>
-    <string name="versionCardsDisplaysPackageSizeIndicator">版本卡片展示額定包大小佔比歷史最大包指示條</string>
+    <string name="versionCardsDisplaysPackageSizeIndicator">QQ 版本卡片展示額定包大小佔比歷史最大包指示條</string>
     <string name="customVersionEnumSuffix">自定義猜版後綴</string>
     <string name="customVersionEnumSuffixHelpText">請使用“, ”（西文逗號+空格）分割</string>
     <string name="facilitateI18n">協助翻譯：</string>
@@ -130,5 +130,4 @@
     <string name="skip">跳過</string>
     <string name="qqntTag">基於 QQNT 技術架構</string>
     <string name="releaseDateTIM">發佈日期：</string>
-    <string name="appTitleTIM">TIM 版本列表</string>
 </resources>
