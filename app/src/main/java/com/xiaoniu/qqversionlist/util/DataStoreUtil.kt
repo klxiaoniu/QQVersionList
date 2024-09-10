@@ -31,7 +31,7 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import com.xiaoniu.qqversionlist.Application
+import com.xiaoniu.qqversionlist.QVTApplication
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
@@ -49,7 +49,7 @@ object DataStoreUtil {
         })
 
     private val dataStore: DataStore<Preferences> by lazy {
-        Application.instance.dataStore
+        QVTApplication.instance.dataStore
     }
 
     @Throws(IOException::class)

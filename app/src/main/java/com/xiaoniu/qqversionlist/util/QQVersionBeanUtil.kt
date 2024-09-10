@@ -18,7 +18,7 @@
 
 package com.xiaoniu.qqversionlist.util
 
-import com.xiaoniu.qqversionlist.Application.Companion.EARLIEST_QQNT_FRAMEWORK_QQ_VERSION_STABLE
+import com.xiaoniu.qqversionlist.QVTApplication.Companion.EARLIEST_QQNT_FRAMEWORK_QQ_VERSION_STABLE
 import com.xiaoniu.qqversionlist.data.QQVersionBean
 import com.xiaoniu.qqversionlist.ui.MainActivity
 import kotlinx.serialization.json.Json
