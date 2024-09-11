@@ -62,28 +62,49 @@ class LocalTIMAdapter : RecyclerView.Adapter<LocalTIMAdapter.LocalTIMViewHolder>
                 itemTimInstallCard.setOnLongClickListener {
                     if (DataStoreUtil.getBoolean("longPressCard", true)) {
                         val tv = TextView(itemView.context).apply {
-                            text = "Version Name: ${
+                            text = (if (DataStoreUtil.getString(
+                                    "TIMTargetInstall", ""
+                                ) != ""
+                            ) "Target SDK: ${
+                                DataStoreUtil.getString(
+                                    "TIMTargetInstall", ""
+                                )
+                            }" else "") + (if (DataStoreUtil.getString(
+                                    "TIMMinInstall", ""
+                                ) != ""
+                            ) "\nMin SDK: ${
+                                DataStoreUtil.getString(
+                                    "TIMMinInstall", ""
+                                )
+                            }" else "") + (if (DataStoreUtil.getString(
+                                    "TIMCompileInstall", ""
+                                ) != ""
+                            ) "\nCompile SDK: ${
+                                DataStoreUtil.getString(
+                                    "TIMCompileInstall", ""
+                                )
+                            }" else "") + "\nVersion Name: ${
                                 DataStoreUtil.getString(
                                     "TIMVersionInstall", ""
                                 )
                             }" + (if (DataStoreUtil.getString(
                                     "TIMRdmUUIDInstall", ""
                                 ) != ""
-                            ) "\n\nRdm UUID: ${
+                            ) "\nRdm UUID: ${
                                 DataStoreUtil.getString(
                                     "TIMRdmUUIDInstall", ""
                                 )
                             }" else "") + (if (DataStoreUtil.getString(
                                     "TIMVersionCodeInstall", ""
                                 ) != ""
-                            ) "\n\nVersion Code: ${
+                            ) "\nVersion Code: ${
                                 DataStoreUtil.getString(
                                     "TIMVersionCodeInstall", ""
                                 )
                             }" else "") + (if (DataStoreUtil.getString(
                                     "TIMAppSettingParamsInstall", ""
                                 ) != ""
-                            ) "\n\nAppSetting_params: ${
+                            ) "\nAppSetting_params: ${
                                 DataStoreUtil.getString(
                                     "TIMAppSettingParamsInstall", ""
                                 )

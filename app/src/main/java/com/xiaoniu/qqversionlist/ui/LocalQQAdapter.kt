@@ -83,35 +83,56 @@ class LocalQQAdapter : RecyclerView.Adapter<LocalQQAdapter.LocalQQViewHolder>() 
                 itemQqInstallCard.setOnLongClickListener {
                     if (DataStoreUtil.getBoolean("longPressCard", true)) {
                         val tv = TextView(itemView.context).apply {
-                            text = "Version Name: ${
+                            text = (if (DataStoreUtil.getString(
+                                    "QQTargetInstall", ""
+                                ) != ""
+                            ) "Target SDK: ${
+                                DataStoreUtil.getString(
+                                    "QQTargetInstall", ""
+                                )
+                            }" else "") + (if (DataStoreUtil.getString(
+                                    "QQMinInstall", ""
+                                ) != ""
+                            ) "\nMin SDK: ${
+                                DataStoreUtil.getString(
+                                    "QQMinInstall", ""
+                                )
+                            }" else "") + (if (DataStoreUtil.getString(
+                                    "QQCompileInstall", ""
+                                ) != ""
+                            ) "\nCompile SDK: ${
+                                DataStoreUtil.getString(
+                                    "QQCompileInstall", ""
+                                )
+                            }" else "") + "\nVersion Name: ${
                                 DataStoreUtil.getString(
                                     "QQVersionInstall", ""
                                 )
                             }" + (if (DataStoreUtil.getString(
                                     "QQRdmUUIDInstall", ""
                                 ) != ""
-                            ) "\n\nRdm UUID: ${
+                            ) "\nRdm UUID: ${
                                 DataStoreUtil.getString(
                                     "QQRdmUUIDInstall", ""
                                 )
                             }" else "") + (if (DataStoreUtil.getString(
                                     "QQVersionCodeInstall", ""
                                 ) != ""
-                            ) "\n\nVersion Code: ${
+                            ) "\nVersion Code: ${
                                 DataStoreUtil.getString(
                                     "QQVersionCodeInstall", ""
                                 )
                             }" else "") + (if (DataStoreUtil.getString(
                                     "QQAppSettingParamsInstall", ""
                                 ) != ""
-                            ) "\n\nAppSetting_params: ${
+                            ) "\nAppSetting_params: ${
                                 DataStoreUtil.getString(
                                     "QQAppSettingParamsInstall", ""
                                 )
                             }" else "") + (if (DataStoreUtil.getString(
                                     "QQAppSettingParamsPadInstall", ""
                                 ) != ""
-                            ) "\n\nAppSetting_params_pad: ${
+                            ) "\nAppSetting_params_pad: ${
                                 DataStoreUtil.getString(
                                     "QQAppSettingParamsPadInstall", ""
                                 )
