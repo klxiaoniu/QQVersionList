@@ -1091,9 +1091,17 @@ class MainActivity : AppCompatActivity() {
                     DataStoreUtil.putString("TIMVersionCodeInstall", "")
                     DataStoreUtil.putString("TIMAppSettingParamsInstall", "")
                 } finally {
+                    var progressFlag = 0
                     withContext(Dispatchers.Main) {
                         localQQAdapter.refreshData()
                         localTIMAdapter.refreshData()
+                    }
+                    fun endProgress() {
+                        if (progressFlag == 0) progressFlag = 1
+                        else {
+                            binding.progressLine.hide()
+                            if (menu != null) menu.isEnabled = true
+                        }
                     }
                     try {
                         val okHttpClient = OkHttpClient()
@@ -1112,10 +1120,7 @@ class MainActivity : AppCompatActivity() {
                         e.printStackTrace()
                         dialogError(e)
                     } finally {
-                        withContext(Dispatchers.Main) {
-                            binding.progressLine.hide()
-                            if (menu != null) menu.isEnabled = true
-                        }
+                        withContext(Dispatchers.Main) { endProgress() }
                     }
                     try {
                         val okHttpClient = OkHttpClient()
@@ -1134,10 +1139,7 @@ class MainActivity : AppCompatActivity() {
                         e.printStackTrace()
                         dialogError(e)
                     } finally {
-                        withContext(Dispatchers.Main) {
-                            binding.progressLine.hide()
-                            if (menu != null) menu.isEnabled = true
-                        }
+                        withContext(Dispatchers.Main) { endProgress() }
                     }
                 }
             }

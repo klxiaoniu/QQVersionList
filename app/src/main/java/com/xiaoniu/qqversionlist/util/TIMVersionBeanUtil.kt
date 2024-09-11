@@ -22,6 +22,7 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.xiaoniu.qqversionlist.data.TIMVersionBean
 import com.xiaoniu.qqversionlist.ui.MainActivity
+import com.xiaoniu.qqversionlist.util.StringUtil.toPrettyFormat
 
 object TIMVersionBeanUtil {
     fun timVersionBeanUtil(thisActivity: MainActivity, responseData: String) {
@@ -122,7 +123,7 @@ object TIMVersionBeanUtil {
         }
 
         // 去除重复的版本号
-        thisActivity.timVersion = thisActivity.timVersion.distinctBy { it.jsonString }
+        thisActivity.timVersion = thisActivity.timVersion.distinctBy { it.jsonString.toPrettyFormat() }
 
         if (DataStoreUtil.getBoolean(
                 "displayFirst", true
