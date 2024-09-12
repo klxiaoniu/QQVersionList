@@ -24,6 +24,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.text.HtmlCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.xiaoniu.qqversionlist.R
@@ -83,60 +84,67 @@ class LocalQQAdapter : RecyclerView.Adapter<LocalQQAdapter.LocalQQViewHolder>() 
                 itemQqInstallCard.setOnLongClickListener {
                     if (DataStoreUtil.getBoolean("longPressCard", true)) {
                         val tv = TextView(itemView.context).apply {
-                            text = (if (DataStoreUtil.getString(
-                                    "QQTargetInstall", ""
-                                ) != ""
-                            ) "Target SDK: ${
-                                DataStoreUtil.getString(
-                                    "QQTargetInstall", ""
-                                )
-                            }" else "") + (if (DataStoreUtil.getString(
-                                    "QQMinInstall", ""
-                                ) != ""
-                            ) "\nMin SDK: ${
-                                DataStoreUtil.getString(
-                                    "QQMinInstall", ""
-                                )
-                            }" else "") + (if (DataStoreUtil.getString(
-                                    "QQCompileInstall", ""
-                                ) != ""
-                            ) "\nCompile SDK: ${
-                                DataStoreUtil.getString(
-                                    "QQCompileInstall", ""
-                                )
-                            }" else "") + "\nVersion Name: ${
-                                DataStoreUtil.getString(
-                                    "QQVersionInstall", ""
-                                )
-                            }" + (if (DataStoreUtil.getString(
-                                    "QQRdmUUIDInstall", ""
-                                ) != ""
-                            ) "\nRdm UUID: ${
-                                DataStoreUtil.getString(
-                                    "QQRdmUUIDInstall", ""
-                                )
-                            }" else "") + (if (DataStoreUtil.getString(
-                                    "QQVersionCodeInstall", ""
-                                ) != ""
-                            ) "\nVersion Code: ${
-                                DataStoreUtil.getString(
-                                    "QQVersionCodeInstall", ""
-                                )
-                            }" else "") + (if (DataStoreUtil.getString(
-                                    "QQAppSettingParamsInstall", ""
-                                ) != ""
-                            ) "\nAppSetting_params: ${
-                                DataStoreUtil.getString(
-                                    "QQAppSettingParamsInstall", ""
-                                )
-                            }" else "") + (if (DataStoreUtil.getString(
-                                    "QQAppSettingParamsPadInstall", ""
-                                ) != ""
-                            ) "\nAppSetting_params_pad: ${
-                                DataStoreUtil.getString(
-                                    "QQAppSettingParamsPadInstall", ""
-                                )
-                            }" else "")
+                            text = HtmlCompat.fromHtml(
+                                (if (DataStoreUtil.getString(
+                                        "QQTargetInstall",
+                                        ""
+                                    ) != ""
+                                ) "<b>Target SDK</b>: ${
+                                    DataStoreUtil.getString(
+                                        "QQTargetInstall",
+                                        ""
+                                    )
+                                }" else "") + (if (DataStoreUtil.getString(
+                                        "QQMinInstall",
+                                        ""
+                                    ) != ""
+                                ) "<br><b>Min SDK</b>: ${
+                                    DataStoreUtil.getString(
+                                        "QQMinInstall",
+                                        ""
+                                    )
+                                }" else "") + (if (DataStoreUtil.getString(
+                                        "QQCompileInstall",
+                                        ""
+                                    ) != ""
+                                ) "<br><b>Compile SDK</b>: ${
+                                    DataStoreUtil.getString(
+                                        "QQCompileInstall", ""
+                                    )
+                                }" else "") + "<br><b>Version Name</b>: ${
+                                    DataStoreUtil.getString(
+                                        "QQVersionInstall", ""
+                                    )
+                                }" + (if (DataStoreUtil.getString(
+                                        "QQRdmUUIDInstall", ""
+                                    ) != ""
+                                ) "<br><b>Rdm UUID</b>: ${
+                                    DataStoreUtil.getString(
+                                        "QQRdmUUIDInstall", ""
+                                    )
+                                }" else "") + (if (DataStoreUtil.getString(
+                                        "QQVersionCodeInstall", ""
+                                    ) != ""
+                                ) "<br><b>Version Code</b>: ${
+                                    DataStoreUtil.getString(
+                                        "QQVersionCodeInstall", ""
+                                    )
+                                }" else "") + (if (DataStoreUtil.getString(
+                                        "QQAppSettingParamsInstall", ""
+                                    ) != ""
+                                ) "<br><b>AppSetting_params</b>: ${
+                                    DataStoreUtil.getString(
+                                        "QQAppSettingParamsInstall", ""
+                                    )
+                                }" else "") + (if (DataStoreUtil.getString(
+                                        "QQAppSettingParamsPadInstall", ""
+                                    ) != ""
+                                ) "<br><b>AppSetting_params_pad</b>: ${
+                                    DataStoreUtil.getString(
+                                        "QQAppSettingParamsPadInstall", ""
+                                    )
+                                }" else ""), HtmlCompat.FROM_HTML_MODE_LEGACY
+                            )
                             setTextIsSelectable(true)
                             setPadding(96, 48, 96, 96)
                         }

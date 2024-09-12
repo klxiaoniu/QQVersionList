@@ -24,6 +24,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.text.HtmlCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.xiaoniu.qqversionlist.R
@@ -62,53 +63,55 @@ class LocalTIMAdapter : RecyclerView.Adapter<LocalTIMAdapter.LocalTIMViewHolder>
                 itemTimInstallCard.setOnLongClickListener {
                     if (DataStoreUtil.getBoolean("longPressCard", true)) {
                         val tv = TextView(itemView.context).apply {
-                            text = (if (DataStoreUtil.getString(
-                                    "TIMTargetInstall", ""
-                                ) != ""
-                            ) "Target SDK: ${
-                                DataStoreUtil.getString(
-                                    "TIMTargetInstall", ""
-                                )
-                            }" else "") + (if (DataStoreUtil.getString(
-                                    "TIMMinInstall", ""
-                                ) != ""
-                            ) "\nMin SDK: ${
-                                DataStoreUtil.getString(
-                                    "TIMMinInstall", ""
-                                )
-                            }" else "") + (if (DataStoreUtil.getString(
-                                    "TIMCompileInstall", ""
-                                ) != ""
-                            ) "\nCompile SDK: ${
-                                DataStoreUtil.getString(
-                                    "TIMCompileInstall", ""
-                                )
-                            }" else "") + "\nVersion Name: ${
-                                DataStoreUtil.getString(
-                                    "TIMVersionInstall", ""
-                                )
-                            }" + (if (DataStoreUtil.getString(
-                                    "TIMRdmUUIDInstall", ""
-                                ) != ""
-                            ) "\nRdm UUID: ${
-                                DataStoreUtil.getString(
-                                    "TIMRdmUUIDInstall", ""
-                                )
-                            }" else "") + (if (DataStoreUtil.getString(
-                                    "TIMVersionCodeInstall", ""
-                                ) != ""
-                            ) "\nVersion Code: ${
-                                DataStoreUtil.getString(
-                                    "TIMVersionCodeInstall", ""
-                                )
-                            }" else "") + (if (DataStoreUtil.getString(
-                                    "TIMAppSettingParamsInstall", ""
-                                ) != ""
-                            ) "\nAppSetting_params: ${
-                                DataStoreUtil.getString(
-                                    "TIMAppSettingParamsInstall", ""
-                                )
-                            }" else "")
+                            text = HtmlCompat.fromHtml(
+                                (if (DataStoreUtil.getString(
+                                        "TIMTargetInstall", ""
+                                    ) != ""
+                                ) "<b>Target SDK</b>: ${
+                                    DataStoreUtil.getString(
+                                        "TIMTargetInstall", ""
+                                    )
+                                }" else "") + (if (DataStoreUtil.getString(
+                                        "TIMMinInstall", ""
+                                    ) != ""
+                                ) "<br><b>Min SDK</b>: ${
+                                    DataStoreUtil.getString(
+                                        "TIMMinInstall", ""
+                                    )
+                                }" else "") + (if (DataStoreUtil.getString(
+                                        "TIMCompileInstall", ""
+                                    ) != ""
+                                ) "<br><b>Compile SDK</b>: ${
+                                    DataStoreUtil.getString(
+                                        "TIMCompileInstall", ""
+                                    )
+                                }" else "") + "<br><b>Version Name</b>: ${
+                                    DataStoreUtil.getString(
+                                        "TIMVersionInstall", ""
+                                    )
+                                }" + (if (DataStoreUtil.getString(
+                                        "TIMRdmUUIDInstall", ""
+                                    ) != ""
+                                ) "<br><b>Rdm UUID</b>: ${
+                                    DataStoreUtil.getString(
+                                        "TIMRdmUUIDInstall", ""
+                                    )
+                                }" else "") + (if (DataStoreUtil.getString(
+                                        "TIMVersionCodeInstall", ""
+                                    ) != ""
+                                ) "<br><b>Version Code</b>: ${
+                                    DataStoreUtil.getString(
+                                        "TIMVersionCodeInstall", ""
+                                    )
+                                }" else "") + (if (DataStoreUtil.getString(
+                                        "TIMAppSettingParamsInstall", ""
+                                    ) != ""
+                                ) "<br><b>AppSetting_params</b>: ${
+                                    DataStoreUtil.getString(
+                                        "TIMAppSettingParamsInstall", ""
+                                    )
+                                }" else ""), HtmlCompat.FROM_HTML_MODE_LEGACY
+                            )
                             setTextIsSelectable(true)
                             setPadding(96, 48, 96, 96)
                         }

@@ -35,12 +35,4 @@ class VersionListPagerAdapter(context: Context) :
             else -> throw IllegalArgumentException(position.toString())
         }
     }
-
-    fun getFragmentAtPosition(position: Int): Fragment? {
-        return when (position) {
-            0 -> QQVersionListFragmentAdapter()
-            1 -> TIMVersionListFragmentAdapter()
-            else -> null
-        }
-    }
 }
