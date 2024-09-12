@@ -18,6 +18,7 @@
 
 package com.xiaoniu.qqversionlist.ui
 
+import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -31,17 +32,14 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.xiaoniu.qqversionlist.databinding.RecycleQqVersionBinding
 import com.xiaoniu.qqversionlist.util.Extensions.pxToDp
 
-// 将视图绑定放在 Fragment 前声明，否则在旋转屏幕时会导致 Fragment 里的数据销毁
-// 相信用户内存的力量（逃）
-private var insideFragmentBinding: RecycleQqVersionBinding? = null
-
 class QQVersionListFragmentAdapter : Fragment() {
-    private val fragmentBinding get() = insideFragmentBinding!!
+    private var _fragmentBinding: RecycleQqVersionBinding? = null
+    private val fragmentBinding get() = _fragmentBinding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        insideFragmentBinding = RecycleQqVersionBinding.inflate(inflater, container, false)
+        _fragmentBinding = RecycleQqVersionBinding.inflate(inflater, container, false)
         val view = fragmentBinding.root
         return view
     }
@@ -57,7 +55,17 @@ class QQVersionListFragmentAdapter : Fragment() {
         })
     }
 
-    fun versionListStaggeredGridLayout(thisActivity: MainActivity) {
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        versionListStaggeredGridLayout(this.activity as MainActivity)
+    }
+
+    override fun onMultiWindowModeChanged(isInMultiWindowMode: Boolean) {
+        super.onMultiWindowModeChanged(isInMultiWindowMode)
+        versionListStaggeredGridLayout(this.activity as MainActivity)
+    }
+
+    private fun versionListStaggeredGridLayout(thisActivity: MainActivity) {
         val concatenated = ConcatAdapter(thisActivity.localQQAdapter, thisActivity.qqVersionAdapter)
         val screenWidthDp = (Resources.getSystem().displayMetrics.widthPixels).pxToDp
         val screenHeightDp = (Resources.getSystem().displayMetrics.heightPixels).pxToDp
@@ -92,6 +100,6 @@ class QQVersionListFragmentAdapter : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        insideFragmentBinding = null
+        _fragmentBinding = null
     }
 }

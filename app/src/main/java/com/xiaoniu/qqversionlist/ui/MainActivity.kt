@@ -157,18 +157,6 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        qqVersionListFragmentAdapter.versionListStaggeredGridLayout(this)
-        timVersionListFragmentAdapter.versionListStaggeredGridLayout(this)
-    }
-
-    override fun onMultiWindowModeChanged(isInMultiWindowMode: Boolean, newConfig: Configuration) {
-        super.onMultiWindowModeChanged(isInMultiWindowMode, newConfig)
-        qqVersionListFragmentAdapter.versionListStaggeredGridLayout(this)
-        timVersionListFragmentAdapter.versionListStaggeredGridLayout(this)
-    }
-
     private fun showUADialog(agreed: Boolean, UATarget: Int) {
 
         // 屏幕高度获取
