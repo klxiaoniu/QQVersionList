@@ -18,7 +18,7 @@
 <shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
     <shortcut
         android:enabled="true"
-        android:icon="@mipmap/search_shortcut_icon"
+        android:icon="@mipmap/scan_shortcut_icon"
         android:shortcutId="guess_version"
         android:shortcutLongLabel="@string/shortcutLongLabel"
         android:shortcutShortLabel="@string/shortcutShortLabel">
