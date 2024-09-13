@@ -25,7 +25,7 @@ import com.xiaoniu.qqversionlist.ui.MainActivity
 import com.xiaoniu.qqversionlist.util.StringUtil.toPrettyFormat
 
 object TIMVersionBeanUtil {
-    fun timVersionBeanUtil(thisActivity: MainActivity, responseData: String) {
+    fun timVersionBeanProcessor(thisActivity: MainActivity, responseData: String) {
         val start = (responseData.indexOf("var params= ")) + 12
         val end = (responseData.indexOf(";\n" + "      typeof"))
         val jsonString = responseData.substring(start, end)

@@ -25,7 +25,7 @@ import kotlinx.serialization.json.Json
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion
 
 object QQVersionBeanUtil {
-    fun qqVersionBeanUtil(thisActivity: MainActivity, responseData: String) {
+    fun qqVersionBeanProcessor(thisActivity: MainActivity, responseData: String) {
         val start = (responseData.indexOf("versions64\":[")) + 12
         val end = (responseData.indexOf(";\n" + "      typeof"))
         val totalJson = responseData.substring(start, end)

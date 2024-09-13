@@ -28,14 +28,14 @@ import androidx.core.text.HtmlCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.xiaoniu.qqversionlist.R
+import com.xiaoniu.qqversionlist.databinding.LocalQqBinding
 import com.xiaoniu.qqversionlist.util.DataStoreUtil
 
 class LocalQQAdapter : RecyclerView.Adapter<LocalQQAdapter.LocalQQViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LocalQQViewHolder {
-        val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.local_qq, parent, false)
-        return LocalQQViewHolder(view)
+        val binding = LocalQqBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return LocalQQViewHolder(binding)
     }
 
     @SuppressLint("SetTextI18n")
@@ -172,9 +172,9 @@ class LocalQQAdapter : RecyclerView.Adapter<LocalQQAdapter.LocalQQViewHolder>() 
     }
 
     @SuppressLint("SetTextI18n")
-    inner class LocalQQViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val itemQqInstallText: TextView = itemView.findViewById(R.id.item_qq_install_text)
-        val itemQqInstallCard: View = itemView.findViewById(R.id.item_qq_install_card)
+    inner class LocalQQViewHolder(binding: LocalQqBinding) : RecyclerView.ViewHolder(binding.root) {
+        val itemQqInstallText = binding.itemQqInstallText
+        val itemQqInstallCard = binding.itemQqInstallCard
     }
 }
 

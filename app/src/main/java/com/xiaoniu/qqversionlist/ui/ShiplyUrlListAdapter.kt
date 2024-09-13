@@ -23,14 +23,13 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Environment
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity.DOWNLOAD_SERVICE
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.xiaoniu.qqversionlist.R
+import com.xiaoniu.qqversionlist.databinding.ItemShiplyBackUrlCardBinding
 import com.xiaoniu.qqversionlist.databinding.ShiplyLinkNextButtonBinding
 import com.xiaoniu.qqversionlist.util.ClipboardUtil.copyText
 import com.xiaoniu.qqversionlist.util.DataStoreUtil
@@ -43,9 +42,15 @@ import okhttp3.Request
 
 class ShiplyUrlListAdapter(private val urlList: List<String>) :
     RecyclerView.Adapter<ShiplyUrlListAdapter.ShiplyUrlViewHolder>() {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShiplyUrlViewHolder {
+        val binding =
+            ItemShiplyBackUrlCardBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ShiplyUrlViewHolder(binding)
+    }
 
-    inner class ShiplyUrlViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val shiplyUrlText: TextView = itemView.findViewById(R.id.shiply_url_text)
+    inner class ShiplyUrlViewHolder(binding: ItemShiplyBackUrlCardBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        val shiplyUrlText = binding.shiplyUrlText
         var currentUrl: String? = null
 
         init {
@@ -177,12 +182,6 @@ class ShiplyUrlListAdapter(private val urlList: List<String>) :
                 true
             }
         }
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShiplyUrlViewHolder {
-        val urlCardView = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_shiply_back_url_card, parent, false)
-        return ShiplyUrlViewHolder(urlCardView)
     }
 
     override fun onBindViewHolder(holder: ShiplyUrlViewHolder, position: Int) {

@@ -28,14 +28,14 @@ import androidx.core.text.HtmlCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.xiaoniu.qqversionlist.R
+import com.xiaoniu.qqversionlist.databinding.LocalTimBinding
 import com.xiaoniu.qqversionlist.util.DataStoreUtil
 
 class LocalTIMAdapter : RecyclerView.Adapter<LocalTIMAdapter.LocalTIMViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LocalTIMViewHolder {
-        val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.local_tim, parent, false)
-        return LocalTIMViewHolder(view)
+        val binding = LocalTimBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return LocalTIMViewHolder(binding)
     }
 
     @SuppressLint("SetTextI18n")
@@ -138,9 +138,10 @@ class LocalTIMAdapter : RecyclerView.Adapter<LocalTIMAdapter.LocalTIMViewHolder>
     }
 
     @SuppressLint("SetTextI18n")
-    inner class LocalTIMViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val itemTimInstallCard: View = itemView.findViewById(R.id.item_tim_install_card)
-        val itemTimInstallText: TextView = itemView.findViewById(R.id.item_tim_install_text)
+    inner class LocalTIMViewHolder(binding: LocalTimBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        val itemTimInstallCard = binding.itemTimInstallCard
+        val itemTimInstallText = binding.itemTimInstallText
     }
 }
 
