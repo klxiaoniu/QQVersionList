@@ -50,7 +50,7 @@ object TIMVersionBeanUtil {
                     addProperty("fix", "")
                     addProperty("new", "")
                 }).toString(),
-                displayInstall = (DataStoreUtil.getString(
+                displayInstall = (DataStoreUtil.getStringKV(
                     "TIMVersionInstall",
                     ""
                 ) == androidVersion)
@@ -79,7 +79,7 @@ object TIMVersionBeanUtil {
                             addProperty("fix", fix)
                             addProperty("new", newFeature)
                         }).toString(),
-                        displayInstall = (DataStoreUtil.getString(
+                        displayInstall = (DataStoreUtil.getStringKV(
                             "QQVersionInstall",
                             ""
                         ) == version)
@@ -112,7 +112,7 @@ object TIMVersionBeanUtil {
                                 addProperty("fix", fix)
                                 addProperty("new", newFeature)
                             }).toString(),
-                            displayInstall = (DataStoreUtil.getString(
+                            displayInstall = (DataStoreUtil.getStringKV(
                                 "QQVersionInstall",
                                 ""
                             ) == version)
@@ -125,11 +125,11 @@ object TIMVersionBeanUtil {
         // 去除重复的版本号
         thisActivity.timVersion = thisActivity.timVersion.distinctBy { it.jsonString.toPrettyFormat() }
 
-        if (DataStoreUtil.getBoolean(
+        if (DataStoreUtil.getBooleanKV(
                 "displayFirst", true
             )
         ) thisActivity.timVersion[0].displayType = 1
-        DataStoreUtil.putStringAsync(
+        DataStoreUtil.putStringKVAsync(
             "TIMVersionBig", thisActivity.timVersion.first().version
         )
     }

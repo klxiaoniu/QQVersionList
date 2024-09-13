@@ -66,7 +66,7 @@
     <string name="longPressTheVersionCardToViewSourceDetails">長按版本卡片查看源詳情</string>
     <string name="useTheSystemDownloadManagerToTakeOverTheDownloadIntent">使用系統下載管理器接管下載意圖</string>
     <string name="removeMultiplesOf5ForQQPreviewVersions">解除 QQ 測試版猜版小版本號遵循 5 的倍數限制</string>
-    <string name="longPressToViewSourceDetailsIsDisabledPleaseGoToSettingsToTurnItOn">未開啟長按查看源詳情功能，請前往設定開啟</string>
+    <string name="longPressToViewSourceDetailsIsDisabled">未開啟長按查看源詳情功能，請前往設定開啟</string>
     <string name="currentSizeVsLargestHistoricalPackage">占比歷史最大包（</string>
     <string name="endParenthesis">）：</string>
     <string name="extendTheSuffixForDirectDownloadLinksOfEnumeratedPreviewVersions">擴展測試版猜版直鏈後綴</string>

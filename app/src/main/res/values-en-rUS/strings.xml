@@ -66,7 +66,7 @@
     <string name="longPressTheVersionCardToViewSourceDetails">Long press the version card to view source details</string>
     <string name="useTheSystemDownloadManagerToTakeOverTheDownloadIntent">Use the system download manager to take over the download intent</string>
     <string name="removeMultiplesOf5ForQQPreviewVersions">Remove the restriction of adhering to multiples of 5 when enumerating minor version numbers for QQ preview versions</string>
-    <string name="longPressToViewSourceDetailsIsDisabledPleaseGoToSettingsToTurnItOn">Long press to view source details is disabled. Please go to settings to turn it on.</string>
+    <string name="longPressToViewSourceDetailsIsDisabled">Long press to view source details is disabled. Please go to settings to turn it on.</string>
     <string name="currentSizeVsLargestHistoricalPackage">Current Size VS Largest Historical Package(</string>
     <string name="endParenthesis">):&#160;</string>
     <string name="extendTheSuffixForDirectDownloadLinksOfEnumeratedPreviewVersions">Extend the suffix for direct download links of enumerated preview versions</string>

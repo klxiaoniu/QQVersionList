@@ -97,7 +97,7 @@ class ShiplyUrlListAdapter(private val urlList: List<String>) :
 
                                     shiplyNextBtnDownload.setOnClickListener {
                                         shiplyNextMaterialDialog.dismiss()
-                                        if (DataStoreUtil.getBoolean(
+                                        if (DataStoreUtil.getBooleanKV(
                                                 "downloadOnSystemManager", false
                                             )
                                         ) {

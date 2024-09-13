@@ -40,74 +40,73 @@ class LocalTIMAdapter : RecyclerView.Adapter<LocalTIMAdapter.LocalTIMViewHolder>
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: LocalTIMViewHolder, position: Int) {
-        val TIMVersionInstall2 = DataStoreUtil.getString("TIMVersionInstall", "")
-        val TIMVersionCodeInstall2 = DataStoreUtil.getString("TIMVersionCodeInstall", "")
-        val QQAppSettingParamsInstall = DataStoreUtil.getString("QQAppSettingParamsInstall", "")
-        val TIMAppSettingParamsInstall = DataStoreUtil.getString("TIMAppSettingParamsInstall", "")
-        val TIMRdmUUIDInstall = if (DataStoreUtil.getString(
+        val TIMVersionInstall2 = DataStoreUtil.getStringKV("TIMVersionInstall", "")
+        val TIMVersionCodeInstall2 = DataStoreUtil.getStringKV("TIMVersionCodeInstall", "")
+        val TIMAppSettingParamsInstall = DataStoreUtil.getStringKV("TIMAppSettingParamsInstall", "")
+        val TIMRdmUUIDInstall = if (DataStoreUtil.getStringKV(
                 "TIMRdmUUIDInstall", ""
             ) != ""
-        ) ".${DataStoreUtil.getString("TIMRdmUUIDInstall", "").split("_")[0]}" else ""
-        val TIMChannelInstall = if (TIMAppSettingParamsInstall != "") DataStoreUtil.getString(
+        ) ".${DataStoreUtil.getStringKV("TIMRdmUUIDInstall", "").split("_")[0]}" else ""
+        val TIMChannelInstall = if (TIMAppSettingParamsInstall != "") DataStoreUtil.getStringKV(
             "TIMAppSettingParamsInstall", ""
         ).split("#")[3] else ""
         holder.apply {
             if (TIMVersionInstall2 != "") {
                 itemTimInstallText.text =
-                    if (TIMChannelInstall != "") itemView.context.getString(R.string.localTIMVersion) + DataStoreUtil.getString(
+                    if (TIMChannelInstall != "") itemView.context.getString(R.string.localTIMVersion) + DataStoreUtil.getStringKV(
                         "TIMVersionInstall", ""
                     ) + TIMRdmUUIDInstall + (if (TIMVersionCodeInstall2 != "") " (${TIMVersionCodeInstall2})" else "") + " - $TIMChannelInstall" else itemView.context.getString(
                         R.string.localTIMVersion
-                    ) + DataStoreUtil.getString("TIMVersionInstall", "")
+                    ) + DataStoreUtil.getStringKV("TIMVersionInstall", "")
                 itemTimInstallCard.visibility = View.VISIBLE
                 itemTimInstallCard.setOnLongClickListener {
-                    if (DataStoreUtil.getBoolean("longPressCard", true)) {
+                    if (DataStoreUtil.getBooleanKV("longPressCard", true)) {
                         val tv = TextView(itemView.context).apply {
                             text = HtmlCompat.fromHtml(
-                                (if (DataStoreUtil.getString(
+                                (if (DataStoreUtil.getStringKV(
                                         "TIMTargetInstall", ""
                                     ) != ""
                                 ) "<b>Target SDK</b>: ${
-                                    DataStoreUtil.getString(
+                                    DataStoreUtil.getStringKV(
                                         "TIMTargetInstall", ""
                                     )
-                                }" else "") + (if (DataStoreUtil.getString(
+                                }" else "") + (if (DataStoreUtil.getStringKV(
                                         "TIMMinInstall", ""
                                     ) != ""
                                 ) "<br><b>Min SDK</b>: ${
-                                    DataStoreUtil.getString(
+                                    DataStoreUtil.getStringKV(
                                         "TIMMinInstall", ""
                                     )
-                                }" else "") + (if (DataStoreUtil.getString(
+                                }" else "") + (if (DataStoreUtil.getStringKV(
                                         "TIMCompileInstall", ""
                                     ) != ""
                                 ) "<br><b>Compile SDK</b>: ${
-                                    DataStoreUtil.getString(
+                                    DataStoreUtil.getStringKV(
                                         "TIMCompileInstall", ""
                                     )
                                 }" else "") + "<br><b>Version Name</b>: ${
-                                    DataStoreUtil.getString(
+                                    DataStoreUtil.getStringKV(
                                         "TIMVersionInstall", ""
                                     )
-                                }" + (if (DataStoreUtil.getString(
+                                }" + (if (DataStoreUtil.getStringKV(
                                         "TIMRdmUUIDInstall", ""
                                     ) != ""
                                 ) "<br><b>Rdm UUID</b>: ${
-                                    DataStoreUtil.getString(
+                                    DataStoreUtil.getStringKV(
                                         "TIMRdmUUIDInstall", ""
                                     )
-                                }" else "") + (if (DataStoreUtil.getString(
+                                }" else "") + (if (DataStoreUtil.getStringKV(
                                         "TIMVersionCodeInstall", ""
                                     ) != ""
                                 ) "<br><b>Version Code</b>: ${
-                                    DataStoreUtil.getString(
+                                    DataStoreUtil.getStringKV(
                                         "TIMVersionCodeInstall", ""
                                     )
-                                }" else "") + (if (DataStoreUtil.getString(
+                                }" else "") + (if (DataStoreUtil.getStringKV(
                                         "TIMAppSettingParamsInstall", ""
                                     ) != ""
                                 ) "<br><b>AppSetting_params</b>: ${
-                                    DataStoreUtil.getString(
+                                    DataStoreUtil.getStringKV(
                                         "TIMAppSettingParamsInstall", ""
                                     )
                                 }" else ""), HtmlCompat.FROM_HTML_MODE_LEGACY
@@ -122,7 +121,7 @@ class LocalTIMAdapter : RecyclerView.Adapter<LocalTIMAdapter.LocalTIMViewHolder>
                             .show()
                     } else Toast.makeText(
                         itemView.context,
-                        itemView.context.getString(R.string.longPressToViewSourceDetailsIsDisabledPleaseGoToSettingsToTurnItOn),
+                        itemView.context.getString(R.string.longPressToViewSourceDetailsIsDisabled),
                         Toast.LENGTH_SHORT
                     ).show()
                     true

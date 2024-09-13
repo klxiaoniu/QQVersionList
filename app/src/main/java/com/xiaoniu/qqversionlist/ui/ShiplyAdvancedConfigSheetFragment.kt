@@ -30,9 +30,9 @@ import androidx.appcompat.app.AppCompatActivity.INPUT_METHOD_SERVICE
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.xiaoniu.qqversionlist.R
 import com.xiaoniu.qqversionlist.QVTApplication.Companion.SHIPLY_DEFAULT_APPID
 import com.xiaoniu.qqversionlist.QVTApplication.Companion.SHIPLY_DEFAULT_SDK_VERSION
+import com.xiaoniu.qqversionlist.R
 import com.xiaoniu.qqversionlist.databinding.BottomsheetShiplyAdvancedConfigBinding
 import com.xiaoniu.qqversionlist.util.DataStoreUtil
 import java.util.Locale
@@ -66,16 +66,16 @@ class ShiplyAdvancedConfigSheetFragment : BottomSheetDialogFragment() {
                 getString(R.string.shiplyGeneralOptionalHelpText) + Locale.getDefault().language.toString()
 
             DataStoreUtil.apply {
-                shiplyAppid.editText?.setText(getString("shiplyAppid", ""))
+                shiplyAppid.editText?.setText(getStringKV("shiplyAppid", ""))
                 shiplyOsVersion.editText?.setText(
-                    getString("shiplyOsVersion", "")
+                    getStringKV("shiplyOsVersion", "")
                 )
-                shiplyModel.editText?.setText(getString("shiplyModel", ""))
+                shiplyModel.editText?.setText(getStringKV("shiplyModel", ""))
                 shiplySdkVersion.editText?.setText(
-                    getString("shiplySdkVersion", "")
+                    getStringKV("shiplySdkVersion", "")
                 )
                 shiplyLanguage.editText?.setText(
-                    getString("shiplyLanguage", "")
+                    getStringKV("shiplyLanguage", "")
                 )
 
                 btnShiplyConfigSave.setOnClickListener {
@@ -87,21 +87,30 @@ class ShiplyAdvancedConfigSheetFragment : BottomSheetDialogFragment() {
                     val imm =
                         requireContext().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
                     imm.hideSoftInputFromWindow(shiplyLanguage.windowToken, 0)
-                    putStringAsync(
-                        "shiplyAppid", shiplyAppid.editText?.text.toString()
+                    val shiplyConfigList = listOf(
+                        mapOf(
+                            "key" to "shiplyAppid",
+                            "value" to shiplyAppid.editText?.text.toString(),
+                            "type" to "String"
+                        ), mapOf(
+                            "key" to "shiplyOsVersion",
+                            "value" to shiplyOsVersion.editText?.text.toString(),
+                            "type" to "String"
+                        ), mapOf(
+                            "key" to "shiplyModel",
+                            "value" to shiplyModel.editText?.text.toString(),
+                            "type" to "String"
+                        ), mapOf(
+                            "key" to "shiplySdkVersion",
+                            "value" to shiplySdkVersion.editText?.text.toString(),
+                            "type" to "String"
+                        ), mapOf(
+                            "key" to "shiplyLanguage",
+                            "value" to shiplyLanguage.editText?.text.toString(),
+                            "type" to "String"
+                        )
                     )
-                    putStringAsync(
-                        "shiplyOsVersion", shiplyOsVersion.editText?.text.toString()
-                    )
-                    putStringAsync(
-                        "shiplyModel", shiplyModel.editText?.text.toString()
-                    )
-                    putStringAsync(
-                        "shiplySdkVersion", shiplySdkVersion.editText?.text.toString()
-                    )
-                    putStringAsync(
-                        "shiplyLanguage", shiplyLanguage.editText?.text.toString()
-                    )
+                    batchPutKVAsync(shiplyConfigList)
                     Toast.makeText(requireContext(), R.string.saved, Toast.LENGTH_SHORT).show()
                     this@ShiplyAdvancedConfigSheetFragment.isCancelable = true
                     shiplyAdvancedConfigSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN

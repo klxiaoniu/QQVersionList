@@ -44,9 +44,9 @@ import com.xiaoniu.qqversionlist.util.DataStoreUtil
 import com.xiaoniu.qqversionlist.util.Extensions.dp
 import com.xiaoniu.qqversionlist.util.StringUtil.toPrettyFormat
 
-private var getProgressSize = DataStoreUtil.getBoolean("progressSize", false)
-private var getVersionTCloud = DataStoreUtil.getBoolean("versionTCloud", true)
-private var getVersionTCloudThickness = DataStoreUtil.getString("versionTCloudThickness", "System")
+private var getVersionTCloud = DataStoreUtil.getBooleanKV("versionTCloud", true)
+private var getVersionTCloudThickness =
+    DataStoreUtil.getStringKV("versionTCloudThickness", "System")
 
 class TIMVersionAdapter :
     ListAdapter<TIMVersionBean, RecyclerView.ViewHolder>(TIMVersionDiffCallback()) {
@@ -63,7 +63,7 @@ class TIMVersionAdapter :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            0 -> {
+            0 -> { // 卡片收起态
                 ViewHolder(
                     ItemTimVersionBinding.inflate(
                         LayoutInflater.from(parent.context), parent, false
@@ -74,16 +74,7 @@ class TIMVersionAdapter :
                         notifyItemChanged(bindingAdapterPosition)
                     }
                     binding.cardTimAll.setOnLongClickListener {
-                        if (DataStoreUtil.getBoolean("longPressCard", true)) {
-                            showDialog(
-                                it.context,
-                                currentList[bindingAdapterPosition].jsonString.toPrettyFormat()
-                            )
-                        } else Toast.makeText(
-                            it.context,
-                            R.string.longPressToViewSourceDetailsIsDisabledPleaseGoToSettingsToTurnItOn,
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        longPressCard(bindingAdapterPosition, it)
                         true
                     }
                 }
@@ -100,17 +91,7 @@ class TIMVersionAdapter :
                         notifyItemChanged(bindingAdapterPosition)
                     }
                     binding.cardAllDetail.setOnLongClickListener {
-                        if (DataStoreUtil.getBoolean("longPressCard", true)) {
-                            showDialog(
-                                it.context,
-                                currentList[bindingAdapterPosition].jsonString.toPrettyFormat()
-                            )
-                        } else Toast.makeText(
-                            it.context,
-                            R.string.longPressToViewSourceDetailsIsDisabledPleaseGoToSettingsToTurnItOn,
-                            Toast.LENGTH_SHORT
-                        ).show()
-
+                        longPressCard(bindingAdapterPosition, it)
                         true
                     }
                 }
@@ -157,6 +138,16 @@ class TIMVersionAdapter :
                 }
             }
         }
+    }
+
+    private fun longPressCard(bindingAdapterPosition: Int, it: View) {
+        if (DataStoreUtil.getBooleanKV("longPressCard", true)) {
+            showDialog(
+                it.context, currentList[bindingAdapterPosition].jsonString.toPrettyFormat()
+            )
+        } else Toast.makeText(
+            it.context, R.string.longPressToViewSourceDetailsIsDisabled, Toast.LENGTH_SHORT
+        ).show()
     }
 
     private fun bindDisplayInstall(
@@ -223,33 +214,19 @@ class TIMVersionAdapter :
         else {
             val bean = currentList[position]
             when (payloads[0]) {
-                "displayType" -> {
-                    onBindViewHolder(holder, position)
-                }
+                "displayType" -> onBindViewHolder(holder, position)
 
-                "displayInstall" -> {
-                    if (holder is ViewHolder) {
-                        bindDisplayInstall(
-                            holder.binding.tvTimInstall, holder.binding.tvTimInstallCard, bean
-                        )
-                    } else if (holder is ViewHolderDetail) {
-                        bindDisplayInstall(
-                            holder.binding.tvTimOldInstall, holder.binding.tvTimOldInstallCard, bean
-                        )
-                    }
-                }
+                "displayInstall" -> if (holder is ViewHolder) bindDisplayInstall(
+                    holder.binding.tvTimInstall, holder.binding.tvTimInstallCard, bean
+                ) else if (holder is ViewHolderDetail) bindDisplayInstall(
+                    holder.binding.tvTimOldInstall, holder.binding.tvTimOldInstallCard, bean
+                )
 
-                "isTCloud" -> {
-                    if (holder is ViewHolder) {
-                        bindVersionTCloud(
-                            holder.binding.tvTimVersion, holder.context
-                        )
-                    } else if (holder is ViewHolderDetail) {
-                        bindVersionTCloud(
-                            holder.binding.tvTimOldVersion, holder.context
-                        )
-                    }
-                }
+                "isTCloud" -> if (holder is ViewHolder) bindVersionTCloud(
+                    holder.binding.tvTimVersion, holder.context
+                ) else if (holder is ViewHolderDetail) bindVersionTCloud(
+                    holder.binding.tvTimOldVersion, holder.context
+                )
             }
         }
     }
@@ -257,9 +234,9 @@ class TIMVersionAdapter :
     fun updateItemProperty(payloads: Any?) {
         when (payloads) {
             "isTCloud" -> {
-                getVersionTCloud = DataStoreUtil.getBoolean("versionTCloud", true)
+                getVersionTCloud = DataStoreUtil.getBooleanKV("versionTCloud", true)
                 getVersionTCloudThickness =
-                    DataStoreUtil.getString("versionTCloudThickness", "System")
+                    DataStoreUtil.getStringKV("versionTCloudThickness", "System")
                 notifyItemRangeChanged(0, currentList.size, "isTCloud")
             }
         }

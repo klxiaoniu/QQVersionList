@@ -29,17 +29,17 @@ import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.xiaoniu.qqversionlist.databinding.RecycleTimVersionBinding
+import com.xiaoniu.qqversionlist.databinding.RecycleQqVersionBinding
 import com.xiaoniu.qqversionlist.util.Extensions.pxToDp
 
-class TIMVersionListFragmentAdapter : Fragment() {
-    private var _fragmentBinding: RecycleTimVersionBinding? = null
+class QQVersionListFragment : Fragment() {
+    private var _fragmentBinding: RecycleQqVersionBinding? = null
     private val fragmentBinding get() = _fragmentBinding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        _fragmentBinding = RecycleTimVersionBinding.inflate(inflater, container, false)
+        _fragmentBinding = RecycleQqVersionBinding.inflate(inflater, container, false)
         val view = fragmentBinding.root
         return view
     }
@@ -47,7 +47,7 @@ class TIMVersionListFragmentAdapter : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         versionListStaggeredGridLayout(requireActivity() as MainActivity)
-        fragmentBinding.rvTimContent.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        fragmentBinding.rvContent.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 handleScroll(dy)
@@ -66,10 +66,10 @@ class TIMVersionListFragmentAdapter : Fragment() {
     }
 
     private fun versionListStaggeredGridLayout(thisActivity: MainActivity) {
-        val concatenated = ConcatAdapter(thisActivity.localTIMAdapter, thisActivity.timVersionAdapter)
+        val concatenated = ConcatAdapter(thisActivity.localQQAdapter, thisActivity.qqVersionAdapter)
         val screenWidthDp = (Resources.getSystem().displayMetrics.widthPixels).pxToDp
         val screenHeightDp = (Resources.getSystem().displayMetrics.heightPixels).pxToDp
-        fragmentBinding.rvTimContent.apply {
+        fragmentBinding.rvContent.apply {
             adapter = concatenated
             // 当横纵逻辑像素都大于 600 时，根据横向逻辑像素的不同区间显示不同的瀑布流布局
             // 小于 600 时显示线性布局

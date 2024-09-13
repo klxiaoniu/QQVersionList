@@ -36,7 +36,7 @@ object QQVersionBeanUtil {
             Json.decodeFromString<QQVersionBean>(json).apply {
                 jsonString = json
                 // 标记本机 Android QQ 版本
-                this.displayInstall = (DataStoreUtil.getString(
+                this.displayInstall = (DataStoreUtil.getStringKV(
                     "QQVersionInstall", ""
                 ) == this.versionNumber)
                 this.isAccessibility = false
@@ -51,13 +51,13 @@ object QQVersionBeanUtil {
                     )
             }
         }
-        if (DataStoreUtil.getBoolean(
+        if (DataStoreUtil.getBooleanKV(
                 "displayFirst", true
             )
         ) thisActivity.qqVersion[0].displayType = 1
         // 舍弃 currentQQVersion = qqVersion.first().versionNumber
         // 大版本号也放持久化存储了，否则猜版 Shortcut 因为加载过快而获取不到东西
-        DataStoreUtil.putStringAsync(
+        DataStoreUtil.putStringKVAsync(
             "versionBig", thisActivity.qqVersion.first().versionNumber
         )
     }

@@ -107,8 +107,8 @@ class MainActivity : AppCompatActivity() {
     lateinit var localTIMAdapter: LocalTIMAdapter
     lateinit var qqVersion: List<QQVersionBean>
     lateinit var timVersion: List<TIMVersionBean>
-    private lateinit var qqVersionListFragmentAdapter: QQVersionListFragmentAdapter
-    private lateinit var timVersionListFragmentAdapter: TIMVersionListFragmentAdapter
+    private lateinit var qqVersionListFragment: QQVersionListFragment
+    private lateinit var timVersionListFragment: TIMVersionListFragment
     private lateinit var rvPagerAdapter: VersionListPagerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -148,8 +148,8 @@ class MainActivity : AppCompatActivity() {
         localTIMAdapter = LocalTIMAdapter()
         binding.rvPager.adapter = VersionListPagerAdapter(this)
         rvPagerAdapter = binding.rvPager.adapter as VersionListPagerAdapter
-        qqVersionListFragmentAdapter = QQVersionListFragmentAdapter()
-        timVersionListFragmentAdapter = TIMVersionListFragmentAdapter()
+        qqVersionListFragment = QQVersionListFragment()
+        timVersionListFragment = TIMVersionListFragment()
         initButtons()
 
         if (!BuildConfig.VERSION_NAME.endsWith("Release")) binding.materialToolbar.setNavigationIcon(
@@ -192,13 +192,13 @@ class MainActivity : AppCompatActivity() {
         constraintSet.applyTo(userAgreementBinding.userAgreement)
 
         userAgreementBinding.uaButtonAgree.setOnClickListener {
-            DataStoreUtil.putIntAsync("userAgreement", UATarget)
+            DataStoreUtil.putIntKVAsync("userAgreement", UATarget)
             dialogUA.dismiss()
             getData()
         }
 
         userAgreementBinding.uaButtonDisagree.setOnClickListener {
-            DataStoreUtil.putIntAsync("userAgreement", 0)
+            DataStoreUtil.putIntKVAsync("userAgreement", 0)
             finish()
         }
         if (agreed) userAgreementBinding.uaButtonDisagree.setText(R.string.withdrawConsentAndExit)
@@ -209,14 +209,14 @@ class MainActivity : AppCompatActivity() {
 
     private fun initButtons() {
         // 删除 version Shared Preferences
-        DataStoreUtil.deletePreferenceAsync("version")
+        DataStoreUtil.deleteKVAsync("version")
 
         /**
          * 这里的 `val judgeUATarget = 2` 的值代表着用户协议修订版本，
          * 后续更新协议版本后也需要在下面一行把“judgeUATarget” + 1，以此类推
          **/
         val judgeUATarget = 2 // 2024.5.30 第二版
-        if (DataStoreUtil.getInt("userAgreement", 0) < judgeUATarget) showUADialog(
+        if (DataStoreUtil.getIntKV("userAgreement", 0) < judgeUATarget) showUADialog(
             false, judgeUATarget
         )
         else getData()
@@ -353,12 +353,12 @@ class MainActivity : AppCompatActivity() {
                     val dialogSettingBinding = DialogSettingBinding.inflate(layoutInflater)
 
                     dialogSettingBinding.apply {
-                        longPressCard.isChecked = DataStoreUtil.getBoolean("longPressCard", true)
-                        guessNot5.isChecked = DataStoreUtil.getBoolean("guessNot5", false)
+                        longPressCard.isChecked = DataStoreUtil.getBooleanKV("longPressCard", true)
+                        guessNot5.isChecked = DataStoreUtil.getBooleanKV("guessNot5", false)
                         switchGuessTestExtend.isChecked =
-                            DataStoreUtil.getBoolean("guessTestExtend", false) // 扩展测试版猜版格式
+                            DataStoreUtil.getBooleanKV("guessTestExtend", false) // 扩展测试版猜版格式
                         downloadOnSystemManager.isChecked =
-                            DataStoreUtil.getBoolean("downloadOnSystemManager", false)
+                            DataStoreUtil.getBooleanKV("downloadOnSystemManager", false)
                     }
 
                     val dialogSetting = MaterialAlertDialogBuilder(this)
@@ -372,10 +372,10 @@ class MainActivity : AppCompatActivity() {
                             dialogSetting.dismiss()
                         }
                         longPressCard.setOnCheckedChangeListener { _, isChecked ->
-                            DataStoreUtil.putBooleanAsync("longPressCard", isChecked)
+                            DataStoreUtil.putBooleanKVAsync("longPressCard", isChecked)
                         }
                         guessNot5.setOnCheckedChangeListener { _, isChecked ->
-                            DataStoreUtil.putBooleanAsync("guessNot5", isChecked)
+                            DataStoreUtil.putBooleanKVAsync("guessNot5", isChecked)
                         }
                         dialogPersonalization.setOnClickListener {
                             val dialogPersonalization =
@@ -387,12 +387,12 @@ class MainActivity : AppCompatActivity() {
                                     }
 
                                     versionTcloudThickness.setEnabled(
-                                        DataStoreUtil.getBoolean(
+                                        DataStoreUtil.getBooleanKV(
                                             "versionTCloud", true
                                         )
                                     )
 
-                                    versionTcloudThickness.value = when (DataStoreUtil.getString(
+                                    versionTcloudThickness.value = when (DataStoreUtil.getStringKV(
                                         "versionTCloudThickness", "System"
                                     )) {
                                         "Light" -> 1.0f
@@ -410,14 +410,14 @@ class MainActivity : AppCompatActivity() {
 
                             dialogPersonalization.apply {
                                 switchDisplayFirst.isChecked =
-                                    DataStoreUtil.getBoolean("displayFirst", true)
+                                    DataStoreUtil.getBooleanKV("displayFirst", true)
                                 progressSize.isChecked =
-                                    DataStoreUtil.getBoolean("progressSize", false)
+                                    DataStoreUtil.getBooleanKV("progressSize", false)
                                 versionTcloud.isChecked =
-                                    DataStoreUtil.getBoolean("versionTCloud", true)
+                                    DataStoreUtil.getBooleanKV("versionTCloud", true)
 
                                 switchDisplayFirst.setOnCheckedChangeListener { _, isChecked ->
-                                    DataStoreUtil.putBooleanAsync("displayFirst", isChecked)
+                                    DataStoreUtil.putBooleanKVAsync("displayFirst", isChecked)
                                     qqVersion = qqVersion.mapIndexed { index, qqVersionBean ->
                                         if (index == 0) qqVersionBean.copy(
                                             displayType = if (isChecked) 1 else 0
@@ -436,11 +436,11 @@ class MainActivity : AppCompatActivity() {
 
                                 // 下两个设置不能异步持久化存储，否则视图更新读不到更新值
                                 progressSize.setOnCheckedChangeListener { _, isChecked ->
-                                    DataStoreUtil.putBoolean("progressSize", isChecked)
+                                    DataStoreUtil.putBooleanKV("progressSize", isChecked)
                                     qqVersionAdapter.updateItemProperty("isShowProgressSize")
                                 }
                                 versionTcloud.setOnCheckedChangeListener { _, isChecked ->
-                                    DataStoreUtil.putBoolean("versionTCloud", isChecked)
+                                    DataStoreUtil.putBooleanKV("versionTCloud", isChecked)
                                     dialogPersonalization.versionTcloudThickness.setEnabled(
                                         isChecked
                                     )
@@ -462,19 +462,19 @@ class MainActivity : AppCompatActivity() {
 
                                 versionTcloudThickness.addOnChangeListener { _, value, _ ->
                                     when (value) {
-                                        1.0f -> DataStoreUtil.putString(
+                                        1.0f -> DataStoreUtil.putStringKV(
                                             "versionTCloudThickness", "Light"
                                         )
 
-                                        2.0f -> DataStoreUtil.putString(
+                                        2.0f -> DataStoreUtil.putStringKV(
                                             "versionTCloudThickness", "Regular"
                                         )
 
-                                        3.0f -> DataStoreUtil.putString(
+                                        3.0f -> DataStoreUtil.putStringKV(
                                             "versionTCloudThickness", "Bold"
                                         )
 
-                                        else -> DataStoreUtil.putString(
+                                        else -> DataStoreUtil.putStringKV(
                                             "versionTCloudThickness", "System"
                                         )
                                     }
@@ -485,10 +485,10 @@ class MainActivity : AppCompatActivity() {
                         }
 
                         switchGuessTestExtend.setOnCheckedChangeListener { _, isChecked ->
-                            DataStoreUtil.putBooleanAsync("guessTestExtend", isChecked)
+                            DataStoreUtil.putBooleanKVAsync("guessTestExtend", isChecked)
                         }
                         downloadOnSystemManager.setOnCheckedChangeListener { _, isChecked ->
-                            DataStoreUtil.putBooleanAsync("downloadOnSystemManager", isChecked)
+                            DataStoreUtil.putBooleanKVAsync("downloadOnSystemManager", isChecked)
                         }
 //                        settingSuffixSave.setOnClickListener { _ ->
 //                            val suffixDefine = settingSuffixDefine.editText?.text.toString()
@@ -515,43 +515,43 @@ class MainActivity : AppCompatActivity() {
                             dialogSuffixDefine.apply {
                                 DataStoreUtil.apply {
                                     suffixDefineCheckbox64hb.isChecked =
-                                        getBoolean("suffix64HB", true)
+                                        getBooleanKV("suffix64HB", true)
                                     suffixDefineCheckboxHb64.isChecked =
-                                        getBoolean("suffixHB64", true)
+                                        getBooleanKV("suffixHB64", true)
                                     suffixDefineCheckbox64hb1.isChecked =
-                                        getBoolean("suffix64HB1", true)
+                                        getBooleanKV("suffix64HB1", true)
                                     suffixDefineCheckboxHb164.isChecked =
-                                        getBoolean("suffixHB164", true)
+                                        getBooleanKV("suffixHB164", true)
                                     suffixDefineCheckbox64hb2.isChecked =
-                                        getBoolean("suffix64HB2", true)
+                                        getBooleanKV("suffix64HB2", true)
                                     suffixDefineCheckboxHb264.isChecked =
-                                        getBoolean("suffixHB264", true)
+                                        getBooleanKV("suffixHB264", true)
                                     suffixDefineCheckbox64hb3.isChecked =
-                                        getBoolean("suffix64HB3", true)
+                                        getBooleanKV("suffix64HB3", true)
                                     suffixDefineCheckboxHb364.isChecked =
-                                        getBoolean("suffixHB364", true)
+                                        getBooleanKV("suffixHB364", true)
                                     suffixDefineCheckbox64hd.isChecked =
-                                        getBoolean("suffix64HD", true)
+                                        getBooleanKV("suffix64HD", true)
                                     suffixDefineCheckboxHd64.isChecked =
-                                        getBoolean("suffixHD64", true)
+                                        getBooleanKV("suffixHD64", true)
                                     suffixDefineCheckbox64hd1.isChecked =
-                                        getBoolean("suffix64HD1", true)
+                                        getBooleanKV("suffix64HD1", true)
                                     suffixDefineCheckboxHd164.isChecked =
-                                        getBoolean("suffixHD164", true)
+                                        getBooleanKV("suffixHD164", true)
                                     suffixDefineCheckbox64hd2.isChecked =
-                                        getBoolean("suffix64HD2", true)
+                                        getBooleanKV("suffix64HD2", true)
                                     suffixDefineCheckboxHd264.isChecked =
-                                        getBoolean("suffixHD264", true)
+                                        getBooleanKV("suffixHD264", true)
                                     suffixDefineCheckbox64hd3.isChecked =
-                                        getBoolean("suffix64HD3", true)
+                                        getBooleanKV("suffix64HD3", true)
                                     suffixDefineCheckboxHd364.isChecked =
-                                        getBoolean("suffixHD364", true)
+                                        getBooleanKV("suffixHD364", true)
                                     suffixDefineCheckbox64hd1hb.isChecked =
-                                        getBoolean("suffix64HD1HB", true)
+                                        getBooleanKV("suffix64HD1HB", true)
                                     suffixDefineCheckboxHd1hb64.isChecked =
-                                        getBoolean("suffixHD1HB64", true)
+                                        getBooleanKV("suffixHD1HB64", true)
                                     suffixDefineCheckboxTest.isChecked =
-                                        getBoolean("suffixTest", true)
+                                        getBooleanKV("suffixTest", true)
                                 }
 
                                 dialogSuffix.show()
@@ -562,7 +562,8 @@ class MainActivity : AppCompatActivity() {
                                     btnSuffixSave.isEnabled = false
                                     lifecycleScope.launch {
                                         val suffixDefine = withContext(Dispatchers.IO) {
-                                            DataStoreUtil.getStringAsync("suffixDefine", "").await()
+                                            DataStoreUtil.getStringKVAsync("suffixDefine", "")
+                                                .await()
                                         }
                                         editText?.setText(
                                             suffixDefine
@@ -574,67 +575,92 @@ class MainActivity : AppCompatActivity() {
 
                                 btnSuffixSave.setOnClickListener {
                                     val suffixDefine = settingSuffixDefine.editText?.text.toString()
-                                    DataStoreUtil.apply {
-                                        putStringAsync("suffixDefine", suffixDefine)
-                                        putBooleanAsync(
-                                            "suffix64HB", suffixDefineCheckbox64hb.isChecked
-                                        )
-                                        putBooleanAsync(
-                                            "suffixHB64", suffixDefineCheckboxHb64.isChecked
-                                        )
-                                        putBooleanAsync(
-                                            "suffix64HB1", suffixDefineCheckbox64hb1.isChecked
-                                        )
-                                        putBooleanAsync(
-                                            "suffixHB164", suffixDefineCheckboxHb164.isChecked
-                                        )
-                                        putBooleanAsync(
-                                            "suffix64HB2", suffixDefineCheckbox64hb2.isChecked
-                                        )
-                                        putBooleanAsync(
-                                            "suffixHB264", suffixDefineCheckboxHb264.isChecked
-                                        )
-                                        putBooleanAsync(
-                                            "suffix64HB3", suffixDefineCheckbox64hb3.isChecked
-                                        )
-                                        putBooleanAsync(
-                                            "suffixHB364", suffixDefineCheckboxHb364.isChecked
-                                        )
-                                        putBooleanAsync(
-                                            "suffix64HD", suffixDefineCheckbox64hd.isChecked
-                                        )
-                                        putBooleanAsync(
-                                            "suffixHD64", suffixDefineCheckboxHd64.isChecked
-                                        )
-                                        putBooleanAsync(
-                                            "suffix64HD1", suffixDefineCheckbox64hd1.isChecked
-                                        )
-                                        putBooleanAsync(
-                                            "suffixHD164", suffixDefineCheckboxHd164.isChecked
-                                        )
-                                        putBooleanAsync(
-                                            "suffix64HD2", suffixDefineCheckbox64hd2.isChecked
-                                        )
-                                        putBooleanAsync(
-                                            "suffixHD264", suffixDefineCheckboxHd264.isChecked
-                                        )
-                                        putBooleanAsync(
-                                            "suffix64HD3", suffixDefineCheckbox64hd3.isChecked
-                                        )
-                                        putBooleanAsync(
-                                            "suffixHD364", suffixDefineCheckboxHd364.isChecked
-                                        )
-                                        putBooleanAsync(
-                                            "suffixHD1HB64", suffixDefineCheckboxHd1hb64.isChecked
-                                        )
-                                        putBooleanAsync(
-                                            "suffix64HD1HB", suffixDefineCheckbox64hd1hb.isChecked
-                                        )
-                                        putBooleanAsync(
-                                            "suffixTest", suffixDefineCheckboxTest.isChecked
-                                        )
-                                    }
 
+                                    val suffixDataStoreList = listOf(
+                                        mapOf(
+                                            "key" to "suffixDefine",
+                                            "value" to suffixDefine,
+                                            "type" to "String"
+                                        ), mapOf(
+                                            "key" to "suffix64HB",
+                                            "value" to suffixDefineCheckbox64hb.isChecked,
+                                            "type" to "Boolean"
+                                        ), mapOf(
+                                            "key" to "suffixHB64",
+                                            "value" to suffixDefineCheckboxHb64.isChecked,
+                                            "type" to "Boolean"
+                                        ), mapOf(
+                                            "key" to "suffix64HB1",
+                                            "value" to suffixDefineCheckbox64hb1.isChecked,
+                                            "type" to "Boolean"
+                                        ), mapOf(
+                                            "key" to "suffixHB164",
+                                            "value" to suffixDefineCheckboxHb164.isChecked,
+                                            "type" to "Boolean"
+                                        ), mapOf(
+                                            "key" to "suffix64HB2",
+                                            "value" to suffixDefineCheckbox64hb2.isChecked,
+                                            "type" to "Boolean"
+                                        ), mapOf(
+                                            "key" to "suffixHB264",
+                                            "value" to suffixDefineCheckboxHb264.isChecked,
+                                            "type" to "Boolean"
+                                        ), mapOf(
+                                            "key" to "suffix64HB3",
+                                            "value" to suffixDefineCheckbox64hb3.isChecked,
+                                            "type" to "Boolean"
+                                        ), mapOf(
+                                            "key" to "suffixHB364",
+                                            "value" to suffixDefineCheckboxHb364.isChecked,
+                                            "type" to "Boolean"
+                                        ), mapOf(
+                                            "key" to "suffix64HD",
+                                            "value" to suffixDefineCheckbox64hd.isChecked,
+                                            "type" to "Boolean"
+                                        ), mapOf(
+                                            "key" to "suffixHD64",
+                                            "value" to suffixDefineCheckboxHd64.isChecked,
+                                            "type" to "Boolean"
+                                        ), mapOf(
+                                            "key" to "suffix64HD1",
+                                            "value" to suffixDefineCheckbox64hd1.isChecked,
+                                            "type" to "Boolean"
+                                        ), mapOf(
+                                            "key" to "suffixHD164",
+                                            "value" to suffixDefineCheckboxHd164.isChecked,
+                                            "type" to "Boolean"
+                                        ), mapOf(
+                                            "key" to "suffix64HD2",
+                                            "value" to suffixDefineCheckbox64hd2.isChecked,
+                                            "type" to "Boolean"
+                                        ), mapOf(
+                                            "key" to "suffixHD264",
+                                            "value" to suffixDefineCheckboxHd264.isChecked,
+                                            "type" to "Boolean"
+                                        ), mapOf(
+                                            "key" to "suffix64HD3",
+                                            "value" to suffixDefineCheckbox64hd3.isChecked,
+                                            "type" to "Boolean"
+                                        ), mapOf(
+                                            "key" to "suffixHD364",
+                                            "value" to suffixDefineCheckboxHd364.isChecked,
+                                            "type" to "Boolean"
+                                        ), mapOf(
+                                            "key" to "suffixHD1HB64",
+                                            "value" to suffixDefineCheckboxHd1hb64.isChecked,
+                                            "type" to "Boolean"
+                                        ), mapOf(
+                                            "key" to "suffix64HD1HB",
+                                            "value" to suffixDefineCheckbox64hd1hb.isChecked,
+                                            "type" to "Boolean"
+                                        ), mapOf(
+                                            "key" to "suffixTest",
+                                            "value" to suffixDefineCheckboxTest.isChecked,
+                                            "type" to "Boolean"
+                                        )
+                                    )
+
+                                    DataStoreUtil.batchPutKVAsync(suffixDataStoreList)
                                     showToast(getString(R.string.saved))
                                     dialogSuffix.dismiss()
                                 }
@@ -660,16 +686,19 @@ class MainActivity : AppCompatActivity() {
 
                     dialogShiplyBinding.apply {
                         DataStoreUtil.apply {
-                            shiplyUin.editText?.setText(getString("shiplyUin", ""))
+                            shiplyUin.editText?.setText(getStringKV("shiplyUin", ""))
                             shiplyVersion.editText?.setText(
-                                getString("shiplyVersion", "")
+                                getStringKV("shiplyVersion", "")
                             )
                             switchShiplyAdvancedConfigurations.isChecked =
-                                getBoolean("shiplyAdvancedConfigurations", false)
+                                getBooleanKV("shiplyAdvancedConfigurations", false)
                         }
 
                         switchShiplyAdvancedConfigurations.setOnCheckedChangeListener { _, isChecked ->
-                            DataStoreUtil.putBooleanAsync("shiplyAdvancedConfigurations", isChecked)
+                            DataStoreUtil.putBooleanKVAsync(
+                                "shiplyAdvancedConfigurations",
+                                isChecked
+                            )
                         }
 
                         shiplyAdvancedConfigurationsClick.setOnClickListener {
@@ -715,15 +744,15 @@ class MainActivity : AppCompatActivity() {
                                         .isEmpty()
                                 ) throw MissingParameterException("请求 TDS 腾讯端服务 Shiply 发布平台需要 QQ 版本号参数，缺失版本号参数将无法获取 Shiply 平台返回数据。")
 
-                                if (!DataStoreUtil.getBoolean(
+                                if (!DataStoreUtil.getBooleanKV(
                                         "shiplyAdvancedConfigurations", false
                                     )
                                 ) {
                                     DataStoreUtil.apply {
-                                        putStringAsync(
+                                        putStringKVAsync(
                                             "shiplyVersion", shiplyVersion.editText?.text.toString()
                                         )
-                                        putStringAsync(
+                                        putStringKVAsync(
                                             "shiplyUin", shiplyUin.editText?.text.toString()
                                         )
                                     }
@@ -733,28 +762,28 @@ class MainActivity : AppCompatActivity() {
                                         shiplyUin.editText?.text.toString()
                                     )
                                 } else DataStoreUtil.apply {
-                                    putStringAsync(
+                                    putStringKVAsync(
                                         "shiplyVersion", shiplyVersion.editText?.text.toString()
                                     )
-                                    putStringAsync(
+                                    putStringKVAsync(
                                         "shiplyUin", shiplyUin.editText?.text.toString()
                                     )
                                     tencentShiplyStart(btnShiplyStart,
                                         shiplyVersion.editText?.text.toString(),
                                         shiplyUin.editText?.text.toString(),
-                                        getString(
+                                        getStringKV(
                                             "shiplyAppid", ""
                                         ).ifEmpty { SHIPLY_DEFAULT_APPID },
-                                        getString(
+                                        getStringKV(
                                             "shiplyOsVersion", ""
                                         ).ifEmpty { SDK_INT.toString() },
-                                        getString(
+                                        getStringKV(
                                             "shiplyModel", ""
                                         ).ifEmpty { Build.MODEL.toString() },
-                                        getString(
+                                        getStringKV(
                                             "shiplySdkVersion", ""
                                         ).ifEmpty { SHIPLY_DEFAULT_SDK_VERSION },
-                                        getString(
+                                        getStringKV(
                                             "shiplyLanguage", ""
                                         ).ifEmpty { Locale.getDefault().language.toString() })
                                 }
@@ -773,7 +802,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        if (intent.action == "android.intent.action.VIEW" && DataStoreUtil.getInt(
+        if (intent.action == "android.intent.action.VIEW" && DataStoreUtil.getIntKV(
                 "userAgreement", 0
             ) >= judgeUATarget
         ) showGuessVersionDialog()
@@ -821,16 +850,16 @@ class MainActivity : AppCompatActivity() {
 
     private fun showGuessVersionDialog() {
         val dialogGuessBinding = DialogGuessBinding.inflate(layoutInflater)
-        val verBig = DataStoreUtil.getString("versionBig", "")
+        val verBig = DataStoreUtil.getStringKV("versionBig", "")
         dialogGuessBinding.etVersionBig.editText?.setText(verBig)
-        when (val memVersion = DataStoreUtil.getString("versionSelect", MODE_OFFICIAL)) {
+        when (val memVersion = DataStoreUtil.getStringKV("versionSelect", MODE_OFFICIAL)) {
             MODE_TEST, MODE_UNOFFICIAL, MODE_OFFICIAL, MODE_WECHAT -> dialogGuessBinding.spinnerVersion.setText(
                 memVersion, false
             )
 
             else -> {
                 dialogGuessBinding.spinnerVersion.setText(MODE_OFFICIAL, false)
-                DataStoreUtil.putStringAsync("versionSelect", MODE_OFFICIAL)
+                DataStoreUtil.putStringKVAsync("versionSelect", MODE_OFFICIAL)
             }
         }
 
@@ -844,7 +873,7 @@ class MainActivity : AppCompatActivity() {
         dialogGuessBinding.spinnerVersion.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
                 val judgeVerSelect = dialogGuessBinding.spinnerVersion.text.toString()
-                DataStoreUtil.putStringAsync("versionSelect", judgeVerSelect)
+                DataStoreUtil.putStringKVAsync("versionSelect", judgeVerSelect)
                 when (judgeVerSelect) {
                     MODE_TEST, MODE_UNOFFICIAL -> modeTestView(dialogGuessBinding)
                     MODE_OFFICIAL -> modeOfficialView(dialogGuessBinding)
@@ -893,11 +922,11 @@ class MainActivity : AppCompatActivity() {
                     ) else {
                         versionSmall =
                             dialogGuessBinding.etVersionSmall.editText?.text.toString().toInt()
-                        if (versionSmall % 5 != 0 && !DataStoreUtil.getBoolean(
+                        if (versionSmall % 5 != 0 && !DataStoreUtil.getBooleanKV(
                                 "guessNot5", false
                             )
                         ) throw InvalidMultipleException(getString(R.string.QQPreviewMinorNot5Warning))
-                        if (versionSmall != 0) DataStoreUtil.putIntAsync(
+                        if (versionSmall != 0) DataStoreUtil.putIntKVAsync(
                             "versionSmall", versionSmall
                         )
                     }
@@ -911,10 +940,10 @@ class MainActivity : AppCompatActivity() {
                             dialogGuessBinding.etVersionTrue.editText?.text.toString().toInt()
                         version16code =
                             dialogGuessBinding.etVersion16code.editText?.text.toString()
-                        if (version16code != 0.toString()) DataStoreUtil.putStringAsync(
+                        if (version16code != 0.toString()) DataStoreUtil.putStringKVAsync(
                             "version16code", version16code
                         )
-                        if (versionTrue != 0) DataStoreUtil.putIntAsync(
+                        if (versionTrue != 0) DataStoreUtil.putIntKVAsync(
                             "versionTrue", versionTrue
                         )
                     }
@@ -936,15 +965,15 @@ class MainActivity : AppCompatActivity() {
             dialogGuess.dismiss()
         }
 
-        val memVersionSmall = DataStoreUtil.getInt("versionSmall", -1)
+        val memVersionSmall = DataStoreUtil.getIntKV("versionSmall", -1)
         if (memVersionSmall != -1) dialogGuessBinding.etVersionSmall.editText?.setText(
             memVersionSmall.toString()
         )
-        val memVersion16code = DataStoreUtil.getString("version16code", "-1")
+        val memVersion16code = DataStoreUtil.getStringKV("version16code", "-1")
         if (memVersion16code != "-1") dialogGuessBinding.etVersion16code.editText?.setText(
             memVersion16code
         )
-        val memVersionTrue = DataStoreUtil.getInt("versionTrue", -1)
+        val memVersionTrue = DataStoreUtil.getIntKV("versionTrue", -1)
         if (memVersionTrue != -1) dialogGuessBinding.etVersionTrue.editText?.setText(memVersionTrue.toString())
     }
 
@@ -975,47 +1004,55 @@ class MainActivity : AppCompatActivity() {
                 val QQMinInstall = QQMetaDataInstall.applicationInfo?.minSdkVersion.toString()
                 val QQCompileInstall = (if (SDK_INT >= Build.VERSION_CODES.S)
                     QQMetaDataInstall.applicationInfo?.compileSdkVersion.toString() else "")
-                if (QQVersionInstall != DataStoreUtil.getString(
+                if (QQVersionInstall != DataStoreUtil.getStringKV(
                         "QQVersionInstall", ""
                     )
-                ) DataStoreUtil.putString("QQVersionInstall", QQVersionInstall)
-                if (QQVersionCodeInstall != DataStoreUtil.getString(
+                ) DataStoreUtil.putStringKV("QQVersionInstall", QQVersionInstall)
+                if (QQVersionCodeInstall != DataStoreUtil.getStringKV(
                         "QQVersionCodeInstall", ""
                     )
-                ) DataStoreUtil.putString("QQVersionCodeInstall", QQVersionCodeInstall)
-                if (QQAppSettingParamsInstall != null && QQAppSettingParamsInstall != DataStoreUtil.getString(
+                ) DataStoreUtil.putStringKV("QQVersionCodeInstall", QQVersionCodeInstall)
+                if (QQAppSettingParamsInstall != null && QQAppSettingParamsInstall != DataStoreUtil.getStringKV(
                         "QQAppSettingParamsInstall", ""
                     )
-                ) DataStoreUtil.putString("QQAppSettingParamsInstall", QQAppSettingParamsInstall)
-                if (QQAppSettingParamsPadInstall != null && QQAppSettingParamsPadInstall != DataStoreUtil.getString(
+                ) DataStoreUtil.putStringKV("QQAppSettingParamsInstall", QQAppSettingParamsInstall)
+                if (QQAppSettingParamsPadInstall != null && QQAppSettingParamsPadInstall != DataStoreUtil.getStringKV(
                         "QQAppSettingParamsPadInstall", ""
                     )
-                ) DataStoreUtil.putString(
+                ) DataStoreUtil.putStringKV(
                     "QQAppSettingParamsPadInstall", QQAppSettingParamsPadInstall
                 )
-                if (QQRdmUUIDInstall != null && QQRdmUUIDInstall != DataStoreUtil.getString(
+                if (QQRdmUUIDInstall != null && QQRdmUUIDInstall != DataStoreUtil.getStringKV(
                         "QQRdmUUIDInstall", ""
                     )
-                ) DataStoreUtil.putString("QQRdmUUIDInstall", QQRdmUUIDInstall)
-                if (QQTargetInstall.isNotEmpty() && QQTargetInstall != DataStoreUtil.getString(
+                ) DataStoreUtil.putStringKV("QQRdmUUIDInstall", QQRdmUUIDInstall)
+                if (QQTargetInstall.isNotEmpty() && QQTargetInstall != DataStoreUtil.getStringKV(
                         "QQTargetInstall",
                         ""
                     )
-                ) DataStoreUtil.putString("QQTargetInstall", QQTargetInstall)
-                if (QQMinInstall.isNotEmpty() && QQMinInstall != DataStoreUtil.getString(
+                ) DataStoreUtil.putStringKV("QQTargetInstall", QQTargetInstall)
+                if (QQMinInstall.isNotEmpty() && QQMinInstall != DataStoreUtil.getStringKV(
                         "QQMinInstall",
                         ""
                     )
-                ) DataStoreUtil.putString("QQMinInstall", QQMinInstall)
-                if (QQCompileInstall.isNotEmpty() && QQCompileInstall != DataStoreUtil.getString(
+                ) DataStoreUtil.putStringKV("QQMinInstall", QQMinInstall)
+                if (QQCompileInstall.isNotEmpty() && QQCompileInstall != DataStoreUtil.getStringKV(
                         "QQCompileInstall",
                         ""
                     )
-                ) DataStoreUtil.putString("QQCompileInstall", QQCompileInstall)
+                ) DataStoreUtil.putStringKV("QQCompileInstall", QQCompileInstall)
             } catch (_: Exception) {
-                DataStoreUtil.putString("QQVersionInstall", "")
-                DataStoreUtil.putString("QQVersionCodeInstall", "")
-                DataStoreUtil.putString("QQAppSettingParamsInstall", "")
+                val localQQEmptyList = listOf(
+                    mapOf("key" to "QQVersionInstall", "value" to "", "type" to "String"),
+                    mapOf("key" to "QQVersionCodeInstall", "value" to "", "type" to "String"),
+                    mapOf("key" to "QQAppSettingParamsInstall", "value" to "", "type" to "String"),
+                    mapOf(
+                        "key" to "QQAppSettingParamsPadInstall",
+                        "value" to "",
+                        "type" to "String"
+                    )
+                )
+                DataStoreUtil.batchPutKVAsync(localQQEmptyList)
             } finally {
                 try {
                     // 识别本机 Android TIM 版本并放进持久化存储
@@ -1036,43 +1073,50 @@ class MainActivity : AppCompatActivity() {
                     val TIMMinInstall = TIMMetaData.applicationInfo?.minSdkVersion.toString()
                     val TIMCompileInstall =
                         (if (SDK_INT >= Build.VERSION_CODES.S) TIMMetaData.applicationInfo?.compileSdkVersion.toString() else "")
-                    if (TIMTargetInstall.isNotEmpty() && TIMTargetInstall != DataStoreUtil.getString(
+                    if (TIMTargetInstall.isNotEmpty() && TIMTargetInstall != DataStoreUtil.getStringKV(
                             "TIMTargetInstall",
                             ""
                         )
-                    ) DataStoreUtil.putString("TIMTargetInstall", TIMTargetInstall)
-                    if (TIMMinInstall.isNotEmpty() && TIMMinInstall != DataStoreUtil.getString(
+                    ) DataStoreUtil.putStringKV("TIMTargetInstall", TIMTargetInstall)
+                    if (TIMMinInstall.isNotEmpty() && TIMMinInstall != DataStoreUtil.getStringKV(
                             "TIMMinInstall",
                             ""
                         )
-                    ) DataStoreUtil.putString("TIMMinInstall", TIMMinInstall)
-                    if (TIMCompileInstall.isNotEmpty() && TIMCompileInstall != DataStoreUtil.getString(
+                    ) DataStoreUtil.putStringKV("TIMMinInstall", TIMMinInstall)
+                    if (TIMCompileInstall.isNotEmpty() && TIMCompileInstall != DataStoreUtil.getStringKV(
                             "TIMCompileInstall",
                             ""
                         )
-                    ) DataStoreUtil.putString("TIMCompileInstall", TIMCompileInstall)
-                    if (TIMVersionInstall != DataStoreUtil.getString(
+                    ) DataStoreUtil.putStringKV("TIMCompileInstall", TIMCompileInstall)
+                    if (TIMVersionInstall != DataStoreUtil.getStringKV(
                             "TIMVersionInstall", ""
                         )
-                    ) DataStoreUtil.putString("TIMVersionInstall", TIMVersionInstall)
-                    if (TIMVersionCodeInstall != DataStoreUtil.getString(
+                    ) DataStoreUtil.putStringKV("TIMVersionInstall", TIMVersionInstall)
+                    if (TIMVersionCodeInstall != DataStoreUtil.getStringKV(
                             "TIMVersionCodeInstall", ""
                         )
-                    ) DataStoreUtil.putString("TIMVersionCodeInstall", TIMVersionCodeInstall)
-                    if (TIMAppSettingParamsInstall != null && TIMAppSettingParamsInstall != DataStoreUtil.getString(
+                    ) DataStoreUtil.putStringKV("TIMVersionCodeInstall", TIMVersionCodeInstall)
+                    if (TIMAppSettingParamsInstall != null && TIMAppSettingParamsInstall != DataStoreUtil.getStringKV(
                             "TIMAppSettingParamsInstall", ""
                         )
-                    ) DataStoreUtil.putString(
+                    ) DataStoreUtil.putStringKV(
                         "TIMAppSettingParamsInstall", TIMAppSettingParamsInstall
                     )
-                    if (TIMRdmUUIDInstall != null && TIMRdmUUIDInstall != DataStoreUtil.getString(
+                    if (TIMRdmUUIDInstall != null && TIMRdmUUIDInstall != DataStoreUtil.getStringKV(
                             "TIMRdmUUIDInstall", ""
                         )
-                    ) DataStoreUtil.putString("TIMRdmUUIDInstall", TIMRdmUUIDInstall)
+                    ) DataStoreUtil.putStringKV("TIMRdmUUIDInstall", TIMRdmUUIDInstall)
                 } catch (_: Exception) {
-                    DataStoreUtil.putString("TIMVersionInstall", "")
-                    DataStoreUtil.putString("TIMVersionCodeInstall", "")
-                    DataStoreUtil.putString("TIMAppSettingParamsInstall", "")
+                    val localTIMEmptyList = listOf(
+                        mapOf("key" to "TIMVersionInstall", "value" to "", "type" to "String"),
+                        mapOf("key" to "TIMVersionCodeInstall", "value" to "", "type" to "String"),
+                        mapOf(
+                            "key" to "TIMAppSettingParamsInstall",
+                            "value" to "",
+                            "type" to "String"
+                        )
+                    )
+                    DataStoreUtil.batchPutKVAsync(localTIMEmptyList)
                 } finally {
                     var progressFlag = 0
                     withContext(Dispatchers.Main) {
@@ -1157,76 +1201,93 @@ class MainActivity : AppCompatActivity() {
         val thread = Thread {
             var vSmall = versionSmall
             var v16codeStr = version16codeStr
-            val guessNot5 = DataStoreUtil.getBoolean("guessNot5", false)
-            val guessTestExtend = DataStoreUtil.getBoolean("guessTestExtend", false)
-            val downloadOnSystemManager = DataStoreUtil.getBoolean("downloadOnSystemManager", false)
-            val defineSufList = DataStoreUtil.getString("suffixDefine", "").split(", ")
+            val guessNot5 = DataStoreUtil.getBooleanKV("guessNot5", false)
+            val guessTestExtend = DataStoreUtil.getBooleanKV("guessTestExtend", false)
+            val downloadOnSystemManager =
+                DataStoreUtil.getBooleanKV("downloadOnSystemManager", false)
+            val defineSufList = DataStoreUtil.getStringKV("suffixDefine", "").split(", ")
             val suf64hb =
-                if (DataStoreUtil.getBoolean("suffix64HB", true)) listOf("_64_HB") else emptyList()
+                if (DataStoreUtil.getBooleanKV(
+                        "suffix64HB",
+                        true
+                    )
+                ) listOf("_64_HB") else emptyList()
             val sufHb64 =
-                if (DataStoreUtil.getBoolean("suffixHB64", true)) listOf("_HB_64") else emptyList()
-            val suf64hb1 = if (DataStoreUtil.getBoolean(
+                if (DataStoreUtil.getBooleanKV(
+                        "suffixHB64",
+                        true
+                    )
+                ) listOf("_HB_64") else emptyList()
+            val suf64hb1 = if (DataStoreUtil.getBooleanKV(
                     "suffix64HB1", true
                 )
             ) listOf("_64_HB1") else emptyList()
-            val sufHb164 = if (DataStoreUtil.getBoolean(
+            val sufHb164 = if (DataStoreUtil.getBooleanKV(
                     "suffixHB164", true
                 )
             ) listOf("_HB1_64") else emptyList()
-            val suf64hb2 = if (DataStoreUtil.getBoolean(
+            val suf64hb2 = if (DataStoreUtil.getBooleanKV(
                     "suffix64HB2", true
                 )
             ) listOf("_64_HB2") else emptyList()
-            val sufHb264 = if (DataStoreUtil.getBoolean(
+            val sufHb264 = if (DataStoreUtil.getBooleanKV(
                     "suffixHB264", true
                 )
             ) listOf("_HB2_64") else emptyList()
-            val suf64hb3 = if (DataStoreUtil.getBoolean(
+            val suf64hb3 = if (DataStoreUtil.getBooleanKV(
                     "suffix64HB3", true
                 )
             ) listOf("_64_HB3") else emptyList()
-            val sufHb364 = if (DataStoreUtil.getBoolean(
+            val sufHb364 = if (DataStoreUtil.getBooleanKV(
                     "suffixHB364", true
                 )
             ) listOf("_HB3_64") else emptyList()
             val suf64hd =
-                if (DataStoreUtil.getBoolean("suffix64HD", true)) listOf("_64_HD") else emptyList()
+                if (DataStoreUtil.getBooleanKV(
+                        "suffix64HD",
+                        true
+                    )
+                ) listOf("_64_HD") else emptyList()
             val sufHd64 =
-                if (DataStoreUtil.getBoolean("suffixHD64", true)) listOf("_HD_64") else emptyList()
-            val suf64hd1 = if (DataStoreUtil.getBoolean(
+                if (DataStoreUtil.getBooleanKV(
+                        "suffixHD64",
+                        true
+                    )
+                ) listOf("_HD_64") else emptyList()
+            val suf64hd1 = if (DataStoreUtil.getBooleanKV(
                     "suffix64HD1", true
                 )
             ) listOf("_64_HD1") else emptyList()
-            val sufHd164 = if (DataStoreUtil.getBoolean(
+            val sufHd164 = if (DataStoreUtil.getBooleanKV(
                     "suffixHD164", true
                 )
             ) listOf("_HD1_64") else emptyList()
-            val suf64hd2 = if (DataStoreUtil.getBoolean(
+            val suf64hd2 = if (DataStoreUtil.getBooleanKV(
                     "suffix64HD2", true
                 )
             ) listOf("_64_HD2") else emptyList()
-            val sufHd264 = if (DataStoreUtil.getBoolean(
+            val sufHd264 = if (DataStoreUtil.getBooleanKV(
                     "suffixHD264", true
                 )
             ) listOf("_HD2_64") else emptyList()
-            val suf64hd3 = if (DataStoreUtil.getBoolean(
+            val suf64hd3 = if (DataStoreUtil.getBooleanKV(
                     "suffix64HD3", true
                 )
             ) listOf("_64_HD3") else emptyList()
-            val sufHd364 = if (DataStoreUtil.getBoolean(
+            val sufHd364 = if (DataStoreUtil.getBooleanKV(
                     "suffixHD364", true
                 )
             ) listOf("_HD3_64") else emptyList()
-            val suf64hd1hb = if (DataStoreUtil.getBoolean(
+            val suf64hd1hb = if (DataStoreUtil.getBooleanKV(
                     "suffix64HD1HB", true
                 )
             ) listOf("_64_HD1HB") else emptyList()
-            val sufHd1hb64 = if (DataStoreUtil.getBoolean(
+            val sufHd1hb64 = if (DataStoreUtil.getBooleanKV(
                     "suffixHD1HB64", true
                 )
             ) listOf("_HD1HB_64") else emptyList()
             val sufTest =
-                if (DataStoreUtil.getBoolean("suffixTest", true)) listOf("_test") else emptyList()
+                if (DataStoreUtil.getBooleanKV("suffixTest", true)) listOf("_test") else emptyList()
 
             val stListPre = listOf("_64") + arrayListOf(
                 suf64hb,

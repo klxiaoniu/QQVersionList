@@ -20,7 +20,6 @@ package com.xiaoniu.qqversionlist.util
 
 import android.content.Context
 import androidx.datastore.core.DataStore
-import androidx.datastore.core.IOException
 import androidx.datastore.preferences.SharedPreferencesMigration
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -41,7 +40,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 object DataStoreUtil {
-    private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "data",
+    private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(
+        name = "data",
         produceMigrations = { context ->
             listOf(
                 SharedPreferencesMigration(context, "data")
@@ -52,8 +52,7 @@ object DataStoreUtil {
         QVTApplication.instance.dataStore
     }
 
-    @Throws(IOException::class)
-    fun getInt(key: String, defValue: Int): Int {
+    fun getIntKV(key: String, defValue: Int): Int {
         return runBlocking {
             dataStore.data.firstOrNull()?.let { preferences ->
                 preferences[intPreferencesKey(key)] ?: defValue
@@ -61,8 +60,7 @@ object DataStoreUtil {
         }
     }
 
-    @Throws(IOException::class)
-    fun putInt(key: String, value: Int) {
+    fun putIntKV(key: String, value: Int) {
         runBlocking {
             dataStore.edit { preferences ->
                 preferences[intPreferencesKey(key)] = value
@@ -70,8 +68,7 @@ object DataStoreUtil {
         }
     }
 
-    @Throws(IOException::class)
-    fun getString(key: String, defValue: String): String {
+    fun getStringKV(key: String, defValue: String): String {
         return runBlocking {
             dataStore.data.firstOrNull()?.let { preferences ->
                 preferences[stringPreferencesKey(key)] ?: defValue
@@ -79,8 +76,7 @@ object DataStoreUtil {
         }
     }
 
-    @Throws(IOException::class)
-    fun putString(key: String, value: String) {
+    fun putStringKV(key: String, value: String) {
         runBlocking {
             dataStore.edit { preferences ->
                 preferences[stringPreferencesKey(key)] = value
@@ -88,8 +84,7 @@ object DataStoreUtil {
         }
     }
 
-    @Throws(IOException::class)
-    fun getBoolean(key: String, defValue: Boolean): Boolean {
+    fun getBooleanKV(key: String, defValue: Boolean): Boolean {
         return runBlocking {
             dataStore.data.firstOrNull()?.let { preferences ->
                 preferences[booleanPreferencesKey(key)] ?: defValue
@@ -97,8 +92,7 @@ object DataStoreUtil {
         }
     }
 
-    @Throws(IOException::class)
-    fun putBoolean(key: String, value: Boolean) {
+    fun putBooleanKV(key: String, value: Boolean) {
         runBlocking {
             dataStore.edit { preferences ->
                 preferences[booleanPreferencesKey(key)] = value
@@ -106,8 +100,7 @@ object DataStoreUtil {
         }
     }
 
-    @Throws(IOException::class)
-    fun deletePreference(key: String) {
+    fun deleteKV(key: String) {
         runBlocking {
             dataStore.edit { preferences ->
                 preferences.remove(stringPreferencesKey(key))
@@ -120,8 +113,49 @@ object DataStoreUtil {
         }
     }
 
+    /**
+     * 批量写入 DataStore 持久化存储数据
+     * @param dataStoreList List<Map<String, Any>>
+     *
+     *  key: String
+     *
+     *  value: Any
+     *
+     *  type: String
+     */
+    fun batchPutKV(dataStoreList: List<Map<String, Any>>) {
+        runBlocking {
+            dataStore.edit { preferences ->
+                dataStoreList.forEach { dataMap ->
+                    val key = dataMap["key"] as? String ?: return@forEach
+                    val value = dataMap["value"]
+                    when (val type = dataMap["type"] as? String) {
+                        "Int", "int" -> preferences[intPreferencesKey(key)] =
+                            value as? Int ?: return@forEach
 
-    fun getIntAsync(key: String, defValue: Int): Deferred<Int> {
+                        "Long", "long" -> preferences[longPreferencesKey(key)] =
+                            value as? Long ?: return@forEach
+
+                        "Float", "float" -> preferences[floatPreferencesKey(key)] =
+                            value as? Float ?: return@forEach
+
+                        "Double", "double" -> preferences[doublePreferencesKey(key)] =
+                            value as? Double ?: return@forEach
+
+                        "String", "string" -> preferences[stringPreferencesKey(key)] =
+                            value as? String ?: return@forEach
+
+                        "Boolean", "boolean" -> preferences[booleanPreferencesKey(key)] =
+                            value as? Boolean ?: return@forEach
+
+                        else -> throw IllegalArgumentException("DataStore 不支持的类型: $type")
+                    }
+                }
+            }
+        }
+    }
+
+    fun getIntKVAsync(key: String, defValue: Int): Deferred<Int> {
         return CoroutineScope(Dispatchers.IO).async {
             dataStore.data.firstOrNull()?.let { preferences ->
                 preferences[intPreferencesKey(key)] ?: defValue
@@ -129,8 +163,7 @@ object DataStoreUtil {
         }
     }
 
-
-    fun putIntAsync(key: String, value: Int) {
+    fun putIntKVAsync(key: String, value: Int) {
         CoroutineScope(Dispatchers.IO).launch {
             dataStore.edit { preferences ->
                 preferences[intPreferencesKey(key)] = value
@@ -138,8 +171,7 @@ object DataStoreUtil {
         }
     }
 
-
-    fun getStringAsync(key: String, defValue: String): Deferred<String> {
+    fun getStringKVAsync(key: String, defValue: String): Deferred<String> {
         return CoroutineScope(Dispatchers.IO).async {
             dataStore.data.firstOrNull()?.let { preferences ->
                 preferences[stringPreferencesKey(key)] ?: defValue
@@ -147,7 +179,7 @@ object DataStoreUtil {
         }
     }
 
-    fun putStringAsync(key: String, value: String) {
+    fun putStringKVAsync(key: String, value: String) {
         CoroutineScope(Dispatchers.IO).launch {
             dataStore.edit { preferences ->
                 preferences[stringPreferencesKey(key)] = value
@@ -155,7 +187,7 @@ object DataStoreUtil {
         }
     }
 
-    fun getBooleanAsync(key: String, defValue: Boolean): Deferred<Boolean> {
+    fun getBooleanKVAsync(key: String, defValue: Boolean): Deferred<Boolean> {
         return CoroutineScope(Dispatchers.IO).async {
             dataStore.data.firstOrNull()?.let { preferences ->
                 preferences[booleanPreferencesKey(key)] ?: defValue
@@ -163,8 +195,7 @@ object DataStoreUtil {
         }
     }
 
-
-    fun putBooleanAsync(key: String, value: Boolean) {
+    fun putBooleanKVAsync(key: String, value: Boolean) {
         CoroutineScope(Dispatchers.IO).launch {
             dataStore.edit { preferences ->
                 preferences[booleanPreferencesKey(key)] = value
@@ -172,8 +203,7 @@ object DataStoreUtil {
         }
     }
 
-
-    fun deletePreferenceAsync(key: String) {
+    fun deleteKVAsync(key: String) {
         CoroutineScope(Dispatchers.IO).launch {
             dataStore.edit { preferences ->
                 preferences.remove(stringPreferencesKey(key))
@@ -182,6 +212,48 @@ object DataStoreUtil {
                 preferences.remove(floatPreferencesKey(key))
                 preferences.remove(longPreferencesKey(key))
                 preferences.remove(doublePreferencesKey(key))
+            }
+        }
+    }
+
+    /**
+     * 异步批量写入 DataStore 持久化存储数据
+     * @param dataStoreList List<Map<String, Any>>
+     *
+     *  key: String
+     *
+     *  value: Any
+     *
+     *  type: String
+     */
+    fun batchPutKVAsync(dataStoreList: List<Map<String, Any>>) {
+        CoroutineScope(Dispatchers.IO).launch {
+            dataStore.edit { preferences ->
+                dataStoreList.forEach { dataMap ->
+                    val key = dataMap["key"] as? String ?: return@forEach
+                    val value = dataMap["value"]
+                    when (val type = dataMap["type"] as? String) {
+                        "Int", "int" -> preferences[intPreferencesKey(key)] =
+                            value as? Int ?: return@forEach
+
+                        "Long", "long" -> preferences[longPreferencesKey(key)] =
+                            value as? Long ?: return@forEach
+
+                        "Float", "float" -> preferences[floatPreferencesKey(key)] =
+                            value as? Float ?: return@forEach
+
+                        "Double", "double" -> preferences[doublePreferencesKey(key)] =
+                            value as? Double ?: return@forEach
+
+                        "String", "string" -> preferences[stringPreferencesKey(key)] =
+                            value as? String ?: return@forEach
+
+                        "Boolean", "boolean" -> preferences[booleanPreferencesKey(key)] =
+                            value as? Boolean ?: return@forEach
+
+                        else -> throw IllegalArgumentException("DataStore 不支持的类型: $type")
+                    }
+                }
             }
         }
     }

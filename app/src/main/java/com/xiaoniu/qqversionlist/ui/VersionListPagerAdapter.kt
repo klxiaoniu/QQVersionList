@@ -30,8 +30,8 @@ class VersionListPagerAdapter(context: Context) :
 
     override fun createFragment(position: Int): Fragment {
         return when (position) {
-            0 -> QQVersionListFragmentAdapter()
-            1 -> TIMVersionListFragmentAdapter()
+            0 -> QQVersionListFragment()
+            1 -> TIMVersionListFragment()
             else -> throw IllegalArgumentException(position.toString())
         }
     }
