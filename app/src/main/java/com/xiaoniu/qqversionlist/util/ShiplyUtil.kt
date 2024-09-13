@@ -48,13 +48,13 @@ object ShiplyUtil {
     /**
      * @param appVersion QQ 版本号
      * @param uin QQ 号
-     * @param appid QQ 版本 ID，如 "537230561"
+     * @param appid QQ 版本 ID，如 `537230561`
      * @param osVersion Android 版本（整数表示）
      * @param model 设备型号
      * @param sdkVersion Shiply SDK 版本
      * @param language 语言
      * @return 生成的 JSON 字符串
-     */
+     **/
     fun generateJsonString(
         appVersion: String,
         uin: String,

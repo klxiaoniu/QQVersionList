@@ -157,6 +157,9 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
+    /**
+     * @param UATarget 用户协议版本
+     **/
     private fun showUADialog(agreed: Boolean, UATarget: Int) {
 
         // 屏幕高度获取
@@ -208,7 +211,10 @@ class MainActivity : AppCompatActivity() {
         // 删除 version Shared Preferences
         DataStoreUtil.deletePreferenceAsync("version")
 
-        // 这里的“getInt: userAgreement”的值代表着用户协议修订版本，后续更新协议版本后也需要在下面一行把“judgeUARead”+1，以此类推
+        /**
+         * 这里的 `val judgeUATarget = 2` 的值代表着用户协议修订版本，
+         * 后续更新协议版本后也需要在下面一行把“judgeUATarget” + 1，以此类推
+         **/
         val judgeUATarget = 2 // 2024.5.30 第二版
         if (DataStoreUtil.getInt("userAgreement", 0) < judgeUATarget) showUADialog(
             false, judgeUATarget
@@ -817,12 +823,15 @@ class MainActivity : AppCompatActivity() {
         val dialogGuessBinding = DialogGuessBinding.inflate(layoutInflater)
         val verBig = DataStoreUtil.getString("versionBig", "")
         dialogGuessBinding.etVersionBig.editText?.setText(verBig)
-        val memVersion = DataStoreUtil.getString("versionSelect", MODE_OFFICIAL)
-        if (memVersion == MODE_TEST || memVersion == MODE_UNOFFICIAL || memVersion == MODE_OFFICIAL || memVersion == MODE_WECHAT) dialogGuessBinding.spinnerVersion.setText(
-            memVersion, false
-        ) else {
-            dialogGuessBinding.spinnerVersion.setText(MODE_OFFICIAL, false)
-            DataStoreUtil.putStringAsync("versionSelect", MODE_OFFICIAL)
+        when (val memVersion = DataStoreUtil.getString("versionSelect", MODE_OFFICIAL)) {
+            MODE_TEST, MODE_UNOFFICIAL, MODE_OFFICIAL, MODE_WECHAT -> dialogGuessBinding.spinnerVersion.setText(
+                memVersion, false
+            )
+
+            else -> {
+                dialogGuessBinding.spinnerVersion.setText(MODE_OFFICIAL, false)
+                DataStoreUtil.putStringAsync("versionSelect", MODE_OFFICIAL)
+            }
         }
 
         when (dialogGuessBinding.spinnerVersion.text.toString()) {
@@ -847,15 +856,6 @@ class MainActivity : AppCompatActivity() {
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
         })
-
-//            舍弃
-//            dialogGuessBinding.spinnerVersion.setOnFocusChangeListener { _, hasFocus ->
-//                if (hasFocus) {
-//                    val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-//                    imm.hideSoftInputFromWindow(dialogGuessBinding.spinnerVersion.windowToken, 0)
-//                }
-//            }
-
 
         val dialogGuess = MaterialAlertDialogBuilder(this)
             .setTitle(R.string.enumerateVersionsDialogTitle)
@@ -888,40 +888,35 @@ class MainActivity : AppCompatActivity() {
                 var version16code = 0.toString()
                 var versionTrue = 0
                 when (mode) {
-                    MODE_TEST, MODE_UNOFFICIAL -> {
-                        if (dialogGuessBinding.etVersionSmall.editText?.text.isNullOrEmpty()) throw MissingVersionException(
-                            getString(R.string.missingMajorVersionWarning)
-                        ) else {
-                            versionSmall =
-                                dialogGuessBinding.etVersionSmall.editText?.text.toString().toInt()
-                            if (versionSmall % 5 != 0 && !DataStoreUtil.getBoolean(
-                                    "guessNot5", false
-                                )
-                            ) throw InvalidMultipleException(getString(R.string.QQPreviewMinorNot5Warning))
-                            if (versionSmall != 0) DataStoreUtil.putIntAsync(
-                                "versionSmall", versionSmall
+                    MODE_TEST, MODE_UNOFFICIAL -> if (dialogGuessBinding.etVersionSmall.editText?.text.isNullOrEmpty()) throw MissingVersionException(
+                        getString(R.string.missingMajorVersionWarning)
+                    ) else {
+                        versionSmall =
+                            dialogGuessBinding.etVersionSmall.editText?.text.toString().toInt()
+                        if (versionSmall % 5 != 0 && !DataStoreUtil.getBoolean(
+                                "guessNot5", false
                             )
-                        }
-
+                        ) throw InvalidMultipleException(getString(R.string.QQPreviewMinorNot5Warning))
+                        if (versionSmall != 0) DataStoreUtil.putIntAsync(
+                            "versionSmall", versionSmall
+                        )
                     }
 
-                    MODE_WECHAT -> {
-                        if (dialogGuessBinding.etVersionTrue.editText?.text.isNullOrEmpty()) throw MissingVersionException(
-                            getString(R.string.missingWeixinTrueVersionWarning)
-                        ) else if (dialogGuessBinding.etVersion16code.editText?.text.isNullOrEmpty()) throw MissingVersionException(
-                            getString(R.string.missingWeixin16CodeWarning)
-                        ) else {
-                            versionTrue =
-                                dialogGuessBinding.etVersionTrue.editText?.text.toString().toInt()
-                            version16code =
-                                dialogGuessBinding.etVersion16code.editText?.text.toString()
-                            if (version16code != 0.toString()) DataStoreUtil.putStringAsync(
-                                "version16code", version16code
-                            )
-                            if (versionTrue != 0) DataStoreUtil.putIntAsync(
-                                "versionTrue", versionTrue
-                            )
-                        }
+                    MODE_WECHAT -> if (dialogGuessBinding.etVersionTrue.editText?.text.isNullOrEmpty()) throw MissingVersionException(
+                        getString(R.string.missingWeixinTrueVersionWarning)
+                    ) else if (dialogGuessBinding.etVersion16code.editText?.text.isNullOrEmpty()) throw MissingVersionException(
+                        getString(R.string.missingWeixin16CodeWarning)
+                    ) else {
+                        versionTrue =
+                            dialogGuessBinding.etVersionTrue.editText?.text.toString().toInt()
+                        version16code =
+                            dialogGuessBinding.etVersion16code.editText?.text.toString()
+                        if (version16code != 0.toString()) DataStoreUtil.putStringAsync(
+                            "version16code", version16code
+                        )
+                        if (versionTrue != 0) DataStoreUtil.putIntAsync(
+                            "versionTrue", versionTrue
+                        )
                     }
                 }
                 guessUrl(versionBig, versionSmall, versionTrue, version16code, mode)
@@ -1263,16 +1258,14 @@ class MainActivity : AppCompatActivity() {
                 while (true) when (status) {
                     STATUS_ONGOING -> {
                         when (mode) {
-                            MODE_TEST -> {
-                                if (link == "" || !guessTestExtend) {
-                                    link =
-                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}${stList[sIndex]}.apk"
-                                    if (guessTestExtend) sIndex += 1
-                                } else {
-                                    link =
-                                        "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}.${vSmall}${stList[sIndex]}.apk"
-                                    sIndex += 1
-                                }
+                            MODE_TEST -> if (link == "" || !guessTestExtend) {
+                                link =
+                                    "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_$versionBig.${vSmall}${stList[sIndex]}.apk"
+                                if (guessTestExtend) sIndex += 1
+                            } else {
+                                link =
+                                    "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_${versionBig}.${vSmall}${stList[sIndex]}.apk"
+                                sIndex += 1
                             }
 
                             MODE_UNOFFICIAL -> link =
@@ -1500,6 +1493,16 @@ class MainActivity : AppCompatActivity() {
         thread.start()
     }
 
+    /**
+     * @param btn `MaterialButton` 实例，此函数将控制传入按钮的加载态
+     * @param shiplyVersion QQ 版本号
+     * @param shiplyUin QQ 号
+     * @param shiplyAppid QQ 版本 ID，如 `537230561`
+     * @param shiplyOsVersion Android 版本（整数表示）
+     * @param shiplyModel 设备型号
+     * @param shiplySdkVersion Shiply SDK 版本
+     * @param shiplyLanguage 语言
+     **/
     private fun tencentShiplyStart(
         btn: MaterialButton,
         shiplyVersion: String,
@@ -1616,9 +1619,11 @@ class MainActivity : AppCompatActivity() {
                 dialogError(e)
             } finally {
                 runOnUiThread {
-                    btn.style(com.google.android.material.R.style.Widget_Material3_Button)
-                    btn.icon = null
-                    btn.isEnabled = true
+                    btn.apply {
+                        style(com.google.android.material.R.style.Widget_Material3_Button)
+                        icon = null
+                        isEnabled = true
+                    }
                 }
             }
         }
