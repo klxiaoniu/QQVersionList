@@ -1,3 +1,21 @@
+/*
+    QQ Versions Tool for Android™
+    Copyright (C) 2023 klxiaoniu
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
 package com.xiaoniu.qqversionlist.ui
 
 import android.annotation.SuppressLint
@@ -6,49 +24,40 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.text.HtmlCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.xiaoniu.qqversionlist.R
+import com.xiaoniu.qqversionlist.databinding.LocalQqBinding
 import com.xiaoniu.qqversionlist.util.DataStoreUtil
 
 class LocalQQAdapter : RecyclerView.Adapter<LocalQQAdapter.LocalQQViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LocalQQViewHolder {
-        val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.local_qq_list, parent, false)
-        return LocalQQViewHolder(view)
+        val binding = LocalQqBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return LocalQQViewHolder(binding)
     }
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: LocalQQViewHolder, position: Int) {
-        val QQVersionInstall2 = DataStoreUtil.getString("QQVersionInstall", "")
-        val TIMVersionInstall2 = DataStoreUtil.getString("TIMVersionInstall", "")
-        val QQVersionCodeInstall2 = DataStoreUtil.getString("QQVersionCodeInstall", "")
-        val TIMVersionCodeInstall2 = DataStoreUtil.getString("TIMVersionCodeInstall", "")
-        val QQAppSettingParamsInstall = DataStoreUtil.getString("QQAppSettingParamsInstall", "")
-        val TIMAppSettingParamsInstall = DataStoreUtil.getString("TIMAppSettingParamsInstall", "")
-        val QQRdmUUIDInstall = if (DataStoreUtil.getString(
+        val QQVersionInstall2 = DataStoreUtil.getStringKV("QQVersionInstall", "")
+        val QQVersionCodeInstall2 = DataStoreUtil.getStringKV("QQVersionCodeInstall", "")
+        val QQAppSettingParamsInstall = DataStoreUtil.getStringKV("QQAppSettingParamsInstall", "")
+        val QQRdmUUIDInstall = if (DataStoreUtil.getStringKV(
                 "QQRdmUUIDInstall", ""
             ) != ""
-        ) ".${DataStoreUtil.getString("QQRdmUUIDInstall", "").split("_")[0]}" else ""
-        val TIMRdmUUIDInstall = if (DataStoreUtil.getString(
-                "TIMRdmUUIDInstall", ""
-            ) != ""
-        ) ".${DataStoreUtil.getString("TIMRdmUUIDInstall", "").split("_")[0]}" else ""
-        val QQChannelInstall = if (QQAppSettingParamsInstall != "") DataStoreUtil.getString(
+        ) ".${DataStoreUtil.getStringKV("QQRdmUUIDInstall", "").split("_")[0]}" else ""
+        val QQChannelInstall = if (QQAppSettingParamsInstall != "") DataStoreUtil.getStringKV(
             "QQAppSettingParamsInstall", ""
-        ).split("#")[3] else ""
-        val TIMChannelInstall = if (TIMAppSettingParamsInstall != "") DataStoreUtil.getString(
-            "TIMAppSettingParamsInstall", ""
         ).split("#")[3] else ""
         holder.apply {
             if (QQVersionInstall2 != "") {
                 itemQqInstallText.text =
-                    if (QQChannelInstall != "") itemView.context.getString(R.string.localQQVersion) + DataStoreUtil.getString(
+                    if (QQChannelInstall != "") itemView.context.getString(R.string.localQQVersion) + DataStoreUtil.getStringKV(
                         "QQVersionInstall", ""
                     ) + QQRdmUUIDInstall + (if (QQVersionCodeInstall2 != "") " (${QQVersionCodeInstall2})" else "") + " - $QQChannelInstall" else itemView.context.getString(
                         R.string.localQQVersion
-                    ) + DataStoreUtil.getString("QQVersionInstall", "")
+                    ) + DataStoreUtil.getStringKV("QQVersionInstall", "")
                 itemQqInstallCard.visibility = View.VISIBLE
 
                 // 无障碍标记
@@ -73,41 +82,69 @@ class LocalQQAdapter : RecyclerView.Adapter<LocalQQAdapter.LocalQQViewHolder>() 
                         ), Charsets.UTF_8
                     )*/
                 itemQqInstallCard.setOnLongClickListener {
-                    if (DataStoreUtil.getBoolean("longPressCard", true)) {
+                    if (DataStoreUtil.getBooleanKV("longPressCard", true)) {
                         val tv = TextView(itemView.context).apply {
-                            text = "Version Name: ${
-                                DataStoreUtil.getString(
-                                    "QQVersionInstall", ""
-                                )
-                            }" + (if (DataStoreUtil.getString(
-                                    "QQRdmUUIDInstall", ""
-                                ) != ""
-                            ) "\n\nRdm UUID: ${
-                                DataStoreUtil.getString(
-                                    "QQRdmUUIDInstall", ""
-                                )
-                            }" else "") + (if (DataStoreUtil.getString(
-                                    "QQVersionCodeInstall", ""
-                                ) != ""
-                            ) "\n\nVersion Code: ${
-                                DataStoreUtil.getString(
-                                    "QQVersionCodeInstall", ""
-                                )
-                            }" else "") + (if (DataStoreUtil.getString(
-                                    "QQAppSettingParamsInstall", ""
-                                ) != ""
-                            ) "\n\nAppSetting_params: ${
-                                DataStoreUtil.getString(
-                                    "QQAppSettingParamsInstall", ""
-                                )
-                            }" else "") + (if (DataStoreUtil.getString(
-                                    "QQAppSettingParamsPadInstall", ""
-                                ) != ""
-                            ) "\n\nAppSetting_params_pad: ${
-                                DataStoreUtil.getString(
-                                    "QQAppSettingParamsPadInstall", ""
-                                )
-                            }" else "")
+                            text = HtmlCompat.fromHtml(
+                                (if (DataStoreUtil.getStringKV(
+                                        "QQTargetInstall",
+                                        ""
+                                    ) != ""
+                                ) "<b>Target SDK</b>: ${
+                                    DataStoreUtil.getStringKV(
+                                        "QQTargetInstall",
+                                        ""
+                                    )
+                                }" else "") + (if (DataStoreUtil.getStringKV(
+                                        "QQMinInstall",
+                                        ""
+                                    ) != ""
+                                ) "<br><b>Min SDK</b>: ${
+                                    DataStoreUtil.getStringKV(
+                                        "QQMinInstall",
+                                        ""
+                                    )
+                                }" else "") + (if (DataStoreUtil.getStringKV(
+                                        "QQCompileInstall",
+                                        ""
+                                    ) != ""
+                                ) "<br><b>Compile SDK</b>: ${
+                                    DataStoreUtil.getStringKV(
+                                        "QQCompileInstall", ""
+                                    )
+                                }" else "") + "<br><b>Version Name</b>: ${
+                                    DataStoreUtil.getStringKV(
+                                        "QQVersionInstall", ""
+                                    )
+                                }" + (if (DataStoreUtil.getStringKV(
+                                        "QQRdmUUIDInstall", ""
+                                    ) != ""
+                                ) "<br><b>Rdm UUID</b>: ${
+                                    DataStoreUtil.getStringKV(
+                                        "QQRdmUUIDInstall", ""
+                                    )
+                                }" else "") + (if (DataStoreUtil.getStringKV(
+                                        "QQVersionCodeInstall", ""
+                                    ) != ""
+                                ) "<br><b>Version Code</b>: ${
+                                    DataStoreUtil.getStringKV(
+                                        "QQVersionCodeInstall", ""
+                                    )
+                                }" else "") + (if (DataStoreUtil.getStringKV(
+                                        "QQAppSettingParamsInstall", ""
+                                    ) != ""
+                                ) "<br><b>AppSetting_params</b>: ${
+                                    DataStoreUtil.getStringKV(
+                                        "QQAppSettingParamsInstall", ""
+                                    )
+                                }" else "") + (if (DataStoreUtil.getStringKV(
+                                        "QQAppSettingParamsPadInstall", ""
+                                    ) != ""
+                                ) "<br><b>AppSetting_params_pad</b>: ${
+                                    DataStoreUtil.getStringKV(
+                                        "QQAppSettingParamsPadInstall", ""
+                                    )
+                                }" else ""), HtmlCompat.FROM_HTML_MODE_LEGACY
+                            )
                             setTextIsSelectable(true)
                             setPadding(96, 48, 96, 96)
                         }
@@ -118,65 +155,12 @@ class LocalQQAdapter : RecyclerView.Adapter<LocalQQAdapter.LocalQQViewHolder>() 
                             .show()
                     } else Toast.makeText(
                         itemView.context,
-                        itemView.context.getString(R.string.longPressToViewSourceDetailsIsDisabledPleaseGoToSettingsToTurnItOn),
+                        itemView.context.getString(R.string.longPressToViewSourceDetailsIsDisabled),
                         Toast.LENGTH_SHORT
                     ).show()
                     true
                 }
             } else itemQqInstallCard.visibility = View.GONE
-            if (TIMVersionInstall2 != "") {
-                itemTimInstallText.text =
-                    if (TIMChannelInstall != "") itemView.context.getString(R.string.localTIMVersion) + DataStoreUtil.getString(
-                        "TIMVersionInstall", ""
-                    ) + TIMRdmUUIDInstall + (if (TIMVersionCodeInstall2 != "") " (${TIMVersionCodeInstall2})" else "") + " - $TIMChannelInstall" else itemView.context.getString(
-                        R.string.localTIMVersion
-                    ) + DataStoreUtil.getString("TIMVersionInstall", "")
-                itemTimInstallCard.visibility = View.VISIBLE
-                itemTimInstallCard.setOnLongClickListener {
-                    if (DataStoreUtil.getBoolean("longPressCard", true)) {
-                        val tv = TextView(itemView.context).apply {
-                            text = "Version Name: ${
-                                DataStoreUtil.getString(
-                                    "TIMVersionInstall", ""
-                                )
-                            }" + (if (DataStoreUtil.getString(
-                                    "TIMRdmUUIDInstall", ""
-                                ) != ""
-                            ) "\n\nRdm UUID: ${
-                                DataStoreUtil.getString(
-                                    "TIMRdmUUIDInstall", ""
-                                )
-                            }" else "") + (if (DataStoreUtil.getString(
-                                    "TIMVersionCodeInstall", ""
-                                ) != ""
-                            ) "\n\nVersion Code: ${
-                                DataStoreUtil.getString(
-                                    "TIMVersionCodeInstall", ""
-                                )
-                            }" else "") + (if (DataStoreUtil.getString(
-                                    "TIMAppSettingParamsInstall", ""
-                                ) != ""
-                            ) "\n\nAppSetting_params: ${
-                                DataStoreUtil.getString(
-                                    "TIMAppSettingParamsInstall", ""
-                                )
-                            }" else "")
-                            setTextIsSelectable(true)
-                            setPadding(96, 48, 96, 96)
-                        }
-                        MaterialAlertDialogBuilder(itemView.context)
-                            .setView(tv)
-                            .setTitle(R.string.localTIMVersionDetails)
-                            .setIcon(R.drawable.phone_find_line)
-                            .show()
-                    } else Toast.makeText(
-                        itemView.context,
-                        itemView.context.getString(R.string.longPressToViewSourceDetailsIsDisabledPleaseGoToSettingsToTurnItOn),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    true
-                }
-            } else itemTimInstallCard.visibility = View.GONE
         }
     }
 
@@ -188,11 +172,9 @@ class LocalQQAdapter : RecyclerView.Adapter<LocalQQAdapter.LocalQQViewHolder>() 
     }
 
     @SuppressLint("SetTextI18n")
-    inner class LocalQQViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val itemQqInstallText = itemView.findViewById<TextView>(R.id.item_qq_install_text)
-        val itemQqInstallCard = itemView.findViewById<View>(R.id.item_qq_install_card)
-        val itemTimInstallCard = itemView.findViewById<View>(R.id.item_tim_install_card)
-        val itemTimInstallText = itemView.findViewById<TextView>(R.id.item_tim_install_text)
+    inner class LocalQQViewHolder(binding: LocalQqBinding) : RecyclerView.ViewHolder(binding.root) {
+        val itemQqInstallText = binding.itemQqInstallText
+        val itemQqInstallCard = binding.itemQqInstallCard
     }
 }
 

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+   Copyright 2018 Remix-Design
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+  <group android:scaleX="0.792"
+      android:scaleY="0.792"
+      android:translateX="2.496"
+      android:translateY="2.496">
+    <group android:scaleX="0.9339623"
+        android:scaleY="0.9339623"
+        android:translateX="0.8962264"
+        android:translateY="0.8962264">
+      <group android:scaleX="0.8123077"
+          android:scaleY="0.8123077"
+          android:translateX="2.1620512"
+          android:translateY="2.1620512">
+        <group android:scaleX="2"
+            android:scaleY="2"
+            android:translateX="-11.777778"
+            android:translateY="-11.777778">
+          <group android:scaleX="0.35869566"
+              android:scaleY="0.35869566"
+              android:translateX="7.615942"
+              android:translateY="7.615942">
+            <path
+                android:pathData="M5.671,4.257L13.414,12L12,13.414L5.68,7.094C4.627,8.449 4,10.151 4,12C4,16.418 7.582,20 12,20C16.418,20 20,16.418 20,12C20,7.582 16.418,4 12,4C11.085,4 10.205,4.154 9.386,4.437L7.849,2.899C9.114,2.322 10.519,2 12,2C17.523,2 22,6.477 22,12C22,17.523 17.523,22 12,22C6.477,22 2,17.523 2,12C2,8.878 3.43,6.091 5.671,4.257Z"
+                android:fillColor="#00201B"/>
+          </group>
+        </group>
+      </group>
+    </group>
+  </group>
+</vector>

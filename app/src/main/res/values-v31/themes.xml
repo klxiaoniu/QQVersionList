@@ -18,7 +18,7 @@
 
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="Base.Theme.QQVersionList" parent="Theme.Material3.DynamicColors.Light.NoActionBar">
+    <style name="Base.Theme.QQVersionList" parent="Theme.Material3.DynamicColors.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
         <item name="android:windowLightStatusBar">true</item>

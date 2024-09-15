@@ -15,6 +15,16 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
-<resources>
-    <color name="search_shortcut_icon_background">#A0F2DF</color>
-</resources>
+<androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rv_content"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clipToPadding="false"
+    android:fillViewport="true"
+    android:paddingStart="11dp"
+    android:paddingTop="11dp"
+    android:paddingEnd="11dp"
+    android:paddingBottom="100dp"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    app:layout_constrainedHeight="true" />

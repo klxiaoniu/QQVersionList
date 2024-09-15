@@ -30,6 +30,14 @@ object StringUtil {
     @OptIn(ExperimentalSerializationApi::class)
     private val json = Json { isLenient = true; prettyPrint = true; prettyPrintIndent = "  " }
 
+    /**
+     * 将当前字符串转换为格式化的 JSON 字符串。
+     *
+     * 此函数尝试将当前字符串解析为 JSON 元素，并将其格式化为更易读的格式。
+     * 如果解析或格式化过程中发生异常，则返回原始字符串。
+     *
+     * @return 格式化后的 JSON 字符串，如果解析失败则返回原始字符串。
+     */
     fun String.toPrettyFormat(): String {
         return try {
             val parsedElement = Json.parseToJsonElement(this)
@@ -41,6 +49,11 @@ object StringUtil {
         }
     }
 
+    /**
+     * 从字符串中提取所有以 `.apk` 结尾的 URL 链接
+     *
+     * @return 返回一个包含所有提取到的 `.apk` 文件 URL 链接的列表如果未找到任何 `.apk` 链接，则返回 null
+     */
     fun String.getAllAPKUrl(): List<String>? {
         val urlPattern =
             """(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))""".toRegex()
@@ -49,7 +62,14 @@ object StringUtil {
         return if (apkUrls.isEmpty()) null else apkUrls
     }
 
-
+    /**
+     * 格式化 Json 元素的私有方法
+     * 此方法用于递归地格式化 Json 对象、数组和原始类型的元素
+     * 对于字符串类型的 Json 原始元素，如果其内容本身就是有效的 Json，也会进行格式化
+     *
+     * @param element 要格式化的 Json 元素
+     * @return 格式化后的 Json 元素
+     */
     private fun formatJsonElement(element: JsonElement): JsonElement {
         return when (element) {
             is JsonObject -> JsonObject(element.entries.map { (key, value) ->
@@ -70,6 +90,16 @@ object StringUtil {
         }
     }
 
+    /**
+     * 判断字符串是否为 JSON 格式
+     *
+     * JSON(JavaScript Object Notation)是一种轻量级的数据交换格式，常见于 Web 服务和客户端之间的数据传输
+     * 本函数通过检查字符串是否以左大括号'{'或左方括号'['开始，并以相应的右括号'}'或']'结束，
+     * 来简单判断字符串是否为 JSON 格式。这种方法仅适用于格式非常标准且结构简单的JSON字符串的初步判断，
+     * **对于复杂的 JSON 结构或包含转义字符的情况则不适用**。
+     *
+     * @return 如果字符串为 JSON 格式，则返回 true；否则返回 false
+     */
     private fun String.isJson(): Boolean {
         return this.startsWith("{") && this.endsWith("}") || this.startsWith("[") && this.endsWith("]")
     }

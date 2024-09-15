@@ -20,7 +20,18 @@ package com.xiaoniu.qqversionlist.data
 
 import kotlinx.serialization.Serializable
 
-
+/**
+ * @param versions QQ 版本代码
+ * @param versionNumber QQ 版本号
+ * @param size QQ 版本额定大小
+ * @param featureTitle QQ 版本特性标题
+ * @param imgs QQ 应用宣传图片列表
+ * @param summary QQ 版本特性描述列表
+ * @param jsonString 该 QQ 版本 JSON 字符串详情
+ * @param displayType 卡片展示类型，0 为收起态，1 为展开态
+ * @param displayInstall 展示是否安装到本机的标签
+ * @param isQQNTFramework 该版本是否基于 QQNT 技术架构
+ */
 @Serializable
 data class QQVersionBean(
     val versions: String,
@@ -33,5 +44,6 @@ data class QQVersionBean(
     var jsonString: String = "",
     var displayType: Int = 0, // 0为收起
     var displayInstall: Boolean = false, // false 为不展示
-    var isAccessibility: Boolean = false
+    var isAccessibility: Boolean = false,
+    var isQQNTFramework: Boolean = false
 )

@@ -45,6 +45,16 @@ import javax.crypto.spec.SecretKeySpec
 
 object ShiplyUtil {
 
+    /**
+     * @param appVersion QQ 版本号
+     * @param uin QQ 号
+     * @param appid QQ 版本 ID，如 `537230561`
+     * @param osVersion Android 版本（整数表示）
+     * @param model 设备型号
+     * @param sdkVersion Shiply SDK 版本
+     * @param language 语言
+     * @return 生成的 JSON 字符串
+     **/
     fun generateJsonString(
         appVersion: String,
         uin: String,
@@ -86,6 +96,16 @@ object ShiplyUtil {
         return GsonBuilder().setStrictness(Strictness.LENIENT).create().toJson(data)
     }
 
+    /**
+     * 从给定的 JSON 字符串中提取加密文本。
+     *
+     * 该函数旨在处理一个特定格式的 JSON 字符串，该字符串预期包含嵌套结构，
+     * 最终目标是提取出“cipher_text”字段的值。如果输入字符串不符合预期格式，
+     * 或者“cipher_text”字段不存在，或者它不是一个原始的 JSON 类型，则函数返回 null。
+     *
+     * @param jsonString 期望格式化的 JSON 字符串。
+     * @return 提取的加密文本字符串，如果提取失败则返回 null。
+     */
     fun getCipherText(jsonString: String): String? {
         val json = JsonParser.parseString(jsonString)
         if (!json.isJsonObject) return null
@@ -156,6 +176,12 @@ object ShiplyUtil {
         return cipher.doFinal(data)
     }
 
+    /**
+     * @param url 请求的 URL 地址
+     * @param data 请求体中的 JSON 数据
+     * @return 服务器的响应内容
+     * @throws IOException 如果网络请求失败或响应体为空时抛出
+     */
     fun postJsonWithOkHttp(url: String, data: Any): String {
         val client = OkHttpClient.Builder().addInterceptor(HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY

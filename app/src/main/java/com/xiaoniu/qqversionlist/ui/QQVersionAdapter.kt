@@ -23,6 +23,7 @@ import android.content.Context
 import android.graphics.Typeface
 import android.util.Base64
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -40,22 +41,24 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.xiaoniu.qqversionlist.R
 import com.xiaoniu.qqversionlist.data.QQVersionBean
-import com.xiaoniu.qqversionlist.databinding.ItemVersionBinding
-import com.xiaoniu.qqversionlist.databinding.ItemVersionDetailBinding
+import com.xiaoniu.qqversionlist.databinding.ItemQqVersionBinding
+import com.xiaoniu.qqversionlist.databinding.ItemQqVersionDetailBinding
 import com.xiaoniu.qqversionlist.util.DataStoreUtil
+import com.xiaoniu.qqversionlist.util.Extensions.dp
 import com.xiaoniu.qqversionlist.util.StringUtil.toPrettyFormat
-import com.xiaoniu.qqversionlist.util.dp
 
-private var getProgressSize = DataStoreUtil.getBoolean("progressSize", false)
-private var getVersionTCloud = DataStoreUtil.getBoolean("versionTCloud", true)
-private var getVersionTCloudThickness = DataStoreUtil.getString("versionTCloudThickness", "System")
+private var getProgressSize = DataStoreUtil.getBooleanKV("progressSize", false)
+private var getVersionTCloud = DataStoreUtil.getBooleanKV("versionTCloud", true)
+private var getVersionTCloudThickness =
+    DataStoreUtil.getStringKV("versionTCloudThickness", "System")
 
-class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(VersionDiffCallback()) {
+class QQVersionAdapter :
+    ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(QQVersionDiffCallback()) {
 
-    class ViewHolder(val binding: ItemVersionBinding, val context: Context) :
+    class ViewHolder(val binding: ItemQqVersionBinding, val context: Context) :
         RecyclerView.ViewHolder(binding.root)
 
-    class ViewHolderDetail(val binding: ItemVersionDetailBinding, val context: Context) :
+    class ViewHolderDetail(val binding: ItemQqVersionDetailBinding, val context: Context) :
         RecyclerView.ViewHolder(binding.root)
 
     override fun getItemViewType(position: Int): Int {
@@ -64,9 +67,9 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
-            0 -> {
+            0 -> { // 卡片收起态
                 ViewHolder(
-                    ItemVersionBinding.inflate(
+                    ItemQqVersionBinding.inflate(
                         LayoutInflater.from(parent.context), parent, false
                     ), parent.context
                 ).apply {
@@ -75,16 +78,7 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
                         notifyItemChanged(bindingAdapterPosition)
                     }
                     binding.cardAll.setOnLongClickListener {
-                        if (DataStoreUtil.getBoolean("longPressCard", true)) {
-                            showDialog(
-                                it.context,
-                                currentList[bindingAdapterPosition].jsonString.toPrettyFormat()
-                            )
-                        } else Toast.makeText(
-                            it.context,
-                            R.string.longPressToViewSourceDetailsIsDisabledPleaseGoToSettingsToTurnItOn,
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        longPressCard(bindingAdapterPosition, it)
                         true
                     }
                 }
@@ -92,7 +86,7 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
 
             else -> {
                 ViewHolderDetail(
-                    ItemVersionDetailBinding.inflate(
+                    ItemQqVersionDetailBinding.inflate(
                         LayoutInflater.from(parent.context), parent, false
                     ), parent.context
                 ).apply {
@@ -101,17 +95,7 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
                         notifyItemChanged(bindingAdapterPosition)
                     }
                     binding.cardAllDetail.setOnLongClickListener {
-                        if (DataStoreUtil.getBoolean("longPressCard", true)) {
-                            showDialog(
-                                it.context,
-                                currentList[bindingAdapterPosition].jsonString.toPrettyFormat()
-                            )
-                        } else Toast.makeText(
-                            it.context,
-                            R.string.longPressToViewSourceDetailsIsDisabledPleaseGoToSettingsToTurnItOn,
-                            Toast.LENGTH_SHORT
-                        ).show()
-
+                        longPressCard(bindingAdapterPosition, it)
                         true
                     }
                 }
@@ -134,6 +118,7 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
                     bindDisplayInstall(tvInstall, tvInstallCard, bean)
                     bindVersionTCloud(tvVersion, holder.context)
                     bindAccessibilityTag(accessibilityTag, holder.context, bean)
+                    bindQQNTTag(qqntTag, bean)
                 }
             }
 
@@ -167,6 +152,7 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
                     bindDisplayInstall(tvOldInstall, tvOldInstallCard, bean)
                     bindVersionTCloud(tvOldVersion, holder.context)
                     bindAccessibilityTag(accessibilityOldTag, holder.context, bean)
+                    bindQQNTTag(qqntOldTag, bean)
 
                     bindProgress(
                         listDetailProgressLine,
@@ -179,6 +165,16 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
                 }
             }
         }
+    }
+
+    private fun longPressCard(bindingAdapterPosition: Int, it: View) {
+        if (DataStoreUtil.getBooleanKV("longPressCard", true)) {
+            showDialog(
+                it.context, currentList[bindingAdapterPosition].jsonString.toPrettyFormat()
+            )
+        } else Toast.makeText(
+            it.context, R.string.longPressToViewSourceDetailsIsDisabled, Toast.LENGTH_SHORT
+        ).show()
     }
 
     @SuppressLint("SetTextI18n")
@@ -236,7 +232,7 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
         if (bean.displayInstall) {
             tvInstallCard.isVisible = true
             tvInstall.text = tvInstall.context.getString(R.string.installed)
-            if (bean.isAccessibility) {
+            if (bean.isAccessibility || bean.isQQNTFramework) {
                 val marginLayoutParams = tvInstallCard.layoutParams as ViewGroup.MarginLayoutParams
                 marginLayoutParams.marginStart = 3.dp
                 tvInstallCard.layoutParams = marginLayoutParams
@@ -261,9 +257,11 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
         } else accessibilityTag.isVisible = false
     }
 
-    private fun bindVersionTCloud(
-        tvVersion: TextView, context: Context
-    ) {
+    private fun bindQQNTTag(qqntTag: ImageView, bean: QQVersionBean) {
+        qqntTag.isVisible = bean.isQQNTFramework
+    }
+
+    private fun bindVersionTCloud(tvVersion: TextView, context: Context) {
         if (getVersionTCloud) {
             val TCloudFont: Typeface = when (getVersionTCloudThickness) {
                 "Light" -> ResourcesCompat.getFont(context, R.font.tcloud_number_light)!!
@@ -292,55 +290,35 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
         else {
             val bean = currentList[position]
             when (payloads[0]) {
-                "displayType" -> {
-                    onBindViewHolder(holder, position)
-                }
+                "displayType" -> onBindViewHolder(holder, position)
 
-                "displayInstall" -> {
-                    if (holder is ViewHolder) {
-                        bindDisplayInstall(
-                            holder.binding.tvInstall, holder.binding.tvInstallCard, bean
-                        )
-                    } else if (holder is ViewHolderDetail) {
-                        bindDisplayInstall(
-                            holder.binding.tvOldInstall, holder.binding.tvOldInstallCard, bean
-                        )
-                    }
-                }
+                "displayInstall" -> if (holder is ViewHolder) bindDisplayInstall(
+                    holder.binding.tvInstall, holder.binding.tvInstallCard, bean
+                ) else if (holder is ViewHolderDetail) bindDisplayInstall(
+                    holder.binding.tvOldInstall, holder.binding.tvOldInstallCard, bean
+                )
 
-                "isShowProgressSize" -> {
-                    if (holder is ViewHolder) {
-                        bindProgress(
-                            holder.binding.listProgressLine,
-                            null,
-                            holder.binding.tvPerSizeText,
-                            holder.binding.tvPerSizeCard,
-                            holder.binding.tvSizeCard,
-                            bean
-                        )
-                    } else if (holder is ViewHolderDetail) {
-                        bindProgress(
-                            holder.binding.listDetailProgressLine,
-                            holder.binding.tvPerSize,
-                            holder.binding.tvOldPerSizeText,
-                            holder.binding.tvOldPerSizeCard,
-                            holder.binding.tvOldSizeCard,
-                            bean
-                        )
-                    }
-                }
+                "isShowProgressSize" -> if (holder is ViewHolder) bindProgress(
+                    holder.binding.listProgressLine,
+                    null,
+                    holder.binding.tvPerSizeText,
+                    holder.binding.tvPerSizeCard,
+                    holder.binding.tvSizeCard,
+                    bean
+                ) else if (holder is ViewHolderDetail) bindProgress(
+                    holder.binding.listDetailProgressLine,
+                    holder.binding.tvPerSize,
+                    holder.binding.tvOldPerSizeText,
+                    holder.binding.tvOldPerSizeCard,
+                    holder.binding.tvOldSizeCard,
+                    bean
+                )
 
-                "isTCloud" -> {
-                    if (holder is ViewHolder) {
-                        bindVersionTCloud(
-                            holder.binding.tvVersion, holder.context
-                        )
-                    } else if (holder is ViewHolderDetail) {
-                        bindVersionTCloud(
-                            holder.binding.tvOldVersion, holder.context
-                        )
-                    }
-                }
+                "isTCloud" -> if (holder is ViewHolder) bindVersionTCloud(
+                    holder.binding.tvVersion, holder.context
+                ) else if (holder is ViewHolderDetail) bindVersionTCloud(
+                    holder.binding.tvOldVersion, holder.context
+                )
             }
         }
     }
@@ -348,39 +326,39 @@ class VersionAdapter : ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(Versi
     fun updateItemProperty(payloads: Any?) {
         when (payloads) {
             "isShowProgressSize" -> {
-                getProgressSize = DataStoreUtil.getBoolean("progressSize", false)
+                getProgressSize = DataStoreUtil.getBooleanKV("progressSize", false)
                 notifyItemRangeChanged(0, currentList.size, "isShowProgressSize")
             }
 
             "isTCloud" -> {
-                getVersionTCloud = DataStoreUtil.getBoolean("versionTCloud", true)
+                getVersionTCloud = DataStoreUtil.getBooleanKV("versionTCloud", true)
                 getVersionTCloudThickness =
-                    DataStoreUtil.getString("versionTCloudThickness", "System")
+                    DataStoreUtil.getStringKV("versionTCloudThickness", "System")
                 notifyItemRangeChanged(0, currentList.size, "isTCloud")
             }
         }
     }
 
+    class QQVersionDiffCallback : DiffUtil.ItemCallback<QQVersionBean>() {
+        override fun areItemsTheSame(
+            oldItem: QQVersionBean, newItem: QQVersionBean
+        ): Boolean {
+            return oldItem.versions == newItem.versions
+        }
+
+        override fun areContentsTheSame(
+            oldItem: QQVersionBean, newItem: QQVersionBean
+        ): Boolean {
+            return oldItem.displayType == newItem.displayType && oldItem.displayInstall == newItem.displayInstall
+        }
+
+        override fun getChangePayload(
+            oldItem: QQVersionBean, newItem: QQVersionBean
+        ): Any? {
+            return if (oldItem.displayType != newItem.displayType) "displayType"
+            else if (oldItem.displayInstall != newItem.displayInstall) "displayInstall"
+            else null
+        }
+    }
 }
 
-class VersionDiffCallback : DiffUtil.ItemCallback<QQVersionBean>() {
-    override fun areItemsTheSame(
-        oldItem: QQVersionBean, newItem: QQVersionBean
-    ): Boolean {
-        return oldItem.versions == newItem.versions
-    }
-
-    override fun areContentsTheSame(
-        oldItem: QQVersionBean, newItem: QQVersionBean
-    ): Boolean {
-        return oldItem.displayType == newItem.displayType && oldItem.displayInstall == newItem.displayInstall
-    }
-
-    override fun getChangePayload(
-        oldItem: QQVersionBean, newItem: QQVersionBean
-    ): Any? {
-        return if (oldItem.displayType != newItem.displayType) "displayType"
-        else if (oldItem.displayInstall != newItem.displayInstall) "displayInstall"
-        else null
-    }
-}

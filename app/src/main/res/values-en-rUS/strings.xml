@@ -66,7 +66,7 @@
     <string name="longPressTheVersionCardToViewSourceDetails">Long press the version card to view source details</string>
     <string name="useTheSystemDownloadManagerToTakeOverTheDownloadIntent">Use the system download manager to take over the download intent</string>
     <string name="removeMultiplesOf5ForQQPreviewVersions">Remove the restriction of adhering to multiples of 5 when enumerating minor version numbers for QQ preview versions</string>
-    <string name="longPressToViewSourceDetailsIsDisabledPleaseGoToSettingsToTurnItOn">Long press to view source details is disabled. Please go to settings to turn it on.</string>
+    <string name="longPressToViewSourceDetailsIsDisabled">Long press to view source details is disabled. Please go to settings to turn it on.</string>
     <string name="currentSizeVsLargestHistoricalPackage">Current Size VS Largest Historical Package(</string>
     <string name="endParenthesis">):&#160;</string>
     <string name="extendTheSuffixForDirectDownloadLinksOfEnumeratedPreviewVersions">Extend the suffix for direct download links of enumerated preview versions</string>
@@ -102,7 +102,7 @@
     <string name="shiplyWarning">Tencent QQ utilizes the Tencent Device-oriented Service (TDS) Shiply Distribution Platform to distribute limited-scale gray testing packages based on the QQ account number (uin) and its terminal information. This feature does not guarantee successful retrieval of update data with each request; failure to obtain update data indicates that the entered parameters fall outside the recognized and distributed scope of the Shiply Platform. The QQ Versions Tool makes no warranty regarding the reliability of this feature or any consequences thereof. Please ensure that you have a clear understanding and sufficient capability to bear the associated risks.</string>
     <string name="defaultDisplayOfFirstListItemDetails">Default display of first version list item details</string>
     <string name="versionNumberFontUsesTCloudNumber">Version number font uses TCloudNumber</string>
-    <string name="versionCardsDisplaysPackageSizeIndicator">Version cards displays the ratio of current package size to the historical maximum package size indicator</string>
+    <string name="versionCardsDisplaysPackageSizeIndicator">QQ version cards displays the ratio of current package size to the historical maximum package size indicator</string>
     <string name="customVersionEnumSuffix">Custom Version Enum. Suffix</string>
     <string name="customVersionEnumSuffixHelpText">Please separate using \&quot;, \&quot; (comma + space).</string>
     <string name="facilitateI18n">Facilitate I18n:&#160;</string>
@@ -128,4 +128,6 @@
     <string name="download">Download</string>
     <string name="stop">Stop</string>
     <string name="skip">Skip</string>
+    <string name="qqntTag">Powered by QQNT Framework</string>
+    <string name="releaseDateTIM">Release Date:&#160;</string>
 </resources>
