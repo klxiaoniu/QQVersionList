@@ -80,11 +80,10 @@ import com.xiaoniu.qqversionlist.util.ClipboardUtil.copyText
 import com.xiaoniu.qqversionlist.util.DataStoreUtil
 import com.xiaoniu.qqversionlist.util.InfoUtil.dialogError
 import com.xiaoniu.qqversionlist.util.InfoUtil.showToast
-import com.xiaoniu.qqversionlist.util.QQVersionBeanUtil.qqVersionBeanProcessor
 import com.xiaoniu.qqversionlist.util.ShiplyUtil
 import com.xiaoniu.qqversionlist.util.StringUtil.getAllAPKUrl
 import com.xiaoniu.qqversionlist.util.StringUtil.toPrettyFormat
-import com.xiaoniu.qqversionlist.util.TIMVersionBeanUtil.timVersionBeanProcessor
+import com.xiaoniu.qqversionlist.util.VersionBeanUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -1138,7 +1137,7 @@ class MainActivity : AppCompatActivity() {
                         val response = okHttpClient.newCall(request).execute()
                         val responseData = response.body?.string()
                         if (responseData != null) {
-                            qqVersionBeanProcessor(this@MainActivity, responseData)
+                            VersionBeanUtil.qqVersionBeanProcessor(this@MainActivity, responseData)
                             withContext(Dispatchers.Main) {
                                 qqVersionAdapter.submitList(qqVersion)
                             }
@@ -1157,7 +1156,7 @@ class MainActivity : AppCompatActivity() {
                         val response = okHttpClient.newCall(request).execute()
                         val responseData = response.body?.string()
                         if (responseData != null) {
-                            timVersionBeanProcessor(this@MainActivity, responseData)
+                            VersionBeanUtil.timVersionBeanProcessor(this@MainActivity, responseData)
                             withContext(Dispatchers.Main) {
                                 timVersionAdapter.submitList(timVersion)
                             }
