@@ -1137,7 +1137,7 @@ class MainActivity : AppCompatActivity() {
                         val response = okHttpClient.newCall(request).execute()
                         val responseData = response.body?.string()
                         if (responseData != null) {
-                            VersionBeanUtil.qqVersionBeanProcessor(this@MainActivity, responseData)
+                            VersionBeanUtil.resolveQQRainbow(this@MainActivity, responseData)
                             withContext(Dispatchers.Main) {
                                 qqVersionAdapter.submitList(qqVersion)
                             }
@@ -1156,7 +1156,7 @@ class MainActivity : AppCompatActivity() {
                         val response = okHttpClient.newCall(request).execute()
                         val responseData = response.body?.string()
                         if (responseData != null) {
-                            VersionBeanUtil.timVersionBeanProcessor(this@MainActivity, responseData)
+                            VersionBeanUtil.resolveTIMRainbow(this@MainActivity, responseData)
                             withContext(Dispatchers.Main) {
                                 timVersionAdapter.submitList(timVersion)
                             }

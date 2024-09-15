@@ -29,7 +29,7 @@ import kotlinx.serialization.json.Json
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion
 
 object VersionBeanUtil {
-    fun qqVersionBeanProcessor(thisActivity: MainActivity, responseData: String) {
+    fun resolveQQRainbow(thisActivity: MainActivity, responseData: String) {
         val start = (responseData.indexOf("versions64\":[")) + 12
         val end = (responseData.indexOf(";\n" + "      typeof"))
         val totalJson = responseData.substring(start, end)
@@ -66,7 +66,7 @@ object VersionBeanUtil {
         )
     }
 
-    fun timVersionBeanProcessor(thisActivity: MainActivity, responseData: String) {
+    fun resolveTIMRainbow(thisActivity: MainActivity, responseData: String) {
         val start = (responseData.indexOf("var params= ")) + 12
         val end = (responseData.indexOf(";\n" + "      typeof"))
         val jsonString = responseData.substring(start, end)
