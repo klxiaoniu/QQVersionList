@@ -232,7 +232,7 @@ QQ 版本列表实用工具的诞生离不开以下开源项目，感谢以下�
 
 ## 商业服务鸣谢
 
-- 感谢 [Crowdin](https://crowdin.com/) 为本开源项目提供免费的[开源项目计划](https://zh.crowdin.com/page/open-source-project-setup-request)。[Crowdin](https://crowdin.com/) 是面向团队和企业的 AI 驱动本地化软件。使用 600+ 个应用和集成自动翻译您的内容。
+- 感谢 [Crowdin](https://crowdin.com/) 为本开源项目提供免费的[开源项目计划](https://crowdin.com/page/open-source-project-setup-request)。[Crowdin](https://crowdin.com/) 是面向团队和企业的 AI 驱动本地化软件。使用 600+ 个应用和集成自动翻译您的内容。
 
 ## 孪生项目
 
