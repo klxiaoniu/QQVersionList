@@ -130,4 +130,11 @@
     <string name="skip">Skip</string>
     <string name="qqntTag">Powered by QQNT Framework</string>
     <string name="releaseDateTIM">Release Date:&#160;</string>
+    <string name="checkUpdateViaGitHubAPI">Check for Updates via GitHub API</string>
+    <string name="noUpdatesDetected">No updates detected.</string>
+    <string name="noAssetsDetected">No assets detected.</string>
+    <string name="cannotGetGitHub">Unable to connect to GitHub. Please ensure your network environment can access GitHub.</string>
+    <string name="updateQVTAvailable">Update Available</string>
+    <string name="canBeUpdatedTo">Can be updated to:&#160;</string>
+    <string name="copyDownloadLink">Copy Download Link</string>
 </resources>

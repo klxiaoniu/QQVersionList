@@ -103,6 +103,35 @@ object StringUtil {
     private fun String.isJson(): Boolean {
         return this.startsWith("{") && this.endsWith("}") || this.startsWith("[") && this.endsWith("]")
     }
+
+    /**
+     * 修剪字符串末尾的指定后缀。
+     *
+     * 该函数接受两个参数：一个原始字符串`str`和一个需要修剪的后缀字符串`suffix`。
+     * 如果原始字符串`str`的末尾包含了后缀字符串`suffix`，则将这部分后缀字符串修剪掉；
+     * 否则，返回原始字符串`str`。
+     *
+     * @param str 原始字符串。
+     * @param suffix 需要修剪的后缀字符串。
+     * @return 修剪掉末尾后缀后的字符串，如果原始字符串没有以该后缀结束，则返回原始字符串。
+     */
+    fun String.trimSubstringAtEnd(suffix: String): String {
+        return if (this.endsWith(suffix)) this.substring(0, this.length - suffix.length) else this
+    }
+
+    /**
+     * 修剪字符串开头的指定前缀。
+     *
+     * 该函数接受两个参数：一个原始字符串`str`和一个需要修剪的前缀字符串`prefix`。
+     * 如果原始字符串`str`的开头包含了前缀字符串`prefix`，则将这部分前缀字符串修剪掉；
+     * 否则，返回原始字符串`str`。
+     *
+     * @param prefix 需要修剪的前缀字符串。
+     * @return 修剪掉开头前缀后的字符串，如果原始字符串没有以该前缀开始，则返回原始字符串。
+     */
+    fun String.trimSubstringAtStart(prefix: String): String {
+        return if (this.startsWith(prefix)) this.substring(prefix.length) else this
+    }
 }
 
 

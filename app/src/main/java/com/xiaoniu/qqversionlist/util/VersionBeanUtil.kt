@@ -26,7 +26,7 @@ import com.xiaoniu.qqversionlist.data.TIMVersionBean
 import com.xiaoniu.qqversionlist.ui.MainActivity
 import com.xiaoniu.qqversionlist.util.StringUtil.toPrettyFormat
 import kotlinx.serialization.json.Json
-import org.apache.maven.artifact.versioning.DefaultArtifactVersion
+import org.apache.maven.artifact.versioning.ComparableVersion
 
 object VersionBeanUtil {
     fun resolveQQRainbow(thisActivity: MainActivity, responseData: String) {
@@ -45,12 +45,12 @@ object VersionBeanUtil {
                 ) == this.versionNumber)
                 this.isAccessibility = false
                 // 无障碍标记
-                /*DefaultArtifactVersion(this.versionNumber) >= DefaultArtifactVersion(
+                /*ComparableVersion(this.versionNumber) >= ComparableVersion(
                     EARLIEST_ACCESSIBILITY_QQ_VERSION
                 )*/
 
                 this.isQQNTFramework =
-                    DefaultArtifactVersion(this.versionNumber) >= DefaultArtifactVersion(
+                    ComparableVersion(this.versionNumber) >= ComparableVersion(
                         EARLIEST_QQNT_FRAMEWORK_QQ_VERSION_STABLE
                     )
             }

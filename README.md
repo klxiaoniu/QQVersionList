@@ -6,7 +6,7 @@
 
 [注意事项](#注意事项) | [简介](#简介) | [如何使用](#如何使用) | [获取更新](#获取更新) | [常见问题](#常见问题) | [其它](#其它)
 
-[贡献成员](#贡献成员) | [开源相关](#开源相关) | [孪生项目](#孪生项目)
+[贡献成员](#贡献成员) | [开源相关](#开源相关) | [商业服务鸣谢](#商业服务鸣谢) | [孪生项目](#孪生项目)
 
 </div> 
 
@@ -229,6 +229,10 @@ QQ 版本列表实用工具的诞生离不开以下开源项目，感谢以下�
 - [Apache Maven](https://maven.apache.org/)，Licensed under [Apache License Version 2.0](https://github.com/apache/maven/blob/master/LICENSE)
 - [Gradle](https://gradle.org/)，Licensed under [Apache License Version 2.0](https://github.com/gradle/gradle/blob/master/LICENSE)
 - [Material Symbols / Material Icons（Google）](https://fonts.google.com/icons)，Licensed under [Apache License Version 2.0](https://github.com/google/material-design-icons/blob/master/LICENSE)
+
+## 商业服务鸣谢
+
+- 感谢 [Crowdin](https://crowdin.com/) 为本开源项目提供免费的[开源项目计划](https://zh.crowdin.com/page/open-source-project-setup-request)。[Crowdin](https://crowdin.com/) 是面向团队和企业的 AI 驱动本地化软件。使用 600+ 个应用和集成自动翻译您的内容。
 
 ## 孪生项目
 

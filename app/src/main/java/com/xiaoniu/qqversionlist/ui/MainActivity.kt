@@ -57,8 +57,10 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.progressindicator.CircularProgressIndicatorSpec
 import com.google.android.material.progressindicator.IndeterminateDrawable
 import com.google.android.material.progressindicator.LinearProgressIndicator
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonElement
+import com.google.gson.JsonObject
 import com.xiaoniu.qqversionlist.BuildConfig
 import com.xiaoniu.qqversionlist.QVTApplication.Companion.SHIPLY_DEFAULT_APPID
 import com.xiaoniu.qqversionlist.QVTApplication.Companion.SHIPLY_DEFAULT_SDK_VERSION
@@ -75,6 +77,7 @@ import com.xiaoniu.qqversionlist.databinding.DialogShiplyBackBinding
 import com.xiaoniu.qqversionlist.databinding.DialogShiplyBinding
 import com.xiaoniu.qqversionlist.databinding.DialogSuffixDefineBinding
 import com.xiaoniu.qqversionlist.databinding.SuccessButtonBinding
+import com.xiaoniu.qqversionlist.databinding.UpdateQvtButtonBinding
 import com.xiaoniu.qqversionlist.databinding.UserAgreementBinding
 import com.xiaoniu.qqversionlist.util.ClipboardUtil.copyText
 import com.xiaoniu.qqversionlist.util.DataStoreUtil
@@ -83,6 +86,8 @@ import com.xiaoniu.qqversionlist.util.InfoUtil.showToast
 import com.xiaoniu.qqversionlist.util.ShiplyUtil
 import com.xiaoniu.qqversionlist.util.StringUtil.getAllAPKUrl
 import com.xiaoniu.qqversionlist.util.StringUtil.toPrettyFormat
+import com.xiaoniu.qqversionlist.util.StringUtil.trimSubstringAtEnd
+import com.xiaoniu.qqversionlist.util.StringUtil.trimSubstringAtStart
 import com.xiaoniu.qqversionlist.util.VersionBeanUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -90,6 +95,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import org.apache.maven.artifact.versioning.ComparableVersion
 import java.io.BufferedReader
 import java.io.ByteArrayInputStream
 import java.io.InputStreamReader
@@ -245,6 +251,9 @@ class MainActivity : AppCompatActivity() {
                             .setIcon(R.drawable.information_line)
                             .setView(root)
                             .show().apply {
+                                if (BuildConfig.VERSION_NAME.endsWith("Release")) btnAboutUpdate.visibility =
+                                    View.VISIBLE else btnAboutUpdate.visibility = View.GONE
+
                                 aboutText.movementMethod =
                                     LinkMovementMethodCompat.getInstance()
 
@@ -338,6 +347,30 @@ class MainActivity : AppCompatActivity() {
                         btnAboutWithdrawConsentUA.setOnClickListener {
                             showUADialog(true, judgeUATarget)
                             aboutDialog.dismiss()
+                        }
+
+                        btnAboutUpdate.setOnClickListener {
+                            val spec = CircularProgressIndicatorSpec(
+                                this@MainActivity,
+                                null,
+                                0,
+                                com.google.android.material.R.style.Widget_Material3_CircularProgressIndicator_ExtraSmall
+                            )
+                            val progressIndicatorDrawable =
+                                IndeterminateDrawable.createCircularDrawable(
+                                    this@MainActivity, spec
+                                )
+
+                            btnAboutUpdate.apply {
+                                isEnabled = false
+                                style(com.google.android.material.R.style.Widget_Material3_Button_TonalButton_Icon)
+                                icon = progressIndicatorDrawable
+                            }
+
+                            checkQVTUpdates(
+                                btnAboutUpdate,
+                                BuildConfig.VERSION_NAME.trimSubstringAtEnd("-Release")
+                            )
                         }
 
                         btnAboutOk.setOnClickListener {
@@ -732,9 +765,11 @@ class MainActivity : AppCompatActivity() {
                                         this@MainActivity, spec
                                     )
 
-                                btnShiplyStart.isEnabled = false
-                                btnShiplyStart.style(com.google.android.material.R.style.Widget_Material3_Button_Icon)
-                                btnShiplyStart.icon = progressIndicatorDrawable
+                                btnShiplyStart.apply {
+                                    isEnabled = false
+                                    style(com.google.android.material.R.style.Widget_Material3_Button_Icon)
+                                    icon = progressIndicatorDrawable
+                                }
 
                                 if (shiplyUin.editText?.text.toString()
                                         .isEmpty()
@@ -1689,6 +1724,104 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun checkQVTUpdates(btn: MaterialButton, selfVersion: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val okHttpClient = OkHttpClient()
+                val request =
+                    Request.Builder()
+                        .url("https://api.github.com/repos/klxiaoniu/QQVersionList/releases/latest")
+                        .build()
+                val response = okHttpClient.newCall(request).execute()
+                val responseData = response.body?.string()
+                if (responseData != null) {
+                    val gson = Gson()
+                    val jsonData = gson.fromJson(responseData, JsonObject::class.java)
+                    val latestQVTVersion =
+                        jsonData.get("tag_name").asString.trimSubstringAtStart("v")
+                    if (ComparableVersion(latestQVTVersion) > ComparableVersion(selfVersion)) {
+                        val latestQVTAssets = jsonData.get("assets").asJsonArray
+                        var latestQVTDownloadUrl: String? = null
+                        var latestQVTFileName: String? = null
+                        var latestQVTFileSize: String? = null
+                        for (asset in latestQVTAssets) {
+                            val assetObject = asset.asJsonObject
+                            val contentType = assetObject.get("content_type").asString
+                            val browserDownloadUrl =
+                                assetObject.get("browser_download_url").asString
+                            if (contentType == "application/vnd.android.package-archive") {
+                                latestQVTDownloadUrl = browserDownloadUrl
+                                latestQVTFileName = assetObject.get("name").asString
+                                latestQVTFileSize = "%.2f".format(
+                                    assetObject.get("size").asLong.toDouble().div(1024 * 1024)
+                                )
+                                break
+                            }
+                        }
+                        if (latestQVTDownloadUrl != null) withContext(Dispatchers.Main) {
+                            val updateQvtButtonBinding =
+                                UpdateQvtButtonBinding.inflate(layoutInflater)
+
+                            val updateQvtMaterialDialog =
+                                MaterialAlertDialogBuilder(this@MainActivity)
+                                    .setTitle(R.string.updateQVTAvailable)
+                                    .setIcon(R.drawable.check_circle)
+                                    .setView(updateQvtButtonBinding.root)
+                                    .setMessage(
+                                        "${getString(R.string.canBeUpdatedTo)}$latestQVTVersion\n${
+                                            getString(
+                                                R.string.fileSize
+                                            )
+                                        }$latestQVTFileSize MB"
+                                    )
+                                    .show()
+
+                            updateQvtButtonBinding.updateQvtCopy.setOnClickListener {
+                                copyText(latestQVTDownloadUrl)
+                                updateQvtMaterialDialog.dismiss()
+                            }
+
+                            updateQvtButtonBinding.updateQvtDownload.setOnClickListener {
+                                updateQvtMaterialDialog.dismiss()
+                                if (DataStoreUtil.getBooleanKV(
+                                        "downloadOnSystemManager", false
+                                    )
+                                ) {
+                                    val requestDownload =
+                                        DownloadManager.Request(Uri.parse(latestQVTDownloadUrl))
+                                    requestDownload.setDestinationInExternalPublicDir(
+                                        Environment.DIRECTORY_DOWNLOADS, latestQVTFileName
+                                    )
+                                    val downloadManager =
+                                        getSystemService(DOWNLOAD_SERVICE) as DownloadManager
+                                    downloadManager.enqueue(requestDownload)
+                                } else {
+                                    // 这里不用 Chrome Custom Tab 的原因是 Chrome 不知道咋回事有概率卡在“等待下载”状态
+                                    val browserIntent =
+                                        Intent(Intent.ACTION_VIEW, Uri.parse(latestQVTDownloadUrl))
+                                    browserIntent.apply {
+                                        addCategory(Intent.CATEGORY_BROWSABLE)
+                                        flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                                    }
+                                    startActivity(browserIntent)
+                                }
+                            }
+                        } else showToast(getString(R.string.noAssetsDetected))
+                    } else showToast(getString(R.string.noUpdatesDetected))
+                }
+            } catch (e: Exception) {
+                dialogError(RuntimeException(getString(R.string.cannotGetGitHub), e), true)
+            } finally {
+                withContext(Dispatchers.Main) {
+                    btn.apply {
+                        style(com.google.android.material.R.style.Widget_Material3_Button_TonalButton)
+                        icon = null
+                        isEnabled = true
+                    }
+                }
+            }
+        }
+    }
 
     companion object {
         @SuppressLint("StaticFieldLeak")
