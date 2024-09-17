@@ -224,7 +224,16 @@ class MainActivity : AppCompatActivity() {
         if (DataStoreUtil.getIntKV("userAgreement", 0) < judgeUATarget) showUADialog(
             false, judgeUATarget
         )
-        else getData()
+        else {
+            getData()
+            if (BuildConfig.VERSION_NAME.endsWith("Release") && DataStoreUtil.getBooleanKV(
+                    "autoCheckUpdates",
+                    false
+                )
+            ) checkQVTUpdates(
+                BuildConfig.VERSION_NAME.trimSubstringAtEnd("-Release"), false
+            )
+        }
 
         // 进度条动画
         // https://github.com/material-components/material-components-android/blob/master/docs/components/ProgressIndicator.md
@@ -368,8 +377,8 @@ class MainActivity : AppCompatActivity() {
                             }
 
                             checkQVTUpdates(
-                                btnAboutUpdate,
-                                BuildConfig.VERSION_NAME.trimSubstringAtEnd("-Release")
+                                BuildConfig.VERSION_NAME.trimSubstringAtEnd("-Release"),
+                                true, btnAboutUpdate
                             )
                         }
 
@@ -391,6 +400,8 @@ class MainActivity : AppCompatActivity() {
                             DataStoreUtil.getBooleanKV("guessTestExtend", false) // 扩展测试版猜版格式
                         downloadOnSystemManager.isChecked =
                             DataStoreUtil.getBooleanKV("downloadOnSystemManager", false)
+                        switchAutoCheckUpdates.isChecked =
+                            DataStoreUtil.getBooleanKV("autoCheckUpdates", false)
                     }
 
                     val dialogSetting = MaterialAlertDialogBuilder(this)
@@ -518,6 +529,9 @@ class MainActivity : AppCompatActivity() {
 
                         switchGuessTestExtend.setOnCheckedChangeListener { _, isChecked ->
                             DataStoreUtil.putBooleanKVAsync("guessTestExtend", isChecked)
+                        }
+                        switchAutoCheckUpdates.setOnCheckedChangeListener { _, isChecked ->
+                            DataStoreUtil.putBooleanKVAsync("autoCheckUpdates", isChecked)
                         }
                         downloadOnSystemManager.setOnCheckedChangeListener { _, isChecked ->
                             DataStoreUtil.putBooleanKVAsync("downloadOnSystemManager", isChecked)
@@ -1724,7 +1738,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun checkQVTUpdates(btn: MaterialButton, selfVersion: String) {
+    private fun checkQVTUpdates(
+        selfVersion: String,
+        isManual: Boolean,
+        btn: MaterialButton? = null
+    ) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val okHttpClient = OkHttpClient()
@@ -1814,10 +1832,13 @@ class MainActivity : AppCompatActivity() {
                     } else showToast(getString(R.string.noUpdatesDetected))
                 }
             } catch (e: Exception) {
-                dialogError(RuntimeException(getString(R.string.cannotGetGitHub), e), true)
+                if (isManual) dialogError(
+                    RuntimeException(getString(R.string.cannotGetGitHub), e),
+                    true
+                ) else showToast(getString(R.string.cannotGetGitHub))
             } finally {
                 withContext(Dispatchers.Main) {
-                    btn.apply {
+                    btn?.apply {
                         style(com.google.android.material.R.style.Widget_Material3_Button_TonalButton)
                         icon = null
                         isEnabled = true

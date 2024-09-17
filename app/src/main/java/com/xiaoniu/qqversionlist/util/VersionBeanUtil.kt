@@ -21,6 +21,7 @@ package com.xiaoniu.qqversionlist.util
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.xiaoniu.qqversionlist.QVTApplication.Companion.EARLIEST_QQNT_FRAMEWORK_QQ_VERSION_STABLE
+import com.xiaoniu.qqversionlist.QVTApplication.Companion.EARLIEST_UNREAL_ENGINE_QQ_VERSION_STABLE
 import com.xiaoniu.qqversionlist.data.QQVersionBean
 import com.xiaoniu.qqversionlist.data.TIMVersionBean
 import com.xiaoniu.qqversionlist.ui.MainActivity
@@ -40,19 +41,22 @@ object VersionBeanUtil {
             Json.decodeFromString<QQVersionBean>(json).apply {
                 jsonString = json
                 // 标记本机 Android QQ 版本
-                this.displayInstall = (DataStoreUtil.getStringKV(
-                    "QQVersionInstall", ""
-                ) == this.versionNumber)
-                this.isAccessibility = false
-                // 无障碍标记
-                /*ComparableVersion(this.versionNumber) >= ComparableVersion(
-                    EARLIEST_ACCESSIBILITY_QQ_VERSION
-                )*/
+                this.apply {
+                    displayInstall =
+                        (DataStoreUtil.getStringKV("QQVersionInstall", "") == versionNumber)
+                    isAccessibility = false
+                    // 无障碍标记
+                    /*ComparableVersion(versionNumber) >= ComparableVersion(
+                        EARLIEST_ACCESSIBILITY_QQ_VERSION
+                    )*/
 
-                this.isQQNTFramework =
-                    ComparableVersion(this.versionNumber) >= ComparableVersion(
+                    isQQNTFramework = ComparableVersion(versionNumber) >= ComparableVersion(
                         EARLIEST_QQNT_FRAMEWORK_QQ_VERSION_STABLE
                     )
+                    isUnrealEngine = ComparableVersion(versionNumber) >= ComparableVersion(
+                        EARLIEST_UNREAL_ENGINE_QQ_VERSION_STABLE
+                    )
+                }
             }
         }
         if (DataStoreUtil.getBooleanKV(

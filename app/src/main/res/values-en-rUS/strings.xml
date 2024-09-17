@@ -136,4 +136,6 @@
     <string name="cannotGetGitHub">Unable to connect to GitHub. Please ensure your network environment can access GitHub.</string>
     <string name="updateQVTAvailable">Update Available</string>
     <string name="copyLink">Copy Link</string>
+    <string name="unrealEngineTag">Unreal Engine Inside</string>
+    <string name="autoCheckForUpdates">Auto-check updates with GitHub API on startup</string>
 </resources>

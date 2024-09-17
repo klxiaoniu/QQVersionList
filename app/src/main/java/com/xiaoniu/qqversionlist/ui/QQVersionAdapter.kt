@@ -47,13 +47,12 @@ import com.xiaoniu.qqversionlist.util.DataStoreUtil
 import com.xiaoniu.qqversionlist.util.Extensions.dp
 import com.xiaoniu.qqversionlist.util.StringUtil.toPrettyFormat
 
-private var getProgressSize = DataStoreUtil.getBooleanKV("progressSize", false)
-private var getVersionTCloud = DataStoreUtil.getBooleanKV("versionTCloud", true)
-private var getVersionTCloudThickness =
-    DataStoreUtil.getStringKV("versionTCloudThickness", "System")
-
 class QQVersionAdapter :
     ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(QQVersionDiffCallback()) {
+    private var getProgressSize = DataStoreUtil.getBooleanKV("progressSize", false)
+    private var getVersionTCloud = DataStoreUtil.getBooleanKV("versionTCloud", true)
+    private var getVersionTCloudThickness =
+        DataStoreUtil.getStringKV("versionTCloudThickness", "System")
 
     class ViewHolder(val binding: ItemQqVersionBinding, val context: Context) :
         RecyclerView.ViewHolder(binding.root)
@@ -108,7 +107,6 @@ class QQVersionAdapter :
         val bean = currentList[position]
         when (holder) {
             is ViewHolder -> {
-                //val result = "版本：" + bean.versionNumber + "\n额定大小：" + bean.size + " MB"
                 holder.binding.apply {
                     tvVersion.text = bean.versionNumber
                     tvSize.text = bean.size + " MB"
@@ -119,6 +117,7 @@ class QQVersionAdapter :
                     bindVersionTCloud(tvVersion, holder.context)
                     bindAccessibilityTag(accessibilityTag, holder.context, bean)
                     bindQQNTTag(qqntTag, bean)
+                    bindUnrealEngineTag(ueTag, bean)
                 }
             }
 
@@ -153,6 +152,7 @@ class QQVersionAdapter :
                     bindVersionTCloud(tvOldVersion, holder.context)
                     bindAccessibilityTag(accessibilityOldTag, holder.context, bean)
                     bindQQNTTag(qqntOldTag, bean)
+                    bindUnrealEngineTag(ueOldTag, bean)
 
                     bindProgress(
                         listDetailProgressLine,
@@ -232,15 +232,10 @@ class QQVersionAdapter :
         if (bean.displayInstall) {
             tvInstallCard.isVisible = true
             tvInstall.text = tvInstall.context.getString(R.string.installed)
-            if (bean.isAccessibility || bean.isQQNTFramework) {
-                val marginLayoutParams = tvInstallCard.layoutParams as ViewGroup.MarginLayoutParams
-                marginLayoutParams.marginStart = 3.dp
-                tvInstallCard.layoutParams = marginLayoutParams
-            } else {
-                val marginLayoutParams = tvInstallCard.layoutParams as ViewGroup.MarginLayoutParams
-                marginLayoutParams.marginStart = 6.dp
-                tvInstallCard.layoutParams = marginLayoutParams
-            }
+            val marginLayoutParams = tvInstallCard.layoutParams as ViewGroup.MarginLayoutParams
+            marginLayoutParams.marginStart =
+                if (bean.isAccessibility || bean.isQQNTFramework || bean.isUnrealEngine) 3.dp else 6.dp
+            tvInstallCard.layoutParams = marginLayoutParams
         } else tvInstallCard.isVisible = false
     }
 
@@ -259,6 +254,10 @@ class QQVersionAdapter :
 
     private fun bindQQNTTag(qqntTag: ImageView, bean: QQVersionBean) {
         qqntTag.isVisible = bean.isQQNTFramework
+    }
+
+    private fun bindUnrealEngineTag(ueTag: ImageView, bean: QQVersionBean) {
+        ueTag.isVisible = bean.isUnrealEngine
     }
 
     private fun bindVersionTCloud(tvVersion: TextView, context: Context) {

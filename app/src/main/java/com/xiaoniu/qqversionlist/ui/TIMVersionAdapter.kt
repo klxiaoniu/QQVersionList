@@ -44,12 +44,11 @@ import com.xiaoniu.qqversionlist.util.DataStoreUtil
 import com.xiaoniu.qqversionlist.util.Extensions.dp
 import com.xiaoniu.qqversionlist.util.StringUtil.toPrettyFormat
 
-private var getVersionTCloud = DataStoreUtil.getBooleanKV("versionTCloud", true)
-private var getVersionTCloudThickness =
-    DataStoreUtil.getStringKV("versionTCloudThickness", "System")
-
 class TIMVersionAdapter :
     ListAdapter<TIMVersionBean, RecyclerView.ViewHolder>(TIMVersionDiffCallback()) {
+    private var getVersionTCloud = DataStoreUtil.getBooleanKV("versionTCloud", true)
+    private var getVersionTCloudThickness =
+        DataStoreUtil.getStringKV("versionTCloudThickness", "System")
 
     class ViewHolder(val binding: ItemTimVersionBinding, val context: Context) :
         RecyclerView.ViewHolder(binding.root)
@@ -104,7 +103,6 @@ class TIMVersionAdapter :
         val bean = currentList[position]
         when (holder) {
             is ViewHolder -> {
-                //val result = "版本：" + bean.versionNumber + "\n额定大小：" + bean.size + " MB"
                 holder.binding.apply {
                     tvTimVersion.text = bean.version
                     bindDisplayInstall(tvTimInstall, tvTimInstallCard, bean)

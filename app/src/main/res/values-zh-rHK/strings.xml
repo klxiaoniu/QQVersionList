@@ -136,4 +136,6 @@
     <string name="cannotGetGitHub">無法連接到 GitHub，請確保您所在的網絡環境可以訪問 GitHub。</string>
     <string name="updateQVTAvailable">更新可用</string>
     <string name="copyLink">複製連結</string>
+    <string name="unrealEngineTag">內建虛幻引擎</string>
+    <string name="autoCheckForUpdates">啟動時自動使用 GitHub API 檢查更新</string>
 </resources>
