@@ -16,26 +16,33 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/update_qvt_button_constraint_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_weight="2"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:paddingStart="20dp"
     android:paddingEnd="20dp"
     android:paddingBottom="20dp">
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/update_qvt_download"
-        style="@style/Widget.Material3.Button"
-        android:layout_width="match_parent"
+        android:id="@+id/update_qvt_copy"
+        style="@style/Widget.Material3.Button.TonalButton.Icon"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/download" />
+        android:layout_marginEnd="8dp"
+        android:layout_weight="1"
+        android:text="@string/copyLink"
+        app:icon="@drawable/file_copy_line" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/update_qvt_copy"
-        style="@style/Widget.Material3.Button.TonalButton"
-        android:layout_width="match_parent"
+        android:id="@+id/update_qvt_download"
+        style="@style/Widget.Material3.Button.Icon"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/copyDownloadLink" />
+        android:layout_marginStart="8dp"
+        android:layout_weight="1"
+        android:text="@string/download"
+        app:icon="@drawable/download_line" />
 </LinearLayout>

@@ -1768,7 +1768,11 @@ class MainActivity : AppCompatActivity() {
                                     .setIcon(R.drawable.check_circle)
                                     .setView(updateQvtButtonBinding.root)
                                     .setMessage(
-                                        "${getString(R.string.canBeUpdatedTo)}$latestQVTVersion\n${
+                                        "${getString(R.string.version)}$latestQVTVersion\n${
+                                            getString(
+                                                R.string.downloadLink
+                                            )
+                                        }$latestQVTDownloadUrl\n${
                                             getString(
                                                 R.string.fileSize
                                             )

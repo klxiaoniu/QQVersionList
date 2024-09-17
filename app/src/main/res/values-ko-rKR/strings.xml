@@ -135,6 +135,5 @@
     <string name="noAssetsDetected">未检测到资产文件</string>
     <string name="cannotGetGitHub">无法连接到 GitHub，请确保您所在网络环境可以访问 GitHub。</string>
     <string name="updateQVTAvailable">更新可用</string>
-    <string name="canBeUpdatedTo">可更新至：</string>
-    <string name="copyDownloadLink">复制下载地址</string>
+    <string name="copyLink">复制下载地址</string>
 </resources>

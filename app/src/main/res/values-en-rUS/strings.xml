@@ -135,6 +135,5 @@
     <string name="noAssetsDetected">No assets detected.</string>
     <string name="cannotGetGitHub">Unable to connect to GitHub. Please ensure your network environment can access GitHub.</string>
     <string name="updateQVTAvailable">Update Available</string>
-    <string name="canBeUpdatedTo">Can be updated to:&#160;</string>
-    <string name="copyDownloadLink">Copy Download Link</string>
+    <string name="copyLink">Copy Link</string>
 </resources>
