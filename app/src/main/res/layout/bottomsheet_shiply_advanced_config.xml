@@ -131,20 +131,19 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <LinearLayout
+
+            <com.google.android.material.button.MaterialButtonGroup
                 style="?android:attr/buttonBarStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingBottom="32dp"
-                android:weightSum="2">
+                android:layout_marginTop="8dp"
+                android:paddingBottom="32dp">
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_shiply_config_back"
                     style="@style/Widget.Material3.Button.TonalButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_weight="1"
                     android:text="@string/back" />
@@ -155,11 +154,10 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
                     android:layout_weight="1"
                     android:text="@string/save" />
 
-            </LinearLayout>
+            </com.google.android.material.button.MaterialButtonGroup>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

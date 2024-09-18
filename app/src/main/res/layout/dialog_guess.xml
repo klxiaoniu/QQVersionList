@@ -163,18 +163,16 @@
                     app:drawableStartCompat="@drawable/error_warning_fill" />
             </com.google.android.material.card.MaterialCardView>
 
-            <LinearLayout
+            <com.google.android.material.button.MaterialButtonGroup
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="2">
+                android:layout_marginTop="8dp">
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_guess_cancel"
                     style="@style/Widget.Material3.Button.TonalButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
                     android:layout_marginEnd="8dp"
                     android:layout_weight="1"
                     android:text="@string/cancel" />
@@ -184,11 +182,10 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
                     android:layout_weight="1"
                     android:text="@string/start" />
 
-            </LinearLayout>
+            </com.google.android.material.button.MaterialButtonGroup>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
