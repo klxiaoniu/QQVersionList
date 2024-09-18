@@ -45,7 +45,15 @@
                 android:text="@string/defaultDisplayOfFirstListItemDetails" />
 
             <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/progress_size"
+                android:id="@+id/switch_unreal_engine_tag"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:text="@string/showUnrealEngineTag" />
+
+            <com.google.android.material.materialswitch.MaterialSwitch
+                android:id="@+id/switch_progress_size"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="8dp"
@@ -53,7 +61,7 @@
                 android:text="@string/versionCardsDisplaysPackageSizeIndicator" />
 
             <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/version_tcloud"
+                android:id="@+id/switch_version_tcloud"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="8dp"

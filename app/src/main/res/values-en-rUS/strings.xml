@@ -38,7 +38,7 @@
     <string name="setting">Setting</string>
     <string name="personalization">Personalization</string>
     <string name="about">About</string>
-    <string name="enumerateVersionsSuffixSetting">Enumerate Versions Suffix Setting</string>
+    <string name="enumerateVersionsFormatSetting">Enumerate Versions Format Setting</string>
     <string name="getUpdateFromTDSShiplyDistributionPlatform">Get Update From Tencent Device-oriented Service (TDS) Shiply Distribution Platform (Experimental)</string>
     <string name="getUpdateFromShiplyPlatform">Get Update From Shiply Platform (Experimental)</string>
     <string name="acceptedEnumerateVersion">Accepted Enumerate Version</string>
@@ -136,6 +136,11 @@
     <string name="cannotGetGitHub">Unable to connect to GitHub. Please ensure your network environment can access GitHub.</string>
     <string name="updateQVTAvailable">Update Available</string>
     <string name="copyLink">Copy Link</string>
-    <string name="unrealEngineTag">Unreal Engine Inside</string>
-    <string name="autoCheckForUpdates">Auto-check updates with GitHub API on startup</string>
+    <string name="unrealEngineTag">Unreal® Engine Inside</string>
+    <string name="autoCheckForUpdates">Auto-check Updates With GitHub API on Startup</string>
+    <string name="useQQ8958Test">Use QQ 8.9.58 Test Version Link Format</string>
+    <string name="ciVersionNoSupportUpdates">CI Build No Support Update Check</string>
+    <string name="showUnrealEngineTag">Version card displays matching Unreal® Engine logo</string>
+    <string name="suffixSetting">Suffix Settings</string>
+    <string name="others">Others</string>
 </resources>

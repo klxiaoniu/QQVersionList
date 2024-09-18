@@ -53,6 +53,7 @@ class QQVersionAdapter :
     private var getVersionTCloud = DataStoreUtil.getBooleanKV("versionTCloud", true)
     private var getVersionTCloudThickness =
         DataStoreUtil.getStringKV("versionTCloudThickness", "System")
+    private var getShowUnrealEngineTag = DataStoreUtil.getBooleanKV("unrealEngineTag", false)
 
     class ViewHolder(val binding: ItemQqVersionBinding, val context: Context) :
         RecyclerView.ViewHolder(binding.root)
@@ -234,7 +235,7 @@ class QQVersionAdapter :
             tvInstall.text = tvInstall.context.getString(R.string.installed)
             val marginLayoutParams = tvInstallCard.layoutParams as ViewGroup.MarginLayoutParams
             marginLayoutParams.marginStart =
-                if (bean.isAccessibility || bean.isQQNTFramework || bean.isUnrealEngine) 3.dp else 6.dp
+                if (bean.isAccessibility || bean.isQQNTFramework || (getShowUnrealEngineTag && bean.isUnrealEngine)) 3.dp else 6.dp
             tvInstallCard.layoutParams = marginLayoutParams
         } else tvInstallCard.isVisible = false
     }
@@ -257,7 +258,7 @@ class QQVersionAdapter :
     }
 
     private fun bindUnrealEngineTag(ueTag: ImageView, bean: QQVersionBean) {
-        ueTag.isVisible = bean.isUnrealEngine
+        ueTag.isVisible = (getShowUnrealEngineTag && bean.isUnrealEngine)
     }
 
     private fun bindVersionTCloud(tvVersion: TextView, context: Context) {
@@ -318,6 +319,18 @@ class QQVersionAdapter :
                 ) else if (holder is ViewHolderDetail) bindVersionTCloud(
                     holder.binding.tvOldVersion, holder.context
                 )
+
+                "isShowUnrealEngineTag" -> if (holder is ViewHolder) {
+                    bindUnrealEngineTag(holder.binding.ueTag, bean)
+                    bindDisplayInstall(holder.binding.tvInstall, holder.binding.tvInstallCard, bean)
+                } else if (holder is ViewHolderDetail) {
+                    bindUnrealEngineTag(holder.binding.ueOldTag, bean)
+                    bindDisplayInstall(
+                        holder.binding.tvOldInstall,
+                        holder.binding.tvOldInstallCard,
+                        bean
+                    )
+                }
             }
         }
     }
@@ -334,6 +347,11 @@ class QQVersionAdapter :
                 getVersionTCloudThickness =
                     DataStoreUtil.getStringKV("versionTCloudThickness", "System")
                 notifyItemRangeChanged(0, currentList.size, "isTCloud")
+            }
+
+            "isShowUnrealEngineTag" -> {
+                getShowUnrealEngineTag = DataStoreUtil.getBooleanKV("unrealEngineTag", false)
+                notifyItemRangeChanged(0, currentList.size, "isShowUnrealEngineTag")
             }
         }
     }

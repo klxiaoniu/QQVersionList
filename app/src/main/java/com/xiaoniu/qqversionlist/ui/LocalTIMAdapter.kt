@@ -25,6 +25,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.text.HtmlCompat
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.xiaoniu.qqversionlist.R
@@ -58,7 +59,7 @@ class LocalTIMAdapter : RecyclerView.Adapter<LocalTIMAdapter.LocalTIMViewHolder>
                     ) + TIMRdmUUIDInstall + (if (TIMVersionCodeInstall2 != "") " (${TIMVersionCodeInstall2})" else "") + " - $TIMChannelInstall" else itemView.context.getString(
                         R.string.localTIMVersion
                     ) + DataStoreUtil.getStringKV("TIMVersionInstall", "")
-                itemTimInstallCard.visibility = View.VISIBLE
+                itemTimInstallCard.isVisible = true
                 itemTimInstallCard.setOnLongClickListener {
                     if (DataStoreUtil.getBooleanKV("longPressCard", true)) {
                         val tv = TextView(itemView.context).apply {
@@ -126,7 +127,7 @@ class LocalTIMAdapter : RecyclerView.Adapter<LocalTIMAdapter.LocalTIMViewHolder>
                     ).show()
                     true
                 }
-            } else itemTimInstallCard.visibility = View.GONE
+            } else itemTimInstallCard.isVisible = false
         }
     }
 

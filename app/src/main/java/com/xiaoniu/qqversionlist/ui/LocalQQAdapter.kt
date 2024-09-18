@@ -25,6 +25,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.text.HtmlCompat
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.xiaoniu.qqversionlist.R
@@ -58,7 +59,7 @@ class LocalQQAdapter : RecyclerView.Adapter<LocalQQAdapter.LocalQQViewHolder>() 
                     ) + QQRdmUUIDInstall + (if (QQVersionCodeInstall2 != "") " (${QQVersionCodeInstall2})" else "") + " - $QQChannelInstall" else itemView.context.getString(
                         R.string.localQQVersion
                     ) + DataStoreUtil.getStringKV("QQVersionInstall", "")
-                itemQqInstallCard.visibility = View.VISIBLE
+                itemQqInstallCard.isVisible = true
 
                 // 无障碍标记
                 /*if (DefaultArtifactVersion(QQVersionInstall2) >= DefaultArtifactVersion(
@@ -160,7 +161,7 @@ class LocalQQAdapter : RecyclerView.Adapter<LocalQQAdapter.LocalQQViewHolder>() 
                     ).show()
                     true
                 }
-            } else itemQqInstallCard.visibility = View.GONE
+            } else itemQqInstallCard.isVisible = false
         }
     }
 

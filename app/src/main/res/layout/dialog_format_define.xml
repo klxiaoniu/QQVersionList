@@ -65,6 +65,18 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/setting_suffix_define">
 
+                <TextView
+                    android:id="@+id/suffix_check_group_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="8dp"
+                    android:paddingTop="8dp"
+                    android:paddingEnd="8dp"
+                    android:text="@string/suffixSetting"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
                 <LinearLayout
                     android:id="@+id/suffix_define_checkbox_group1"
                     android:layout_width="match_parent"
@@ -286,6 +298,41 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="_test" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/format_check_group_title_others"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="8dp"
+                    android:paddingTop="4dp"
+                    android:paddingEnd="8dp"
+                    android:text="@string/others"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/setting_suffix_define" />
+
+                <LinearLayout
+                    android:id="@+id/suffix_define_checkbox_group8"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:weightSum="1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/suffix_define_checkbox_group6">
+
+                    <CheckBox
+                        android:id="@+id/format_define_checkbox_qq_8958"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/useQQ8958Test" />
 
                 </LinearLayout>
             </LinearLayout>

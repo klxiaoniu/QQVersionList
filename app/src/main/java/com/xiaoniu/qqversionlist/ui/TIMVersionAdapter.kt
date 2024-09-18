@@ -123,11 +123,11 @@ class TIMVersionAdapter :
                     Log.d(bean.version, bean.fix)
                     if (fix != "" && fix.contains("<br/>")) tvTimDesc.apply {
                         text = fix.split("<br/>").joinToString(separator = "\n")
-                        tvTimDesc.visibility = View.VISIBLE
+                        tvTimDesc.isVisible = true
                     } else if (fix != "") tvTimDesc.apply {
                         text = fix
-                        tvTimDesc.visibility = View.VISIBLE
-                    } else tvTimDesc.visibility = View.GONE
+                        tvTimDesc.isVisible = true
+                    } else tvTimDesc.isVisible = false
 
                     bindDisplayInstall(tvTimOldInstall, tvTimOldInstallCard, bean)
                     bindVersionTCloud(tvTimOldVersion, holder.context)
