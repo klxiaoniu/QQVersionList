@@ -143,4 +143,6 @@
     <string name="showUnrealEngineTag">版本卡片顯示匹配的虛幻引擎標誌</string>
     <string name="suffixSetting">後綴設定</string>
     <string name="others">其它</string>
+    <string name="ok">好</string>
+    <string name="swipeLeftForTIMVersions">左滑查看 TIM 版本列表</string>
 </resources>

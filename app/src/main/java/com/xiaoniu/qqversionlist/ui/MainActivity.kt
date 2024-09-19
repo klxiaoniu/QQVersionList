@@ -37,6 +37,7 @@ import android.text.TextWatcher
 import android.text.style.URLSpan
 import android.util.Base64
 import android.view.MenuItem
+import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.enableEdgeToEdge
@@ -57,6 +58,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.progressindicator.CircularProgressIndicatorSpec
 import com.google.android.material.progressindicator.IndeterminateDrawable
 import com.google.android.material.progressindicator.LinearProgressIndicator
+import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonElement
@@ -1225,6 +1227,21 @@ class MainActivity : AppCompatActivity() {
                             VersionBeanUtil.resolveTIMRainbow(this@MainActivity, responseData)
                             withContext(Dispatchers.Main) {
                                 timVersionAdapter.submitList(timVersion)
+                                if (!DataStoreUtil.getBooleanKV("closeSwipeLeftForTIM", false)) {
+                                    class TipTIMSnackbarActionListener : View.OnClickListener {
+                                        override fun onClick(v: View?) {
+                                            DataStoreUtil.putBooleanKV("closeSwipeLeftForTIM", true)
+                                        }
+                                    }
+
+                                    Snackbar
+                                        .make(
+                                            binding.root,
+                                            R.string.swipeLeftForTIMVersions,
+                                            Snackbar.LENGTH_INDEFINITE
+                                        ).setAction(R.string.ok, TipTIMSnackbarActionListener())
+                                        .show()
+                                }
                             }
                         }
                     } catch (e: Exception) {

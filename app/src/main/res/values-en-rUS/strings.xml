@@ -143,4 +143,6 @@
     <string name="showUnrealEngineTag">Version card displays matching Unreal® Engine logo</string>
     <string name="suffixSetting">Suffix Settings</string>
     <string name="others">Others</string>
+    <string name="ok">OK</string>
+    <string name="swipeLeftForTIMVersions">Swipe left to view the TIM version list.</string>
 </resources>
