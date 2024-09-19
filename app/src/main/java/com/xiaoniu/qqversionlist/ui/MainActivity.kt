@@ -1045,7 +1045,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n", "PrivateResource")
     private fun getData(menu: MenuItem? = null) {
         binding.progressLine.show()
         if (menu != null) menu.isEnabled = false
@@ -1234,13 +1234,23 @@ class MainActivity : AppCompatActivity() {
                                         }
                                     }
 
+                                    val isDarkTheme: Boolean =
+                                        when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
+                                            Configuration.UI_MODE_NIGHT_YES -> true
+                                            else -> false
+                                        }
+
                                     Snackbar
                                         .make(
                                             binding.root,
                                             R.string.swipeLeftForTIMVersions,
                                             Snackbar.LENGTH_INDEFINITE
                                         ).setAction(R.string.ok, TipTIMSnackbarActionListener())
-                                        .show()
+                                        .setAnchorView(binding.btnGuess)
+                                        .apply {
+                                            if (isDarkTheme) setBackgroundTint(getColor(com.google.android.material.R.color.m3_sys_color_dynamic_dark_secondary))
+                                            else setBackgroundTint(getColor(com.google.android.material.R.color.m3_sys_color_dynamic_light_secondary))
+                                        }.show()
                                 }
                             }
                         }
