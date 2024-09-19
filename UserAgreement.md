@@ -99,7 +99,7 @@ QQ 版本列表实用工具基于 GNU Affero General Public License Version 3 �
 
 本应用与深圳市腾讯计算机系统有限公司和/或其关联公司无关。
 
-“腾讯”“QQ”“腾讯 QQ”“微信”“WeChat”“微信输入法”“WeType”是深圳市腾讯计算机系统有限公司和/或其关联公司的商标。本项目对“腾讯”“QQ”“腾讯 QQ”“微信”“WeChat”“微信输入法”“WeType”的使用旨在注明和指向对应主体，并非表示对“腾讯”“QQ”“腾讯 QQ”“微信”“WeChat”“微信输入法”“WeType”商标的注册和拥有。
+“腾讯”“QQ”“腾讯 QQ”“微信”“WeChat”“微信输入法”“WeType”等是深圳市腾讯计算机系统有限公司和/或其关联公司的商标。本项目对“腾讯”“QQ”“腾讯 QQ”“微信”“WeChat”“微信输入法”“WeType”等的使用旨在注明和指向对应主体，并非表示对“腾讯”“QQ”“腾讯 QQ”“微信”“WeChat”“微信输入法”“WeType”等商标的注册和拥有。
 
 Android™ 是 Google LLC 的商标。
 
