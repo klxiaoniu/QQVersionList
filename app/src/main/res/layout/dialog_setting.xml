@@ -81,9 +81,17 @@
                 android:gravity="center_vertical"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
-                android:text="@string/enumerateVersionsSuffixSetting"
+                android:text="@string/enumerateVersionsFormatSetting"
                 android:textColor="?attr/colorOnSurface"
                 app:drawableEndCompat="@drawable/arrow_right_s_line" />
+
+            <com.google.android.material.materialswitch.MaterialSwitch
+                android:id="@+id/switch_auto_check_updates"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:text="@string/autoCheckForUpdates" />
 
             <com.google.android.material.materialswitch.MaterialSwitch
                 android:id="@+id/guess_not_5"

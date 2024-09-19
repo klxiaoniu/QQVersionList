@@ -31,10 +31,10 @@
         android:layout_weight="1"
         android:scrollbars="none">
 
-        <LinearLayout
+        <com.google.android.material.button.MaterialButtonGroup
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:spacing="0dp">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_share"
@@ -68,7 +68,7 @@
                 android:contentDescription="@string/skip"
                 app:icon="@drawable/skip_forward_line" />
 
-        </LinearLayout>
+        </com.google.android.material.button.MaterialButtonGroup>
 
     </HorizontalScrollView>
 

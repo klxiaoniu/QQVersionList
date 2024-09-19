@@ -201,6 +201,9 @@ QQ 版本列表实用工具不能实现“检测到新版本自动提醒您”�
 > [!NOTE]
 > Android™ 是 Google LLC 的商标。
 
+> [!NOTE]
+> Unreal® 及其徽标是 Epic Games, Inc. 在美国及其他国家或地区的商标或注册商标。
+
 ## 贡献成员
 
 <a href="https://github.com/klxiaoniu/QQVersionList/graphs/contributors">

@@ -58,6 +58,13 @@
                 android:text="@string/done" />
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_about_update"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/checkUpdateViaGitHubAPI" />
+
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_about_withdrawConsentUA"
                 style="@style/Widget.Material3.Button.TonalButton"
                 android:layout_width="match_parent"
