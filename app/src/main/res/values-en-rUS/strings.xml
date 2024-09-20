@@ -145,4 +145,12 @@
     <string name="others">Others</string>
     <string name="ok">OK</string>
     <string name="swipeLeftForTIMVersions">Swipe left to view the TIM version list.</string>
+    <string name="getUpdateFromTencentAppStore">Get Update From Tencent App Store (Experimental)</string>
+    <string name="experimentalFeatures">Experimental Features</string>
+    <string name="getQQLinkFromTencentAppStore">Get QQ Download Link</string>
+    <string name="getTIMLinkFromTencentAppStore">Get TIM Download Link</string>
+    <string name="getWeixinLinkFromTencentAppStore">Get Weixin Download Link</string>
+    <string name="getWeComLinkFromTencentAppStore">Get WeCom Download Link</string>
+    <string name="contentReturnedByTencentAppStore">Content Returned By Tencent App Store</string>
+    <string name="getWeTypeLinkFromTencentAppStore">Get WeType Download Link</string>
 </resources>

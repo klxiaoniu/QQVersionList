@@ -16,7 +16,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/ll_personalization"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/experimental_features"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -25,7 +26,6 @@
     android:paddingEnd="20dp">
 
     <ScrollView
-        android:id="@+id/exp_back_text_scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="none">
@@ -36,54 +36,36 @@
             android:orientation="vertical"
             android:paddingBottom="20dp">
 
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/switch_display_first"
+            <TextView
+                android:id="@+id/dialog_tencent_app_store"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
+                android:drawablePadding="8dp"
+                android:gravity="center_vertical"
                 android:paddingTop="16dp"
-                android:text="@string/defaultDisplayOfFirstListItemDetails" />
-
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/switch_unreal_engine_tag"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="8dp"
                 android:paddingBottom="8dp"
-                android:text="@string/showUnrealEngineTag" />
+                android:text="@string/getUpdateFromTencentAppStore"
+                android:textColor="?attr/colorOnSurface"
+                app:drawableEndCompat="@drawable/arrow_right_s_line" />
 
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/switch_progress_size"
+            <TextView
+                android:id="@+id/dialog_shiply"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:drawablePadding="8dp"
+                android:gravity="center_vertical"
                 android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:text="@string/versionCardsDisplaysPackageSizeIndicator" />
-
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/switch_version_tcloud"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:text="@string/versionNumberFontUsesTCloudNumber" />
-
-            <com.google.android.material.slider.Slider
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:id="@+id/version_tcloud_thickness"
-                android:stepSize="1.0"
-                android:valueFrom="1.0"
-                android:valueTo="4.0" />
+                android:paddingBottom="16dp"
+                android:text="@string/getUpdateFromShiplyPlatform"
+                android:textColor="?attr/colorOnSurface"
+                app:drawableEndCompat="@drawable/arrow_right_s_line" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_personalization_ok"
+                android:id="@+id/btn_exp_ok"
                 style="@style/Widget.Material3.Button.TonalButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:text="@string/done" />
-
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

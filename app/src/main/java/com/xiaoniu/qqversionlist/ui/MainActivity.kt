@@ -63,6 +63,7 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
+import com.google.gson.Strictness
 import com.xiaoniu.qqversionlist.BuildConfig
 import com.xiaoniu.qqversionlist.QVTApplication.Companion.SHIPLY_DEFAULT_APPID
 import com.xiaoniu.qqversionlist.QVTApplication.Companion.SHIPLY_DEFAULT_SDK_VERSION
@@ -71,13 +72,15 @@ import com.xiaoniu.qqversionlist.data.QQVersionBean
 import com.xiaoniu.qqversionlist.data.TIMVersionBean
 import com.xiaoniu.qqversionlist.databinding.ActivityMainBinding
 import com.xiaoniu.qqversionlist.databinding.DialogAboutBinding
+import com.xiaoniu.qqversionlist.databinding.DialogExpBackBinding
+import com.xiaoniu.qqversionlist.databinding.DialogExperimentalFeaturesBinding
 import com.xiaoniu.qqversionlist.databinding.DialogFormatDefineBinding
 import com.xiaoniu.qqversionlist.databinding.DialogGuessBinding
 import com.xiaoniu.qqversionlist.databinding.DialogLoadingBinding
 import com.xiaoniu.qqversionlist.databinding.DialogPersonalizationBinding
 import com.xiaoniu.qqversionlist.databinding.DialogSettingBinding
-import com.xiaoniu.qqversionlist.databinding.DialogShiplyBackBinding
 import com.xiaoniu.qqversionlist.databinding.DialogShiplyBinding
+import com.xiaoniu.qqversionlist.databinding.DialogTencentAppStoreBinding
 import com.xiaoniu.qqversionlist.databinding.SuccessButtonBinding
 import com.xiaoniu.qqversionlist.databinding.UpdateQvtButtonBinding
 import com.xiaoniu.qqversionlist.databinding.UserAgreementBinding
@@ -95,8 +98,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.logging.HttpLoggingInterceptor
 import org.apache.maven.artifact.versioning.ComparableVersion
 import java.io.BufferedReader
 import java.io.ByteArrayInputStream
@@ -740,125 +746,198 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.btn_tencent_shiply -> {
-                    val dialogShiplyBinding = DialogShiplyBinding.inflate(layoutInflater)
+                    val dialogExperimentalFeaturesBinding =
+                        DialogExperimentalFeaturesBinding.inflate(layoutInflater)
 
-                    val shiplyDialog = MaterialAlertDialogBuilder(this)
-                        .setTitle(R.string.getUpdateFromShiplyPlatform)
+                    val dialogExperimentalFeatures = MaterialAlertDialogBuilder(this)
+                        .setTitle(R.string.experimentalFeatures)
                         .setIcon(R.drawable.flask_line)
-                        .setView(dialogShiplyBinding.root)
+                        .setView(dialogExperimentalFeaturesBinding.root)
                         .setCancelable(false)
                         .show()
 
-                    dialogShiplyBinding.apply {
-                        DataStoreUtil.apply {
-                            shiplyUin.editText?.setText(getStringKV("shiplyUin", ""))
-                            shiplyVersion.editText?.setText(
-                                getStringKV("shiplyVersion", "")
-                            )
-                            switchShiplyAdvancedConfigurations.isChecked =
-                                getBooleanKV("shiplyAdvancedConfigurations", false)
+                    dialogExperimentalFeaturesBinding.apply {
+                        btnExpOk.setOnClickListener {
+                            dialogExperimentalFeatures.dismiss()
                         }
 
-                        switchShiplyAdvancedConfigurations.setOnCheckedChangeListener { _, isChecked ->
-                            DataStoreUtil.putBooleanKVAsync(
-                                "shiplyAdvancedConfigurations",
-                                isChecked
-                            )
-                        }
+                        dialogTencentAppStore.setOnClickListener {
+                            val dialogTencentAppStoreBinding =
+                                DialogTencentAppStoreBinding.inflate(layoutInflater)
 
-                        shiplyAdvancedConfigurationsClick.setOnClickListener {
-                            ShiplyAdvancedConfigSheetFragment().apply {
-                                isCancelable = false
-                                show(supportFragmentManager, ShiplyAdvancedConfigSheetFragment.TAG)
+                            val tencentAppStoreDialog =
+                                MaterialAlertDialogBuilder(this@MainActivity)
+                                    .setTitle(R.string.getUpdateFromTencentAppStore)
+                                    .setIcon(R.drawable.flask_line)
+                                    .setView(dialogTencentAppStoreBinding.root)
+                                    .show()
+
+                            dialogTencentAppStoreBinding.apply {
+                                tencentAppStoreBack.setOnClickListener {
+                                    tencentAppStoreDialog.dismiss()
+                                }
+
+                                getQq.setOnClickListener {
+                                    tencentAppStoreStart(
+                                        mapOf("packagename" to "com.tencent.mobileqq"), getQq
+                                    )
+                                }
+
+                                getTim.setOnClickListener {
+                                    tencentAppStoreStart(
+                                        mapOf("packagename" to "com.tencent.tim"), getTim
+                                    )
+                                }
+
+                                getWeixin.setOnClickListener {
+                                    tencentAppStoreStart(
+                                        mapOf("packagename" to "com.tencent.mm"), getWeixin
+                                    )
+                                }
+
+                                getWecom.setOnClickListener {
+                                    tencentAppStoreStart(
+                                        mapOf("packagename" to "com.tencent.wework"), getWecom
+                                    )
+                                }
+
+                                getWetype.setOnClickListener {
+                                    tencentAppStoreStart(
+                                        mapOf("packagename" to "com.tencent.wetype"), getWetype
+                                    )
+                                }
                             }
                         }
 
-                        btnShiplyCancel.setOnClickListener {
-                            shiplyDialog.dismiss()
-                        }
+                        dialogShiply.setOnClickListener {
+                            val dialogShiplyBinding = DialogShiplyBinding.inflate(layoutInflater)
 
-                        btnShiplyStart.setOnClickListener {
-                            shiplyUin.clearFocus()
-                            shiplyVersion.clearFocus()
+                            val shiplyDialog = MaterialAlertDialogBuilder(this@MainActivity)
+                                .setTitle(R.string.getUpdateFromShiplyPlatform)
+                                .setIcon(R.drawable.flask_line)
+                                .setView(dialogShiplyBinding.root)
+                                .setCancelable(false)
+                                .show()
 
-                            val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-                            imm.hideSoftInputFromWindow(shiplyVersion.windowToken, 0)
-
-                            class MissingParameterException(message: String) : Exception(message)
-
-                            try {
-                                val spec = CircularProgressIndicatorSpec(
-                                    this@MainActivity,
-                                    null,
-                                    0,
-                                    com.google.android.material.R.style.Widget_Material3_CircularProgressIndicator_ExtraSmall
-                                )
-                                val progressIndicatorDrawable =
-                                    IndeterminateDrawable.createCircularDrawable(
-                                        this@MainActivity, spec
+                            dialogShiplyBinding.apply {
+                                DataStoreUtil.apply {
+                                    shiplyUin.editText?.setText(getStringKV("shiplyUin", ""))
+                                    shiplyVersion.editText?.setText(
+                                        getStringKV("shiplyVersion", "")
                                     )
-
-                                btnShiplyStart.apply {
-                                    isEnabled = false
-                                    style(com.google.android.material.R.style.Widget_Material3_Button_Icon)
-                                    icon = progressIndicatorDrawable
+                                    switchShiplyAdvancedConfigurations.isChecked =
+                                        getBooleanKV("shiplyAdvancedConfigurations", false)
                                 }
 
-                                if (shiplyUin.editText?.text.toString()
-                                        .isEmpty()
-                                ) throw MissingParameterException("uin 信息是用于请求 TDS 腾讯端服务 Shiply 发布平台的对象 QQ 号，缺失 uin 参数将无法获取 Shiply 平台返回数据。")
-                                if (shiplyVersion.editText?.text.toString()
-                                        .isEmpty()
-                                ) throw MissingParameterException("请求 TDS 腾讯端服务 Shiply 发布平台需要 QQ 版本号参数，缺失版本号参数将无法获取 Shiply 平台返回数据。")
-
-                                if (!DataStoreUtil.getBooleanKV(
-                                        "shiplyAdvancedConfigurations", false
+                                switchShiplyAdvancedConfigurations.setOnCheckedChangeListener { _, isChecked ->
+                                    DataStoreUtil.putBooleanKVAsync(
+                                        "shiplyAdvancedConfigurations",
+                                        isChecked
                                     )
-                                ) {
-                                    DataStoreUtil.apply {
-                                        putStringKVAsync(
-                                            "shiplyVersion", shiplyVersion.editText?.text.toString()
-                                        )
-                                        putStringKVAsync(
-                                            "shiplyUin", shiplyUin.editText?.text.toString()
+                                }
+
+                                shiplyAdvancedConfigurationsClick.setOnClickListener {
+                                    ShiplyAdvancedConfigSheetFragment().apply {
+                                        isCancelable = false
+                                        show(
+                                            supportFragmentManager,
+                                            ShiplyAdvancedConfigSheetFragment.TAG
                                         )
                                     }
-                                    tencentShiplyStart(
-                                        btnShiplyStart,
-                                        shiplyVersion.editText?.text.toString(),
-                                        shiplyUin.editText?.text.toString()
-                                    )
-                                } else DataStoreUtil.apply {
-                                    putStringKVAsync(
-                                        "shiplyVersion", shiplyVersion.editText?.text.toString()
-                                    )
-                                    putStringKVAsync(
-                                        "shiplyUin", shiplyUin.editText?.text.toString()
-                                    )
-                                    tencentShiplyStart(btnShiplyStart,
-                                        shiplyVersion.editText?.text.toString(),
-                                        shiplyUin.editText?.text.toString(),
-                                        getStringKV(
-                                            "shiplyAppid", ""
-                                        ).ifEmpty { SHIPLY_DEFAULT_APPID },
-                                        getStringKV(
-                                            "shiplyOsVersion", ""
-                                        ).ifEmpty { SDK_INT.toString() },
-                                        getStringKV(
-                                            "shiplyModel", ""
-                                        ).ifEmpty { Build.MODEL.toString() },
-                                        getStringKV(
-                                            "shiplySdkVersion", ""
-                                        ).ifEmpty { SHIPLY_DEFAULT_SDK_VERSION },
-                                        getStringKV(
-                                            "shiplyLanguage", ""
-                                        ).ifEmpty { Locale.getDefault().language.toString() })
                                 }
-                            } catch (e: MissingParameterException) {
-                                dialogError(e, true)
-                            } catch (e: Exception) {
-                                e.printStackTrace()
-                                dialogError(e)
+
+                                btnShiplyCancel.setOnClickListener {
+                                    shiplyDialog.dismiss()
+                                }
+
+                                btnShiplyStart.setOnClickListener {
+                                    shiplyUin.clearFocus()
+                                    shiplyVersion.clearFocus()
+
+                                    val imm =
+                                        getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                                    imm.hideSoftInputFromWindow(shiplyVersion.windowToken, 0)
+
+                                    class MissingParameterException(message: String) :
+                                        Exception(message)
+
+                                    try {
+                                        val spec = CircularProgressIndicatorSpec(
+                                            this@MainActivity,
+                                            null,
+                                            0,
+                                            com.google.android.material.R.style.Widget_Material3_CircularProgressIndicator_ExtraSmall
+                                        )
+                                        val progressIndicatorDrawable =
+                                            IndeterminateDrawable.createCircularDrawable(
+                                                this@MainActivity, spec
+                                            )
+
+                                        btnShiplyStart.apply {
+                                            isEnabled = false
+                                            style(com.google.android.material.R.style.Widget_Material3_Button_Icon)
+                                            icon = progressIndicatorDrawable
+                                        }
+
+                                        if (shiplyUin.editText?.text.toString()
+                                                .isEmpty()
+                                        ) throw MissingParameterException("uin 信息是用于请求 TDS 腾讯端服务 Shiply 发布平台的对象 QQ 号，缺失 uin 参数将无法获取 Shiply 平台返回数据。")
+                                        if (shiplyVersion.editText?.text.toString()
+                                                .isEmpty()
+                                        ) throw MissingParameterException("请求 TDS 腾讯端服务 Shiply 发布平台需要 QQ 版本号参数，缺失版本号参数将无法获取 Shiply 平台返回数据。")
+
+                                        if (!DataStoreUtil.getBooleanKV(
+                                                "shiplyAdvancedConfigurations", false
+                                            )
+                                        ) {
+                                            DataStoreUtil.apply {
+                                                putStringKVAsync(
+                                                    "shiplyVersion",
+                                                    shiplyVersion.editText?.text.toString()
+                                                )
+                                                putStringKVAsync(
+                                                    "shiplyUin", shiplyUin.editText?.text.toString()
+                                                )
+                                            }
+                                            tencentShiplyStart(
+                                                btnShiplyStart,
+                                                shiplyVersion.editText?.text.toString(),
+                                                shiplyUin.editText?.text.toString()
+                                            )
+                                        } else DataStoreUtil.apply {
+                                            putStringKVAsync(
+                                                "shiplyVersion",
+                                                shiplyVersion.editText?.text.toString()
+                                            )
+                                            putStringKVAsync(
+                                                "shiplyUin", shiplyUin.editText?.text.toString()
+                                            )
+                                            tencentShiplyStart(btnShiplyStart,
+                                                shiplyVersion.editText?.text.toString(),
+                                                shiplyUin.editText?.text.toString(),
+                                                getStringKV(
+                                                    "shiplyAppid", ""
+                                                ).ifEmpty { SHIPLY_DEFAULT_APPID },
+                                                getStringKV(
+                                                    "shiplyOsVersion", ""
+                                                ).ifEmpty { SDK_INT.toString() },
+                                                getStringKV(
+                                                    "shiplyModel", ""
+                                                ).ifEmpty { Build.MODEL.toString() },
+                                                getStringKV(
+                                                    "shiplySdkVersion", ""
+                                                ).ifEmpty { SHIPLY_DEFAULT_SDK_VERSION },
+                                                getStringKV(
+                                                    "shiplyLanguage", ""
+                                                ).ifEmpty { Locale.getDefault().language.toString() })
+                                        }
+                                    } catch (e: MissingParameterException) {
+                                        dialogError(e, true)
+                                    } catch (e: Exception) {
+                                        e.printStackTrace()
+                                        dialogError(e)
+                                    }
+                                }
                             }
                         }
                     }
@@ -1643,6 +1722,45 @@ class MainActivity : AppCompatActivity() {
         thread.start()
     }
 
+    private fun showExpBackDialog(sourceDataJson: String, dialogTitle: String) {
+        val dialogShiplyBackBinding =
+            DialogExpBackBinding.inflate(layoutInflater)
+
+        dialogShiplyBackBinding.root.parent?.let { parent ->
+            if (parent is ViewGroup) parent.removeView(dialogShiplyBackBinding.root)
+        }
+
+        val shiplyApkUrl =
+            sourceDataJson.toPrettyFormat().getAllAPKUrl()
+
+        dialogShiplyBackBinding.apply {
+            MaterialAlertDialogBuilder(this@MainActivity)
+                .setView(
+                    dialogShiplyBackBinding.root
+                ).setTitle(dialogTitle)
+                .setIcon(R.drawable.flask_line)
+                .show().apply {
+                    expUrlRecyclerView.layoutManager =
+                        LinearLayoutManager(this@MainActivity)
+                    when {
+                        shiplyApkUrl != null -> {
+                            expUrlBackTitle.isVisible = true
+                            expUrlRecyclerView.isVisible = true
+                            expUrlRecyclerView.adapter =
+                                ExpUrlListAdapter(shiplyApkUrl)
+                        }
+
+                        else -> {
+                            expUrlBackTitle.isVisible = false
+                            expUrlRecyclerView.isVisible = false
+                        }
+                    }
+                    expBackText.text =
+                        sourceDataJson.toPrettyFormat()
+                }
+        }
+    }
+
     /**
      * @param btn `MaterialButton` 实例，此函数将控制传入按钮的加载态
      * @param shiplyVersion QQ 版本号
@@ -1720,50 +1838,77 @@ class MainActivity : AppCompatActivity() {
                         val gson = GsonBuilder().setPrettyPrinting().create()
                         val shiplyDecodeStringJson =
                             gson.toJson(gson.fromJson(shiplyDecodeString, JsonElement::class.java))
-
                         runOnUiThread {
-                            val dialogShiplyBackBinding =
-                                DialogShiplyBackBinding.inflate(layoutInflater)
-
-                            dialogShiplyBackBinding.root.parent?.let { parent ->
-                                if (parent is ViewGroup) parent.removeView(dialogShiplyBackBinding.root)
-                            }
-
-                            val shiplyApkUrl =
-                                shiplyDecodeStringJson.toPrettyFormat().getAllAPKUrl()
-
-                            dialogShiplyBackBinding.apply {
-                                MaterialAlertDialogBuilder(this@MainActivity)
-                                    .setView(
-                                        dialogShiplyBackBinding.root
-                                    ).setTitle(R.string.contentReturnedByShiplyPlatform)
-                                    .setIcon(R.drawable.flask_line)
-                                    .show().apply {
-                                        shiplyUrlRecyclerView.layoutManager =
-                                            LinearLayoutManager(this@MainActivity)
-                                        when {
-                                            shiplyApkUrl != null -> {
-                                                shiplyUrlBackTitle.isVisible = true
-                                                shiplyUrlRecyclerView.isVisible = true
-                                                shiplyUrlRecyclerView.adapter =
-                                                    ShiplyUrlListAdapter(shiplyApkUrl)
-                                            }
-
-                                            else -> {
-                                                shiplyUrlBackTitle.isVisible = false
-                                                shiplyUrlRecyclerView.isVisible = false
-                                            }
-                                        }
-                                        shiplyBackText.text =
-                                            shiplyDecodeStringJson.toPrettyFormat()
-                                    }
-                            }
+                            showExpBackDialog(
+                                shiplyDecodeStringJson,
+                                getString(R.string.contentReturnedByShiplyPlatform)
+                            )
                         }
                     } else throw MissingCipherTextException(getString(R.string.missingCipherWarning))
                 }
             } catch (e: MissingCipherTextException) {
                 e.printStackTrace()
                 dialogError(e, true)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                dialogError(e)
+            } finally {
+                runOnUiThread {
+                    btn.apply {
+                        style(com.google.android.material.R.style.Widget_Material3_Button)
+                        icon = null
+                        isEnabled = true
+                    }
+                }
+            }
+        }
+    }
+
+    private fun tencentAppStoreStart(
+        getType: Any,
+        btn: MaterialButton
+    ) {
+        val spec = CircularProgressIndicatorSpec(
+            this@MainActivity,
+            null,
+            0,
+            com.google.android.material.R.style.Widget_Material3_CircularProgressIndicator_ExtraSmall
+        )
+        val progressIndicatorDrawable =
+            IndeterminateDrawable.createCircularDrawable(
+                this@MainActivity, spec
+            )
+        btn.apply {
+            isEnabled = false
+            style(com.google.android.material.R.style.Widget_Material3_Button_TonalButton_Icon)
+            icon = progressIndicatorDrawable
+        }
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val okHttpClient = OkHttpClient.Builder().addInterceptor(HttpLoggingInterceptor()
+                    .apply {
+                        level = HttpLoggingInterceptor.Level.BODY
+                    }).build()
+                val mediaType = "application/json; charset=utf-8".toMediaTypeOrNull()
+                val body = GsonBuilder().setStrictness(Strictness.LENIENT).create().toJson(getType)
+                val request = Request.Builder().url("https://upage.html5.qq.com/wechat-apkinfo")
+                    .post(body.toRequestBody(mediaType!!))
+                    .addHeader("Content-Type", "application/json")
+                    .build()
+
+                val response = okHttpClient.newCall(request).execute()
+                val responseData = response.body?.string()
+                if (response.isSuccessful && !responseData.isNullOrEmpty()) {
+                    val gson = GsonBuilder().setPrettyPrinting().create()
+                    val tencentAppStoreResultJson =
+                        gson.toJson(gson.fromJson(responseData, JsonElement::class.java))
+                    runOnUiThread {
+                        showExpBackDialog(
+                            tencentAppStoreResultJson,
+                            getString(R.string.contentReturnedByTencentAppStore)
+                        )
+                    }
+                }
             } catch (e: Exception) {
                 e.printStackTrace()
                 dialogError(e)

@@ -16,16 +16,15 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/ll_personalization"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:paddingStart="20dp"
-    android:paddingTop="6dp"
+    android:paddingTop="8dp"
     android:paddingEnd="20dp">
 
     <ScrollView
-        android:id="@+id/exp_back_text_scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="none">
@@ -36,54 +35,48 @@
             android:orientation="vertical"
             android:paddingBottom="20dp">
 
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/switch_display_first"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:paddingTop="16dp"
-                android:text="@string/defaultDisplayOfFirstListItemDetails" />
-
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/switch_unreal_engine_tag"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:text="@string/showUnrealEngineTag" />
-
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/switch_progress_size"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:text="@string/versionCardsDisplaysPackageSizeIndicator" />
-
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/switch_version_tcloud"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:text="@string/versionNumberFontUsesTCloudNumber" />
-
-            <com.google.android.material.slider.Slider
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:id="@+id/version_tcloud_thickness"
-                android:stepSize="1.0"
-                android:valueFrom="1.0"
-                android:valueTo="4.0" />
-
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_personalization_ok"
+                android:id="@+id/get_qq"
                 style="@style/Widget.Material3.Button.TonalButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="@string/done" />
+                android:text="@string/getQQLinkFromTencentAppStore" />
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/get_tim"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/getTIMLinkFromTencentAppStore" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/get_weixin"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/getWeixinLinkFromTencentAppStore" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/get_wecom"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/getWeComLinkFromTencentAppStore" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/get_wetype"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/getWeTypeLinkFromTencentAppStore" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/tencent_app_store_back"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/back" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

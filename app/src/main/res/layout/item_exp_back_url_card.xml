@@ -17,7 +17,7 @@
 -->
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/shiply_url_card"
+    android:id="@+id/exp_url_card"
     style="?attr/materialCardViewOutlinedStyle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -30,7 +30,7 @@
     app:strokeWidth="0dp">
 
     <TextView
-        android:id="@+id/shiply_url_text"
+        android:id="@+id/exp_url_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="4dp"

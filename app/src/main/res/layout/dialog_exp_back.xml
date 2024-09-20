@@ -24,7 +24,7 @@
     android:paddingEnd="16dp">
 
     <androidx.core.widget.NestedScrollView
-        android:id="@+id/shiply_back_text_scroll"
+        android:id="@+id/exp_back_text_scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="none">
@@ -35,7 +35,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/shiply_url_back_title"
+                android:id="@+id/exp_url_back_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingStart="10dp"
@@ -47,14 +47,14 @@
                 android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/shiply_url_recycler_view"
+                android:id="@+id/exp_url_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:nestedScrollingEnabled="false"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/shiply_back_title"
+                android:id="@+id/exp_back_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingStart="10dp"
@@ -66,7 +66,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/shiply_back_text"
+                android:id="@+id/exp_back_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingStart="4dp"
@@ -76,7 +76,5 @@
                 android:textIsSelectable="true" />
 
         </LinearLayout>
-
     </androidx.core.widget.NestedScrollView>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

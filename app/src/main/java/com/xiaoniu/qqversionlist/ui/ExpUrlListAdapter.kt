@@ -29,8 +29,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.xiaoniu.qqversionlist.R
-import com.xiaoniu.qqversionlist.databinding.ItemShiplyBackUrlCardBinding
-import com.xiaoniu.qqversionlist.databinding.ShiplyLinkNextButtonBinding
+import com.xiaoniu.qqversionlist.databinding.ExpLinkNextButtonBinding
+import com.xiaoniu.qqversionlist.databinding.ItemExpBackUrlCardBinding
 import com.xiaoniu.qqversionlist.util.ClipboardUtil.copyText
 import com.xiaoniu.qqversionlist.util.DataStoreUtil
 import kotlinx.coroutines.CoroutineScope
@@ -40,22 +40,22 @@ import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
-class ShiplyUrlListAdapter(private val urlList: List<String>) :
-    RecyclerView.Adapter<ShiplyUrlListAdapter.ShiplyUrlViewHolder>() {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShiplyUrlViewHolder {
+class ExpUrlListAdapter(private val urlList: List<String>) :
+    RecyclerView.Adapter<ExpUrlListAdapter.ExpUrlViewHolder>() {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExpUrlViewHolder {
         val binding =
-            ItemShiplyBackUrlCardBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ShiplyUrlViewHolder(binding)
+            ItemExpBackUrlCardBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ExpUrlViewHolder(binding)
     }
 
-    inner class ShiplyUrlViewHolder(binding: ItemShiplyBackUrlCardBinding) :
+    inner class ExpUrlViewHolder(binding: ItemExpBackUrlCardBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        val shiplyUrlText = binding.shiplyUrlText
+        val expUrlText = binding.expUrlText
         var currentUrl: String? = null
 
         init {
-            val shiplyUrlCard = itemView.findViewById<MaterialCardView>(R.id.shiply_url_card)
-            shiplyUrlCard.setOnClickListener {
+            val expUrlCard = itemView.findViewById<MaterialCardView>(R.id.exp_url_card)
+            expUrlCard.setOnClickListener {
                 currentUrl?.let { url ->
                     CoroutineScope(Dispatchers.IO).launch {
                         var appSize = ""
@@ -70,20 +70,20 @@ class ShiplyUrlListAdapter(private val urlList: List<String>) :
                         } catch (_: Exception) {
                         } finally {
                             withContext(Dispatchers.Main) {
-                                val shiplyLinkNextButtonBinding =
-                                    ShiplyLinkNextButtonBinding.inflate(
+                                val expLinkNextButtonBinding =
+                                    ExpLinkNextButtonBinding.inflate(
                                         LayoutInflater.from(itemView.context)
                                     )
-                                shiplyLinkNextButtonBinding.root.parent?.let { parent ->
+                                expLinkNextButtonBinding.root.parent?.let { parent ->
                                     if (parent is ViewGroup) parent.removeView(
-                                        shiplyLinkNextButtonBinding.root
+                                        expLinkNextButtonBinding.root
                                     )
                                 }
-                                val shiplyNextMaterialDialog =
+                                val expNextMaterialDialog =
                                     MaterialAlertDialogBuilder(itemView.context)
                                         .setTitle(R.string.additionalActions)
                                         .setIcon(R.drawable.flask_line)
-                                        .setView(shiplyLinkNextButtonBinding.root).apply {
+                                        .setView(expLinkNextButtonBinding.root).apply {
                                             if (appSize != "" && appSize != "-1" && appSize != "0") setMessage(
                                                 "${itemView.context.getString(R.string.downloadLink)}$url\n\n${
                                                     itemView.context.getString(
@@ -94,14 +94,14 @@ class ShiplyUrlListAdapter(private val urlList: List<String>) :
                                             else setMessage("${itemView.context.getString(R.string.downloadLink)}$url")
                                         }.show()
 
-                                shiplyLinkNextButtonBinding.apply {
-                                    shiplyNextBtnCopy.setOnClickListener {
-                                        shiplyNextMaterialDialog.dismiss()
+                                expLinkNextButtonBinding.apply {
+                                    expNextBtnCopy.setOnClickListener {
+                                        expNextMaterialDialog.dismiss()
                                         itemView.context.copyText(url)
                                     }
 
-                                    shiplyNextBtnDownload.setOnClickListener {
-                                        shiplyNextMaterialDialog.dismiss()
+                                    expNextBtnDownload.setOnClickListener {
+                                        expNextMaterialDialog.dismiss()
                                         if (DataStoreUtil.getBooleanKV(
                                                 "downloadOnSystemManager", false
                                             )
@@ -127,8 +127,8 @@ class ShiplyUrlListAdapter(private val urlList: List<String>) :
                                         }
                                     }
 
-                                    shiplyNextBtnShare.setOnClickListener {
-                                        shiplyNextMaterialDialog.dismiss()
+                                    expNextBtnShare.setOnClickListener {
+                                        expNextMaterialDialog.dismiss()
                                         val shareIntent = Intent(Intent.ACTION_SEND).apply {
                                             type = "text/plain"
                                             putExtra(
@@ -153,12 +153,12 @@ class ShiplyUrlListAdapter(private val urlList: List<String>) :
                                                         url.substringAfterLast(
                                                             '/'
                                                         )
-                                                    }）（大小：$appSize MB）\n\n下载地址：$url\n\n此下载地址由 TDS 腾讯端服务 Shiply 发布平台提供，指向的 QQ 安装包可能属于测试版本。测试版本可能存在不可预知的稳定性问题，请明确并确保自身具备足够的风险识别和承受能力。"
+                                                    }）（大小：$appSize MB）\n\n下载地址：$url\n\n此下载地址由 TDS 腾讯端服务 Exp 发布平台提供，指向的 QQ 安装包可能属于测试版本。测试版本可能存在不可预知的稳定性问题，请明确并确保自身具备足够的风险识别和承受能力。"
                                                     else "Android QQ（${url.substringAfterLast('/')}）\n\n${
                                                         itemView.context.getString(
                                                             R.string.downloadLink
                                                         )
-                                                    }$url\n\n此下载地址由 TDS 腾讯端服务 Shiply 发布平台提供，指向的 QQ 安装包可能属于测试版本。测试版本可能存在不可预知的稳定性问题，请明确并确保自身具备足够的风险识别和承受能力。"
+                                                    }$url\n\n此下载地址由 TDS 腾讯端服务 Exp 发布平台提供，指向的 QQ 安装包可能属于测试版本。测试版本可能存在不可预知的稳定性问题，请明确并确保自身具备足够的风险识别和承受能力。"
                                                 }
                                             )
                                         }
@@ -175,7 +175,7 @@ class ShiplyUrlListAdapter(private val urlList: List<String>) :
                     }
                 }
             }
-            shiplyUrlCard.setOnLongClickListener {
+            expUrlCard.setOnLongClickListener {
                 currentUrl?.let { url ->
                     itemView.context.copyText(url)
                 }
@@ -184,9 +184,9 @@ class ShiplyUrlListAdapter(private val urlList: List<String>) :
         }
     }
 
-    override fun onBindViewHolder(holder: ShiplyUrlViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ExpUrlViewHolder, position: Int) {
         val currentUrl = urlList[position]
-        holder.shiplyUrlText.text = currentUrl
+        holder.expUrlText.text = currentUrl
         holder.currentUrl = currentUrl
     }
 

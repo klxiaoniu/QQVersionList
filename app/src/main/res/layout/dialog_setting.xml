@@ -26,7 +26,6 @@
     android:paddingEnd="20dp">
 
     <ScrollView
-        android:id="@+id/shiply_back_text_scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="none">

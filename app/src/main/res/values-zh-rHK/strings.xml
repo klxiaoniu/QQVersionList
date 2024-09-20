@@ -145,4 +145,12 @@
     <string name="others">其它</string>
     <string name="ok">好</string>
     <string name="swipeLeftForTIMVersions">左滑查看 TIM 版本列表</string>
+    <string name="getUpdateFromTencentAppStore">騰訊應用寶更新取得（實驗性）</string>
+    <string name="experimentalFeatures">實驗性功能</string>
+    <string name="getQQLinkFromTencentAppStore">取得 QQ 下載直鏈</string>
+    <string name="getTIMLinkFromTencentAppStore">取得 TIM 下載直鏈</string>
+    <string name="getWeixinLinkFromTencentAppStore">取得微信下載直鏈</string>
+    <string name="getWeComLinkFromTencentAppStore">取得企業微信下載直鏈</string>
+    <string name="contentReturnedByTencentAppStore">騰訊應用寶返回內容</string>
+    <string name="getWeTypeLinkFromTencentAppStore">取得微信輸入法下載直鏈</string>
 </resources>
