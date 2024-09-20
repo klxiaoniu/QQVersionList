@@ -753,7 +753,6 @@ class MainActivity : AppCompatActivity() {
                         .setTitle(R.string.experimentalFeatures)
                         .setIcon(R.drawable.flask_line)
                         .setView(dialogExperimentalFeaturesBinding.root)
-                        .setCancelable(false)
                         .show()
 
                     dialogExperimentalFeaturesBinding.apply {
