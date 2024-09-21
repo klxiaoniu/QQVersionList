@@ -472,6 +472,8 @@ class MainActivity : AppCompatActivity() {
                                     DataStoreUtil.getBooleanKV("progressSize", false)
                                 switchVersionTcloud.isChecked =
                                     DataStoreUtil.getBooleanKV("versionTCloud", true)
+                                switchOldLoading.isChecked =
+                                    DataStoreUtil.getBooleanKV("showOldLoading", false)
 
                                 switchDisplayFirst.setOnCheckedChangeListener { _, isChecked ->
                                     DataStoreUtil.putBooleanKVAsync("displayFirst", isChecked)
@@ -489,6 +491,10 @@ class MainActivity : AppCompatActivity() {
                                     }
                                     qqVersionAdapter.submitList(qqVersion)
                                     timVersionAdapter.submitList(timVersion)
+                                }
+
+                                switchOldLoading.setOnCheckedChangeListener { _, isChecked ->
+                                    DataStoreUtil.putBooleanKVAsync("showOldLoading", isChecked)
                                 }
 
                                 // 下三个设置不能异步持久化存储，否则视图更新读不到更新值
@@ -1360,6 +1366,13 @@ class MainActivity : AppCompatActivity() {
         val progressDialog = MaterialAlertDialogBuilder(this)
             .setView(dialogLoadingBinding.root)
             .setCancelable(false)
+            .apply {
+                dialogLoadingBinding.apply {
+                    val oldLoadingIsVisible = DataStoreUtil.getBooleanKV("showOldLoading", false)
+                    progressIndicator.isVisible = oldLoadingIsVisible
+                    loadingIndicator.isVisible = !oldLoadingIsVisible
+                }
+            }
             .create()
 
         fun updateProgressDialogMessage(newMessage: String) {

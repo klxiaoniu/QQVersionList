@@ -41,7 +41,7 @@
     <item
         android:id="@+id/btn_tencent_shiply"
         android:icon="@drawable/flask_line"
-        android:title="@string/getUpdateFromTDSShiplyDistributionPlatform"
+        android:title="@string/experimentalFeatures"
         app:showAsAction="always" />
 
 </menu>
