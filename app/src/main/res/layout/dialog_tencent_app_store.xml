@@ -40,7 +40,6 @@
                 style="@style/Widget.Material3.Button.TonalButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:text="@string/getQQLinkFromTencentAppStore" />
 
             <com.google.android.material.button.MaterialButton
@@ -70,6 +69,29 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/getWeTypeLinkFromTencentAppStore" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/guess_dialog_warning"
+                style="?attr/materialCardViewOutlinedStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
+                android:backgroundTint="?android:colorBackground">
+
+                <TextView
+                    android:id="@+id/tencent_app_store_warning"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:drawablePadding="4dp"
+                    android:paddingStart="3dp"
+                    android:paddingEnd="0dp"
+                    android:text="@string/tencentAppStoreWarning"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="10sp"
+                    app:drawableStartCompat="@drawable/error_warning_fill" />
+            </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/tencent_app_store_back"

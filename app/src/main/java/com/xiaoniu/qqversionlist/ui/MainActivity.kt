@@ -228,7 +228,7 @@ class MainActivity : AppCompatActivity() {
          * 这里的 `val judgeUATarget = <Number>` 的值代表着用户协议修订版本，
          * 后续更新协议版本后也需要在下面一行把“judgeUATarget” + 1，以此类推
          **/
-        val judgeUATarget = 3 // 2024.9.17 第三版
+        val judgeUATarget = 4 // 2024.9.21 第四版
         if (DataStoreUtil.getIntKV("userAgreement", 0) < judgeUATarget) showUADialog(
             false, judgeUATarget
         ) else {

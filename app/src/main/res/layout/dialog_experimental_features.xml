@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:drawablePadding="8dp"
                 android:gravity="center_vertical"
-                android:paddingTop="16dp"
+                android:paddingTop="8dp"
                 android:paddingBottom="8dp"
                 android:text="@string/getUpdateFromTencentAppStore"
                 android:textColor="?attr/colorOnSurface"
@@ -65,7 +65,7 @@
                 style="@style/Widget.Material3.Button.TonalButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/done" />
+                android:text="@string/back" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

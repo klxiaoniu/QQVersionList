@@ -153,4 +153,5 @@
     <string name="getWeComLinkFromTencentAppStore">取得企業微信下載直鏈</string>
     <string name="contentReturnedByTencentAppStore">騰訊應用寶返回內容</string>
     <string name="getWeTypeLinkFromTencentAppStore">取得微信輸入法下載直鏈</string>
+    <string name="tencentAppStoreWarning">騰訊應用寶更新取得功能為 QQ 版本列表實用工具附帶的實驗性功能，可能存在不可預知的穩定性問題。請明確並確保自身具備足夠的風險識別和承受能力。</string>
 </resources>
