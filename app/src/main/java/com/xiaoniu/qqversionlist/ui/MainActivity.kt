@@ -470,6 +470,8 @@ class MainActivity : AppCompatActivity() {
                                     DataStoreUtil.getBooleanKV("unrealEngineTag", false)
                                 switchProgressSize.isChecked =
                                     DataStoreUtil.getBooleanKV("progressSize", false)
+                                switchProgressSizeText.isChecked =
+                                    DataStoreUtil.getBooleanKV("progressSizeText", false)
                                 switchVersionTcloud.isChecked =
                                     DataStoreUtil.getBooleanKV("versionTCloud", true)
                                 switchOldLoading.isChecked =
@@ -497,7 +499,7 @@ class MainActivity : AppCompatActivity() {
                                     DataStoreUtil.putBooleanKVAsync("showOldLoading", isChecked)
                                 }
 
-                                // 下三个设置不能异步持久化存储，否则视图更新读不到更新值
+                                // 下四个设置不能异步持久化存储，否则视图更新读不到更新值
                                 switchUnrealEngineTag.setOnCheckedChangeListener { _, isChecked ->
                                     DataStoreUtil.putBooleanKV("unrealEngineTag", isChecked)
                                     qqVersionAdapter.updateItemProperty("isShowUnrealEngineTag")
@@ -505,6 +507,10 @@ class MainActivity : AppCompatActivity() {
                                 switchProgressSize.setOnCheckedChangeListener { _, isChecked ->
                                     DataStoreUtil.putBooleanKV("progressSize", isChecked)
                                     qqVersionAdapter.updateItemProperty("isShowProgressSize")
+                                }
+                                switchProgressSizeText.setOnCheckedChangeListener { _, isChecked ->
+                                    DataStoreUtil.putBooleanKV("progressSizeText", isChecked)
+                                    qqVersionAdapter.updateItemProperty("isShowProgressSizeText")
                                 }
                                 switchVersionTcloud.setOnCheckedChangeListener { _, isChecked ->
                                     DataStoreUtil.putBooleanKV("versionTCloud", isChecked)
@@ -1372,8 +1378,7 @@ class MainActivity : AppCompatActivity() {
                     progressIndicator.isVisible = oldLoadingIsVisible
                     loadingIndicator.isVisible = !oldLoadingIsVisible
                 }
-            }
-            .create()
+            }.create()
 
         fun updateProgressDialogMessage(newMessage: String) {
             dialogLoadingBinding.loadingMessage.text = newMessage

@@ -50,6 +50,7 @@ import com.xiaoniu.qqversionlist.util.StringUtil.toPrettyFormat
 class QQVersionAdapter :
     ListAdapter<QQVersionBean, RecyclerView.ViewHolder>(QQVersionDiffCallback()) {
     private var getProgressSize = DataStoreUtil.getBooleanKV("progressSize", false)
+    private var getProgressSizeText = DataStoreUtil.getBooleanKV("progressSizeText", false)
     private var getVersionTCloud = DataStoreUtil.getBooleanKV("versionTCloud", true)
     private var getVersionTCloudThickness =
         DataStoreUtil.getStringKV("versionTCloudThickness", "System")
@@ -187,44 +188,43 @@ class QQVersionAdapter :
         tvSizeCard: MaterialCardView,
         bean: QQVersionBean,
     ) {
-        with(getProgressSize) {
-            tvPerSize?.isVisible = this
-            listProgressLine.isVisible = this
-            tvPerSizeCard.isVisible = this
+        tvPerSize?.isVisible = getProgressSizeText
+        listProgressLine.isVisible = getProgressSize
+        tvPerSizeCard.isVisible = getProgressSizeText
 
-            val layoutParams = tvSizeCard.layoutParams as? ViewGroup.MarginLayoutParams ?: return
-            layoutParams.marginEnd = if (this) 6.dp else 0
-            tvSizeCard.layoutParams = layoutParams
+        val layoutParams = tvSizeCard.layoutParams as? ViewGroup.MarginLayoutParams ?: return
+        layoutParams.marginEnd = if (getProgressSizeText) 6.dp else 0
+        tvSizeCard.layoutParams = layoutParams
 
-            if (this) {
-                val listMaxSize =
-                    currentList.maxByOrNull { it.size.toFloat() }?.size?.toFloat() ?: 0f
+        if (getProgressSize || getProgressSizeText) {
+            val listMaxSize =
+                currentList.maxByOrNull { it.size.toFloat() }?.size?.toFloat() ?: 0f
 
-                tvPerSize?.text =
-                    "${tvPerSizeCard.context.getString(R.string.currentSizeVsLargestHistoricalPackage)}${listMaxSize} MB${
-                        tvPerSizeCard.context.getString(
-                            R.string.endParenthesis
-                        )
-                    }${
-                        ("%.2f".format(bean.size.toFloat() / listMaxSize * 100)).replace(
-                            "100.00", "100"
-                        )
-                    }%"
-                tvPerSizeText.text = "${
+            tvPerSize?.text =
+                "${tvPerSizeCard.context.getString(R.string.currentSizeVsLargestHistoricalPackage)}${listMaxSize} MB${
+                    tvPerSizeCard.context.getString(
+                        R.string.endParenthesis
+                    )
+                }${
                     ("%.2f".format(bean.size.toFloat() / listMaxSize * 100)).replace(
                         "100.00", "100"
                     )
                 }%"
+            tvPerSizeText.text = "${
+                ("%.2f".format(bean.size.toFloat() / listMaxSize * 100)).replace(
+                    "100.00", "100"
+                )
+            }%"
 
-                // 进度条这里不能直接用 listMaxSize
-                // 因为鬼知道 Material 上游的什么 Bug，导致这里要故意拖点时间让 Material 进度指示条视图加载完毕才能正确显示进度更新，否则会显示异常
-                listProgressLine.apply {
-                    max = ((currentList.maxByOrNull { it.size.toFloat() }?.size?.toFloat()
-                        ?: 0f) * 100).toInt()
-                    progress = (bean.size.toFloat() * 100).toInt()
-                }
+            // 进度条这里不能直接用 listMaxSize
+            // 因为鬼知道 Material 上游的什么 Bug，导致这里要故意拖点时间让 Material 进度指示条视图加载完毕才能正确显示进度更新，否则会显示异常
+            listProgressLine.apply {
+                max = ((currentList.maxByOrNull { it.size.toFloat() }?.size?.toFloat()
+                    ?: 0f) * 100).toInt()
+                progress = (bean.size.toFloat() * 100).toInt()
             }
         }
+
     }
 
     private fun bindDisplayInstall(
@@ -298,7 +298,7 @@ class QQVersionAdapter :
                     holder.binding.tvOldInstall, holder.binding.tvOldInstallCard, bean
                 )
 
-                "isShowProgressSize" -> if (holder is ViewHolder) bindProgress(
+                "isShowProgressSize", "isShowProgressSizeText" -> if (holder is ViewHolder) bindProgress(
                     holder.binding.listProgressLine,
                     null,
                     holder.binding.tvPerSizeText,
@@ -340,6 +340,11 @@ class QQVersionAdapter :
             "isShowProgressSize" -> {
                 getProgressSize = DataStoreUtil.getBooleanKV("progressSize", false)
                 notifyItemRangeChanged(0, currentList.size, "isShowProgressSize")
+            }
+
+            "isShowProgressSizeText" -> {
+                getProgressSizeText = DataStoreUtil.getBooleanKV("progressSizeText", false)
+                notifyItemRangeChanged(0, currentList.size, "isShowProgressSizeText")
             }
 
             "isTCloud" -> {

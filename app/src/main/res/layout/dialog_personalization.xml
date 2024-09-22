@@ -61,6 +61,14 @@
                 android:text="@string/versionCardsDisplaysPackageSizeIndicator" />
 
             <com.google.android.material.materialswitch.MaterialSwitch
+                android:id="@+id/switch_progress_size_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:text="@string/versionCardsDisplaysPackageSizeText" />
+
+            <com.google.android.material.materialswitch.MaterialSwitch
                 android:id="@+id/switch_version_tcloud"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
