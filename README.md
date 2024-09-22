@@ -44,7 +44,7 @@ QQ 版本列表实用工具的源代码依据经过开源促进会（[Open Sourc
 > 请确保您在使用前充分审慎阅读了[用户协议](https://github.com/klxiaoniu/QQVersionList/blob/master/UserAgreement.md)。鉴于 QQ 测试版可能存在不可预知的稳定性问题，您在下载及使用该测试版本之前，必须明确并确保自身具备足够的风险识别和承受能力。根据相关条款，您使用本软件时应当已了解并同意，因下载或使用 QQ 测试版而可能产生的任何直接或间接损失、损害以及其他不利后果，均由您自行承担全部责任。
 
 > [!WARNING]
-> QQ 版本列表实用工具为[自由软件](https://www.gnu.org/philosophy/free-sw.html)，其软件本体及源代码仅可在 GitHub 或相关官方平台上免费并自由获取。根据[用户协议](https://github.com/klxiaoniu/QQVersionList/blob/master/UserAgreement.md)，如果您从未经 GitHub 或相关官方平台获取本应用，QQ 版本列表实用工具无法保证该应用能够正常使用，并对因此给您造成的损失不予负责。
+> QQ 版本列表实用工具为[自由软件](https://www.gnu.org/philosophy/free-sw.html)，其第一方软件本体及源代码仅可在 GitHub 或相关官方平台上免费并自由获取。根据[用户协议](https://github.com/klxiaoniu/QQVersionList/blob/master/UserAgreement.md)，如果您从未经 GitHub 或相关官方平台获取本应用，QQ 版本列表实用工具无法保证该应用能够正常使用，并对因此给您造成的损失不予负责。
 
 > [!WARNING]
 > QQ 版本列表实用工具提供的所有服务及内容均旨在促进合法的学习交流活动，严禁用户将其用于任何非法、违规或侵犯他人权益的目的。敬请所有用户严格遵守相关法律法规，在使用本应用的过程中秉持合法、正当与诚信原则，切勿涉足任何违法用途。如有违反，相关法律责任将由行为人自负，同时，本应用亦保留采取一切必要措施的权利，包括但不限于暂停或终止服务，并追究其法律责任。
