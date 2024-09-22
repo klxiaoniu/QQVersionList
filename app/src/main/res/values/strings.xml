@@ -155,4 +155,6 @@
     <string name="tencentAppStoreWarning">腾讯应用宝更新获取功能为 QQ 版本列表实用工具附带的实验性功能，可能存在不可预知的稳定性问题。请明确并确保自身具备足够的风险识别和承受能力。</string>
     <string name="showOldLoading">猜版对话框使用旧版加载动画</string>
     <string name="versionCardsDisplaysPackageSizeText">QQ 版本卡片展示额定包大小占比历史最大包百分比</string>
+    <string name="timVersion">TIM 猜版</string>
+    <string name="enumTIMWarning">TIM 猜版功能为 QQ 版本列表实用工具附带的实验性功能，可能存在不可预知的稳定性问题。请明确并确保自身具备足够的风险识别和承受能力。</string>
 </resources>

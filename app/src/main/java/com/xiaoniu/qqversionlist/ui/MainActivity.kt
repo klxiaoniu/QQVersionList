@@ -171,15 +171,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
+     * 用户协议
+     * @param agreed 用户先前是否同意过用户协议
      * @param UATarget 用户协议版本
      **/
     private fun showUADialog(agreed: Boolean, UATarget: Int) {
 
         // 屏幕高度获取
         val screenHeight = Resources.getSystem().displayMetrics.heightPixels
-
-        //用户协议，传参内容表示先前是否同意过协议
-        //谁动了代码不动注释？
 
         val userAgreementBinding = UserAgreementBinding.inflate(layoutInflater)
 
@@ -970,14 +969,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     // 下面三个函数是用于响应猜版对话框 Spinner 所选项的界面变化
-    private fun modeTestView(dialogGuessBinding: DialogGuessBinding) {
+    private fun modeTestView(dialogGuessBinding: DialogGuessBinding, mode: String) {
         dialogGuessBinding.apply {
             etVersionSmall.isEnabled = true
             etVersionSmall.isVisible = true
             guessDialogWarning.isVisible = true
             etVersion16code.isVisible = false
             etVersionTrue.isVisible = false
-            tvWarning.setText(R.string.enumQQPreviewWarning)
+            if (mode == MODE_TIM) tvWarning.setText(R.string.enumTIMWarning)
+            else tvWarning.setText(R.string.enumQQPreviewWarning)
             etVersionBig.helperText = getString(R.string.enumQQMajorVersionHelpText)
         }
     }
@@ -1007,10 +1007,15 @@ class MainActivity : AppCompatActivity() {
 
     private fun showGuessVersionDialog() {
         val dialogGuessBinding = DialogGuessBinding.inflate(layoutInflater)
-        val verBig = DataStoreUtil.getStringKV("versionBig", "")
+        val verBig = if (DataStoreUtil.getStringKV(
+                "versionSelect", MODE_OFFICIAL
+            ) == MODE_TIM
+        ) DataStoreUtil.getStringKV(
+            "TIMVersionBig", ""
+        ) else DataStoreUtil.getStringKV("versionBig", "")
         dialogGuessBinding.etVersionBig.editText?.setText(verBig)
         when (val memVersion = DataStoreUtil.getStringKV("versionSelect", MODE_OFFICIAL)) {
-            MODE_TEST, MODE_UNOFFICIAL, MODE_OFFICIAL, MODE_WECHAT -> dialogGuessBinding.spinnerVersion.setText(
+            MODE_TEST, MODE_UNOFFICIAL, MODE_OFFICIAL, MODE_WECHAT, MODE_TIM -> dialogGuessBinding.spinnerVersion.setText(
                 memVersion, false
             )
 
@@ -1020,8 +1025,11 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        when (dialogGuessBinding.spinnerVersion.text.toString()) {
-            MODE_TEST, MODE_UNOFFICIAL -> modeTestView(dialogGuessBinding)
+        when (val memVersion = dialogGuessBinding.spinnerVersion.text.toString()) {
+            MODE_TEST, MODE_UNOFFICIAL, MODE_TIM -> modeTestView(
+                dialogGuessBinding, memVersion
+            )
+
             MODE_OFFICIAL -> modeOfficialView(dialogGuessBinding)
             MODE_WECHAT -> modeWeChatView(dialogGuessBinding)
         }
@@ -1032,7 +1040,10 @@ class MainActivity : AppCompatActivity() {
                 val judgeVerSelect = dialogGuessBinding.spinnerVersion.text.toString()
                 DataStoreUtil.putStringKVAsync("versionSelect", judgeVerSelect)
                 when (judgeVerSelect) {
-                    MODE_TEST, MODE_UNOFFICIAL -> modeTestView(dialogGuessBinding)
+                    MODE_TEST, MODE_UNOFFICIAL, MODE_TIM -> modeTestView(
+                        dialogGuessBinding, judgeVerSelect
+                    )
+
                     MODE_OFFICIAL -> modeOfficialView(dialogGuessBinding)
                     MODE_WECHAT -> modeWeChatView(dialogGuessBinding)
                 }
@@ -1074,12 +1085,12 @@ class MainActivity : AppCompatActivity() {
                 var version16code = 0.toString()
                 var versionTrue = 0
                 when (mode) {
-                    MODE_TEST, MODE_UNOFFICIAL -> if (dialogGuessBinding.etVersionSmall.editText?.text.isNullOrEmpty()) throw MissingVersionException(
+                    MODE_TEST, MODE_UNOFFICIAL, MODE_TIM -> if (dialogGuessBinding.etVersionSmall.editText?.text.isNullOrEmpty()) throw MissingVersionException(
                         getString(R.string.missingMajorVersionWarning)
                     ) else {
                         versionSmall =
                             dialogGuessBinding.etVersionSmall.editText?.text.toString().toInt()
-                        if (versionSmall % 5 != 0 && !DataStoreUtil.getBooleanKV(
+                        if (mode != MODE_TIM && versionSmall % 5 != 0 && !DataStoreUtil.getBooleanKV(
                                 "guessNot5", false
                             )
                         ) throw InvalidMultipleException(getString(R.string.QQPreviewMinorNot5Warning))
@@ -1518,6 +1529,16 @@ class MainActivity : AppCompatActivity() {
                                 sIndex += 1
                             }
 
+                            MODE_TIM -> if (link == "" || !guessTestExtend) {
+                                link =
+                                    "https://downv6.qq.com/qqweb/QQ_1/android_apk/TIM_$versionBig.${vSmall}${stList[sIndex]}.apk"
+                                if (guessTestExtend) sIndex += 1
+                            } else {
+                                link =
+                                    "https://downv6.qq.com/qqweb/QQ_1/android_apk/TIM_$versionBig.${vSmall}${stList[sIndex]}.apk"
+                                sIndex += 1
+                            }
+
                             MODE_UNOFFICIAL -> link =
                                 "https://downv6.qq.com/qqweb/QQ_1/android_apk/Android%20$versionBig.${vSmall}%2064.apk"
 
@@ -1596,13 +1617,22 @@ class MainActivity : AppCompatActivity() {
                                 // 继续按钮点击事件
                                 successButtonBinding.btnContinue.setOnClickListener {
                                     // 测试版情况下，未打开扩展猜版或扩展猜版到最后一步时执行小版本号的递增
-                                    if (mode == MODE_TEST && (!guessTestExtend || sIndex == (stList.size))) {
-                                        vSmall += if (!guessNot5) 5 else 1
-                                        sIndex = 0
-                                    } else if (mode == MODE_UNOFFICIAL) vSmall += if (!guessNot5) 5 else 1
-                                    else if (mode == MODE_WECHAT) {
-                                        val version16code = v16codeStr.toInt(16) + 1
-                                        v16codeStr = version16code.toString(16)
+                                    when {
+                                        mode == MODE_TEST && (!guessTestExtend || sIndex == (stList.size)) -> {
+                                            vSmall += if (!guessNot5) 5 else 1
+                                            sIndex = 0
+                                        }
+
+                                        mode == MODE_TIM && (!guessTestExtend || sIndex == (stList.size)) -> {
+                                            vSmall += 1
+                                            sIndex = 0
+                                        }
+
+                                        mode == MODE_UNOFFICIAL -> vSmall += if (!guessNot5) 5 else 1
+                                        mode == MODE_WECHAT -> {
+                                            val version16code = v16codeStr.toInt(16) + 1
+                                            v16codeStr = version16code.toString(16)
+                                        }
                                     }
                                     successMaterialDialog.dismiss()
                                     status = STATUS_ONGOING
@@ -1632,6 +1662,12 @@ class MainActivity : AppCompatActivity() {
                                                 }$link"
 
                                                 MODE_WECHAT -> "Android 微信 $versionBig（$versionTrue）（${
+                                                    getString(
+                                                        R.string.fileSize
+                                                    )
+                                                }$appSize MB）\n\n${getString(R.string.downloadLink)}$link"
+
+                                                MODE_TIM -> "Android TIM $versionBig.$vSmall（${
                                                     getString(
                                                         R.string.fileSize
                                                     )
@@ -1671,6 +1707,11 @@ class MainActivity : AppCompatActivity() {
                                                     "Android_QQ_${versionBig}.${vSmall}_64.apk"
                                                 )
 
+                                                MODE_TIM -> setDestinationInExternalPublicDir(
+                                                    Environment.DIRECTORY_DOWNLOADS,
+                                                    "Android_TIM_${versionBig}.${vSmall}_64.apk"
+                                                )
+
                                                 MODE_OFFICIAL -> setDestinationInExternalPublicDir(
                                                     Environment.DIRECTORY_DOWNLOADS,
                                                     "Android_QQ_${versionBig}_64.apk"
@@ -1702,6 +1743,11 @@ class MainActivity : AppCompatActivity() {
                             when {
                                 mode == MODE_TEST && (!guessTestExtend || sIndex == (stList.size)) -> { // 测试版情况下，未打开扩展猜版或扩展猜版到最后一步时执行小版本号的递增
                                     vSmall += if (!guessNot5) 5 else 1
+                                    sIndex = 0
+                                }
+
+                                mode == MODE_TIM && (!guessTestExtend || sIndex == (stList.size)) -> {
+                                    vSmall += 1
                                     sIndex = 0
                                 }
 
@@ -2067,5 +2113,6 @@ class MainActivity : AppCompatActivity() {
         val MODE_OFFICIAL: String by lazy { context.getString(R.string.stableVersion) }
         val MODE_UNOFFICIAL: String by lazy { context.getString(R.string.spaceEnumerateVersion) }
         val MODE_WECHAT: String by lazy { context.getString(R.string.weixinEnumerateVersion) }
+        val MODE_TIM: String by lazy { context.getString(R.string.timVersion) }
     }
 }
