@@ -17,7 +17,7 @@
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/ll_setting"
+    android:id="@+id/experimental_features"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -36,77 +36,36 @@
             android:orientation="vertical"
             android:paddingBottom="20dp">
 
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/long_press_card"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:paddingTop="16dp"
-                android:text="@string/longPressTheVersionCardToViewSourceDetails" />
-
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/download_on_system_manager"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:text="@string/useTheSystemDownloadManagerToTakeOverTheDownloadIntent" />
-
             <TextView
-                android:id="@+id/dialog_personalization"
+                android:id="@+id/dialog_tencent_app_store"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawablePadding="8dp"
                 android:gravity="center_vertical"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
-                android:text="@string/personalization"
+                android:text="@string/getUpdateFromTencentAppStore"
                 android:textColor="?attr/colorOnSurface"
                 app:drawableEndCompat="@drawable/arrow_right_s_line" />
 
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/switch_guess_test_extend"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:text="@string/extendTheSuffixForDirectDownloadLinksOfEnumeratedPreviewVersions" />
-
             <TextView
-                android:id="@+id/dialog_suffix_define_click"
+                android:id="@+id/dialog_shiply"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawablePadding="8dp"
                 android:gravity="center_vertical"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:text="@string/enumerateVersionsFormatSetting"
-                android:textColor="?attr/colorOnSurface"
-                app:drawableEndCompat="@drawable/arrow_right_s_line" />
-
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/switch_auto_check_updates"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:text="@string/autoCheckForUpdates" />
-
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/guess_not_5"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:paddingTop="8dp"
                 android:paddingBottom="16dp"
-                android:text="@string/removeMultiplesOf5ForQQPreviewVersions" />
+                android:text="@string/getUpdateFromTDSShiplyDistributionPlatform"
+                android:textColor="?attr/colorOnSurface"
+                app:drawableEndCompat="@drawable/arrow_right_s_line" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_setting_ok"
+                android:id="@+id/btn_exp_ok"
                 style="@style/Widget.Material3.Button.TonalButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@string/done" />
+                android:text="@string/back" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

@@ -25,7 +25,7 @@
     android:paddingEnd="20dp">
 
     <ScrollView
-        android:id="@+id/shiply_back_text_scroll"
+        android:id="@+id/exp_back_text_scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="none">
@@ -61,6 +61,14 @@
                 android:text="@string/versionCardsDisplaysPackageSizeIndicator" />
 
             <com.google.android.material.materialswitch.MaterialSwitch
+                android:id="@+id/switch_progress_size_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:text="@string/versionCardsDisplaysPackageSizeText" />
+
+            <com.google.android.material.materialswitch.MaterialSwitch
                 android:id="@+id/switch_version_tcloud"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -75,6 +83,14 @@
                 android:stepSize="1.0"
                 android:valueFrom="1.0"
                 android:valueTo="4.0" />
+
+            <com.google.android.material.materialswitch.MaterialSwitch
+                android:id="@+id/switch_old_loading"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:text="@string/showOldLoading" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_personalization_ok"

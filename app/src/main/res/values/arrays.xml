@@ -20,6 +20,7 @@
         <item>@string/stableVersion</item>
         <item>@string/previewVersion</item>
         <item>@string/spaceEnumerateVersion</item>
+        <item>@string/timVersion</item>
         <item>@string/weixinEnumerateVersion</item>
     </string-array>
 </resources>
