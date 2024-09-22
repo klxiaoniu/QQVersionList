@@ -79,8 +79,7 @@
                         android:layout_height="wrap_content"
                         android:imeOptions="actionNext"
                         android:inputType="none"
-                        android:singleLine="true"
-                        app:simpleItems="@array/version" />
+                        android:singleLine="true" />
 
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>

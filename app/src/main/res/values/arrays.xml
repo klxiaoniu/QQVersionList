@@ -16,7 +16,14 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <resources>
-    <string-array name="version">
+    <string-array name="version_default">
+        <item>@string/stableVersion</item>
+        <item>@string/previewVersion</item>
+        <item>@string/timVersion</item>
+        <item>@string/weixinEnumerateVersion</item>
+    </string-array>
+
+    <string-array name="version_plus">
         <item>@string/stableVersion</item>
         <item>@string/previewVersion</item>
         <item>@string/spaceEnumerateVersion</item>
