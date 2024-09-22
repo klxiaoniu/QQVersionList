@@ -188,7 +188,7 @@ class QQVersionAdapter :
         tvSizeCard: MaterialCardView,
         bean: QQVersionBean,
     ) {
-        tvPerSize?.isVisible = getProgressSizeText
+        tvPerSize?.isVisible = getProgressSize
         listProgressLine.isVisible = getProgressSize
         tvPerSizeCard.isVisible = getProgressSizeText
 
