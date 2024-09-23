@@ -26,7 +26,7 @@ class QVTApplication : Application() {
         lateinit var instance: QVTApplication
 
         const val SHIPLY_DEFAULT_APPID = "537230561"
-        const val SHIPLY_DEFAULT_SDK_VERSION = "1.3.36-RC01"
+        const val SHIPLY_DEFAULT_SDK_VERSION = "1.3.36-RC03"
 
         const val EARLIEST_ACCESSIBILITY_QQ_VERSION = false
         const val EARLIEST_ACCESSIBILITY_TIM_VERSION = false

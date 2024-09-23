@@ -138,7 +138,7 @@
     <string name="copyLink">复制链接</string>
     <string name="unrealEngineTag">内置虚幻引擎</string>
     <string name="autoCheckForUpdates">启动时自动使用 GitHub API 检查更新</string>
-    <string name="useQQ8958Test">使用 QQ 8.9.58 测试版格式</string>
+    <string name="useQQ8958Test">使用 QQ 8.9.58 测试版直链格式</string>
     <string name="ciVersionNoSupportUpdates">CI 构建版本不支持检查更新</string>
     <string name="showUnrealEngineTag">版本卡片显示匹配的虚幻引擎标识</string>
     <string name="suffixSetting">后缀设置</string>
@@ -158,4 +158,5 @@
     <string name="versionCardsDisplaysPackageSizeText">QQ 版本卡片展示额定包大小占比历史最大包百分比</string>
     <string name="timVersion">TIM 猜版</string>
     <string name="enumTIMWarning">TIM 猜版功能为 QQ 版本列表实用工具附带的实验性功能，可能存在不可预知的稳定性问题。请明确并确保自身具备足够的风险识别和承受能力。</string>
+    <string name="useQQ9008_14600Test">猜版类型添加 QQ 9.0.8.14600 空格直链格式</string>
 </resources>

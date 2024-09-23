@@ -59,6 +59,7 @@ import com.google.android.material.progressindicator.CircularProgressIndicatorSp
 import com.google.android.material.progressindicator.IndeterminateDrawable
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonElement
@@ -279,7 +280,6 @@ class MainActivity : AppCompatActivity() {
 
                                 aboutText.text = SpannableString(
                                     "${getString(R.string.aboutAppName)}\n\n" +
-                                            "${getString(R.string.aboutDescription)}\n\n" +
                                             "${getString(R.string.version)}${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})\n" +
                                             "${getString(R.string.aboutAuthor)}快乐小牛、有鲫雪狐\n" +
                                             "${getString(R.string.aboutContributor)}Col_or、bggRGjQaUbCoE、GMerge、zwJimRaynor\n" +
@@ -630,6 +630,8 @@ class MainActivity : AppCompatActivity() {
                                         getBooleanKV("suffixTest", true)
                                     formatDefineCheckboxQq8958.isChecked =
                                         getBooleanKV("useQQ8958TestFormat", false)
+                                    formatDefineCheckboxQq900814600.isChecked =
+                                        getBooleanKV("useQQ900814600TestFormat", false)
                                 }
 
                                 dialogSuffix.show()
@@ -738,6 +740,10 @@ class MainActivity : AppCompatActivity() {
                                         ), mapOf(
                                             "key" to "useQQ8958TestFormat",
                                             "value" to formatDefineCheckboxQq8958.isChecked,
+                                            "type" to "Boolean"
+                                        ), mapOf(
+                                            "key" to "useQQ900814600TestFormat",
+                                            "value" to formatDefineCheckboxQq900814600.isChecked,
                                             "type" to "Boolean"
                                         )
                                     )
@@ -1015,9 +1021,17 @@ class MainActivity : AppCompatActivity() {
         ) else DataStoreUtil.getStringKV("versionBig", "")
         dialogGuessBinding.etVersionBig.editText?.setText(verBig)
         when (val memVersion = DataStoreUtil.getStringKV("versionSelect", MODE_OFFICIAL)) {
-            MODE_TEST, MODE_UNOFFICIAL, MODE_OFFICIAL, MODE_WECHAT, MODE_TIM -> dialogGuessBinding.spinnerVersion.setText(
+            MODE_TEST, MODE_OFFICIAL, MODE_WECHAT, MODE_TIM -> dialogGuessBinding.spinnerVersion.setText(
                 memVersion, false
             )
+
+            MODE_UNOFFICIAL -> if (DataStoreUtil.getBooleanKV(
+                    "useQQ900814600TestFormat", false
+                )
+            ) dialogGuessBinding.spinnerVersion.setText(memVersion, false) else {
+                dialogGuessBinding.spinnerVersion.setText(MODE_OFFICIAL, false)
+                DataStoreUtil.putStringKVAsync("versionSelect", MODE_OFFICIAL)
+            }
 
             else -> {
                 dialogGuessBinding.spinnerVersion.setText(MODE_OFFICIAL, false)
@@ -1053,6 +1067,15 @@ class MainActivity : AppCompatActivity() {
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
         })
+
+        if (DataStoreUtil.getBooleanKV(
+                "useQQ900814600TestFormat", false
+            )
+        ) (dialogGuessBinding.spinnerLayout.editText as MaterialAutoCompleteTextView).setSimpleItems(
+            R.array.version_plus
+        ) else (dialogGuessBinding.spinnerLayout.editText as MaterialAutoCompleteTextView).setSimpleItems(
+            R.array.version_default
+        )
 
         val dialogGuess = MaterialAlertDialogBuilder(this)
             .setTitle(R.string.enumerateVersionsDialogTitle)
@@ -1094,9 +1117,15 @@ class MainActivity : AppCompatActivity() {
                                 "guessNot5", false
                             )
                         ) throw InvalidMultipleException(getString(R.string.QQPreviewMinorNot5Warning))
-                        if (versionSmall != 0) DataStoreUtil.putIntKVAsync(
-                            "versionSmall", versionSmall
-                        )
+                        if (versionSmall != 0) when (mode) {
+                            MODE_TIM -> DataStoreUtil.putIntKVAsync(
+                                "versionTIMSmall", versionSmall
+                            )
+
+                            else -> DataStoreUtil.putIntKVAsync(
+                                "versionSmall", versionSmall
+                            )
+                        }
                     }
 
                     MODE_WECHAT -> if (dialogGuessBinding.etVersionTrue.editText?.text.isNullOrEmpty()) throw MissingVersionException(
@@ -1134,8 +1163,21 @@ class MainActivity : AppCompatActivity() {
         }
 
         val memVersionSmall = DataStoreUtil.getIntKV("versionSmall", -1)
-        if (memVersionSmall != -1) dialogGuessBinding.etVersionSmall.editText?.setText(
+        val memVersionTIMSmall = DataStoreUtil.getIntKV("versionTIMSmall", -1)
+        if (memVersionSmall != -1 && memVersionTIMSmall != -1) when {
+            DataStoreUtil.getStringKV(
+                "versionSelect", MODE_OFFICIAL
+            ) == MODE_TIM -> dialogGuessBinding.etVersionSmall.editText?.setText(
+                memVersionTIMSmall.toString()
+            )
+
+            else -> dialogGuessBinding.etVersionSmall.editText?.setText(
+                memVersionSmall.toString()
+            )
+        } else if (memVersionTIMSmall == -1) dialogGuessBinding.etVersionSmall.editText?.setText(
             memVersionSmall.toString()
+        ) else if (memVersionSmall == -1) dialogGuessBinding.etVersionSmall.editText?.setText(
+            memVersionTIMSmall.toString()
         )
         val memVersion16code = DataStoreUtil.getStringKV("version16code", "-1")
         if (memVersion16code != "-1") dialogGuessBinding.etVersion16code.editText?.setText(

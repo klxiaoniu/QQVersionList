@@ -158,4 +158,5 @@
     <string name="versionCardsDisplaysPackageSizeText">QQ 版本卡片展示额定包大小占比历史最大包百分比</string>
     <string name="timVersion">TIM</string>
     <string name="enumTIMWarning">The enumerating TIM versions function is an experimental feature included in QQ Versions Tool, which may have unpredictable stability issues. Please clearly understand and ensure that you have sufficient capability to identify and bear the risks.</string>
+    <string name="useQQ9008_14600Test">猜版类型添加 QQ 9.0.8.14600 空格直链格式</string>
 </resources>

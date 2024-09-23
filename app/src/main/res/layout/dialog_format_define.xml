@@ -335,6 +335,26 @@
                         android:text="@string/useQQ8958Test" />
 
                 </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/suffix_define_checkbox_group9"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:weightSum="1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/suffix_define_checkbox_group6">
+
+                    <CheckBox
+                        android:id="@+id/format_define_checkbox_qq_9008_14600"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/useQQ9008_14600Test" />
+
+                </LinearLayout>
             </LinearLayout>
 
             <com.google.android.material.button.MaterialButtonGroup
