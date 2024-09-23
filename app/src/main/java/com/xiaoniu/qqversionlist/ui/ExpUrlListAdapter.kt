@@ -148,17 +148,22 @@ class ExpUrlListAdapter(private val urlList: List<String>) :
                                                             R.string.downloadLink
                                                         )
                                                     }$url\n\n此下载地址指向的 QQ 安装包可能属于测试版本。测试版本可能存在不可预知的稳定性问题，请明确并确保自身具备足够的风险识别和承受能力。"
+                                                } else if (url.contains("imtt.dd.qq.com")) {
+                                                    if (appSize != "" && appSize != "-1" && appSize != "0") "${
+                                                        url.substringAfterLast('/')
+                                                    }（大小：$appSize MB）\n\n下载地址：$url\n\n来自腾讯应用宝"
+                                                    else "${url.substringAfterLast('/')}\n\n${
+                                                        itemView.context.getString(R.string.downloadLink)
+                                                    }$url\n\n来自腾讯应用宝"
                                                 } else {
                                                     if (appSize != "" && appSize != "-1" && appSize != "0") "Android QQ（${
-                                                        url.substringAfterLast(
-                                                            '/'
-                                                        )
-                                                    }）（大小：$appSize MB）\n\n下载地址：$url\n\n此下载地址由 TDS 腾讯端服务 Exp 发布平台提供，指向的 QQ 安装包可能属于测试版本。测试版本可能存在不可预知的稳定性问题，请明确并确保自身具备足够的风险识别和承受能力。"
+                                                        url.substringAfterLast('/')
+                                                    }）（大小：$appSize MB）\n\n下载地址：$url\n\n此下载地址由 TDS 腾讯端服务 Shiply 发布平台提供，指向的 QQ 安装包可能属于测试版本。测试版本可能存在不可预知的稳定性问题，请明确并确保自身具备足够的风险识别和承受能力。"
                                                     else "Android QQ（${url.substringAfterLast('/')}）\n\n${
                                                         itemView.context.getString(
                                                             R.string.downloadLink
                                                         )
-                                                    }$url\n\n此下载地址由 TDS 腾讯端服务 Exp 发布平台提供，指向的 QQ 安装包可能属于测试版本。测试版本可能存在不可预知的稳定性问题，请明确并确保自身具备足够的风险识别和承受能力。"
+                                                    }$url\n\n此下载地址由 TDS 腾讯端服务 Shiply 发布平台提供，指向的 QQ 安装包可能属于测试版本。测试版本可能存在不可预知的稳定性问题，请明确并确保自身具备足够的风险识别和承受能力。"
                                                 }
                                             )
                                         }
