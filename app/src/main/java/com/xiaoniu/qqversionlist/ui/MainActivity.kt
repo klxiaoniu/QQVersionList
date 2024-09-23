@@ -1022,9 +1022,17 @@ class MainActivity : AppCompatActivity() {
         ) else DataStoreUtil.getStringKV("versionBig", "")
         dialogGuessBinding.etVersionBig.editText?.setText(verBig)
         when (val memVersion = DataStoreUtil.getStringKV("versionSelect", MODE_OFFICIAL)) {
-            MODE_TEST, MODE_UNOFFICIAL, MODE_OFFICIAL, MODE_WECHAT, MODE_TIM -> dialogGuessBinding.spinnerVersion.setText(
+            MODE_TEST, MODE_OFFICIAL, MODE_WECHAT, MODE_TIM -> dialogGuessBinding.spinnerVersion.setText(
                 memVersion, false
             )
+
+            MODE_UNOFFICIAL -> if (DataStoreUtil.getBooleanKV(
+                    "useQQ900814600TestFormat", false
+                )
+            ) dialogGuessBinding.spinnerVersion.setText(memVersion, false) else {
+                dialogGuessBinding.spinnerVersion.setText(MODE_OFFICIAL, false)
+                DataStoreUtil.putStringKVAsync("versionSelect", MODE_OFFICIAL)
+            }
 
             else -> {
                 dialogGuessBinding.spinnerVersion.setText(MODE_OFFICIAL, false)
