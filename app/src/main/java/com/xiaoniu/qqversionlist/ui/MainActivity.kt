@@ -280,7 +280,6 @@ class MainActivity : AppCompatActivity() {
 
                                 aboutText.text = SpannableString(
                                     "${getString(R.string.aboutAppName)}\n\n" +
-                                            "${getString(R.string.aboutDescription)}\n\n" +
                                             "${getString(R.string.version)}${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})\n" +
                                             "${getString(R.string.aboutAuthor)}快乐小牛、有鲫雪狐\n" +
                                             "${getString(R.string.aboutContributor)}Col_or、bggRGjQaUbCoE、GMerge、zwJimRaynor\n" +
