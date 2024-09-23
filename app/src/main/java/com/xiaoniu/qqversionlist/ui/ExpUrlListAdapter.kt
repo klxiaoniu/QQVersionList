@@ -149,10 +149,17 @@ class ExpUrlListAdapter(private val urlList: List<String>) :
                                                         )
                                                     }$url\n\n此下载地址指向的 QQ 安装包可能属于测试版本。测试版本可能存在不可预知的稳定性问题，请明确并确保自身具备足够的风险识别和承受能力。"
                                                 } else if (url.contains("imtt.dd.qq.com")) {
-                                                    if (appSize != "" && appSize != "-1" && appSize != "0") "${
-                                                        url.substringAfterLast('/')
-                                                    }（大小：$appSize MB）\n\n下载地址：$url\n\n来自腾讯应用宝"
-                                                    else "${url.substringAfterLast('/')}\n\n${
+                                                    val appName = when {
+                                                        url.contains("com.tencent.mobileqq") -> "Android QQ"
+                                                        url.contains("com.tencent.tim") -> "Android TIM"
+                                                        url.contains("com.tencent.mm") -> "Android 微信"
+                                                        url.contains("com.tencent.wework") -> "Android 企业微信"
+                                                        url.contains("com.tencent.wetype") -> "Android 微信输入法"
+                                                        else -> url.substringAfterLast('/')
+                                                    }
+
+                                                    if (appSize != "" && appSize != "-1" && appSize != "0") "${appName}（大小：$appSize MB）\n\n下载地址：$url\n\n来自腾讯应用宝"
+                                                    else "${appName}\n\n${
                                                         itemView.context.getString(R.string.downloadLink)
                                                     }$url\n\n来自腾讯应用宝"
                                                 } else {
