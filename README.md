@@ -267,6 +267,7 @@ QQ 版本列表实用工具的诞生离不开以下开源项目，感谢以下�
 - [Gradle](https://gradle.org/)，Licensed under [Apache License Version 2.0](https://github.com/gradle/gradle/blob/master/LICENSE)
 - [Material Symbols / Material Icons（Google）](https://fonts.google.com/icons)，Licensed under [Apache License Version 2.0](https://github.com/google/material-design-icons/blob/master/LICENSE)
 - [Obtainium（Imran）](https://github.com/ImranR98/Obtainium)，Licensed under [GNU General Public License Version 3](https://github.com/ImranR98/Obtainium/blob/main/LICENSE.md)
+- [Secrets Gradle Plugin for Android（Google）](https://github.com/google/secrets-gradle-plugin)，Licensed under [Apache License Version 2.0](https://github.com/google/secrets-gradle-plugin/blob/main/LICENSE)
 
 ## 商业服务鸣谢
 
