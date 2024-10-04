@@ -48,6 +48,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Setup local.properties
+        run: echo "" > local.properties
+
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
