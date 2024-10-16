@@ -1140,6 +1140,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun showGuessVersionDialog() {
         val dialogGuessBinding = DialogGuessBinding.inflate(layoutInflater)
         val verBig = if (DataStoreUtil.getStringKV(
