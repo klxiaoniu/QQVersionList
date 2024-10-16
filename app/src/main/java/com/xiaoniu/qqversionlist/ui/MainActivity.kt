@@ -19,8 +19,11 @@
 package com.xiaoniu.qqversionlist.ui
 
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.DownloadManager
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -41,8 +44,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintSet
+import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import androidx.core.text.method.LinkMovementMethodCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
@@ -53,13 +59,19 @@ import androidx.core.view.updatePadding
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.airbnb.paris.extensions.style
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.materialswitch.MaterialSwitch
 import com.google.android.material.progressindicator.CircularProgressIndicatorSpec
 import com.google.android.material.progressindicator.IndeterminateDrawable
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.ktx.messaging
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonElement
@@ -75,6 +87,7 @@ import com.xiaoniu.qqversionlist.databinding.ActivityMainBinding
 import com.xiaoniu.qqversionlist.databinding.DialogAboutBinding
 import com.xiaoniu.qqversionlist.databinding.DialogExpBackBinding
 import com.xiaoniu.qqversionlist.databinding.DialogExperimentalFeaturesBinding
+import com.xiaoniu.qqversionlist.databinding.DialogFirebaseFirstInfoBinding
 import com.xiaoniu.qqversionlist.databinding.DialogFormatDefineBinding
 import com.xiaoniu.qqversionlist.databinding.DialogGuessBinding
 import com.xiaoniu.qqversionlist.databinding.DialogLoadingBinding
@@ -97,6 +110,7 @@ import com.xiaoniu.qqversionlist.util.StringUtil.trimSubstringAtStart
 import com.xiaoniu.qqversionlist.util.VersionBeanUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -413,6 +427,11 @@ class MainActivity : AppCompatActivity() {
                             DataStoreUtil.getBooleanKV("downloadOnSystemManager", false)
                         switchAutoCheckUpdates.isChecked =
                             DataStoreUtil.getBooleanKV("autoCheckUpdates", false)
+                        switchPushNotifViaFcm.isVisible =
+                            Firebase.messaging.isAutoInitEnabled && GoogleApiAvailability.getInstance()
+                                .isGooglePlayServicesAvailable(this@MainActivity) == ConnectionResult.SUCCESS
+                        switchPushNotifViaFcm.isChecked =
+                            DataStoreUtil.getBooleanKV("rainbowFCMSubscribed", false)
                     }
 
                     val dialogSetting = MaterialAlertDialogBuilder(this)
@@ -758,6 +777,40 @@ class MainActivity : AppCompatActivity() {
                                 }
                             }
                         }
+                        switchPushNotifViaFcm.setOnCheckedChangeListener { _, isChecked ->
+                            if (isChecked != DataStoreUtil.getBooleanKV(
+                                    "rainbowFCMSubscribed",
+                                    false
+                                )
+                            ) {
+                                if (isChecked) {
+                                    if (!NotificationManagerCompat.from(this@MainActivity)
+                                            .areNotificationsEnabled()
+                                    ) askNotificationPermission()
+                                    if (!NotificationManagerCompat.from(this@MainActivity)
+                                            .areNotificationsEnabled()
+                                    ) switchPushNotifViaFcm.isChecked = false
+                                    else if (!checkNotificationChannelEnabled(
+                                            getString(R.string.rainbow_notification_channel_id)
+                                        )
+                                    ) {
+                                        switchPushNotifViaFcm.isChecked = false
+                                        dialogError(
+                                            Exception(getString(R.string.cannotEnableFirebaseCloudMessaging)),
+                                            true
+                                        )
+                                    } else {
+                                        switchPushNotifViaFcm.isEnabled = false
+                                        Firebase.analytics.setAnalyticsCollectionEnabled(true)
+                                        subscribeWithTimeout(10000L, switchPushNotifViaFcm)
+                                    }
+                                } else {
+                                    switchPushNotifViaFcm.isEnabled = false
+                                    Firebase.analytics.setAnalyticsCollectionEnabled(true)
+                                    unsubscribeWithTimeout(10000L, switchPushNotifViaFcm)
+                                }
+                            }
+                        }
                     }
                     true
                 }
@@ -954,6 +1007,82 @@ class MainActivity : AppCompatActivity() {
                                         dialogError(e)
                                     }
                                 }
+                            }
+                        }
+
+                        dialogFirebase.setOnClickListener {
+                            // 必须检测 Google Play 服务是否可用，因为 Firebase 服务依赖于 Google Play 服务
+                            if (GoogleApiAvailability.getInstance()
+                                    .isGooglePlayServicesAvailable(this@MainActivity) == ConnectionResult.SUCCESS
+                            ) {
+                                if (Firebase.messaging.isAutoInitEnabled != true) {
+                                    if (SDK_INT >= Build.VERSION_CODES.O) {
+                                        val channelTitle =
+                                            getString(R.string.rainbow_notification_channel_title)
+                                        val channelDescription =
+                                            getString(R.string.rainbow_notification_channel_description)
+                                        val channelId =
+                                            getString(R.string.rainbow_notification_channel_id)
+                                        val channelImportance =
+                                            NotificationManager.IMPORTANCE_DEFAULT
+                                        val notificationChannel = NotificationChannel(
+                                            channelId, channelTitle, channelImportance
+                                        )
+                                        notificationChannel.description = channelDescription
+                                        val notificationManager =
+                                            getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+                                        notificationManager.createNotificationChannel(
+                                            notificationChannel
+                                        )
+                                    }
+
+                                    val dialogFirebaseFirstInfoBinding =
+                                        DialogFirebaseFirstInfoBinding.inflate(layoutInflater)
+
+                                    val dialogFirebaseInfo =
+                                        MaterialAlertDialogBuilder(this@MainActivity)
+                                            .setTitle(R.string.initFirebaseService)
+                                            .setIcon(R.drawable.flask_line)
+                                            .setView(dialogFirebaseFirstInfoBinding.root)
+                                            .show()
+
+                                    dialogFirebaseFirstInfoBinding.firebaseInfoCancel.setOnClickListener {
+                                        dialogFirebaseInfo.dismiss()
+                                    }
+
+                                    dialogFirebaseFirstInfoBinding.firebaseInfoNext.setOnClickListener {
+                                        if (!NotificationManagerCompat.from(this@MainActivity)
+                                                .areNotificationsEnabled()
+                                        ) askNotificationPermission()
+
+                                        Firebase.apply {
+                                            messaging.isAutoInitEnabled = true
+                                            analytics.setAnalyticsCollectionEnabled(true)
+                                            /*messaging.subscribeToTopic("rainbowUpdates")
+                                                .addOnCompleteListener { task ->
+                                                    if (task.isSuccessful) DataStoreUtil.putBooleanKV(
+                                                        "rainbowFCMSubscribed",
+                                                        true
+                                                    ) else DataStoreUtil.putBooleanKV(
+                                                        "rainbowFCMSubscribed",
+                                                        false
+                                                    )
+                                                }*/
+                                        }
+
+                                        dialogFirebaseInfo.dismiss()
+                                    }
+
+
+                                } else {
+                                    showToast(getString(R.string.initializedFirebaseService))
+                                    Firebase.analytics.setAnalyticsCollectionEnabled(true)
+                                }
+                            } else {
+                                dialogError(
+                                    Exception(getString(R.string.cannotFindGooglePlayServices)),
+                                    true
+                                )
                             }
                         }
                     }
@@ -2135,6 +2264,152 @@ class MainActivity : AppCompatActivity() {
                         isEnabled = true
                     }
                 }
+            }
+        }
+    }
+
+    // 检查特定通知渠道是否被用户关闭
+    private fun checkNotificationChannelEnabled(channelId: String): Boolean {
+        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        if (SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = notificationManager.getNotificationChannel(channelId)
+            return channel?.importance != NotificationManager.IMPORTANCE_NONE
+        } else {
+            // 对于 API 级别 < 26 的设备，默认返回 true
+            return true
+        }
+    }
+
+
+    // Declare the launcher at the top of your Activity/Fragment:
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission(),
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            // FCM SDK (and your app) can post notifications.
+        } else {
+            dialogError(
+                Exception(getString(R.string.cannotEnableFirebaseCloudMessaging)),
+                true
+            )
+        }
+    }
+
+    private fun askNotificationPermission() {
+        // This is only necessary for API level >= 33 (TIRAMISU)
+        if (SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(
+                    this, Manifest.permission.POST_NOTIFICATIONS
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
+                // FCM SDK (and your app) can post notifications.
+            } else if (shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)) {
+                dialogError(
+                    Exception(getString(R.string.cannotEnableFirebaseCloudMessaging)),
+                    true
+                )
+            } else {
+                // Directly ask for the permission
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
+        } else {
+            if (checkNotificationChannelEnabled(getString(R.string.rainbow_notification_channel_id))) {
+                // FCM SDK (and your app) can post notifications.
+            } else {
+                dialogError(
+                    Exception(getString(R.string.cannotEnableFirebaseCloudMessaging)),
+                    true
+                )
+            }
+        }
+    }
+
+    private fun subscribeWithTimeout(
+        timeoutMillis: Long, switchPushNotifViaFcm: MaterialSwitch
+    ) {
+        var status = false
+        val job = lifecycleScope.launch {
+            Firebase.messaging.subscribeToTopic("rainbowUpdates").addOnCanceledListener {
+                status = true
+                showToast(getString(R.string.subscribeFailed))
+                switchPushNotifViaFcm.isEnabled = true
+                switchPushNotifViaFcm.isChecked = false
+                DataStoreUtil.putBooleanKV(
+                    "rainbowFCMSubscribed", false
+                )
+            }.addOnSuccessListener {
+                status = true
+                showToast(getString(R.string.subscribeSuccess))
+                switchPushNotifViaFcm.isEnabled = true
+                switchPushNotifViaFcm.isChecked = true
+                DataStoreUtil.putBooleanKV(
+                    "rainbowFCMSubscribed", true
+                )
+            }.addOnFailureListener {
+                status = true
+                showToast(getString(R.string.subscribeFailed))
+                switchPushNotifViaFcm.isEnabled = true
+                switchPushNotifViaFcm.isChecked = false
+                DataStoreUtil.putBooleanKV(
+                    "rainbowFCMSubscribed", false
+                )
+            }
+        }
+        lifecycleScope.launch {
+            for (i in 1..100) if (status) break else delay(timeoutMillis / 100)
+            if (!status) {
+                job.cancel()
+                showToast(getString(R.string.subscribeTimeout))
+                switchPushNotifViaFcm.isEnabled = true
+                switchPushNotifViaFcm.isChecked = false
+                DataStoreUtil.putBooleanKV(
+                    "rainbowFCMSubscribed", false
+                )
+            }
+        }
+    }
+
+    private fun unsubscribeWithTimeout(
+        timeoutMillis: Long, switchPushNotifViaFcm: MaterialSwitch
+    ) {
+        var status = false
+        val job = lifecycleScope.launch {
+            Firebase.messaging.unsubscribeFromTopic("rainbowUpdates").addOnCanceledListener {
+                status = true
+                showToast(getString(R.string.unsubscribeFailed))
+                switchPushNotifViaFcm.isEnabled = true
+                switchPushNotifViaFcm.isChecked = true
+                DataStoreUtil.putBooleanKV(
+                    "rainbowFCMSubscribed", true
+                )
+            }.addOnSuccessListener {
+                status = true
+                showToast(getString(R.string.unsubscribeSuccess))
+                switchPushNotifViaFcm.isEnabled = true
+                switchPushNotifViaFcm.isChecked = false
+                DataStoreUtil.putBooleanKV(
+                    "rainbowFCMSubscribed", false
+                )
+            }.addOnFailureListener {
+                status = true
+                showToast(getString(R.string.unsubscribeFailed))
+                switchPushNotifViaFcm.isEnabled = true
+                switchPushNotifViaFcm.isChecked = true
+                DataStoreUtil.putBooleanKV(
+                    "rainbowFCMSubscribed", true
+                )
+            }
+        }
+        lifecycleScope.launch {
+            for (i in 1..100) if (status) break else delay(timeoutMillis / 100)
+            if (!status) {
+                job.cancel()
+                showToast(getString(R.string.unsubscribeTimeout))
+                switchPushNotifViaFcm.isEnabled = true
+                switchPushNotifViaFcm.isChecked = true
+                DataStoreUtil.putBooleanKV(
+                    "rainbowFCMSubscribed", true
+                )
             }
         }
     }

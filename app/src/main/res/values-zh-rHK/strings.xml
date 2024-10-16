@@ -159,4 +159,22 @@
     <string name="timVersion">TIM 猜版</string>
     <string name="enumTIMWarning">TIM 猜版功能為 QQ 版本列表實用工具附帶的實驗性功能，可能存在無法預知的穩定性問題。請明確並確保自身具備足夠的風險辨識和承受能力。</string>
     <string name="useQQ9008_14600Test">猜版類型添加 QQ 9.0.8.14600 空格直鏈格式</string>
+    <string name="initFirebaseService">初始化 Firebase 服務</string>
+    <string name="enablingFirebaseServiceWarning">初始化 Firebase 服務後，將立即在本地由 Firebase SDK 生成註冊令牌，並將標識符和配置數據上傳到 Firebase 伺服器。此操作一经啟用即無法撤銷，是否繼續？</string>
+    <string name="rainbow_notification_channel_id">rainbow_notification_channel_id</string>
+    <string name="cannotFindGooglePlayServices">當前設備未檢測到 Google Play 服務，因此無法在當前設備中使用 Firebase 提供的服務。</string>
+    <string name="rainbow_notification_channel_title">版本列表更新</string>
+    <string name="rainbow_notification_channel_description">透過 Firebase 雲訊息傳遞</string>
+    <string name="enablingFirebaseServiceInsights">啟用 Firebase 服務可使用以下功能：\n- 透過 Firebase 雲訊息傳遞的版本清單更新提醒</string>
+    <string name="enablingFirebaseServiceWarning2">Firebase 雲訊息傳遞綁定了 Google Analytics。使用 Firebase 雲端訊息傳遞將會不可避免地上傳您在本軟體中的活躍資訊。</string>
+    <string name="continueKey">繼續</string>
+    <string name="initializedFirebaseService">Firebase 服務已初始化，無法撤銷</string>
+    <string name="cannotEnableFirebaseCloudMessaging">接收版本列表更新通知提醒必須打開系統通知權限，否則無法接收版本列表更新提醒。</string>
+    <string name="pushSystemNotificationsWhenVersionListUpdates">版本列表更新時推送系統通知（通過 Firebase 雲訊息傳遞）</string>
+    <string name="unsubscribeTimeout">取消訂閱超時</string>
+    <string name="unsubscribeSuccess">取消訂閱成功</string>
+    <string name="unsubscribeFailed">取消訂閱失敗</string>
+    <string name="subscribeTimeout">訂閱超時</string>
+    <string name="subscribeSuccess">訂閱成功</string>
+    <string name="subscribeFailed">訂閱失敗</string>
 </resources>

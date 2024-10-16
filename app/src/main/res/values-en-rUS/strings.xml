@@ -159,4 +159,22 @@
     <string name="timVersion">TIM</string>
     <string name="enumTIMWarning">The enumerating TIM versions function is an experimental feature included in QQ Versions Tool, which may have unpredictable stability issues. Please clearly understand and ensure that you have sufficient capability to identify and bear the risks.</string>
     <string name="useQQ9008_14600Test">猜版类型添加 QQ 9.0.8.14600 空格直链格式</string>
+    <string name="initFirebaseService">Initialize Firebase Services</string>
+    <string name="enablingFirebaseServiceWarning">After initializing Firebase services, a registration token will be generated locally by the Firebase SDK, and the identifier and configuration data will be uploaded to the Firebase server. This action cannot be reversed once enabled. Do you want to continue?</string>
+    <string name="rainbow_notification_channel_id">rainbow_notification_channel_id</string>
+    <string name="cannotFindGooglePlayServices">Google Play services are not detected on the current device, so Firebase services cannot be used on this device.</string>
+    <string name="rainbow_notification_channel_title">Version List Updates</string>
+    <string name="rainbow_notification_channel_description">Via Firebase Cloud Messaging</string>
+    <string name="enablingFirebaseServiceInsights">Enabling Firebase services allows the use of the following features: \n- Update reminders for version lists via Firebase Cloud Messaging</string>
+    <string name="enablingFirebaseServiceWarning2">Firebase Cloud Messaging is integrated with Google Analytics. Using Firebase Cloud Messaging will inevitably upload your activity information from this software.</string>
+    <string name="continueKey">Continue</string>
+    <string name="initializedFirebaseService">Firebase services has been initialized and cannot be reversed.</string>
+    <string name="cannotEnableFirebaseCloudMessaging">To receive notifications for version list updates, system notification permissions must be enabled; otherwise, you will not be able to receive version list update notifications.</string>
+    <string name="pushSystemNotificationsWhenVersionListUpdates">Push system notifications when the version list is updated (via Firebase Cloud Messaging)</string>
+    <string name="unsubscribeTimeout">Unsubscribing Timeout</string>
+    <string name="unsubscribeSuccess">Unsubscribing Success</string>
+    <string name="unsubscribeFailed">Unsubscribing Failed</string>
+    <string name="subscribeTimeout">Subscribing Timeout</string>
+    <string name="subscribeSuccess">Subscribing Success</string>
+    <string name="subscribeFailed">Subscribing Failed</string>
 </resources>
