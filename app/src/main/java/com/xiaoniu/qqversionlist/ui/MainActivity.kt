@@ -797,6 +797,7 @@ class MainActivity : AppCompatActivity() {
                                         switchPushNotifViaFcm.isChecked = false
                                         dialogError(
                                             Exception(getString(R.string.cannotEnableFirebaseCloudMessaging)),
+                                            true,
                                             true
                                         )
                                     } else {
@@ -818,6 +819,12 @@ class MainActivity : AppCompatActivity() {
                 R.id.btn_tencent_shiply -> {
                     val dialogExperimentalFeaturesBinding =
                         DialogExperimentalFeaturesBinding.inflate(layoutInflater)
+
+                    dialogExperimentalFeaturesBinding.dialogFirebase.setText(
+                        if (GoogleApiAvailability.getInstance()
+                                .isGooglePlayServicesAvailable(this@MainActivity) == ConnectionResult.SUCCESS && Firebase.messaging.isAutoInitEnabled
+                        ) R.string.initializedFirebaseServiceItem else R.string.initFirebaseService
+                    )
 
                     val dialogExperimentalFeatures = MaterialAlertDialogBuilder(this)
                         .setTitle(R.string.experimentalFeatures)
@@ -1015,7 +1022,7 @@ class MainActivity : AppCompatActivity() {
                             if (GoogleApiAvailability.getInstance()
                                     .isGooglePlayServicesAvailable(this@MainActivity) == ConnectionResult.SUCCESS
                             ) {
-                                if (Firebase.messaging.isAutoInitEnabled != true) {
+                                if (!Firebase.messaging.isAutoInitEnabled) {
                                     if (SDK_INT >= Build.VERSION_CODES.O) {
                                         val channelTitle =
                                             getString(R.string.rainbow_notification_channel_title)
@@ -2290,8 +2297,7 @@ class MainActivity : AppCompatActivity() {
             // FCM SDK (and your app) can post notifications.
         } else {
             dialogError(
-                Exception(getString(R.string.cannotEnableFirebaseCloudMessaging)),
-                true
+                Exception(getString(R.string.cannotEnableFirebaseCloudMessaging)), true, true
             )
         }
     }
@@ -2306,8 +2312,7 @@ class MainActivity : AppCompatActivity() {
                 // FCM SDK (and your app) can post notifications.
             } else if (shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)) {
                 dialogError(
-                    Exception(getString(R.string.cannotEnableFirebaseCloudMessaging)),
-                    true
+                    Exception(getString(R.string.cannotEnableFirebaseCloudMessaging)), true, true
                 )
             } else {
                 // Directly ask for the permission
@@ -2318,8 +2323,7 @@ class MainActivity : AppCompatActivity() {
                 // FCM SDK (and your app) can post notifications.
             } else {
                 dialogError(
-                    Exception(getString(R.string.cannotEnableFirebaseCloudMessaging)),
-                    true
+                    Exception(getString(R.string.cannotEnableFirebaseCloudMessaging)), true, true
                 )
             }
         }

@@ -51,6 +51,12 @@ jobs:
       - name: Setup local.properties
         run: echo "" > local.properties
 
+      # 向 app 目录插入 google-services.json，文件内容来自 Secret
+      - name: Insert google-services.json
+        run: |
+          echo "google-services.json" >> app/google-services.json
+          echo "${{ secrets.GOOGLE_SERVICES }}" >> app/google-services.json
+
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:

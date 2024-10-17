@@ -177,4 +177,6 @@
     <string name="subscribeTimeout">Subscribing Timeout</string>
     <string name="subscribeSuccess">Subscribing Success</string>
     <string name="subscribeFailed">Subscribing Failed</string>
+    <string name="initializedFirebaseServiceItem">Firebase services has been initialized</string>
+    <string name="toSystemSetting">Go to System Settings</string>
 </resources>

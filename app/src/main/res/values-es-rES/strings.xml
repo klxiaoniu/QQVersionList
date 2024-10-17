@@ -177,4 +177,6 @@
     <string name="subscribeTimeout">订阅超时</string>
     <string name="subscribeSuccess">订阅成功</string>
     <string name="subscribeFailed">订阅失败</string>
+    <string name="initializedFirebaseServiceItem">Firebase 服务已初始化</string>
+    <string name="toSystemSetting">前往系统设置</string>
 </resources>

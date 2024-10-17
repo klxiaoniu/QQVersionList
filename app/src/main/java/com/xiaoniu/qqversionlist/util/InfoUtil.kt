@@ -20,6 +20,9 @@ package com.xiaoniu.qqversionlist.util
 
 import android.app.Activity
 import android.app.AlertDialog
+import android.content.Intent
+import android.os.Build
+import android.provider.Settings
 import android.widget.Toast
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.xiaoniu.qqversionlist.R
@@ -45,9 +48,14 @@ object InfoUtil {
      * 3. 可选地，设置 `isCustomMessage` 为 `true` 以将其作为自定义错误消息而不显示跟踪堆栈。
      *
      * @param e 异常对象，包含了错误的信息和堆栈跟踪
-     * @param isCustomMessage 布尔值，表示是否使用自定义的错误消息，默认为false
+     * @param isCustomMessage 布尔值，表示是否使用自定义的错误消息（不在前台显示跟踪堆栈），默认为 false
+     * @param isShowSystemNotifSetting 布尔值，表示是否显示前往系统通知设置按钮，默认为 false
      */
-    fun Activity.dialogError(e: Exception, isCustomMessage: Boolean = false) {
+    fun Activity.dialogError(
+        e: Exception,
+        isCustomMessage: Boolean = false,
+        isShowSystemNotifSetting: Boolean = false
+    ) {
         runOnUiThread {
             val message = if (isCustomMessage) e.message else buildString {
                 appendLine("如需反馈，请前往 GitHub 仓库报告 Issue(s) 并随附以下信息：\n")
@@ -57,10 +65,20 @@ object InfoUtil {
             MaterialAlertDialogBuilder(this)
                 .setTitle(R.string.applicationError)
                 .setIcon(R.drawable.alert_line)
-                .setPositiveButton(R.string.done, null)
                 .setCancelable(false)
                 .setNeutralButton(R.string.copy, null)
                 .setMessage(message)
+                .apply {
+                    if (isShowSystemNotifSetting && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        setNegativeButton(R.string.done, null)
+                        setPositiveButton(R.string.toSystemSetting) { _, _ ->
+                            val intent = Intent()
+                            intent.action = Settings.ACTION_APP_NOTIFICATION_SETTINGS
+                            intent.putExtra(Settings.EXTRA_APP_PACKAGE, packageName)
+                            startActivity(intent)
+                        }
+                    } else setPositiveButton(R.string.done, null)
+                }
                 .create()
                 .apply {
                     setOnShowListener {
