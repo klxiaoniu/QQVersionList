@@ -27,7 +27,11 @@ jobs:
 
       # 向 app 目录插入 google-services.json，文件内容来自 Secret
       - name: Insert google-services.json
-        run: echo -n "${{ secrets.GOOGLE_SERVICES }}" > app/google-services.json
+        run: |
+          cat <<EOF > app/google-services.json
+          ${{ secrets.GOOGLE_SERVICES }}
+          EOF
+        shell: bash
 
       - name: set up JDK 21
         uses: actions/setup-java@v4
