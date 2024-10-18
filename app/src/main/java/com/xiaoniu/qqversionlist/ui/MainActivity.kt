@@ -292,6 +292,7 @@ class MainActivity : AppCompatActivity() {
                                 aboutText.movementMethod =
                                     LinkMovementMethodCompat.getInstance()
 
+                                // 九七通知中心因为内容安全原因去掉了 GitHub Releases 更新订阅
                                 aboutText.text = SpannableString(
                                     "${getString(R.string.aboutAppName)}\n\n" +
                                             "${getString(R.string.version)}${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})\n" +
@@ -299,7 +300,7 @@ class MainActivity : AppCompatActivity() {
                                             "${getString(R.string.aboutContributor)}Col_or、bggRGjQaUbCoE、GMerge、zwJimRaynor\n" +
                                             "${getString(R.string.aboutSpecialThanksTo)}owo233\n" +
                                             "${getString(R.string.aboutOpenSourceRepo)}GitHub\n" +
-                                            "${getString(R.string.aboutGetUpdate)}GitHub Releases、Obtainium、九七通知中心\n" +
+                                            "${getString(R.string.aboutGetUpdate)}GitHub Releases、Obtainium\n" +
                                             "${getString(R.string.facilitateI18n)}Crowdin\n\n" +
                                             "Since 2023.8.9"
                                 ).apply {
@@ -363,12 +364,12 @@ class MainActivity : AppCompatActivity() {
                                         indexOf("Obtainium") + "Obtainium".length,
                                         SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
                                     )
-                                    setSpan(
+                                    /*setSpan(
                                         URLSpan("https://github.com/klxiaoniu/QQVersionList/blob/master/ReadmeAssets/Get-it-on-JiuQi-NotifCenter-WeChatMiniProgram.md"),
                                         indexOf("九七通知中心"),
                                         indexOf("九七通知中心") + "九七通知中心".length,
                                         SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-                                    )
+                                    )*/
                                     setSpan(
                                         URLSpan("https://crowdin.com/project/qqversionstool"),
                                         indexOf("Crowdin"),
@@ -2329,6 +2330,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // Firebase 云消息传递订阅和退订 API 有问题，会在无法连接 Google 服务器时无限重试，还无法通过生命周期等线程进行管理和关闭甚至杀死相关进程
+    // 下面两个方法实现不对，给 Firebase 提了 Issue，接下来等 Firebase 更改相关 API 或者进一步回复再改
     private fun subscribeWithTimeout(
         timeoutMillis: Long, switchPushNotifViaFcm: MaterialSwitch
     ) {
