@@ -185,8 +185,8 @@ QQ、TIM、微信、企业微信、微信输入法使用腾讯应用宝（[腾�
 
 <a href='https://github.com/klxiaoniu/QQVersionList/blob/master/ReadmeAssets/Get-it-on-Obtainium.md'><img src='https://raw.githubusercontent.com/ImranR98/Obtainium/main/assets/graphics/badge_obtainium.png' width="300" alt="Obtanium"></a>
 
-> [!important]
-> 2024 年 8 月 2 日，[九七公司「通知中心」微信小程序被微信公众平台以“无实质服务内容引导跳转”暂停服务](https://mp.weixin.qq.com/s/ITU6H_UjA804srGeE2-FOA)。下方“九七公司「通知中心」微信小程序”方案可能在一段时间内不可用。
+> [!warning]
+> 2024 年 10 月 17 日，九七公司「通知中心」微信小程序改名为「通知侠」重新上线，但因内容安全为由去掉了 GitHub Releases 更新订阅。故下方内容不再可用。
 > 
 > <a href='https://github.com/klxiaoniu/QQVersionList/blob/master/ReadmeAssets/Get-it-on-JiuQi-NotifCenter-WeChatMiniProgram.md'><img src='https://raw.githubusercontent.com/klxiaoniu/QQVersionList/master/ReadmeAssets/JiuQi-NotifCenter-Badge-Dark-zh-Hans.png' width="300" alt="Get it on Notif Center"></a>
 
