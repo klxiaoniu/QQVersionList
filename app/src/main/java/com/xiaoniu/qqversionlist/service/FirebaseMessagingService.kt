@@ -7,7 +7,6 @@ import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.xiaoniu.qqversionlist.R
-import com.xiaoniu.qqversionlist.ui.MainActivity
 
 class FirebaseMessagingService : FirebaseMessagingService() {
     override fun onNewToken(token: String) {
@@ -17,10 +16,9 @@ class FirebaseMessagingService : FirebaseMessagingService() {
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         if (!remoteMessage.data.isNotEmpty()) {
             // 创建一个 Intent，用于点击通知后跳转到 MainActivity
-            val intent = Intent(this, MainActivity::class.java)
-            val pendingIntent = PendingIntent.getActivity(
-                this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-            )
+            val intent = Intent().setClassName(this, "com.xiaoniu.qqversionlist.ui.MainActivity")
+            val pendingIntent =
+                PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
 
             // 创建 Notification
             val notificationBuilder = NotificationCompat.Builder(
