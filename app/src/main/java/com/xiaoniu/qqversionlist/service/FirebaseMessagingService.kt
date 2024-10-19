@@ -15,11 +15,6 @@ class FirebaseMessagingService : FirebaseMessagingService() {
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         if (!remoteMessage.data.isNotEmpty()) {
-            // 创建一个 Intent，用于点击通知后跳转到 MainActivity
-            val intent = Intent().setClassName(this, "com.xiaoniu.qqversionlist.ui.MainActivity")
-            val pendingIntent =
-                PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
-
             // 创建 Notification
             val notificationBuilder = NotificationCompat.Builder(
                 this, getString(R.string.rainbow_notification_channel_id)
@@ -27,7 +22,7 @@ class FirebaseMessagingService : FirebaseMessagingService() {
                 .setContentTitle(remoteMessage.notification!!.title)
                 .setContentText(remoteMessage.notification!!.body)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setContentIntent(pendingIntent)
+                .setContentIntent(null)
                 .setAutoCancel(true)
 
             // 获取 NotificationManager 并发送通知
