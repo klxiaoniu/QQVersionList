@@ -44,7 +44,7 @@ jobs:
         # Use only 'javascript-typescript' to analyze code written in JavaScript, TypeScript or both
         # Learn more about CodeQL language support at https://aka.ms/codeql-docs/language-support
 
-    if: ${{ !startsWith(github.event.head_commit.message, '[skip ci]') && (github.repository == 'klxiaoniu/QQVersionList' || github.repository == 'ArcticFoxPro/QQVersionList') }}
+    if: ${{ github.event_name != 'pull_request' && (github.repository == 'klxiaoniu/QQVersionList' || github.repository == 'ArcticFoxPro/QQVersionList') }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
