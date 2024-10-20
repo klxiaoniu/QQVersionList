@@ -30,7 +30,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.xiaoniu.qqversionlist.databinding.RecycleTimVersionBinding
+import com.xiaoniu.qqversionlist.util.Extensions.dp
 import com.xiaoniu.qqversionlist.util.Extensions.pxToDp
+import me.zhanghai.android.fastscroll.FastScrollerBuilder
 
 class TIMVersionListFragment : Fragment() {
     private var _fragmentBinding: RecycleTimVersionBinding? = null
@@ -66,14 +68,16 @@ class TIMVersionListFragment : Fragment() {
     }
 
     private fun versionListStaggeredGridLayout(thisActivity: MainActivity) {
-        val concatenated = ConcatAdapter(thisActivity.localTIMAdapter, thisActivity.timVersionAdapter)
+        val concatenated =
+            ConcatAdapter(thisActivity.localTIMAdapter, thisActivity.timVersionAdapter)
         val screenWidthDp = (Resources.getSystem().displayMetrics.widthPixels).pxToDp
         val screenHeightDp = (Resources.getSystem().displayMetrics.heightPixels).pxToDp
-        fragmentBinding.rvTimContent.apply {
-            adapter = concatenated
+        fragmentBinding.apply {
+            rvTimContent.adapter = concatenated
+            FastScrollerBuilder(rvTimContent).useMd2Style().setPadding(0, 8.dp, 0, 200.dp).build()
             // 当横纵逻辑像素都大于 600 时，根据横向逻辑像素的不同区间显示不同的瀑布流布局
             // 小于 600 时显示线性布局
-            layoutManager = if (screenHeightDp >= 600) {
+            rvTimContent.layoutManager = if (screenHeightDp >= 600) {
                 when {
                     screenWidthDp in 600..840 -> StaggeredGridLayoutManager(
                         2, StaggeredGridLayoutManager.VERTICAL

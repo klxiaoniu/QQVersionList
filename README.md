@@ -269,6 +269,7 @@ QQ 版本列表实用工具的诞生离不开以下开源项目，感谢以下�
 - [Obtainium（Imran）](https://github.com/ImranR98/Obtainium)，Licensed under [GNU General Public License Version 3](https://github.com/ImranR98/Obtainium/blob/main/LICENSE.md)
 - [Secrets Gradle Plugin for Android（Google）](https://github.com/google/secrets-gradle-plugin)，Licensed under [Apache License Version 2.0](https://github.com/google/secrets-gradle-plugin/blob/main/LICENSE)
 - [Firebase Android Open Source Development（Google）](https://firebase.google.com/)，Licensed under [Apache License Version 2.0](https://github.com/firebase/firebase-android-sdk/blob/main/LICENSE)
+- [AndroidFastScroll（张海）](https://github.com/zhanghai/AndroidFastScroll)，Licensed under [Apache License Version 2.0](https://github.com/zhanghai/AndroidFastScroll/blob/master/LICENSE)
 
 ## 商业服务鸣谢
 
