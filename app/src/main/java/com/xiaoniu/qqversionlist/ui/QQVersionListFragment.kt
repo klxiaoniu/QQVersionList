@@ -73,7 +73,6 @@ class QQVersionListFragment : Fragment() {
         val screenHeightDp = (Resources.getSystem().displayMetrics.heightPixels).pxToDp
         fragmentBinding.apply {
             rvContent.adapter = concatenated
-            FastScrollerBuilder(rvContent).useMd2Style().setPadding(0, 8.dp, 0, 200.dp).build()
             // 当横纵逻辑像素都大于 600 时，根据横向逻辑像素的不同区间显示不同的瀑布流布局
             // 小于 600 时显示线性布局
             rvContent.layoutManager = if (screenHeightDp >= 600) {

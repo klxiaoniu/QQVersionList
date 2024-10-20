@@ -100,6 +100,7 @@ import com.xiaoniu.qqversionlist.databinding.UpdateQvtButtonBinding
 import com.xiaoniu.qqversionlist.databinding.UserAgreementBinding
 import com.xiaoniu.qqversionlist.util.ClipboardUtil.copyText
 import com.xiaoniu.qqversionlist.util.DataStoreUtil
+import com.xiaoniu.qqversionlist.util.Extensions.dp
 import com.xiaoniu.qqversionlist.util.InfoUtil.dialogError
 import com.xiaoniu.qqversionlist.util.InfoUtil.showToast
 import com.xiaoniu.qqversionlist.util.ShiplyUtil
@@ -113,6 +114,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import me.zhanghai.android.fastscroll.FastScrollerBuilder
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -229,6 +231,9 @@ class MainActivity : AppCompatActivity() {
             finish()
         }
         if (agreed) userAgreementBinding.uaButtonDisagree.setText(R.string.withdrawConsentAndExit)
+
+        FastScrollerBuilder(userAgreementBinding.UAScroll).useMd2Style()
+            .setPadding(0, 0, 0, 0).build()
 
         dialogUA.show()
     }
@@ -1966,20 +1971,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showExpBackDialog(sourceDataJson: String, dialogTitle: String) {
-        val dialogShiplyBackBinding =
+        val dialogExpBackBinding =
             DialogExpBackBinding.inflate(layoutInflater)
 
-        dialogShiplyBackBinding.root.parent?.let { parent ->
-            if (parent is ViewGroup) parent.removeView(dialogShiplyBackBinding.root)
+        dialogExpBackBinding.root.parent?.let { parent ->
+            if (parent is ViewGroup) parent.removeView(dialogExpBackBinding.root)
         }
 
         val shiplyApkUrl =
             sourceDataJson.toPrettyFormat().getAllAPKUrl()
 
-        dialogShiplyBackBinding.apply {
+        dialogExpBackBinding.apply {
             MaterialAlertDialogBuilder(this@MainActivity)
                 .setView(
-                    dialogShiplyBackBinding.root
+                    dialogExpBackBinding.root
                 ).setTitle(dialogTitle)
                 .setIcon(R.drawable.flask_line)
                 .show().apply {
@@ -2000,6 +2005,8 @@ class MainActivity : AppCompatActivity() {
                     }
                     expBackText.text =
                         sourceDataJson.toPrettyFormat()
+                    FastScrollerBuilder(dialogExpBackBinding.expBackTextScroll).useMd2Style()
+                        .setPadding(0, 0, 0, 32.dp).build()
                 }
         }
     }

@@ -33,10 +33,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ScrollView
+        <me.zhanghai.android.fastscroll.FastScrollScrollView
+            android:id="@+id/UA_scroll"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scrollbarStyle="insideOverlay">
+            android:scrollbars="none">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -206,7 +207,7 @@
                     android:text="您使用 QQ 版本列表实用工具即视为您已阅读并同意接受 QQ 版本列表实用工具协议的约束。QQ 版本列表实用工具有权在必要时修改本协议条款。如果您不接受修改后的条款，应当停止使用 QQ 版本列表实用工具。\n\nQQ 版本列表实用工具有权随时修改本协议，并将在应用内显著位置弹窗通知用户。修订后的协议自公布之日起在一定期限后生效，请用户定期查看相关公告，继续使用本应用即视为同意接受修订后的协议。\n\nQQ 版本列表实用工具基于 GNU Affero General Public License Version 3 许可开放源代码。\n\n本应用与深圳市腾讯计算机系统有限公司和/或其关联公司无关。\n\n“腾讯”“QQ”“腾讯 QQ”“腾讯 TIM”“微信”“WeChat”“Weixin”“腾讯微信”“企业微信”“WeCom”“微信输入法”“WeType”“应用宝”“腾讯应用宝”等是深圳市腾讯计算机系统有限公司和/或其关联公司的商标。本项目对“腾讯”“QQ”“腾讯 QQ”“腾讯 TIM”“微信”“WeChat”“Weixin”“腾讯微信”“企业微信”“WeCom”“微信输入法”“WeType”“应用宝”“腾讯应用宝”等的使用旨在注明和指向对应主体，并非表示对“腾讯”“QQ”“腾讯 QQ”“腾讯 TIM”“微信”“WeChat”“Weixin”“腾讯微信”“企业微信”“WeCom”“微信输入法”“WeType”“应用宝”“腾讯应用宝”等商标的注册和拥有。\n\nAndroid™ 是 Google LLC 的商标。\n\nGITHUB® 是 GitHub, Inc. 在美国和其他国家或地区的商标或注册商标。\n\nUnreal® 及其徽标是 Epic Games, Inc. 在美国及其它国家或地区的商标或注册商标。\n\n本协议的签订地是中华人民共和国福建省福州市。\n\n本协议适用中华人民共和国相关法律法规。如果双方发生纠纷，应友好协商解决；如协商不成，您同意将纠纷提交给签订地具有管辖权的法院提起诉讼。\n\n本协议中的某些条款因故无法适用，则本协议的其它条款继续适用且无法适用的条款将会被修改，以便其能够依法适用。\n\n本协议是您和 QQ 版本列表实用工具之间关于本产品相关事项的最终的、完整的、排他的协议，且取代和合并之前当事人关于此类事项（包括任何形式的最终用户许可、开放源代码许可、服务条款和隐私政策）的讨论和协议。\n\n每部分的标题只为阅读之便而无任何法律或合同义务。\n\n本协议可能存在多种语言版本。各语言版本之间如有不一致之处，以中文版本为准。\n\n除非我们书面同意，您不得转让本协议所规定的权利义务。任何违反上述规定企图转让的行为均无效。在法律许可的范围内，QQ 版本列表实用工具对本协议享有最终解释权。\n\nQQ 版本列表实用工具\n\n2024 年 9 月 21 日" />
 
             </LinearLayout>
-        </ScrollView>
+        </me.zhanghai.android.fastscroll.FastScrollScrollView>
     </LinearLayout>
 
     <LinearLayout
