@@ -301,7 +301,7 @@ class MainActivity : AppCompatActivity() {
                                             "${getString(R.string.version)}${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})\n" +
                                             "${getString(R.string.aboutAuthor)}快乐小牛、有鲫雪狐\n" +
                                             "${getString(R.string.aboutContributor)}Col_or、bggRGjQaUbCoE、GMerge、zwJimRaynor\n" +
-                                            "${getString(R.string.aboutSpecialThanksTo)}owo233\n" +
+                                            "${getString(R.string.aboutSpecialThanksTo)}owo233、钟路帆\n" +
                                             "${getString(R.string.aboutOpenSourceRepo)}GitHub\n" +
                                             "${getString(R.string.aboutGetUpdate)}GitHub Releases、Obtainium\n" +
                                             "${getString(R.string.facilitateI18n)}Crowdin\n\n" +
@@ -347,6 +347,12 @@ class MainActivity : AppCompatActivity() {
                                         URLSpan("https://github.com/callng"),
                                         indexOf("owo233"),
                                         indexOf("owo233") + "owo233".length,
+                                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
+                                    )
+                                    setSpan(
+                                        URLSpan("https://github.com/Hill-98"),
+                                        indexOf("钟路帆"),
+                                        indexOf("钟路帆") + "钟路帆".length,
                                         SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
                                     )
                                     setSpan(
