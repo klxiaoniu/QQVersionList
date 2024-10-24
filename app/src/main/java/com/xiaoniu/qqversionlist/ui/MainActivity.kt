@@ -31,7 +31,6 @@ import android.content.res.Configuration
 import android.content.res.Resources
 import android.net.Uri
 import android.os.Build
-import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
 import android.os.Environment
 import android.text.Editable
@@ -39,6 +38,7 @@ import android.text.SpannableString
 import android.text.TextWatcher
 import android.text.style.URLSpan
 import android.util.Base64
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
@@ -51,7 +51,6 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.core.text.method.LinkMovementMethodCompat
 import androidx.core.view.ViewCompat
-import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
@@ -151,26 +150,25 @@ class MainActivity : AppCompatActivity() {
 
         setContext(this)
 
-        if (SDK_INT <= Build.VERSION_CODES.Q) {
-            ViewCompat.setOnApplyWindowInsetsListener(viewRoot) { view, windowInsets ->
-                val insets = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars())
-                view.setPadding(insets.left, 0, insets.right, 0)
-                binding.apply {
-                    bottomAppBar.updatePadding(0, 0, 0, insets.bottom)
-                    btnGuess.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-                        bottomMargin = insets.bottom / 2
-                    }
-                }
-                windowInsets
-            }
-        }
-
         // 不加这段代码的话 Google 可能会在系统栏加遮罩
-        if (SDK_INT >= Build.VERSION_CODES.Q) window.apply {
-            isNavigationBarContrastEnforced = false
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) window.isNavigationBarContrastEnforced =
+            false
+
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) ViewCompat.setOnApplyWindowInsetsListener(
+            viewRoot
+        ) { _, windowInsets ->
+            val insets =
+                windowInsets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
+            binding.bottomAppBar.post {
+                binding.bottomAppBar.updatePadding(0, 0, 0, insets.bottom)
+            }
+            binding.btnGuess.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                bottomMargin = insets.bottom / 2
+            }
+            windowInsets
         }
 
-        WindowCompat.setDecorFitsSystemWindows(window, false)
+
 
         qqVersionAdapter = QQVersionAdapter()
         timVersionAdapter = TIMVersionAdapter()
@@ -1002,7 +1000,7 @@ class MainActivity : AppCompatActivity() {
                                                 ).ifEmpty { SHIPLY_DEFAULT_APPID },
                                                 getStringKV(
                                                     "shiplyOsVersion", ""
-                                                ).ifEmpty { SDK_INT.toString() },
+                                                ).ifEmpty { Build.VERSION.SDK_INT.toString() },
                                                 getStringKV(
                                                     "shiplyModel", ""
                                                 ).ifEmpty { Build.MODEL.toString() },
@@ -1029,7 +1027,7 @@ class MainActivity : AppCompatActivity() {
                                     .isGooglePlayServicesAvailable(this@MainActivity) == ConnectionResult.SUCCESS
                             ) {
                                 if (!Firebase.messaging.isAutoInitEnabled) {
-                                    if (SDK_INT >= Build.VERSION_CODES.O) {
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                         val channelTitle =
                                             getString(R.string.rainbow_notification_channel_title)
                                         val channelDescription =
@@ -1341,7 +1339,7 @@ class MainActivity : AppCompatActivity() {
                 val QQVersionInstall =
                     packageManager.getPackageInfo("com.tencent.mobileqq", 0).versionName.toString()
                 val QQVersionCodeInstall =
-                    if (SDK_INT >= Build.VERSION_CODES.P) packageManager.getPackageInfo(
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) packageManager.getPackageInfo(
                         "com.tencent.mobileqq", 0
                     ).longVersionCode.toString() else ""
                 val QQMetaDataInstall = packageManager.getPackageInfo(
@@ -1355,7 +1353,7 @@ class MainActivity : AppCompatActivity() {
                     QQMetaDataInstall.applicationInfo?.metaData?.getString("com.tencent.rdm.uuid")
                 val QQTargetInstall = QQMetaDataInstall.applicationInfo?.targetSdkVersion.toString()
                 val QQMinInstall = QQMetaDataInstall.applicationInfo?.minSdkVersion.toString()
-                val QQCompileInstall = (if (SDK_INT >= Build.VERSION_CODES.S)
+                val QQCompileInstall = (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
                     QQMetaDataInstall.applicationInfo?.compileSdkVersion.toString() else "")
                 if (QQVersionInstall != DataStoreUtil.getStringKV(
                         "QQVersionInstall", ""
@@ -1412,7 +1410,7 @@ class MainActivity : AppCompatActivity() {
                     val TIMVersionInstall =
                         packageManager.getPackageInfo("com.tencent.tim", 0).versionName.toString()
                     val TIMVersionCodeInstall =
-                        if (SDK_INT >= Build.VERSION_CODES.P) packageManager.getPackageInfo(
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) packageManager.getPackageInfo(
                             "com.tencent.tim", 0
                         ).longVersionCode.toString() else ""
                     val TIMMetaData = packageManager.getPackageInfo(
@@ -1425,7 +1423,7 @@ class MainActivity : AppCompatActivity() {
                     val TIMTargetInstall = TIMMetaData.applicationInfo?.targetSdkVersion.toString()
                     val TIMMinInstall = TIMMetaData.applicationInfo?.minSdkVersion.toString()
                     val TIMCompileInstall =
-                        (if (SDK_INT >= Build.VERSION_CODES.S) TIMMetaData.applicationInfo?.compileSdkVersion.toString() else "")
+                        (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) TIMMetaData.applicationInfo?.compileSdkVersion.toString() else "")
                     if (TIMTargetInstall.isNotEmpty() && TIMTargetInstall != DataStoreUtil.getStringKV(
                             "TIMTargetInstall",
                             ""
@@ -1534,8 +1532,9 @@ class MainActivity : AppCompatActivity() {
                                         ).setAction(R.string.ok, TipTIMSnackbarActionListener())
                                         .setAnchorView(binding.btnGuess)
                                         .apply {
-                                            if (isDarkTheme) setBackgroundTint(getColor(com.google.android.material.R.color.m3_sys_color_dynamic_dark_secondary))
-                                            else setBackgroundTint(getColor(com.google.android.material.R.color.m3_sys_color_dynamic_light_secondary))
+                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) if (isDarkTheme) setBackgroundTint(
+                                                getColor(com.google.android.material.R.color.m3_sys_color_dynamic_dark_secondary)
+                                            ) else setBackgroundTint(getColor(com.google.android.material.R.color.m3_sys_color_dynamic_light_secondary))
                                         }.show()
                                 }
                             }
@@ -2026,7 +2025,7 @@ class MainActivity : AppCompatActivity() {
         shiplyVersion: String,
         shiplyUin: String,
         shiplyAppid: String = SHIPLY_DEFAULT_APPID,
-        shiplyOsVersion: String = SDK_INT.toString(),
+        shiplyOsVersion: String = Build.VERSION.SDK_INT.toString(),
         shiplyModel: String = Build.MODEL.toString(),
         shiplySdkVersion: String = SHIPLY_DEFAULT_SDK_VERSION,
         shiplyLanguage: String = Locale.getDefault().language.toString()
@@ -2287,7 +2286,7 @@ class MainActivity : AppCompatActivity() {
     // 检查特定通知渠道是否被用户关闭
     private fun checkNotificationChannelEnabled(channelId: String): Boolean {
         val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-        if (SDK_INT >= Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = notificationManager.getNotificationChannel(channelId)
             return channel?.importance != NotificationManager.IMPORTANCE_NONE
         } else {
@@ -2312,7 +2311,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun askNotificationPermission() {
         // This is only necessary for API level >= 33 (TIRAMISU)
-        if (SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(
                     this, Manifest.permission.POST_NOTIFICATIONS
                 ) == PackageManager.PERMISSION_GRANTED

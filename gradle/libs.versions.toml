@@ -1,0 +1,56 @@
+[versions]
+activityKtxVersion = "1.9.3"
+appcompat = "1.7.0"
+coil = "2.7.0"
+constraintlayout = "2.1.4"
+coreKtx = "1.13.1"
+coreSplashscreen = "1.1.0-rc01"
+datastorePreferences = "1.1.1"
+espressoCore = "3.6.1"
+firebaseBom = "33.5.1"
+fragmentKtx = "1.8.4"
+googleServices = "4.4.2"
+gson = "2.11.0"
+junit = "4.13.2"
+junitVersion = "1.2.1"
+kotlinxCoroutinesAndroid = "1.9.0"
+kotlinxSerializationJson = "1.7.3"
+library = "1.3.0"
+lifecycleRuntimeKtx = "2.8.6"
+material = "1.13.0-alpha07"
+mavenArtifact = "3.9.9"
+okhttp = "4.12.0"
+paris = "2.0.2"
+recyclerview = "1.3.2"
+secretsGradlePlugin = "2.0.1"
+viewpager2 = "1.1.0"
+
+[libraries]
+activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activityKtxVersion" }
+androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
+androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraintlayout" }
+androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
+androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
+androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCore" }
+androidx-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "fragmentKtx" }
+androidx-junit = { module = "androidx.test.ext:junit", version.ref = "junitVersion" }
+androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
+androidx-recyclerview = { module = "androidx.recyclerview:recyclerview", version.ref = "recyclerview" }
+androidx-viewpager2 = { module = "androidx.viewpager2:viewpager2", version.ref = "viewpager2" }
+coil = { module = "io.coil-kt:coil", version.ref = "coil" }
+firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+firebase-messaging = { module = "com.google.firebase:firebase-messaging" }
+google-services = { module = "com.google.gms:google-services", version.ref = "googleServices" }
+gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+junit = { module = "junit:junit", version.ref = "junit" }
+kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutinesAndroid" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
+library = { module = "me.zhanghai.android.fastscroll:library", version.ref = "library" }
+logging-interceptor = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttp" }
+material = { module = "com.google.android.material:material", version.ref = "material" }
+maven-artifact = { module = "org.apache.maven:maven-artifact", version.ref = "mavenArtifact" }
+okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
+paris = { module = "com.airbnb.android:paris", version.ref = "paris" }
+secrets-gradle-plugin = { module = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin", version.ref = "secretsGradlePlugin" }
