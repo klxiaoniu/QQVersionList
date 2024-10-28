@@ -290,6 +290,7 @@ QQ 版本列表实用工具的诞生离不开以下开源项目，感谢以下�
 - [Firebase Android Open Source Development（Google）](https://firebase.google.com/)，Licensed under [Apache License Version 2.0](https://github.com/firebase/firebase-android-sdk/blob/main/LICENSE)
 - [AndroidFastScroll（张海）](https://github.com/zhanghai/AndroidFastScroll)，Licensed under [Apache License Version 2.0](https://github.com/zhanghai/AndroidFastScroll/blob/master/LICENSE)
 - [Kotlin Coroutines on Android](https://github.com/Kotlin/kotlinx.coroutines)，Licensed under [Apache License Version 2.0](https://github.com/Kotlin/kotlinx.coroutines/blob/master/LICENSE.txt)
+- [Google Play services Plugins](https://github.com/google/play-services-plugins)，Licensed under [Apache License Version 2.0](https://github.com/google/play-services-plugins/blob/main/LICENSE)
 
 ## 商业服务鸣谢
 
