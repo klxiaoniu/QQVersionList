@@ -119,4 +119,5 @@ dependencies {
     implementation(libs.firebase.messaging)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.library)
+    implementation(libs.androidx.browser)
 }

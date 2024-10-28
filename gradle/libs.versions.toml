@@ -2,6 +2,7 @@
 androidGradlePlugin = "8.7.1"
 activityKtxVersion = "1.9.3"
 appcompat = "1.7.0"
+browserVersion = "1.8.0"
 coil = "2.7.0"
 constraintlayout = "2.1.4"
 coreKtx = "1.13.1"
@@ -29,6 +30,7 @@ viewpager2 = "1.1.0"
 [libraries]
 activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activityKtxVersion" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
+androidx-browser = { module = "androidx.browser:browser", version.ref = "browserVersion" }
 androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraintlayout" }
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }

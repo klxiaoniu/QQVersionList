@@ -38,7 +38,6 @@ import android.text.SpannableString
 import android.text.TextWatcher
 import android.text.style.URLSpan
 import android.util.Base64
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
@@ -46,6 +45,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
@@ -242,10 +242,10 @@ class MainActivity : AppCompatActivity() {
         DataStoreUtil.deleteKVAsync("version")
 
         /**
-         * 这里的 `val judgeUATarget = <Number>` 的值代表着用户协议修订版本，
-         * 后续更新协议版本后也需要在下面一行把“judgeUATarget” + 1，以此类推
+         * 这里的伴生类的 `JUDGE_UA_TARGET` 的值代表着用户协议修订版本，
+         * 后续更新协议版本后也需要在下面伴生类中把 `JUDGE_UA_TARGET` + 1，以此类推
          **/
-        val judgeUATarget = 4 // 2024.9.21 第四版
+        val judgeUATarget = JUDGE_UA_TARGET
         if (DataStoreUtil.getIntKV("userAgreement", 0) < judgeUATarget) showUADialog(
             false, judgeUATarget
         ) else {
@@ -390,6 +390,14 @@ class MainActivity : AppCompatActivity() {
 
                         btnAboutWithdrawConsentUA.setOnClickListener {
                             showUADialog(true, judgeUATarget)
+                            aboutDialog.dismiss()
+                        }
+
+                        btnAboutSharedList.setOnClickListener {
+                            val url =
+                                "https://raw.githubusercontent.com/klxiaoniu/QQVersionList/refs/heads/master/DataListShared.md"
+                            val intent = CustomTabsIntent.Builder().build()
+                            intent.launchUrl(this@MainActivity, Uri.parse(url))
                             aboutDialog.dismiss()
                         }
 
@@ -1068,28 +1076,10 @@ class MainActivity : AppCompatActivity() {
                                     }
 
                                     dialogFirebaseFirstInfoBinding.firebaseInfoNext.setOnClickListener {
-                                        if (!NotificationManagerCompat.from(this@MainActivity)
-                                                .areNotificationsEnabled()
-                                        ) askNotificationPermission()
-
-                                        Firebase.apply {
-                                            messaging.isAutoInitEnabled = true
-                                            analytics.setAnalyticsCollectionEnabled(true)
-                                            /*messaging.subscribeToTopic("rainbowUpdates")
-                                                .addOnCompleteListener { task ->
-                                                    if (task.isSuccessful) DataStoreUtil.putBooleanKV(
-                                                        "rainbowFCMSubscribed",
-                                                        true
-                                                    ) else DataStoreUtil.putBooleanKV(
-                                                        "rainbowFCMSubscribed",
-                                                        false
-                                                    )
-                                                }*/
-                                        }
-
+                                        Firebase.messaging.isAutoInitEnabled = true
+                                        Firebase.analytics.setAnalyticsCollectionEnabled(true)
                                         dialogFirebaseInfo.dismiss()
                                     }
-
 
                                 } else {
                                     showToast(getString(R.string.initializedFirebaseService))
@@ -1321,9 +1311,9 @@ class MainActivity : AppCompatActivity() {
             else -> dialogGuessBinding.etVersionSmall.editText?.setText(
                 memVersionSmall.toString()
             )
-        } else if (memVersionTIMSmall == -1) dialogGuessBinding.etVersionSmall.editText?.setText(
+        } else if (memVersionTIMSmall == -1 && memVersionSmall != -1) dialogGuessBinding.etVersionSmall.editText?.setText(
             memVersionSmall.toString()
-        ) else if (memVersionSmall == -1) dialogGuessBinding.etVersionSmall.editText?.setText(
+        ) else if (memVersionSmall == -1 && memVersionTIMSmall != -1) dialogGuessBinding.etVersionSmall.editText?.setText(
             memVersionTIMSmall.toString()
         )
         val memVersion16code = DataStoreUtil.getStringKV("version16code", "-1")
@@ -2445,6 +2435,7 @@ class MainActivity : AppCompatActivity() {
         const val STATUS_ONGOING = 0
         const val STATUS_PAUSE = 1
         const val STATUS_END = 2
+        const val JUDGE_UA_TARGET = 5 // 2024.10.28 第五版
 
         val MODE_TEST: String by lazy { context.getString(R.string.previewVersion) }
         val MODE_OFFICIAL: String by lazy { context.getString(R.string.stableVersion) }

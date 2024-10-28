@@ -178,4 +178,5 @@
     <string name="subscribeFailed">订阅失败</string>
     <string name="initializedFirebaseServiceItem">Firebase 服务已初始化</string>
     <string name="toSystemSetting">前往系统设置</string>
+    <string name="threePartySharedList">个人信息第三方共享清单</string>
 </resources>
