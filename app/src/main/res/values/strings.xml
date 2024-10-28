@@ -159,7 +159,7 @@
     <string name="enumTIMWarning">TIM 猜版功能为 QQ 版本列表实用工具附带的实验性功能，可能存在不可预知的稳定性问题。请明确并确保自身具备足够的风险识别和承受能力。</string>
     <string name="useQQ9008_14600Test">猜版类型添加 QQ 9.0.8.14600 空格直链格式</string>
     <string name="initFirebaseService">初始化 Firebase 服务</string>
-    <string name="enablingFirebaseServiceWarning">初始化 Firebase 服务后，将立即在本地由 Firebase SDK 生成注册令牌，并将将标识符和配置数据上传到 Firebase 服务器。此操作一经启用即无法撤销，是否继续？</string>
+    <string name="enablingFirebaseServiceWarning">初始化 Firebase 服务后，将立即在本地由 Firebase SDK 生成注册令牌，并将标识符和配置数据上传到 Firebase 服务器。此操作一经启用即无法撤销，是否继续？</string>
     <string name="rainbow_notification_channel_id">rainbow_notification_channel_id</string>
     <string name="cannotFindGooglePlayServices">未在当前设备检测到 Google Play 服务，因此无法在当前设备中使用由 Firebase 提供的服务。</string>
     <string name="rainbow_notification_channel_title">版本列表更新</string>
