@@ -44,9 +44,21 @@ jobs:
         # Use only 'javascript-typescript' to analyze code written in JavaScript, TypeScript or both
         # Learn more about CodeQL language support at https://aka.ms/codeql-docs/language-support
 
+    if: ${{ github.event_name != 'pull_request' && (github.repository == 'klxiaoniu/QQVersionList' || github.repository == 'ArcticFoxPro/QQVersionList') }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Setup local.properties
+        run: echo "" > local.properties
+
+      # 向 app 目录插入 google-services.json，文件内容来自 Secret
+      - name: Insert google-services.json
+        run: |
+          cat <<EOF > app/google-services.json
+          ${{ secrets.GOOGLE_SERVICES }}
+          EOF
+        shell: bash
 
       - name: Set up JDK
         uses: actions/setup-java@v4

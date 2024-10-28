@@ -19,14 +19,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingStart="16dp"
+    android:paddingStart="4dp"
     android:paddingTop="8dp"
-    android:paddingEnd="16dp">
+    android:paddingEnd="4dp">
 
-    <androidx.core.widget.NestedScrollView
+    <me.zhanghai.android.fastscroll.FastScrollNestedScrollView
         android:id="@+id/exp_back_text_scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
         android:scrollbars="none">
 
         <LinearLayout
@@ -76,5 +78,5 @@
                 android:textIsSelectable="true" />
 
         </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
+    </me.zhanghai.android.fastscroll.FastScrollNestedScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

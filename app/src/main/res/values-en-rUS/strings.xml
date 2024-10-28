@@ -39,7 +39,7 @@
     <string name="personalization">Personalization</string>
     <string name="about">About</string>
     <string name="enumerateVersionsFormatSetting">Enumerate Versions Format Setting</string>
-    <string name="getUpdateFromTDSShiplyDistributionPlatform">Get Update From Tencent Device-oriented Service (TDS) Shiply Distribution Platform (Experimental)</string>
+    <string name="getUpdateFromTDSShiplyDistributionPlatform">Get Update From Tencent Device-oriented Service (TDS) Shiply Containing and Distributing Platform (Experimental)</string>
     <string name="getUpdateFromShiplyPlatform">Get Update From Shiply Platform (Experimental)</string>
     <string name="acceptedEnumerateVersion">Accepted Enumerate Version</string>
     <string name="contentReturnedByShiplyPlatform">Content Returned By Shiply Platform</string>
@@ -78,7 +78,7 @@
     <string name="enumWeixinMajorVersionHelpText">Omit the decimal point</string>
     <string name="enumWeixinWarning">The enumerating Weixin versions function is an experimental feature included in QQ Versions Tool, which may have unpredictable stability issues. Please clearly understand and ensure that you have sufficient capability to identify and bear the risks.</string>
     <string name="enumHasBeenStopped">Enumerating has been stopped.</string>
-    <string name="missingCipherWarning">Tencent Device-oriented Service (TDS) Shiply Distribution Platform does not include the \&quot;cipher_text\&quot; key-value pair in the returned JSON content.</string>
+    <string name="missingCipherWarning">Tencent Device-oriented Service (TDS) Shiply Containing and Distributing Platform does not include the \&quot;cipher_text\&quot; key-value pair in the returned JSON content.</string>
     <string name="missingMajorVersionWarning">Enumerating versions requires specifying the major version number, otherwise the enumeration version cannot be executed.</string>
     <string name="missingQQPreviewMinorVersionWarning">Enumerating preview versions (including space-containing enumeration) requires specifying the minor version number, otherwise the enumeration of preview versions cannot be executed.</string>
     <string name="QQPreviewMinorNot5Warning">The minor version number must be a multiple of 5. If you need to remove this restriction, please go to the settings to lift it.</string>
@@ -99,7 +99,7 @@
     <string name="shiplyVersion">Version</string>
     <string name="shiplyVersionHelpText">Enter the Android QQ version number, used for requesting the Shiply Platform.</string>
     <string name="uinHelpText">Enter the target QQ account number, used for requesting the Shiply Platform.</string>
-    <string name="shiplyWarning">Tencent QQ utilizes the Tencent Device-oriented Service (TDS) Shiply Distribution Platform to distribute limited-scale gray testing packages based on the QQ account number (uin) and its terminal information. This feature does not guarantee successful retrieval of update data with each request; failure to obtain update data indicates that the entered parameters fall outside the recognized and distributed scope of the Shiply Platform. The QQ Versions Tool makes no warranty regarding the reliability of this feature or any consequences thereof. Please ensure that you have a clear understanding and sufficient capability to bear the associated risks.</string>
+    <string name="shiplyWarning">Tencent QQ utilizes the Tencent Device-oriented Service (TDS) Shiply Containing and Distributing Platform to distribute limited-scale gray testing packages based on the QQ account number (uin) and its terminal information. This feature does not guarantee successful retrieval of update data with each request; failure to obtain update data indicates that the entered parameters fall outside the recognized and distributed scope of the Shiply Platform. The QQ Versions Tool makes no warranty regarding the reliability of this feature or any consequences thereof. Please ensure that you have a clear understanding and sufficient capability to bear the associated risks.</string>
     <string name="defaultDisplayOfFirstListItemDetails">Default display of first version list item details</string>
     <string name="versionNumberFontUsesTCloudNumber">Version number font uses TCloudNumber</string>
     <string name="versionCardsDisplaysPackageSizeIndicator">QQ version cards displays the ratio of current package size to the historical maximum package size indicator</string>
@@ -159,4 +159,25 @@
     <string name="timVersion">TIM</string>
     <string name="enumTIMWarning">The enumerating TIM versions function is an experimental feature included in QQ Versions Tool, which may have unpredictable stability issues. Please clearly understand and ensure that you have sufficient capability to identify and bear the risks.</string>
     <string name="useQQ9008_14600Test">猜版类型添加 QQ 9.0.8.14600 空格直链格式</string>
+    <string name="initFirebaseService">Initialize Firebase Services</string>
+    <string name="enablingFirebaseServiceWarning">After initializing Firebase services, a registration token will be generated locally by the Firebase SDK, and the identifier and configuration data will be uploaded to the Firebase server. This action cannot be reversed once enabled. Do you want to continue?</string>
+    <string name="rainbow_notification_channel_id">rainbow_notification_channel_id</string>
+    <string name="cannotFindGooglePlayServices">Google Play services are not detected on the current device, so Firebase services cannot be used on this device.</string>
+    <string name="rainbow_notification_channel_title">Version List Updates</string>
+    <string name="rainbow_notification_channel_description">Via Firebase Cloud Messaging</string>
+    <string name="enablingFirebaseServiceInsights">Enabling Firebase services allows the use of the following features: \n- Update reminders for version lists via Firebase Cloud Messaging</string>
+    <string name="enablingFirebaseServiceWarning2">Firebase Cloud Messaging is integrated with Google Analytics. Using Firebase Cloud Messaging will inevitably upload your activity information from this software.</string>
+    <string name="continueKey">Continue</string>
+    <string name="initializedFirebaseService">Firebase services has been initialized and cannot be reversed.</string>
+    <string name="cannotEnableFirebaseCloudMessaging">To receive notifications for version list updates, system notification permissions must be enabled; otherwise, you will not be able to receive version list update notifications.</string>
+    <string name="pushSystemNotificationsWhenVersionListUpdates">Push system notifications when the version list is updated (via Firebase Cloud Messaging)</string>
+    <string name="unsubscribeTimeout">Unsubscribing Timeout</string>
+    <string name="unsubscribeSuccess">Unsubscribing Success</string>
+    <string name="unsubscribeFailed">Unsubscribing Failed</string>
+    <string name="subscribeTimeout">Subscribing Timeout</string>
+    <string name="subscribeSuccess">Subscribing Success</string>
+    <string name="subscribeFailed">Subscribing Failed</string>
+    <string name="initializedFirebaseServiceItem">Firebase services has been initialized</string>
+    <string name="toSystemSetting">Go to System Settings</string>
+    <string name="threePartySharedList">Personal Information Third-Party Sharing List</string>
 </resources>

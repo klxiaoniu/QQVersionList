@@ -160,11 +160,11 @@ QQ、TIM、微信、企业微信、微信输入法使用腾讯应用宝（[腾�
 
 在 QQ 版本列表实用工具界面，点击底部锥形瓶按钮即可看到“腾讯应用宝更新获取（实验性）”选项，点击即可进入“腾讯应用宝更新获取（实验性）”对话框。之后按提示进行操作即可。
 
-#### TDS 腾讯端服务 Shiply 发布平台更新获取（实验性）
+#### TDS 腾讯端服务 Shiply 容器与发布平台更新获取（实验性）
 
-腾讯 QQ 使用 [TDS 腾讯端服务 Shiply 发布平台](https://shiply.tds.qq.com/)，根据 QQ 号（uin）及其终端信息分发小范围灰度测试安装包。当您所使用的 Android QQ 收到官方升级弹窗提醒时，可使用 QQ 版本列表实用工具提供的 TDS 腾讯端服务 Shiply 发布平台更新获取（实验性）尝试获取升级安装包下载直链。
+腾讯 QQ 使用 [TDS 腾讯端服务 Shiply 容器与发布平台](https://shiply.tds.qq.com/)，根据 QQ 号（uin）及其终端信息分发小范围灰度测试安装包。当您所使用的 Android QQ 收到官方升级弹窗提醒时，可使用 QQ 版本列表实用工具提供的 TDS 腾讯端服务 Shiply 容器与发布平台更新获取（实验性）尝试获取升级安装包下载直链。
 
-在 QQ 版本列表实用工具界面，点击底部锥形瓶按钮即可看到“Shiply 平台更新获取（实验性）”选项，点击即可进入“Shiply 平台更新获取（实验性）”对话框。
+在 QQ 版本列表实用工具界面，点击底部锥形瓶按钮即可看到“TDS 腾讯端服务 Shiply 容器与发布平台更新获取（实验性）”选项，点击即可进入“Shiply 平台更新获取（实验性）”对话框。
 
 对话框含有两个输入框，分别是“uin”和“版本”。请在“uin”输入框填写收到官方升级弹窗提醒的 QQ 号，在“版本”输入框填写收到官方升级弹窗提醒时正在使用的 QQ 版本。
 
@@ -185,8 +185,8 @@ QQ、TIM、微信、企业微信、微信输入法使用腾讯应用宝（[腾�
 
 <a href='https://github.com/klxiaoniu/QQVersionList/blob/master/ReadmeAssets/Get-it-on-Obtainium.md'><img src='https://raw.githubusercontent.com/ImranR98/Obtainium/main/assets/graphics/badge_obtainium.png' width="300" alt="Obtanium"></a>
 
-> [!important]
-> 2024 年 8 月 2 日，[九七公司「通知中心」微信小程序被微信公众平台以“无实质服务内容引导跳转”暂停服务](https://mp.weixin.qq.com/s/ITU6H_UjA804srGeE2-FOA)。下方“九七公司「通知中心」微信小程序”方案可能在一段时间内不可用。
+> [!warning]
+> 2024 年 10 月 17 日，九七公司「通知中心」微信小程序改名为「通知侠」重新上线，但因内容安全为由去掉了 GitHub Releases 更新订阅。故下方内容不再可用。
 > 
 > <a href='https://github.com/klxiaoniu/QQVersionList/blob/master/ReadmeAssets/Get-it-on-JiuQi-NotifCenter-WeChatMiniProgram.md'><img src='https://raw.githubusercontent.com/klxiaoniu/QQVersionList/master/ReadmeAssets/JiuQi-NotifCenter-Badge-Dark-zh-Hans.png' width="300" alt="Get it on Notif Center"></a>
 
@@ -266,6 +266,11 @@ QQ 版本列表实用工具的诞生离不开以下开源项目，感谢以下�
 - [Apache Maven](https://maven.apache.org/)，Licensed under [Apache License Version 2.0](https://github.com/apache/maven/blob/master/LICENSE)
 - [Gradle](https://gradle.org/)，Licensed under [Apache License Version 2.0](https://github.com/gradle/gradle/blob/master/LICENSE)
 - [Material Symbols / Material Icons（Google）](https://fonts.google.com/icons)，Licensed under [Apache License Version 2.0](https://github.com/google/material-design-icons/blob/master/LICENSE)
+- [Obtainium（Imran）](https://github.com/ImranR98/Obtainium)，Licensed under [GNU General Public License Version 3](https://github.com/ImranR98/Obtainium/blob/main/LICENSE.md)
+- [Secrets Gradle Plugin for Android（Google）](https://github.com/google/secrets-gradle-plugin)，Licensed under [Apache License Version 2.0](https://github.com/google/secrets-gradle-plugin/blob/main/LICENSE)
+- [Firebase Android Open Source Development（Google）](https://firebase.google.com/)，Licensed under [Apache License Version 2.0](https://github.com/firebase/firebase-android-sdk/blob/main/LICENSE)
+- [AndroidFastScroll（张海）](https://github.com/zhanghai/AndroidFastScroll)，Licensed under [Apache License Version 2.0](https://github.com/zhanghai/AndroidFastScroll/blob/master/LICENSE)
+- [Kotlin Coroutines on Android](https://github.com/Kotlin/kotlinx.coroutines)，Licensed under [Apache License Version 2.0](https://github.com/Kotlin/kotlinx.coroutines/blob/master/LICENSE.txt)
 
 ## 商业服务鸣谢
 

@@ -10,3 +10,4 @@ local.properties
 /app/release
 /.idea
 /app/debug
+app/google-services.json

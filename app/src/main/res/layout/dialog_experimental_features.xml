@@ -55,8 +55,20 @@
                 android:drawablePadding="8dp"
                 android:gravity="center_vertical"
                 android:paddingTop="8dp"
-                android:paddingBottom="16dp"
+                android:paddingBottom="8dp"
                 android:text="@string/getUpdateFromTDSShiplyDistributionPlatform"
+                android:textColor="?attr/colorOnSurface"
+                app:drawableEndCompat="@drawable/arrow_right_s_line" />
+
+            <TextView
+                android:id="@+id/dialog_firebase"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="8dp"
+                android:gravity="center_vertical"
+                android:paddingTop="8dp"
+                android:paddingBottom="16dp"
+                android:text="@string/initFirebaseService"
                 android:textColor="?attr/colorOnSurface"
                 app:drawableEndCompat="@drawable/arrow_right_s_line" />
 

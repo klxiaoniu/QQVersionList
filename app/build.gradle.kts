@@ -19,9 +19,11 @@
 import java.io.ByteArrayOutputStream
 
 plugins {
-    id("com.android.application")
+    alias(libs.plugins.android.application)
     id("org.jetbrains.kotlin.android")
-    kotlin("plugin.serialization") version "2.0.20"
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
+    id("com.google.gms.google-services")
+    kotlin("plugin.serialization") version "2.0.21"
 }
 
 fun String.execute(currentWorkingDir: File = file("./")): String {
@@ -46,7 +48,7 @@ android {
         minSdk = 24
         targetSdk = 35
         versionCode = gitCommitCount
-        versionName = "1.4.0-$gitCommitHash"
+        versionName = "1.4.1-$gitCommitHash"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
             cmake {
@@ -91,24 +93,31 @@ android {
 }
 
 dependencies {
-    implementation("androidx.core:core-ktx:1.13.1")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.6")
-    implementation("androidx.appcompat:appcompat:1.7.0")
-    implementation("androidx.core:core-splashscreen:1.1.0-rc01")
-    implementation("com.google.android.material:material:1.13.0-alpha06")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.2.1")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
-    implementation("com.squareup.okhttp3:okhttp:4.12.0")
-    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
-    implementation("io.coil-kt:coil:2.7.0")
-    implementation("androidx.datastore:datastore-preferences:1.1.1")
-    implementation("com.google.code.gson:gson:2.11.0")
-    implementation("com.airbnb.android:paris:2.0.2")
-    implementation("org.apache.maven:maven-artifact:3.9.9")
-    implementation("androidx.recyclerview:recyclerview:1.3.2")
-    implementation("androidx.viewpager2:viewpager2:1.1.0")
-    implementation("androidx.fragment:fragment-ktx:1.8.3")
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.core.splashscreen)
+    implementation(libs.material)
+    implementation(libs.androidx.constraintlayout)
+    implementation(libs.activity.ktx)
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+    implementation(libs.okhttp)
+    implementation(libs.logging.interceptor)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.coil)
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.gson)
+    implementation(libs.paris)
+    implementation(libs.maven.artifact)
+    implementation(libs.androidx.recyclerview)
+    implementation(libs.androidx.viewpager2)
+    implementation(libs.androidx.fragment.ktx)
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.messaging)
+    implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.library)
+    implementation(libs.androidx.browser)
 }

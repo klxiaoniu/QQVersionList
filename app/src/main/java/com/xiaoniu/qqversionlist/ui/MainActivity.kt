@@ -19,8 +19,11 @@
 package com.xiaoniu.qqversionlist.ui
 
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.DownloadManager
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -28,7 +31,6 @@ import android.content.res.Configuration
 import android.content.res.Resources
 import android.net.Uri
 import android.os.Build
-import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
 import android.os.Environment
 import android.text.Editable
@@ -41,11 +43,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.constraintlayout.widget.ConstraintSet
+import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import androidx.core.text.method.LinkMovementMethodCompat
 import androidx.core.view.ViewCompat
-import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
@@ -53,13 +58,19 @@ import androidx.core.view.updatePadding
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.airbnb.paris.extensions.style
+import com.google.android.gms.common.ConnectionResult
+import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.materialswitch.MaterialSwitch
 import com.google.android.material.progressindicator.CircularProgressIndicatorSpec
 import com.google.android.material.progressindicator.IndeterminateDrawable
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.ktx.messaging
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonElement
@@ -75,6 +86,7 @@ import com.xiaoniu.qqversionlist.databinding.ActivityMainBinding
 import com.xiaoniu.qqversionlist.databinding.DialogAboutBinding
 import com.xiaoniu.qqversionlist.databinding.DialogExpBackBinding
 import com.xiaoniu.qqversionlist.databinding.DialogExperimentalFeaturesBinding
+import com.xiaoniu.qqversionlist.databinding.DialogFirebaseFirstInfoBinding
 import com.xiaoniu.qqversionlist.databinding.DialogFormatDefineBinding
 import com.xiaoniu.qqversionlist.databinding.DialogGuessBinding
 import com.xiaoniu.qqversionlist.databinding.DialogLoadingBinding
@@ -87,6 +99,7 @@ import com.xiaoniu.qqversionlist.databinding.UpdateQvtButtonBinding
 import com.xiaoniu.qqversionlist.databinding.UserAgreementBinding
 import com.xiaoniu.qqversionlist.util.ClipboardUtil.copyText
 import com.xiaoniu.qqversionlist.util.DataStoreUtil
+import com.xiaoniu.qqversionlist.util.Extensions.dp
 import com.xiaoniu.qqversionlist.util.InfoUtil.dialogError
 import com.xiaoniu.qqversionlist.util.InfoUtil.showToast
 import com.xiaoniu.qqversionlist.util.ShiplyUtil
@@ -97,8 +110,10 @@ import com.xiaoniu.qqversionlist.util.StringUtil.trimSubstringAtStart
 import com.xiaoniu.qqversionlist.util.VersionBeanUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import me.zhanghai.android.fastscroll.FastScrollerBuilder
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -135,26 +150,25 @@ class MainActivity : AppCompatActivity() {
 
         setContext(this)
 
-        if (SDK_INT <= Build.VERSION_CODES.Q) {
-            ViewCompat.setOnApplyWindowInsetsListener(viewRoot) { view, windowInsets ->
-                val insets = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars())
-                view.setPadding(insets.left, 0, insets.right, 0)
-                binding.apply {
-                    bottomAppBar.updatePadding(0, 0, 0, insets.bottom)
-                    btnGuess.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-                        bottomMargin = insets.bottom / 2
-                    }
-                }
-                windowInsets
-            }
-        }
-
         // 不加这段代码的话 Google 可能会在系统栏加遮罩
-        if (SDK_INT >= Build.VERSION_CODES.Q) window.apply {
-            isNavigationBarContrastEnforced = false
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) window.isNavigationBarContrastEnforced =
+            false
+
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) ViewCompat.setOnApplyWindowInsetsListener(
+            viewRoot
+        ) { _, windowInsets ->
+            val insets =
+                windowInsets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
+            binding.bottomAppBar.post {
+                binding.bottomAppBar.updatePadding(0, 0, 0, insets.bottom)
+            }
+            binding.btnGuess.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                bottomMargin = insets.bottom / 2
+            }
+            windowInsets
         }
 
-        WindowCompat.setDecorFitsSystemWindows(window, false)
+
 
         qqVersionAdapter = QQVersionAdapter()
         timVersionAdapter = TIMVersionAdapter()
@@ -216,6 +230,9 @@ class MainActivity : AppCompatActivity() {
         }
         if (agreed) userAgreementBinding.uaButtonDisagree.setText(R.string.withdrawConsentAndExit)
 
+        FastScrollerBuilder(userAgreementBinding.UAScroll).useMd2Style()
+            .setPadding(0, 0, 0, 0).build()
+
         dialogUA.show()
     }
 
@@ -225,10 +242,10 @@ class MainActivity : AppCompatActivity() {
         DataStoreUtil.deleteKVAsync("version")
 
         /**
-         * 这里的 `val judgeUATarget = <Number>` 的值代表着用户协议修订版本，
-         * 后续更新协议版本后也需要在下面一行把“judgeUATarget” + 1，以此类推
+         * 这里的伴生类的 `JUDGE_UA_TARGET` 的值代表着用户协议修订版本，
+         * 后续更新协议版本后也需要在下面伴生类中把 `JUDGE_UA_TARGET` + 1，以此类推
          **/
-        val judgeUATarget = 4 // 2024.9.21 第四版
+        val judgeUATarget = JUDGE_UA_TARGET
         if (DataStoreUtil.getIntKV("userAgreement", 0) < judgeUATarget) showUADialog(
             false, judgeUATarget
         ) else {
@@ -278,14 +295,15 @@ class MainActivity : AppCompatActivity() {
                                 aboutText.movementMethod =
                                     LinkMovementMethodCompat.getInstance()
 
+                                // 九七通知中心因为内容安全原因去掉了 GitHub Releases 更新订阅
                                 aboutText.text = SpannableString(
                                     "${getString(R.string.aboutAppName)}\n\n" +
                                             "${getString(R.string.version)}${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})\n" +
                                             "${getString(R.string.aboutAuthor)}快乐小牛、有鲫雪狐\n" +
                                             "${getString(R.string.aboutContributor)}Col_or、bggRGjQaUbCoE、GMerge、zwJimRaynor\n" +
-                                            "${getString(R.string.aboutSpecialThanksTo)}owo233\n" +
+                                            "${getString(R.string.aboutSpecialThanksTo)}owo233、钟路帆\n" +
                                             "${getString(R.string.aboutOpenSourceRepo)}GitHub\n" +
-                                            "${getString(R.string.aboutGetUpdate)}GitHub Releases、Obtainium、九七通知中心\n" +
+                                            "${getString(R.string.aboutGetUpdate)}GitHub Releases、Obtainium\n" +
                                             "${getString(R.string.facilitateI18n)}Crowdin\n\n" +
                                             "Since 2023.8.9"
                                 ).apply {
@@ -332,6 +350,12 @@ class MainActivity : AppCompatActivity() {
                                         SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
                                     )
                                     setSpan(
+                                        URLSpan("https://github.com/Hill-98"),
+                                        indexOf("钟路帆"),
+                                        indexOf("钟路帆") + "钟路帆".length,
+                                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
+                                    )
+                                    setSpan(
                                         URLSpan("https://github.com/klxiaoniu/QQVersionList"),
                                         indexOf("GitHub"),
                                         indexOf("GitHub") + "GitHub".length,
@@ -349,12 +373,12 @@ class MainActivity : AppCompatActivity() {
                                         indexOf("Obtainium") + "Obtainium".length,
                                         SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
                                     )
-                                    setSpan(
+                                    /*setSpan(
                                         URLSpan("https://github.com/klxiaoniu/QQVersionList/blob/master/ReadmeAssets/Get-it-on-JiuQi-NotifCenter-WeChatMiniProgram.md"),
                                         indexOf("九七通知中心"),
                                         indexOf("九七通知中心") + "九七通知中心".length,
                                         SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-                                    )
+                                    )*/
                                     setSpan(
                                         URLSpan("https://crowdin.com/project/qqversionstool"),
                                         indexOf("Crowdin"),
@@ -366,6 +390,14 @@ class MainActivity : AppCompatActivity() {
 
                         btnAboutWithdrawConsentUA.setOnClickListener {
                             showUADialog(true, judgeUATarget)
+                            aboutDialog.dismiss()
+                        }
+
+                        btnAboutSharedList.setOnClickListener {
+                            val url =
+                                "https://raw.githubusercontent.com/klxiaoniu/QQVersionList/refs/heads/master/DataListShared.md"
+                            val intent = CustomTabsIntent.Builder().build()
+                            intent.launchUrl(this@MainActivity, Uri.parse(url))
                             aboutDialog.dismiss()
                         }
 
@@ -413,6 +445,11 @@ class MainActivity : AppCompatActivity() {
                             DataStoreUtil.getBooleanKV("downloadOnSystemManager", false)
                         switchAutoCheckUpdates.isChecked =
                             DataStoreUtil.getBooleanKV("autoCheckUpdates", false)
+                        switchPushNotifViaFcm.isVisible =
+                            Firebase.messaging.isAutoInitEnabled && GoogleApiAvailability.getInstance()
+                                .isGooglePlayServicesAvailable(this@MainActivity) == ConnectionResult.SUCCESS
+                        switchPushNotifViaFcm.isChecked =
+                            DataStoreUtil.getBooleanKV("rainbowFCMSubscribed", false)
                     }
 
                     val dialogSetting = MaterialAlertDialogBuilder(this)
@@ -758,6 +795,41 @@ class MainActivity : AppCompatActivity() {
                                 }
                             }
                         }
+                        switchPushNotifViaFcm.setOnCheckedChangeListener { _, isChecked ->
+                            if (isChecked != DataStoreUtil.getBooleanKV(
+                                    "rainbowFCMSubscribed",
+                                    false
+                                )
+                            ) {
+                                if (isChecked) {
+                                    if (!NotificationManagerCompat.from(this@MainActivity)
+                                            .areNotificationsEnabled()
+                                    ) askNotificationPermission()
+                                    if (!NotificationManagerCompat.from(this@MainActivity)
+                                            .areNotificationsEnabled()
+                                    ) switchPushNotifViaFcm.isChecked = false
+                                    else if (!checkNotificationChannelEnabled(
+                                            getString(R.string.rainbow_notification_channel_id)
+                                        )
+                                    ) {
+                                        switchPushNotifViaFcm.isChecked = false
+                                        dialogError(
+                                            Exception(getString(R.string.cannotEnableFirebaseCloudMessaging)),
+                                            true,
+                                            true
+                                        )
+                                    } else {
+                                        switchPushNotifViaFcm.isEnabled = false
+                                        Firebase.analytics.setAnalyticsCollectionEnabled(true)
+                                        subscribeWithTimeout(10000L, switchPushNotifViaFcm)
+                                    }
+                                } else {
+                                    switchPushNotifViaFcm.isEnabled = false
+                                    Firebase.analytics.setAnalyticsCollectionEnabled(true)
+                                    unsubscribeWithTimeout(10000L, switchPushNotifViaFcm)
+                                }
+                            }
+                        }
                     }
                     true
                 }
@@ -765,6 +837,12 @@ class MainActivity : AppCompatActivity() {
                 R.id.btn_tencent_shiply -> {
                     val dialogExperimentalFeaturesBinding =
                         DialogExperimentalFeaturesBinding.inflate(layoutInflater)
+
+                    dialogExperimentalFeaturesBinding.dialogFirebase.setText(
+                        if (GoogleApiAvailability.getInstance()
+                                .isGooglePlayServicesAvailable(this@MainActivity) == ConnectionResult.SUCCESS && Firebase.messaging.isAutoInitEnabled
+                        ) R.string.initializedFirebaseServiceItem else R.string.initFirebaseService
+                    )
 
                     val dialogExperimentalFeatures = MaterialAlertDialogBuilder(this)
                         .setTitle(R.string.experimentalFeatures)
@@ -936,7 +1014,7 @@ class MainActivity : AppCompatActivity() {
                                                 ).ifEmpty { SHIPLY_DEFAULT_APPID },
                                                 getStringKV(
                                                     "shiplyOsVersion", ""
-                                                ).ifEmpty { SDK_INT.toString() },
+                                                ).ifEmpty { Build.VERSION.SDK_INT.toString() },
                                                 getStringKV(
                                                     "shiplyModel", ""
                                                 ).ifEmpty { Build.MODEL.toString() },
@@ -954,6 +1032,64 @@ class MainActivity : AppCompatActivity() {
                                         dialogError(e)
                                     }
                                 }
+                            }
+                        }
+
+                        dialogFirebase.setOnClickListener {
+                            // 必须检测 Google Play 服务是否可用，因为 Firebase 服务依赖于 Google Play 服务
+                            if (GoogleApiAvailability.getInstance()
+                                    .isGooglePlayServicesAvailable(this@MainActivity) == ConnectionResult.SUCCESS
+                            ) {
+                                if (!Firebase.messaging.isAutoInitEnabled) {
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                        val channelTitle =
+                                            getString(R.string.rainbow_notification_channel_title)
+                                        val channelDescription =
+                                            getString(R.string.rainbow_notification_channel_description)
+                                        val channelId =
+                                            getString(R.string.rainbow_notification_channel_id)
+                                        val channelImportance =
+                                            NotificationManager.IMPORTANCE_DEFAULT
+                                        val notificationChannel = NotificationChannel(
+                                            channelId, channelTitle, channelImportance
+                                        )
+                                        notificationChannel.description = channelDescription
+                                        val notificationManager =
+                                            getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+                                        notificationManager.createNotificationChannel(
+                                            notificationChannel
+                                        )
+                                    }
+
+                                    val dialogFirebaseFirstInfoBinding =
+                                        DialogFirebaseFirstInfoBinding.inflate(layoutInflater)
+
+                                    val dialogFirebaseInfo =
+                                        MaterialAlertDialogBuilder(this@MainActivity)
+                                            .setTitle(R.string.initFirebaseService)
+                                            .setIcon(R.drawable.flask_line)
+                                            .setView(dialogFirebaseFirstInfoBinding.root)
+                                            .show()
+
+                                    dialogFirebaseFirstInfoBinding.firebaseInfoCancel.setOnClickListener {
+                                        dialogFirebaseInfo.dismiss()
+                                    }
+
+                                    dialogFirebaseFirstInfoBinding.firebaseInfoNext.setOnClickListener {
+                                        Firebase.messaging.isAutoInitEnabled = true
+                                        Firebase.analytics.setAnalyticsCollectionEnabled(true)
+                                        dialogFirebaseInfo.dismiss()
+                                    }
+
+                                } else {
+                                    showToast(getString(R.string.initializedFirebaseService))
+                                    Firebase.analytics.setAnalyticsCollectionEnabled(true)
+                                }
+                            } else {
+                                dialogError(
+                                    Exception(getString(R.string.cannotFindGooglePlayServices)),
+                                    true
+                                )
                             }
                         }
                     }
@@ -1011,6 +1147,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun showGuessVersionDialog() {
         val dialogGuessBinding = DialogGuessBinding.inflate(layoutInflater)
         val verBig = if (DataStoreUtil.getStringKV(
@@ -1174,9 +1311,9 @@ class MainActivity : AppCompatActivity() {
             else -> dialogGuessBinding.etVersionSmall.editText?.setText(
                 memVersionSmall.toString()
             )
-        } else if (memVersionTIMSmall == -1) dialogGuessBinding.etVersionSmall.editText?.setText(
+        } else if (memVersionTIMSmall == -1 && memVersionSmall != -1) dialogGuessBinding.etVersionSmall.editText?.setText(
             memVersionSmall.toString()
-        ) else if (memVersionSmall == -1) dialogGuessBinding.etVersionSmall.editText?.setText(
+        ) else if (memVersionSmall == -1 && memVersionTIMSmall != -1) dialogGuessBinding.etVersionSmall.editText?.setText(
             memVersionTIMSmall.toString()
         )
         val memVersion16code = DataStoreUtil.getStringKV("version16code", "-1")
@@ -1198,7 +1335,7 @@ class MainActivity : AppCompatActivity() {
                 val QQVersionInstall =
                     packageManager.getPackageInfo("com.tencent.mobileqq", 0).versionName.toString()
                 val QQVersionCodeInstall =
-                    if (SDK_INT >= Build.VERSION_CODES.P) packageManager.getPackageInfo(
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) packageManager.getPackageInfo(
                         "com.tencent.mobileqq", 0
                     ).longVersionCode.toString() else ""
                 val QQMetaDataInstall = packageManager.getPackageInfo(
@@ -1212,7 +1349,7 @@ class MainActivity : AppCompatActivity() {
                     QQMetaDataInstall.applicationInfo?.metaData?.getString("com.tencent.rdm.uuid")
                 val QQTargetInstall = QQMetaDataInstall.applicationInfo?.targetSdkVersion.toString()
                 val QQMinInstall = QQMetaDataInstall.applicationInfo?.minSdkVersion.toString()
-                val QQCompileInstall = (if (SDK_INT >= Build.VERSION_CODES.S)
+                val QQCompileInstall = (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
                     QQMetaDataInstall.applicationInfo?.compileSdkVersion.toString() else "")
                 if (QQVersionInstall != DataStoreUtil.getStringKV(
                         "QQVersionInstall", ""
@@ -1269,7 +1406,7 @@ class MainActivity : AppCompatActivity() {
                     val TIMVersionInstall =
                         packageManager.getPackageInfo("com.tencent.tim", 0).versionName.toString()
                     val TIMVersionCodeInstall =
-                        if (SDK_INT >= Build.VERSION_CODES.P) packageManager.getPackageInfo(
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) packageManager.getPackageInfo(
                             "com.tencent.tim", 0
                         ).longVersionCode.toString() else ""
                     val TIMMetaData = packageManager.getPackageInfo(
@@ -1282,7 +1419,7 @@ class MainActivity : AppCompatActivity() {
                     val TIMTargetInstall = TIMMetaData.applicationInfo?.targetSdkVersion.toString()
                     val TIMMinInstall = TIMMetaData.applicationInfo?.minSdkVersion.toString()
                     val TIMCompileInstall =
-                        (if (SDK_INT >= Build.VERSION_CODES.S) TIMMetaData.applicationInfo?.compileSdkVersion.toString() else "")
+                        (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) TIMMetaData.applicationInfo?.compileSdkVersion.toString() else "")
                     if (TIMTargetInstall.isNotEmpty() && TIMTargetInstall != DataStoreUtil.getStringKV(
                             "TIMTargetInstall",
                             ""
@@ -1391,8 +1528,9 @@ class MainActivity : AppCompatActivity() {
                                         ).setAction(R.string.ok, TipTIMSnackbarActionListener())
                                         .setAnchorView(binding.btnGuess)
                                         .apply {
-                                            if (isDarkTheme) setBackgroundTint(getColor(com.google.android.material.R.color.m3_sys_color_dynamic_dark_secondary))
-                                            else setBackgroundTint(getColor(com.google.android.material.R.color.m3_sys_color_dynamic_light_secondary))
+                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) if (isDarkTheme) setBackgroundTint(
+                                                getColor(com.google.android.material.R.color.m3_sys_color_dynamic_dark_secondary)
+                                            ) else setBackgroundTint(getColor(com.google.android.material.R.color.m3_sys_color_dynamic_light_secondary))
                                         }.show()
                                 }
                             }
@@ -1828,20 +1966,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showExpBackDialog(sourceDataJson: String, dialogTitle: String) {
-        val dialogShiplyBackBinding =
+        val dialogExpBackBinding =
             DialogExpBackBinding.inflate(layoutInflater)
 
-        dialogShiplyBackBinding.root.parent?.let { parent ->
-            if (parent is ViewGroup) parent.removeView(dialogShiplyBackBinding.root)
+        dialogExpBackBinding.root.parent?.let { parent ->
+            if (parent is ViewGroup) parent.removeView(dialogExpBackBinding.root)
         }
 
         val shiplyApkUrl =
             sourceDataJson.toPrettyFormat().getAllAPKUrl()
 
-        dialogShiplyBackBinding.apply {
+        dialogExpBackBinding.apply {
             MaterialAlertDialogBuilder(this@MainActivity)
                 .setView(
-                    dialogShiplyBackBinding.root
+                    dialogExpBackBinding.root
                 ).setTitle(dialogTitle)
                 .setIcon(R.drawable.flask_line)
                 .show().apply {
@@ -1862,6 +2000,8 @@ class MainActivity : AppCompatActivity() {
                     }
                     expBackText.text =
                         sourceDataJson.toPrettyFormat()
+                    FastScrollerBuilder(dialogExpBackBinding.expBackTextScroll).useMd2Style()
+                        .setPadding(0, 0, 0, 32.dp).build()
                 }
         }
     }
@@ -1881,7 +2021,7 @@ class MainActivity : AppCompatActivity() {
         shiplyVersion: String,
         shiplyUin: String,
         shiplyAppid: String = SHIPLY_DEFAULT_APPID,
-        shiplyOsVersion: String = SDK_INT.toString(),
+        shiplyOsVersion: String = Build.VERSION.SDK_INT.toString(),
         shiplyModel: String = Build.MODEL.toString(),
         shiplySdkVersion: String = SHIPLY_DEFAULT_SDK_VERSION,
         shiplyLanguage: String = Locale.getDefault().language.toString()
@@ -2139,6 +2279,151 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // 检查特定通知渠道是否被用户关闭
+    private fun checkNotificationChannelEnabled(channelId: String): Boolean {
+        val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = notificationManager.getNotificationChannel(channelId)
+            return channel?.importance != NotificationManager.IMPORTANCE_NONE
+        } else {
+            // 对于 API 级别 < 26 的设备，默认返回 true
+            return true
+        }
+    }
+
+
+    // Declare the launcher at the top of your Activity/Fragment:
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission(),
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            // FCM SDK (and your app) can post notifications.
+        } else {
+            dialogError(
+                Exception(getString(R.string.cannotEnableFirebaseCloudMessaging)), true, true
+            )
+        }
+    }
+
+    private fun askNotificationPermission() {
+        // This is only necessary for API level >= 33 (TIRAMISU)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(
+                    this, Manifest.permission.POST_NOTIFICATIONS
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
+                // FCM SDK (and your app) can post notifications.
+            } else if (shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)) {
+                dialogError(
+                    Exception(getString(R.string.cannotEnableFirebaseCloudMessaging)), true, true
+                )
+            } else {
+                // Directly ask for the permission
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
+        } else {
+            if (checkNotificationChannelEnabled(getString(R.string.rainbow_notification_channel_id))) {
+                // FCM SDK (and your app) can post notifications.
+            } else {
+                dialogError(
+                    Exception(getString(R.string.cannotEnableFirebaseCloudMessaging)), true, true
+                )
+            }
+        }
+    }
+
+    // Firebase 云消息传递订阅和退订 API 有问题，会在无法连接 Google 服务器时无限重试，还无法通过生命周期等线程进行管理和关闭甚至杀死相关进程
+    // 下面两个方法实现不对，给 Firebase 提了 Issue，接下来等 Firebase 更改相关 API 或者进一步回复再改
+    private fun subscribeWithTimeout(
+        timeoutMillis: Long, switchPushNotifViaFcm: MaterialSwitch
+    ) {
+        var status = false
+        val job = lifecycleScope.launch {
+            Firebase.messaging.subscribeToTopic("rainbowUpdates").addOnCanceledListener {
+                status = true
+                showToast(getString(R.string.subscribeFailed))
+                switchPushNotifViaFcm.isEnabled = true
+                switchPushNotifViaFcm.isChecked = false
+                DataStoreUtil.putBooleanKV(
+                    "rainbowFCMSubscribed", false
+                )
+            }.addOnSuccessListener {
+                status = true
+                showToast(getString(R.string.subscribeSuccess))
+                switchPushNotifViaFcm.isEnabled = true
+                switchPushNotifViaFcm.isChecked = true
+                DataStoreUtil.putBooleanKV(
+                    "rainbowFCMSubscribed", true
+                )
+            }.addOnFailureListener {
+                status = true
+                showToast(getString(R.string.subscribeFailed))
+                switchPushNotifViaFcm.isEnabled = true
+                switchPushNotifViaFcm.isChecked = false
+                DataStoreUtil.putBooleanKV(
+                    "rainbowFCMSubscribed", false
+                )
+            }
+        }
+        lifecycleScope.launch {
+            for (i in 1..100) if (status) break else delay(timeoutMillis / 100)
+            if (!status) {
+                job.cancel()
+                showToast(getString(R.string.subscribeTimeout))
+                switchPushNotifViaFcm.isEnabled = true
+                switchPushNotifViaFcm.isChecked = false
+                DataStoreUtil.putBooleanKV(
+                    "rainbowFCMSubscribed", false
+                )
+            }
+        }
+    }
+
+    private fun unsubscribeWithTimeout(
+        timeoutMillis: Long, switchPushNotifViaFcm: MaterialSwitch
+    ) {
+        var status = false
+        val job = lifecycleScope.launch {
+            Firebase.messaging.unsubscribeFromTopic("rainbowUpdates").addOnCanceledListener {
+                status = true
+                showToast(getString(R.string.unsubscribeFailed))
+                switchPushNotifViaFcm.isEnabled = true
+                switchPushNotifViaFcm.isChecked = true
+                DataStoreUtil.putBooleanKV(
+                    "rainbowFCMSubscribed", true
+                )
+            }.addOnSuccessListener {
+                status = true
+                showToast(getString(R.string.unsubscribeSuccess))
+                switchPushNotifViaFcm.isEnabled = true
+                switchPushNotifViaFcm.isChecked = false
+                DataStoreUtil.putBooleanKV(
+                    "rainbowFCMSubscribed", false
+                )
+            }.addOnFailureListener {
+                status = true
+                showToast(getString(R.string.unsubscribeFailed))
+                switchPushNotifViaFcm.isEnabled = true
+                switchPushNotifViaFcm.isChecked = true
+                DataStoreUtil.putBooleanKV(
+                    "rainbowFCMSubscribed", true
+                )
+            }
+        }
+        lifecycleScope.launch {
+            for (i in 1..100) if (status) break else delay(timeoutMillis / 100)
+            if (!status) {
+                job.cancel()
+                showToast(getString(R.string.unsubscribeTimeout))
+                switchPushNotifViaFcm.isEnabled = true
+                switchPushNotifViaFcm.isChecked = true
+                DataStoreUtil.putBooleanKV(
+                    "rainbowFCMSubscribed", true
+                )
+            }
+        }
+    }
+
     companion object {
         @SuppressLint("StaticFieldLeak")
         private lateinit var context: Context
@@ -2150,6 +2435,7 @@ class MainActivity : AppCompatActivity() {
         const val STATUS_ONGOING = 0
         const val STATUS_PAUSE = 1
         const val STATUS_END = 2
+        const val JUDGE_UA_TARGET = 5 // 2024.10.28 第五版
 
         val MODE_TEST: String by lazy { context.getString(R.string.previewVersion) }
         val MODE_OFFICIAL: String by lazy { context.getString(R.string.stableVersion) }

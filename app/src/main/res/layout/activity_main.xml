@@ -59,14 +59,13 @@
 
 
     <com.google.android.material.bottomappbar.BottomAppBar
-        android:id="@+id/bottomAppBar"
+        android:id="@+id/bottom_app_bar"
         style="@style/Widget.Material3.BottomAppBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:fitsSystemWindows="true"
         app:hideOnScroll="true"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/bottom_app_bar" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
@@ -76,7 +75,7 @@
         android:minWidth="0dp"
         android:text="@string/enumerateVersionsFAB"
         app:icon="@drawable/scan_line"
-        app:layout_anchor="@id/bottomAppBar"
+        app:layout_anchor="@id/bottom_app_bar"
         app:removeEmbeddedFabElevation="true" />
 
     <com.google.android.material.progressindicator.LinearProgressIndicator
