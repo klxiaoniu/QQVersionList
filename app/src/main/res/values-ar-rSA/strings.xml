@@ -97,9 +97,9 @@
     <string name="appidOptional">appid（非必填）</string>
     <string name="shiplyGeneralOptionalHelpText">默认值：</string>
     <string name="shiplyVersion">版本</string>
-    <string name="shiplyVersionHelpText">填写用于请求 Shiply 平台的 Android QQ 版本号</string>
+    <string name="shiplyVersionHelpText">填写用于请求 Shiply 平台的 Android QQ/TIM 版本号</string>
     <string name="uinHelpText">填写用于请求 Shiply 平台的对象 QQ 号</string>
-    <string name="shiplyWarning">腾讯 QQ 使用 TDS 腾讯端服务 Shiply 容器与发布平台，根据 QQ 号（uin）及其终端信息分发小范围灰度测试安装包。此功能并非每次请求都能成功获取到更新数据，无法获取更新数据则表示填写的参数不在 Shiply 平台认可与分发范围内。QQ 版本列表实用工具不对此功能及其任何后果作出任何可靠性保证。请明确并确保自身具备足够的风险识别和承受能力。</string>
+    <string name="shiplyWarning">腾讯 QQ/TIM 使用 TDS 腾讯端服务 Shiply 容器与发布平台，根据 QQ 号（uin）及其终端信息分发小范围灰度测试安装包。此功能并非每次请求都能成功获取到更新数据，无法获取更新数据则表示填写的参数不在 Shiply 平台认可与分发范围内。QQ 版本列表实用工具不对此功能及其任何后果作出任何可靠性保证。请明确并确保自身具备足够的风险识别和承受能力。</string>
     <string name="defaultDisplayOfFirstListItemDetails">版本列表首项卡片默认显示详情</string>
     <string name="versionNumberFontUsesTCloudNumber">版本号字体使用 TCloudNumber</string>
     <string name="versionCardsDisplaysPackageSizeIndicator">QQ 版本卡片展示额定包大小占比历史最大包指示条</string>
@@ -180,4 +180,8 @@
     <string name="initializedFirebaseServiceItem">Firebase 服务已初始化</string>
     <string name="toSystemSetting">前往系统设置</string>
     <string name="threePartySharedList">个人信息第三方共享清单</string>
+    <string name="shiplyTargetApp">目标应用</string>
+    <string name="shiplyTargetAppQQ">QQ</string>
+    <string name="shiplyTargetAppTIM">TIM</string>
+    <string name="shiplyTargetHelper">指定请求 Shiply 平台的目标应用</string>
 </resources>

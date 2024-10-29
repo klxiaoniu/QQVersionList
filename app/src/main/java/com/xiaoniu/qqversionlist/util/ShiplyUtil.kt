@@ -53,6 +53,7 @@ object ShiplyUtil {
      * @param model 设备型号
      * @param sdkVersion Shiply SDK 版本
      * @param language 语言
+     * @param targetApp 目标应用，默认为“QQ”，可选“TIM”
      * @return 生成的 JSON 字符串
      **/
     fun generateJsonString(
@@ -62,16 +63,20 @@ object ShiplyUtil {
         osVersion: String,
         model: String,
         sdkVersion: String,
-        language: String
+        language: String,
+        targetApp: String = "QQ"
     ): String {
         val timestamp = System.currentTimeMillis() / 1000L
+        val appID = if (targetApp == "QQ") "4cd6974be1" else "ad6b501b0e"
+        val signID =
+            if (targetApp == "QQ") "0ccc46ca-154c-4c6b-8b0b-4d8537ffcbcc" else "33641818-aee7-445a-82d4-b7d0bce3a85a"
         val data = mapOf(
             "systemID" to "10016",
-            "appID" to "4cd6974be1",
+            "appID" to appID,
             "sign" to BigInteger(
                 1,
                 MessageDigest.getInstance("MD5")
-                    .digest("10016$4cd6974be1$4$$$timestamp$$uin$${"rdelivery0ccc46ca-154c-4c6b-8b0b-4d8537ffcbcc"}".toByteArray())
+                    .digest("10016$$appID$4$$$timestamp$$uin${"$"}rdelivery$signID".toByteArray())
             ).toString(16).padStart(32, '0'),
             "timestamp" to timestamp,
             "pullType" to 4,
@@ -88,7 +93,9 @@ object ShiplyUtil {
                     "bundleId" to "com.tencent.mobileqq",
                     "uniqueId" to UUID.randomUUID().toString(),
                     "model" to model // Build.MODEL.toString()
-                ), "isDebugPackage" to false, "customProperties" to mapOf("appid" to appid) // "537230561"
+                ),
+                "isDebugPackage" to false,
+                "customProperties" to mapOf("appid" to appid) // "537230561"
             ),
             "taskChecksum" to "0",
             "context" to "H4sIAAAAAAAA/+Li5ni5T1WIVaBT1INRS8HS0MwyMdnCwMzQMCklxdQ81cTC1MzIIDnV0DIxydLYGAAAAP//AQAA//+OoFcLLwAAAA=="

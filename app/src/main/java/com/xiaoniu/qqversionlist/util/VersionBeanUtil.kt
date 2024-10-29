@@ -21,6 +21,7 @@ package com.xiaoniu.qqversionlist.util
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.xiaoniu.qqversionlist.QVTApplication.Companion.EARLIEST_QQNT_FRAMEWORK_QQ_VERSION_STABLE
+import com.xiaoniu.qqversionlist.QVTApplication.Companion.EARLIEST_QQNT_FRAMEWORK_TIM_VERSION_STABLE
 import com.xiaoniu.qqversionlist.QVTApplication.Companion.EARLIEST_UNREAL_ENGINE_QQ_VERSION_STABLE
 import com.xiaoniu.qqversionlist.data.QQVersionBean
 import com.xiaoniu.qqversionlist.data.TIMVersionBean
@@ -98,7 +99,10 @@ object VersionBeanUtil {
                 displayInstall = (DataStoreUtil.getStringKV(
                     "TIMVersionInstall",
                     ""
-                ) == androidVersion)
+                ) == androidVersion),
+                isQQNTFramework = ComparableVersion(androidVersion) >= ComparableVersion(
+                    EARLIEST_QQNT_FRAMEWORK_TIM_VERSION_STABLE
+                )
             )
         )
 
@@ -127,7 +131,10 @@ object VersionBeanUtil {
                         displayInstall = (DataStoreUtil.getStringKV(
                             "QQVersionInstall",
                             ""
-                        ) == version)
+                        ) == version),
+                        isQQNTFramework = ComparableVersion(version) >= ComparableVersion(
+                            EARLIEST_QQNT_FRAMEWORK_TIM_VERSION_STABLE
+                        )
                     )
                 )
             }
@@ -160,7 +167,10 @@ object VersionBeanUtil {
                             displayInstall = (DataStoreUtil.getStringKV(
                                 "QQVersionInstall",
                                 ""
-                            ) == version)
+                            ) == version),
+                            isQQNTFramework = ComparableVersion(version) >= ComparableVersion(
+                                EARLIEST_QQNT_FRAMEWORK_TIM_VERSION_STABLE
+                            )
                         )
                     )
                 }

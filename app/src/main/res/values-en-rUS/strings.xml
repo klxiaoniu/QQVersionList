@@ -97,9 +97,9 @@
     <string name="appidOptional">appid (optional)</string>
     <string name="shiplyGeneralOptionalHelpText">Default:&#160;</string>
     <string name="shiplyVersion">Version</string>
-    <string name="shiplyVersionHelpText">Enter the Android QQ version number, used for requesting the Shiply Platform.</string>
+    <string name="shiplyVersionHelpText">Enter the Android QQ/TIM version number, used for requesting the Shiply Platform.</string>
     <string name="uinHelpText">Enter the target QQ account number, used for requesting the Shiply Platform.</string>
-    <string name="shiplyWarning">Tencent QQ utilizes the Tencent Device-oriented Service (TDS) Shiply Containing and Distributing Platform to distribute limited-scale gray testing packages based on the QQ account number (uin) and its terminal information. This feature does not guarantee successful retrieval of update data with each request; failure to obtain update data indicates that the entered parameters fall outside the recognized and distributed scope of the Shiply Platform. The QQ Versions Tool makes no warranty regarding the reliability of this feature or any consequences thereof. Please ensure that you have a clear understanding and sufficient capability to bear the associated risks.</string>
+    <string name="shiplyWarning">Tencent QQ/TIM utilizes the Tencent Device-oriented Service (TDS) Shiply Containing and Distributing Platform to distribute limited-scale gray testing packages based on the QQ account number (uin) and its terminal information. This feature does not guarantee successful retrieval of update data with each request; failure to obtain update data indicates that the entered parameters fall outside the recognized and distributed scope of the Shiply Platform. The QQ Versions Tool makes no warranty regarding the reliability of this feature or any consequences thereof. Please ensure that you have a clear understanding and sufficient capability to bear the associated risks.</string>
     <string name="defaultDisplayOfFirstListItemDetails">Default display of first version list item details</string>
     <string name="versionNumberFontUsesTCloudNumber">Version number font uses TCloudNumber</string>
     <string name="versionCardsDisplaysPackageSizeIndicator">QQ version cards displays the ratio of current package size to the historical maximum package size indicator</string>
@@ -180,4 +180,8 @@
     <string name="initializedFirebaseServiceItem">Firebase services has been initialized</string>
     <string name="toSystemSetting">Go to System Settings</string>
     <string name="threePartySharedList">Personal Information Third-Party Sharing List</string>
+    <string name="shiplyTargetApp">Target App</string>
+    <string name="shiplyTargetAppQQ">QQ</string>
+    <string name="shiplyTargetAppTIM">TIM</string>
+    <string name="shiplyTargetHelper">Specify the Target App for the Shiply Platform</string>
 </resources>

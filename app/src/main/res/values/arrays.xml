@@ -30,4 +30,9 @@
         <item>@string/timVersion</item>
         <item>@string/weixinEnumerateVersion</item>
     </string-array>
+
+    <string-array name="shiply_target">
+        <item>@string/shiplyTargetAppQQ</item>
+        <item>@string/shiplyTargetAppTIM</item>
+    </string-array>
 </resources>

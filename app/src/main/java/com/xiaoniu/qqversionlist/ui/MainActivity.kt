@@ -834,7 +834,7 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
 
-                R.id.btn_tencent_shiply -> {
+                R.id.btn_exp_features -> {
                     val dialogExperimentalFeaturesBinding =
                         DialogExperimentalFeaturesBinding.inflate(layoutInflater)
 
@@ -921,6 +921,16 @@ class MainActivity : AppCompatActivity() {
                                     )
                                     switchShiplyAdvancedConfigurations.isChecked =
                                         getBooleanKV("shiplyAdvancedConfigurations", false)
+
+                                    val shiplyTargetSelect = getStringKV("shiplyTargetSelect", "")
+                                    if (shiplyTargetSelect == getString(R.string.shiplyTargetAppQQ) || shiplyTargetSelect == getString(
+                                            R.string.shiplyTargetAppTIM
+                                        )
+                                    ) shiplyTarget.setText(
+                                        shiplyTargetSelect, false
+                                    ) else shiplyTarget.setText(
+                                        getString(R.string.shiplyTargetAppQQ), false
+                                    )
                                 }
 
                                 switchShiplyAdvancedConfigurations.setOnCheckedChangeListener { _, isChecked ->
@@ -943,6 +953,25 @@ class MainActivity : AppCompatActivity() {
                                 btnShiplyCancel.setOnClickListener {
                                     shiplyDialog.dismiss()
                                 }
+
+                                shiplyTarget.addTextChangedListener(object : TextWatcher {
+                                    override fun afterTextChanged(p0: Editable?) {
+                                        val shiplyTargetSelect = shiplyTarget.text.toString()
+                                        DataStoreUtil.putStringKVAsync(
+                                            "shiplyTargetSelect", shiplyTargetSelect
+                                        )
+                                    }
+
+                                    override fun beforeTextChanged(
+                                        p0: CharSequence?, p1: Int, p2: Int, p3: Int
+                                    ) {
+                                    }
+
+                                    override fun onTextChanged(
+                                        p0: CharSequence?, p1: Int, p2: Int, p3: Int
+                                    ) {
+                                    }
+                                })
 
                                 btnShiplyStart.setOnClickListener {
                                     shiplyUin.clearFocus()
@@ -996,7 +1025,8 @@ class MainActivity : AppCompatActivity() {
                                             tencentShiplyStart(
                                                 btnShiplyStart,
                                                 shiplyVersion.editText?.text.toString(),
-                                                shiplyUin.editText?.text.toString()
+                                                shiplyUin.editText?.text.toString(),
+                                                shiplyTarget.text.toString()
                                             )
                                         } else DataStoreUtil.apply {
                                             putStringKVAsync(
@@ -1009,6 +1039,7 @@ class MainActivity : AppCompatActivity() {
                                             tencentShiplyStart(btnShiplyStart,
                                                 shiplyVersion.editText?.text.toString(),
                                                 shiplyUin.editText?.text.toString(),
+                                                shiplyTarget.text.toString(),
                                                 getStringKV(
                                                     "shiplyAppid", ""
                                                 ).ifEmpty { SHIPLY_DEFAULT_APPID },
@@ -1414,6 +1445,8 @@ class MainActivity : AppCompatActivity() {
                     )
                     val TIMAppSettingParamsInstall =
                         TIMMetaData.applicationInfo?.metaData?.getString("AppSetting_params")
+                    val TIMAppSettingParamsPadInstall =
+                        TIMMetaData.applicationInfo?.metaData?.getString("AppSetting_params_pad")
                     val TIMRdmUUIDInstall =
                         TIMMetaData.applicationInfo?.metaData?.getString("com.tencent.rdm.uuid")
                     val TIMTargetInstall = TIMMetaData.applicationInfo?.targetSdkVersion.toString()
@@ -1448,6 +1481,12 @@ class MainActivity : AppCompatActivity() {
                         )
                     ) DataStoreUtil.putStringKV(
                         "TIMAppSettingParamsInstall", TIMAppSettingParamsInstall
+                    )
+                    if (TIMAppSettingParamsPadInstall != null && TIMAppSettingParamsPadInstall != DataStoreUtil.getStringKV(
+                            "TIMAppSettingParamsPadInstall", ""
+                        )
+                    ) DataStoreUtil.putStringKV(
+                        "TIMAppSettingParamsPadInstall", TIMAppSettingParamsPadInstall
                     )
                     if (TIMRdmUUIDInstall != null && TIMRdmUUIDInstall != DataStoreUtil.getStringKV(
                             "TIMRdmUUIDInstall", ""
@@ -2020,6 +2059,7 @@ class MainActivity : AppCompatActivity() {
         btn: MaterialButton,
         shiplyVersion: String,
         shiplyUin: String,
+        targetApp: String = "QQ",
         shiplyAppid: String = SHIPLY_DEFAULT_APPID,
         shiplyOsVersion: String = Build.VERSION.SDK_INT.toString(),
         shiplyModel: String = Build.MODEL.toString(),
@@ -2038,7 +2078,8 @@ class MainActivity : AppCompatActivity() {
                     shiplyOsVersion,
                     shiplyModel,
                     shiplySdkVersion,
-                    shiplyLanguage
+                    shiplyLanguage,
+                    targetApp
                 )
                 val shiplyEncode = ShiplyUtil.aesEncrypt(shiplyData, shiplyKey)
                 val shiplyRsaPublicKey =

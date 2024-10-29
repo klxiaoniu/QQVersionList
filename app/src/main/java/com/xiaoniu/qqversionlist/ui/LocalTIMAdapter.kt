@@ -20,7 +20,6 @@ package com.xiaoniu.qqversionlist.ui
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
@@ -109,6 +108,13 @@ class LocalTIMAdapter : RecyclerView.Adapter<LocalTIMAdapter.LocalTIMViewHolder>
                                 ) "<br><b>AppSetting_params</b>: ${
                                     DataStoreUtil.getStringKV(
                                         "TIMAppSettingParamsInstall", ""
+                                    )
+                                }" else "") + (if (DataStoreUtil.getStringKV(
+                                        "TIMAppSettingParamsPadInstall", ""
+                                    ) != ""
+                                ) "<br><b>AppSetting_params_pad</b>: ${
+                                    DataStoreUtil.getStringKV(
+                                        "TIMAppSettingParamsPadInstall", ""
                                     )
                                 }" else ""), HtmlCompat.FROM_HTML_MODE_LEGACY
                             )
