@@ -70,6 +70,7 @@ object ShiplyUtil {
         val appID = if (targetApp == "QQ") "4cd6974be1" else "ad6b501b0e"
         val signID =
             if (targetApp == "QQ") "0ccc46ca-154c-4c6b-8b0b-4d8537ffcbcc" else "33641818-aee7-445a-82d4-b7d0bce3a85a"
+        val bundleId = if (targetApp == "QQ") "com.tencent.mobileqq" else "com.tencent.tim"
         val data = mapOf(
             "systemID" to "10016",
             "appID" to appID,
@@ -90,7 +91,7 @@ object ShiplyUtil {
                     "appVersion" to appVersion,
                     "osVersion" to osVersion, // Build.VERSION.SDK_INT.toString()
                     "is64Bit" to true,
-                    "bundleId" to "com.tencent.mobileqq",
+                    "bundleId" to bundleId,
                     "uniqueId" to UUID.randomUUID().toString(),
                     "model" to model // Build.MODEL.toString()
                 ),
