@@ -67,20 +67,6 @@
                 android:text="@string/checkUpdateViaGitHubAPI" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_about_open_source"
-                style="@style/Widget.Material3.Button.TonalButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/openSourceLicenseTitle" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_about_shared_list"
-                style="@style/Widget.Material3.Button.TonalButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/threePartySharedList" />
-
-            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_about_withdrawConsentUA"
                 style="@style/Widget.Material3.Button.TonalButton"
                 android:layout_width="match_parent"
@@ -89,6 +75,20 @@
                 android:textColor="?attr/colorOnErrorContainer"
                 app:backgroundTint="?attr/colorErrorContainer"
                 app:iconTint="?attr/colorOnErrorContainer" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_about_shared_list"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/threePartySharedList" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_about_open_source"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/openSourceLicenseTitle" />
 
         </LinearLayout>
     </ScrollView>
