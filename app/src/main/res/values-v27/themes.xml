@@ -34,4 +34,12 @@
     </style>
 
     <style name="Theme.QQVersionList" parent="Base.Theme.QQVersionList" />
+
+    <style name="Theme.OssLicensesMenuActivity" parent="Theme.Material3.DynamicColors.DayNight">
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
 </resources>

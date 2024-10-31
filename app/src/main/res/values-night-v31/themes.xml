@@ -39,4 +39,18 @@
         <item name="android:navigationBarColor" tools:ignore="NewApi">@android:color/transparent
         </item>
     </style>
+
+    <style name="Theme.OssLicensesMenuActivity" parent="Theme.Material3.DynamicColors.DayNight">
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowSplashScreenBackground">?attr/colorPrimaryContainer</item>
+        <item name="android:windowSplashScreenAnimatedIcon">
+            @drawable/ic_launcher_foreground_splash
+        </item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+        <item name="android:windowSplashScreenIconBackgroundColor">?attr/colorPrimaryContainer
+        </item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
 </resources>

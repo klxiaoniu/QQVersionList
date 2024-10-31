@@ -60,6 +60,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.airbnb.paris.extensions.style
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.materialswitch.MaterialSwitch
@@ -278,7 +279,6 @@ class MainActivity : AppCompatActivity() {
                     val dialogAboutBinding = DialogAboutBinding.inflate(layoutInflater)
 
                     dialogAboutBinding.apply {
-
                         val aboutDialog = MaterialAlertDialogBuilder(this@MainActivity)
                             .setTitle(R.string.about)
                             .setIcon(R.drawable.information_line)
@@ -427,6 +427,15 @@ class MainActivity : AppCompatActivity() {
 
                         btnAboutOk.setOnClickListener {
                             aboutDialog.dismiss()
+                        }
+
+                        btnAboutOpenSource.setOnClickListener {
+                            startActivity(
+                                Intent(
+                                    this@MainActivity, OssLicensesMenuActivity::class.java
+                                ).apply {
+                                    OssLicensesMenuActivity.setActivityTitle(getString(R.string.openSourceLicenseTitle))
+                                })
                         }
                     }
 
