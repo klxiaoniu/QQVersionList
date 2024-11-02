@@ -1,5 +1,5 @@
 [versions]
-androidGradlePlugin = "8.7.1"
+androidGradlePlugin = "8.7.2"
 activityKtxVersion = "1.9.3"
 appcompat = "1.7.0"
 browserVersion = "1.8.0"
