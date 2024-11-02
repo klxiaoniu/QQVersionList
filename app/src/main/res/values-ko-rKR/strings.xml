@@ -184,5 +184,5 @@
     <string name="shiplyTargetAppQQ">QQ</string>
     <string name="shiplyTargetAppTIM">TIM</string>
     <string name="shiplyTargetHelper">指定请求 Shiply 平台的目标应用</string>
-    <string name="openSourceLicenseTitle">开源相关</string>
+    <string name="openSourceLicenseTitle">开放源代码许可</string>
 </resources>
