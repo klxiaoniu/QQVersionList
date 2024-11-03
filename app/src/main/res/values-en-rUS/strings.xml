@@ -67,8 +67,7 @@
     <string name="useTheSystemDownloadManagerToTakeOverTheDownloadIntent">Use the system download manager to take over the download intent</string>
     <string name="removeMultiplesOf5ForQQPreviewVersions">Remove the restriction of adhering to multiples of 5 when enumerating minor version numbers for QQ preview versions</string>
     <string name="longPressToViewSourceDetailsIsDisabled">Long press to view source details is disabled. Please go to settings to turn it on.</string>
-    <string name="currentSizeVsLargestHistoricalPackage">Current Size VS Largest Historical Package(</string>
-    <string name="endParenthesis">):&#160;</string>
+    <string name="currentSizeVsLargestHistoricalPackage">Current Size VS Largest Historical Package(%s):&#160;</string>
     <string name="extendTheSuffixForDirectDownloadLinksOfEnumeratedPreviewVersions">Extend the suffix for direct download links of enumerated preview versions</string>
     <string name="fileSize">File Size:&#160;</string>
     <string name="downloadLink">Download Link:&#160;</string>
@@ -117,8 +116,7 @@
     <string name="back">Back</string>
     <string name="shiplyUseAdvancedConfigurations">Use Advanced Configurations</string>
     <string name="localQQVersion">Local QQ:&#160;</string>
-    <string name="bracketStart">&#160;(</string>
-    <string name="bracketEnd">)</string>
+    <string name="bracket">&#160;(%s)</string>
     <string name="localTIMVersion">Local TIM:&#160;</string>
     <string name="localQQVersionDetails">Local QQ Version Details</string>
     <string name="localTIMVersionDetails">Local TIM Version Details</string>
@@ -185,5 +183,5 @@
     <string name="shiplyTargetAppTIM">TIM</string>
     <string name="shiplyTargetHelper">Specify the Target App for the Shiply Platform</string>
     <string name="openSourceLicenseTitle">Open Source Licenses</string>
-    <string name="basedOnQQVer">Based on Android QQ</string>
+    <string name="basedOnQQVer">Secondary Development Based on Android QQ %s</string>
 </resources>

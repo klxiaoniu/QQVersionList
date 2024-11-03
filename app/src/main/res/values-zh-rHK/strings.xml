@@ -67,8 +67,7 @@
     <string name="useTheSystemDownloadManagerToTakeOverTheDownloadIntent">使用系統下載管理器接管下載意圖</string>
     <string name="removeMultiplesOf5ForQQPreviewVersions">解除 QQ 測試版猜版小版本號遵循 5 的倍數限制</string>
     <string name="longPressToViewSourceDetailsIsDisabled">未開啟長按查看源詳情功能，請前往設定開啟</string>
-    <string name="currentSizeVsLargestHistoricalPackage">占比歷史最大包（</string>
-    <string name="endParenthesis">）：</string>
+    <string name="currentSizeVsLargestHistoricalPackage">占比歷史最大包（%s）：</string>
     <string name="extendTheSuffixForDirectDownloadLinksOfEnumeratedPreviewVersions">擴展測試版猜版直鏈後綴</string>
     <string name="fileSize">大小：</string>
     <string name="downloadLink">下載連結：</string>
@@ -117,8 +116,7 @@
     <string name="back">返回</string>
     <string name="shiplyUseAdvancedConfigurations">使用進階配置</string>
     <string name="localQQVersion">本機 QQ：</string>
-    <string name="bracketStart">（</string>
-    <string name="bracketEnd">）</string>
+    <string name="bracket">（%s）</string>
     <string name="localTIMVersion">本機 TIM：</string>
     <string name="localQQVersionDetails">本機 QQ 版本詳情</string>
     <string name="localTIMVersionDetails">本機 TIM 版本詳情</string>
@@ -185,5 +183,5 @@
     <string name="shiplyTargetAppTIM">TIM</string>
     <string name="shiplyTargetHelper">指定 Shiply 平台的目標應用</string>
     <string name="openSourceLicenseTitle">開放原始碼許可</string>
-    <string name="basedOnQQVer">基於 Android QQ</string>
+    <string name="basedOnQQVer">基於 Android QQ %s 二次開發</string>
 </resources>

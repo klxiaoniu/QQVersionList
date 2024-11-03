@@ -41,8 +41,6 @@
             android:layout_margin="10dp"
             android:drawablePadding="6dp"
             android:gravity="center_vertical"
-            android:paddingStart="3dp"
-            android:paddingEnd="0dp"
             android:text="@string/localQQVersion"
             android:textColor="?attr/colorOnSecondaryContainer"
             app:drawableStartCompat="@drawable/phone_find_line"

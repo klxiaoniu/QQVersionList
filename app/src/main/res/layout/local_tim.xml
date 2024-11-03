@@ -46,32 +46,46 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="10dp"
-                android:layout_marginBottom="3dp"
                 android:drawablePadding="6dp"
                 android:gravity="center_vertical"
-                android:paddingStart="3dp"
-                android:paddingEnd="0dp"
                 android:text="@string/localTIMVersion"
                 android:textColor="?attr/colorOnSecondaryContainer"
                 app:drawableStartCompat="@drawable/phone_find_line"
                 app:drawableTint="?attr/colorOnSecondaryContainer" />
 
-            <TextView
-                android:id="@+id/item_tim_install_based_on"
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/item_tim_install_based_on_card"
+                style="?attr/materialCardViewFilledStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="3dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="10dp"
-                android:drawablePadding="6dp"
-                android:gravity="center_vertical"
-                android:paddingStart="3dp"
-                android:paddingEnd="0dp"
-                android:text="@string/basedOnQQVer"
-                android:textColor="?attr/colorOnSecondaryContainer"
-                app:drawableStartCompat="@drawable/archive_stack_line"
-                app:drawableTint="?attr/colorOnSecondaryContainer" />
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:backgroundTint="?android:colorBackground"
+                app:layout_constraintBottom_toBottomOf="@id/tv_tim_version"
+                app:layout_constraintStart_toEndOf="@id/accessibility_tim_tag"
+                app:layout_constraintTop_toTopOf="@id/tv_tim_version"
+                app:shapeAppearance="?attr/shapeAppearanceCornerExtraSmall">
+
+                <TextView
+                    android:id="@+id/item_tim_install_based_on"
+                    style="?attr/textAppearanceLabelSmall"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="4dp"
+                    android:gravity="center_vertical"
+                    android:paddingStart="6dp"
+                    android:paddingTop="4dp"
+                    android:paddingEnd="6dp"
+                    android:paddingBottom="4dp"
+                    android:text="@string/basedOnQQVer"
+                    android:textColor="?attr/colorSecondary"
+                    android:textSize="10sp"
+                    app:drawableStartCompat="@drawable/stack_line"
+                    app:drawableTint="?attr/colorSecondary" />
+
+            </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 

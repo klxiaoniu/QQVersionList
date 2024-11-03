@@ -60,9 +60,11 @@ class LocalTIMAdapter : RecyclerView.Adapter<LocalTIMAdapter.LocalTIMViewHolder>
                         "TIMVersionInstall", ""
                     ) + TIMRdmUUIDInstall + (if (TIMVersionCodeInstall2 != "") " (${TIMVersionCodeInstall2})" else "") + (if (TIMChannelInstall != "") " - $TIMChannelInstall" else "")
                 itemTimInstallCard.isVisible = true
-                itemTimInstallBasedOn.text =
-                    (if (TIMBasedOnQQVer != "") "${itemView.context.getString(R.string.basedOnQQVer)} $TIMBasedOnQQVer" else "")
+                itemTimInstallBasedOn.text = if (TIMBasedOnQQVer != "") itemView.context.getString(
+                    R.string.basedOnQQVer, TIMBasedOnQQVer
+                ) else ""
                 itemTimInstallBasedOn.isVisible = TIMBasedOnQQVer != ""
+                itemTimInstallBasedOnCard.isVisible = TIMBasedOnQQVer != ""
                 itemTimInstallCard.setOnLongClickListener {
                     if (DataStoreUtil.getBooleanKV("longPressCard", true)) {
                         val tv = TextView(itemView.context).apply {
@@ -161,6 +163,7 @@ class LocalTIMAdapter : RecyclerView.Adapter<LocalTIMAdapter.LocalTIMViewHolder>
         val itemTimInstallCard = binding.itemTimInstallCard
         val itemTimInstallText = binding.itemTimInstallText
         val itemTimInstallBasedOn = binding.itemTimInstallBasedOn
+        val itemTimInstallBasedOnCard = binding.itemTimInstallBasedOnCard
     }
 }
 
