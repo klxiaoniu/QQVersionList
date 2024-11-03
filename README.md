@@ -285,7 +285,7 @@ QQ 版本列表实用工具的诞生离不开以下开源项目，感谢以下�
 - [Kotlin Serialization](https://github.com/Kotlin/kotlinx.serialization)，Licensed under [Apache License Version 2.0](https://github.com/Kotlin/kotlinx.serialization/blob/master/LICENSE.txt)
 - [Get QQ Update Link（owo233）](https://github.com/callng/GQUL)，Licensed under [The Unlicense](https://github.com/callng/GQUL/blob/master/LICENSE)
 - [Paris（Airbnb）](https://github.com/airbnb/paris)，Licensed under [Apache License Version 2.0](https://github.com/airbnb/paris/blob/master/LICENSE)
-- [Apache Maven](https://maven.apache.org/)，Licensed under [Apache License Version 2.0](https://github.com/apache/maven/blob/master/LICENSE)
+- [Apache Maven™](https://maven.apache.org/)，Licensed under [Apache License Version 2.0](https://github.com/apache/maven/blob/master/LICENSE)
 - [Gradle](https://gradle.org/)，Licensed under [Apache License Version 2.0](https://github.com/gradle/gradle/blob/master/LICENSE)
 - [Material Symbols / Material Icons（Google）](https://fonts.google.com/icons)，Licensed under [Apache License Version 2.0](https://github.com/google/material-design-icons/blob/master/LICENSE)
 - [Obtainium（Imran）](https://github.com/ImranR98/Obtainium)，Licensed under [GNU General Public License Version 3](https://github.com/ImranR98/Obtainium/blob/main/LICENSE.md)
@@ -294,6 +294,7 @@ QQ 版本列表实用工具的诞生离不开以下开源项目，感谢以下�
 - [AndroidFastScroll（张海）](https://github.com/zhanghai/AndroidFastScroll)，Licensed under [Apache License Version 2.0](https://github.com/zhanghai/AndroidFastScroll/blob/master/LICENSE)
 - [Kotlin Coroutines on Android](https://github.com/Kotlin/kotlinx.coroutines)，Licensed under [Apache License Version 2.0](https://github.com/Kotlin/kotlinx.coroutines/blob/master/LICENSE.txt)
 - [Google Play services Plugins](https://github.com/google/play-services-plugins)，Licensed under [Apache License Version 2.0](https://github.com/google/play-services-plugins/blob/main/LICENSE)
+- [Apache Commons Compress™](https://commons.apache.org/proper/commons-compress/)，Licensed under [Apache License Version 2.0]()
 
 ## 商业服务鸣谢
 
