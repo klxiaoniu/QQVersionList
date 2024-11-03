@@ -185,4 +185,5 @@
     <string name="shiplyTargetAppTIM">TIM</string>
     <string name="shiplyTargetHelper">指定 Shiply 平台的目標應用</string>
     <string name="openSourceLicenseTitle">開放原始碼許可</string>
+    <string name="basedOnQQVer">基於 Android QQ</string>
 </resources>

@@ -34,19 +34,45 @@
         app:strokeColor="?attr/colorSecondaryContainer"
         app:strokeWidth="0dp">
 
-        <TextView
-            android:id="@+id/item_tim_install_text"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:drawablePadding="6dp"
-            android:gravity="center_vertical"
-            android:paddingStart="3dp"
-            android:paddingEnd="0dp"
-            android:text="@string/localTIMVersion"
-            android:textColor="?attr/colorOnSecondaryContainer"
-            app:drawableStartCompat="@drawable/phone_find_line"
-            app:drawableTint="?attr/colorOnSecondaryContainer" />
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/item_tim_install_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="3dp"
+                android:drawablePadding="6dp"
+                android:gravity="center_vertical"
+                android:paddingStart="3dp"
+                android:paddingEnd="0dp"
+                android:text="@string/localTIMVersion"
+                android:textColor="?attr/colorOnSecondaryContainer"
+                app:drawableStartCompat="@drawable/phone_find_line"
+                app:drawableTint="?attr/colorOnSecondaryContainer" />
+
+            <TextView
+                android:id="@+id/item_tim_install_based_on"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="3dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:drawablePadding="6dp"
+                android:gravity="center_vertical"
+                android:paddingStart="3dp"
+                android:paddingEnd="0dp"
+                android:text="@string/basedOnQQVer"
+                android:textColor="?attr/colorOnSecondaryContainer"
+                app:drawableStartCompat="@drawable/archive_stack_line"
+                app:drawableTint="?attr/colorOnSecondaryContainer" />
+        </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
 </LinearLayout>

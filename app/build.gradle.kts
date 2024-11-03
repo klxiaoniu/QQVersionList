@@ -122,4 +122,5 @@ dependencies {
     implementation(libs.library)
     implementation(libs.androidx.browser)
     implementation(libs.play.services.oss.licenses)
+    implementation(libs.commons.compress)
 }

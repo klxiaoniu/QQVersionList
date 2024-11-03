@@ -26,6 +26,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.content.res.Resources
@@ -109,6 +110,7 @@ import com.xiaoniu.qqversionlist.util.StringUtil.toPrettyFormat
 import com.xiaoniu.qqversionlist.util.StringUtil.trimSubstringAtEnd
 import com.xiaoniu.qqversionlist.util.StringUtil.trimSubstringAtStart
 import com.xiaoniu.qqversionlist.util.VersionBeanUtil
+import com.xiaoniu.qqversionlist.util.ZipFileCompat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -123,6 +125,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import org.apache.maven.artifact.versioning.ComparableVersion
 import java.io.BufferedReader
 import java.io.ByteArrayInputStream
+import java.io.File
 import java.io.InputStreamReader
 import java.lang.Thread.sleep
 import java.util.Locale
@@ -169,8 +172,6 @@ class MainActivity : AppCompatActivity() {
             windowInsets
         }
 
-
-
         qqVersionAdapter = QQVersionAdapter()
         timVersionAdapter = TIMVersionAdapter()
         localQQAdapter = LocalQQAdapter()
@@ -179,11 +180,11 @@ class MainActivity : AppCompatActivity() {
         rvPagerAdapter = binding.rvPager.adapter as VersionListPagerAdapter
         qqVersionListFragment = QQVersionListFragment()
         timVersionListFragment = TIMVersionListFragment()
-        initButtons()
-
         if (!BuildConfig.VERSION_NAME.endsWith("Release")) binding.materialToolbar.setNavigationIcon(
             R.drawable.git_commit_line
         )
+
+        initButtons()
     }
 
     /**
@@ -1372,12 +1373,10 @@ class MainActivity : AppCompatActivity() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 // 识别本机 Android QQ 版本并放进持久化存储
-                val QQVersionInstall =
-                    packageManager.getPackageInfo("com.tencent.mobileqq", 0).versionName.toString()
+                val QQPackageInfo = packageManager.getPackageInfo("com.tencent.mobileqq", 0)
+                val QQVersionInstall = QQPackageInfo.versionName.toString()
                 val QQVersionCodeInstall =
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) packageManager.getPackageInfo(
-                        "com.tencent.mobileqq", 0
-                    ).longVersionCode.toString() else ""
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) QQPackageInfo.longVersionCode.toString() else ""
                 val QQMetaDataInstall = packageManager.getPackageInfo(
                     "com.tencent.mobileqq", PackageManager.GET_META_DATA
                 )
@@ -1391,6 +1390,7 @@ class MainActivity : AppCompatActivity() {
                 val QQMinInstall = QQMetaDataInstall.applicationInfo?.minSdkVersion.toString()
                 val QQCompileInstall = (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
                     QQMetaDataInstall.applicationInfo?.compileSdkVersion.toString() else "")
+                val QQQua = getQua(QQPackageInfo)
                 if (QQVersionInstall != DataStoreUtil.getStringKV(
                         "QQVersionInstall", ""
                     )
@@ -1414,20 +1414,21 @@ class MainActivity : AppCompatActivity() {
                     )
                 ) DataStoreUtil.putStringKV("QQRdmUUIDInstall", QQRdmUUIDInstall)
                 if (QQTargetInstall.isNotEmpty() && QQTargetInstall != DataStoreUtil.getStringKV(
-                        "QQTargetInstall",
-                        ""
+                        "QQTargetInstall", ""
                     )
                 ) DataStoreUtil.putStringKV("QQTargetInstall", QQTargetInstall)
                 if (QQMinInstall.isNotEmpty() && QQMinInstall != DataStoreUtil.getStringKV(
-                        "QQMinInstall",
-                        ""
+                        "QQMinInstall", ""
                     )
                 ) DataStoreUtil.putStringKV("QQMinInstall", QQMinInstall)
                 if (QQCompileInstall.isNotEmpty() && QQCompileInstall != DataStoreUtil.getStringKV(
-                        "QQCompileInstall",
-                        ""
+                        "QQCompileInstall", ""
                     )
                 ) DataStoreUtil.putStringKV("QQCompileInstall", QQCompileInstall)
+                if (QQQua != null && QQQua.replace("\n", "") != DataStoreUtil.getStringKV(
+                        "QQQua", ""
+                    )
+                ) DataStoreUtil.putStringKV("QQQua", QQQua.replace("\n", ""))
             } catch (_: Exception) {
                 val localQQEmptyList = listOf(
                     mapOf("key" to "QQVersionInstall", "value" to "", "type" to "String"),
@@ -1437,31 +1438,33 @@ class MainActivity : AppCompatActivity() {
                         "key" to "QQAppSettingParamsPadInstall",
                         "value" to "",
                         "type" to "String"
-                    )
+                    ),
+                    mapOf("key" to "QQRdmUUIDInstall", "value" to "", "type" to "String"),
+                    mapOf("key" to "QQQua", "value" to "", "type" to "String"),
                 )
                 DataStoreUtil.batchPutKVAsync(localQQEmptyList)
             } finally {
                 try {
                     // 识别本机 Android TIM 版本并放进持久化存储
-                    val TIMVersionInstall =
-                        packageManager.getPackageInfo("com.tencent.tim", 0).versionName.toString()
+                    val TIMPackageInfo = packageManager.getPackageInfo("com.tencent.tim", 0)
+                    val TIMVersionInstall = TIMPackageInfo.versionName.toString()
                     val TIMVersionCodeInstall =
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) packageManager.getPackageInfo(
-                            "com.tencent.tim", 0
-                        ).longVersionCode.toString() else ""
-                    val TIMMetaData = packageManager.getPackageInfo(
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) TIMPackageInfo.longVersionCode.toString() else ""
+                    val TIMMetaDataInstall = packageManager.getPackageInfo(
                         "com.tencent.tim", PackageManager.GET_META_DATA
                     )
                     val TIMAppSettingParamsInstall =
-                        TIMMetaData.applicationInfo?.metaData?.getString("AppSetting_params")
+                        TIMMetaDataInstall.applicationInfo?.metaData?.getString("AppSetting_params")
                     val TIMAppSettingParamsPadInstall =
-                        TIMMetaData.applicationInfo?.metaData?.getString("AppSetting_params_pad")
+                        TIMMetaDataInstall.applicationInfo?.metaData?.getString("AppSetting_params_pad")
                     val TIMRdmUUIDInstall =
-                        TIMMetaData.applicationInfo?.metaData?.getString("com.tencent.rdm.uuid")
-                    val TIMTargetInstall = TIMMetaData.applicationInfo?.targetSdkVersion.toString()
-                    val TIMMinInstall = TIMMetaData.applicationInfo?.minSdkVersion.toString()
+                        TIMMetaDataInstall.applicationInfo?.metaData?.getString("com.tencent.rdm.uuid")
+                    val TIMTargetInstall =
+                        TIMMetaDataInstall.applicationInfo?.targetSdkVersion.toString()
+                    val TIMMinInstall = TIMMetaDataInstall.applicationInfo?.minSdkVersion.toString()
                     val TIMCompileInstall =
-                        (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) TIMMetaData.applicationInfo?.compileSdkVersion.toString() else "")
+                        (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) TIMMetaDataInstall.applicationInfo?.compileSdkVersion.toString() else "")
+                    val TIMQua = getQua(TIMPackageInfo)
                     if (TIMTargetInstall.isNotEmpty() && TIMTargetInstall != DataStoreUtil.getStringKV(
                             "TIMTargetInstall",
                             ""
@@ -1501,12 +1504,28 @@ class MainActivity : AppCompatActivity() {
                             "TIMRdmUUIDInstall", ""
                         )
                     ) DataStoreUtil.putStringKV("TIMRdmUUIDInstall", TIMRdmUUIDInstall)
+                    if (TIMQua != null && TIMQua.replace("\n", "") != DataStoreUtil.getStringKV(
+                            "TIMQua", ""
+                        )
+                    ) DataStoreUtil.putStringKV("TIMQua", TIMQua.replace("\n", ""))
                 } catch (_: Exception) {
                     val localTIMEmptyList = listOf(
                         mapOf("key" to "TIMVersionInstall", "value" to "", "type" to "String"),
                         mapOf("key" to "TIMVersionCodeInstall", "value" to "", "type" to "String"),
                         mapOf(
                             "key" to "TIMAppSettingParamsInstall",
+                            "value" to "",
+                            "type" to "String"
+                        ), mapOf(
+                            "key" to "TIMAppSettingParamsPadInstall",
+                            "value" to "",
+                            "type" to "String"
+                        ), mapOf(
+                            "key" to "TIMRdmUUIDInstall",
+                            "value" to "",
+                            "type" to "String"
+                        ), mapOf(
+                            "key" to "TIMQua",
                             "value" to "",
                             "type" to "String"
                         )
@@ -2474,6 +2493,20 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun getQua(packageInfo: PackageInfo): String? {
+        val sourceDir = packageInfo.applicationInfo?.sourceDir ?: return null
+        val file = File(sourceDir)
+        if (!file.exists()) return null
+        return runCatching {
+            ZipFileCompat(file).use { zipFile ->
+                val entry = zipFile.getEntry("assets/qua.ini") ?: return null
+                zipFile.getInputStream(entry).use { inputStream ->
+                    return inputStream.reader().use { reader -> reader.readText() }
+                }
+            }
+        }.onFailure { dialogError(Exception(it)) }.getOrElse { null }
+    }
+
     companion object {
         @SuppressLint("StaticFieldLeak")
         private lateinit var context: Context
@@ -2494,3 +2527,4 @@ class MainActivity : AppCompatActivity() {
         val MODE_TIM: String by lazy { context.getString(R.string.timVersion) }
     }
 }
+

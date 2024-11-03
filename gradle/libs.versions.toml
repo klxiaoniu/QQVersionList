@@ -4,6 +4,7 @@ activityKtxVersion = "1.9.3"
 appcompat = "1.7.0"
 browserVersion = "1.8.0"
 coil = "2.7.0"
+commonsCompressVersion = "1.27.1"
 constraintlayout = "2.2.0"
 coreKtx = "1.15.0"
 coreSplashscreen = "1.1.0-rc01"
@@ -44,6 +45,7 @@ androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtim
 androidx-recyclerview = { module = "androidx.recyclerview:recyclerview", version.ref = "recyclerview" }
 androidx-viewpager2 = { module = "androidx.viewpager2:viewpager2", version.ref = "viewpager2" }
 coil = { module = "io.coil-kt:coil", version.ref = "coil" }
+commons-compress = { module = "org.apache.commons:commons-compress", version.ref = "commonsCompressVersion" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 firebase-messaging = { module = "com.google.firebase:firebase-messaging" }

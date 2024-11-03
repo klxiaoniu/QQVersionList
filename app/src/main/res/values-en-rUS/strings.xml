@@ -185,4 +185,5 @@
     <string name="shiplyTargetAppTIM">TIM</string>
     <string name="shiplyTargetHelper">Specify the Target App for the Shiply Platform</string>
     <string name="openSourceLicenseTitle">Open Source Licenses</string>
+    <string name="basedOnQQVer">Based on Android QQ</string>
 </resources>
