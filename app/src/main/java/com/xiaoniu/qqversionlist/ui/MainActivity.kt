@@ -399,7 +399,6 @@ class MainActivity : AppCompatActivity() {
                                 "https://raw.githubusercontent.com/klxiaoniu/QQVersionList/refs/heads/master/DataListShared.md"
                             val intent = CustomTabsIntent.Builder().build()
                             intent.launchUrl(this@MainActivity, Uri.parse(url))
-                            aboutDialog.dismiss()
                         }
 
                         btnAboutUpdate.setOnClickListener {
@@ -908,6 +907,12 @@ class MainActivity : AppCompatActivity() {
                                 getWetype.setOnClickListener {
                                     tencentAppStoreStart(
                                         mapOf("packagename" to "com.tencent.wetype"), getWetype
+                                    )
+                                }
+
+                                getQidian.setOnClickListener {
+                                    tencentAppStoreStart(
+                                        mapOf("packagename" to "com.tencent.qidian"), getQidian
                                     )
                                 }
                             }

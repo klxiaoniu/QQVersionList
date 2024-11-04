@@ -80,10 +80,10 @@
                     android:paddingEnd="6dp"
                     android:paddingBottom="4dp"
                     android:text="@string/basedOnQQVer"
-                    android:textColor="?attr/colorSecondary"
+                    android:textColor="?attr/colorOnSecondaryContainer"
                     android:textSize="10sp"
                     app:drawableStartCompat="@drawable/stack_line"
-                    app:drawableTint="?attr/colorSecondary" />
+                    app:drawableTint="?attr/colorOnSecondaryContainer" />
 
             </com.google.android.material.card.MaterialCardView>
         </LinearLayout>

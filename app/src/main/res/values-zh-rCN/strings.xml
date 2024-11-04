@@ -184,4 +184,5 @@
     <string name="shiplyTargetHelper">指定请求 Shiply 平台的目标应用</string>
     <string name="openSourceLicenseTitle">开放源代码许可</string>
     <string name="basedOnQQVer">基于 Android QQ %s 二次开发</string>
+    <string name="getQidianLinkFromTencentAppStore">获取腾讯企点下载直链</string>
 </resources>

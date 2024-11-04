@@ -70,6 +70,13 @@
                 android:layout_height="wrap_content"
                 android:text="@string/getWeTypeLinkFromTencentAppStore" />
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/get_qidian"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/getQidianLinkFromTencentAppStore" />
+
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/guess_dialog_warning"
                 style="?attr/materialCardViewOutlinedStyle"
