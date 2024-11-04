@@ -31,7 +31,7 @@ class QVTApplication : Application() {
         const val EARLIEST_ACCESSIBILITY_QQ_VERSION = false
         const val EARLIEST_ACCESSIBILITY_TIM_VERSION = false
         const val EARLIEST_QQNT_FRAMEWORK_QQ_VERSION_STABLE = "8.9.63"
-        const val EARLIEST_QQNT_FRAMEWORK_TIM_VERSION_STABLE = "4.0.00"
+        const val EARLIEST_QQNT_FRAMEWORK_TIM_VERSION_STABLE = "4.0.0"
         const val EARLIEST_UNREAL_ENGINE_QQ_VERSION_STABLE = "8.8.55"
     }
 
