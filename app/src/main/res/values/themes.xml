@@ -18,19 +18,39 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.QQVersionList" parent="Theme.Material3.DynamicColors.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
         <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowSplashScreenBackground" tools:targetApi="31">?attr/colorPrimaryContainer</item>
+        <item name="android:windowSplashScreenAnimatedIcon" tools:targetApi="31">
+            @drawable/ic_launcher_foreground_splash
+        </item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:windowLayoutInDisplayCutoutMode" tools:targetApi="27">shortEdges</item>
+        <item name="android:windowSplashScreenIconBackgroundColor" tools:targetApi="31">?attr/colorPrimaryContainer
+        </item>
         <item name="bottomSheetDialogTheme">@style/ThemeOverlay.App.BottomSheetDialog</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
     <style name="ThemeOverlay.App.BottomSheetDialog" parent="ThemeOverlay.Material3.BottomSheetDialog">
-        <item name="android:navigationBarColor" tools:ignore="NewApi">@android:color/transparent
+        <item name="android:navigationBarColor" >@android:color/transparent
         </item>
     </style>
 
     <style name="Theme.QQVersionList" parent="Base.Theme.QQVersionList" />
+
+    <style name="Theme.OssLicensesMenuActivity" parent="Theme.Material3.DynamicColors.DayNight">
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowSplashScreenBackground" tools:targetApi="31">?attr/colorPrimaryContainer</item>
+        <item name="android:windowSplashScreenAnimatedIcon" tools:targetApi="31">
+            @drawable/ic_launcher_foreground_splash
+        </item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:windowLayoutInDisplayCutoutMode" tools:targetApi="27">shortEdges</item>
+        <item name="android:windowSplashScreenIconBackgroundColor" tools:targetApi="31">?attr/colorPrimaryContainer
+        </item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowOptOutEdgeToEdgeEnforcement" tools:targetApi="35">true</item>
+    </style>
 </resources>

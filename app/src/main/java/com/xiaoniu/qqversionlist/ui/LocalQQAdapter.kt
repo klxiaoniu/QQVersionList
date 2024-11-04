@@ -20,7 +20,6 @@ package com.xiaoniu.qqversionlist.ui
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
@@ -54,11 +53,9 @@ class LocalQQAdapter : RecyclerView.Adapter<LocalQQAdapter.LocalQQViewHolder>() 
         holder.apply {
             if (QQVersionInstall2 != "") {
                 itemQqInstallText.text =
-                    if (QQChannelInstall != "") itemView.context.getString(R.string.localQQVersion) + DataStoreUtil.getStringKV(
+                    itemView.context.getString(R.string.localQQVersion) + DataStoreUtil.getStringKV(
                         "QQVersionInstall", ""
-                    ) + QQRdmUUIDInstall + (if (QQVersionCodeInstall2 != "") " (${QQVersionCodeInstall2})" else "") + " - $QQChannelInstall" else itemView.context.getString(
-                        R.string.localQQVersion
-                    ) + DataStoreUtil.getStringKV("QQVersionInstall", "")
+                    ) + QQRdmUUIDInstall + (if (QQVersionCodeInstall2 != "") " (${QQVersionCodeInstall2})" else "") + (if (QQChannelInstall != "") " - $QQChannelInstall" else "")
                 itemQqInstallCard.isVisible = true
 
                 // 无障碍标记
@@ -143,6 +140,13 @@ class LocalQQAdapter : RecyclerView.Adapter<LocalQQAdapter.LocalQQViewHolder>() 
                                 ) "<br><b>AppSetting_params_pad</b>: ${
                                     DataStoreUtil.getStringKV(
                                         "QQAppSettingParamsPadInstall", ""
+                                    )
+                                }" else "") + (if (DataStoreUtil.getStringKV(
+                                        "QQQua", ""
+                                    ) != ""
+                                ) "<br><b>QUA</b>: ${
+                                    DataStoreUtil.getStringKV(
+                                        "QQQua", ""
                                     )
                                 }" else ""), HtmlCompat.FROM_HTML_MODE_LEGACY
                             )

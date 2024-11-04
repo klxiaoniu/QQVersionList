@@ -17,6 +17,7 @@
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -47,7 +48,8 @@
                 android:contentDescription="Built with Material 3, Licensed under GNU Affero General Public License Version 3."
                 android:paddingTop="8dp"
                 android:paddingBottom="4dp"
-                android:src="@drawable/built_with_material_licensed_under_agpl_v3" />
+                android:src="@drawable/built_with_material_licensed_under_agpl_v3"
+                tools:ignore="HardcodedText" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_about_ok"
@@ -65,13 +67,6 @@
                 android:text="@string/checkUpdateViaGitHubAPI" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_about_shared_list"
-                style="@style/Widget.Material3.Button.TonalButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/threePartySharedList" />
-
-            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_about_withdrawConsentUA"
                 style="@style/Widget.Material3.Button.TonalButton"
                 android:layout_width="match_parent"
@@ -80,6 +75,20 @@
                 android:textColor="?attr/colorOnErrorContainer"
                 app:backgroundTint="?attr/colorErrorContainer"
                 app:iconTint="?attr/colorOnErrorContainer" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_about_shared_list"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/threePartySharedList" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_about_open_source"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/openSourceLicenseTitle" />
 
         </LinearLayout>
     </ScrollView>

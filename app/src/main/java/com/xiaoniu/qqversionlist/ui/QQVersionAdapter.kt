@@ -201,9 +201,9 @@ class QQVersionAdapter :
                 currentList.maxByOrNull { it.size.toFloat() }?.size?.toFloat() ?: 0f
 
             tvPerSize?.text =
-                "${tvPerSizeCard.context.getString(R.string.currentSizeVsLargestHistoricalPackage)}${listMaxSize} MB${
+                "${
                     tvPerSizeCard.context.getString(
-                        R.string.endParenthesis
+                        R.string.currentSizeVsLargestHistoricalPackage, "$listMaxSize MB"
                     )
                 }${
                     ("%.2f".format(bean.size.toFloat() / listMaxSize * 100)).replace(

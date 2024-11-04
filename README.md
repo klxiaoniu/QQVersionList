@@ -254,7 +254,7 @@ QQ 版本列表实用工具不能实现“检测到新测试版本下载直链�
 > QQ 版本列表实用工具始终坚守法律底线，秉持尊重与保护所有用户及第三方合法权益的原则。我们深切认识到任何可能存在的权益侵犯行为都会对权益方造成潜在影响，对此，我们表示由衷歉意，并承诺，一旦接到权益方的权益受到侵犯的通知，我们将立即依法启动核查程序，并在确认侵权事实后，迅速采取有效措施，以最大程度地消除不良影响，恢复并保障权益方的合法权益。敬请相关权益方在发现 QQ 版本列表实用工具存在任何侵权内容时，及时与我们取得联系，我们将竭诚为权益方提供必要的协助与支持。
 
 > [!NOTE]
-> “腾讯”“QQ”“腾讯 QQ”“腾讯 TIM”“微信”“WeChat”“Weixin”“腾讯微信”“企业微信”“WeCom”“微信输入法”“WeType”“应用宝”“腾讯应用宝”等是深圳市腾讯计算机系统有限公司和/或其关联公司的商标。本项目对“腾讯”“QQ”“腾讯 QQ”“腾讯 TIM”“微信”“WeChat”“Weixin”“腾讯微信”“企业微信”“WeCom”“微信输入法”“WeType”“应用宝”“腾讯应用宝”等的使用旨在注明和指向对应主体，并非表示对“腾讯”“QQ”“腾讯 QQ”“腾讯 TIM”“微信”“WeChat”“Weixin”“腾讯微信”“企业微信”“WeCom”“微信输入法”“WeType”“应用宝”“腾讯应用宝”等商标的注册和拥有。
+> “腾讯”“QQ”“腾讯 QQ”“腾讯 TIM”“微信”“WeChat”“Weixin”“腾讯微信”“企业微信”“WeCom”“微信输入法”“WeType”“应用宝”“腾讯应用宝”“腾讯企点”等是深圳市腾讯计算机系统有限公司和/或其关联公司的商标。本项目对“腾讯”“QQ”“腾讯 QQ”“腾讯 TIM”“微信”“WeChat”“Weixin”“腾讯微信”“企业微信”“WeCom”“微信输入法”“WeType”“应用宝”“腾讯应用宝”“腾讯企点”等的使用旨在注明和指向对应主体，并非表示对“腾讯”“QQ”“腾讯 QQ”“腾讯 TIM”“微信”“WeChat”“Weixin”“腾讯微信”“企业微信”“WeCom”“微信输入法”“WeType”“应用宝”“腾讯应用宝”“腾讯企点”等商标的注册和拥有。
 >
 > Android™ 是 Google LLC 的商标。
 > 
@@ -285,7 +285,7 @@ QQ 版本列表实用工具的诞生离不开以下开源项目，感谢以下�
 - [Kotlin Serialization](https://github.com/Kotlin/kotlinx.serialization)，Licensed under [Apache License Version 2.0](https://github.com/Kotlin/kotlinx.serialization/blob/master/LICENSE.txt)
 - [Get QQ Update Link（owo233）](https://github.com/callng/GQUL)，Licensed under [The Unlicense](https://github.com/callng/GQUL/blob/master/LICENSE)
 - [Paris（Airbnb）](https://github.com/airbnb/paris)，Licensed under [Apache License Version 2.0](https://github.com/airbnb/paris/blob/master/LICENSE)
-- [Apache Maven](https://maven.apache.org/)，Licensed under [Apache License Version 2.0](https://github.com/apache/maven/blob/master/LICENSE)
+- [Apache Maven™](https://maven.apache.org/)，Licensed under [Apache License Version 2.0](https://github.com/apache/maven/blob/master/LICENSE)
 - [Gradle](https://gradle.org/)，Licensed under [Apache License Version 2.0](https://github.com/gradle/gradle/blob/master/LICENSE)
 - [Material Symbols / Material Icons（Google）](https://fonts.google.com/icons)，Licensed under [Apache License Version 2.0](https://github.com/google/material-design-icons/blob/master/LICENSE)
 - [Obtainium（Imran）](https://github.com/ImranR98/Obtainium)，Licensed under [GNU General Public License Version 3](https://github.com/ImranR98/Obtainium/blob/main/LICENSE.md)
@@ -294,6 +294,7 @@ QQ 版本列表实用工具的诞生离不开以下开源项目，感谢以下�
 - [AndroidFastScroll（张海）](https://github.com/zhanghai/AndroidFastScroll)，Licensed under [Apache License Version 2.0](https://github.com/zhanghai/AndroidFastScroll/blob/master/LICENSE)
 - [Kotlin Coroutines on Android](https://github.com/Kotlin/kotlinx.coroutines)，Licensed under [Apache License Version 2.0](https://github.com/Kotlin/kotlinx.coroutines/blob/master/LICENSE.txt)
 - [Google Play services Plugins](https://github.com/google/play-services-plugins)，Licensed under [Apache License Version 2.0](https://github.com/google/play-services-plugins/blob/main/LICENSE)
+- [Apache Commons™](https://commons.apache.org/)，Licensed under [Apache License Version 2.0](https://www.apache.org/licenses/LICENSE-2.0)
 
 ## 商业服务鸣谢
 

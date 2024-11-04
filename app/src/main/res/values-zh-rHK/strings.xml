@@ -67,8 +67,7 @@
     <string name="useTheSystemDownloadManagerToTakeOverTheDownloadIntent">使用系統下載管理器接管下載意圖</string>
     <string name="removeMultiplesOf5ForQQPreviewVersions">解除 QQ 測試版猜版小版本號遵循 5 的倍數限制</string>
     <string name="longPressToViewSourceDetailsIsDisabled">未開啟長按查看源詳情功能，請前往設定開啟</string>
-    <string name="currentSizeVsLargestHistoricalPackage">占比歷史最大包（</string>
-    <string name="endParenthesis">）：</string>
+    <string name="currentSizeVsLargestHistoricalPackage">占比歷史最大包（%s）：</string>
     <string name="extendTheSuffixForDirectDownloadLinksOfEnumeratedPreviewVersions">擴展測試版猜版直鏈後綴</string>
     <string name="fileSize">大小：</string>
     <string name="downloadLink">下載連結：</string>
@@ -97,9 +96,9 @@
     <string name="appidOptional">appid（非必填）</string>
     <string name="shiplyGeneralOptionalHelpText">預設值：</string>
     <string name="shiplyVersion">版本</string>
-    <string name="shiplyVersionHelpText">填寫用於請求 Shiply 平台的 Android QQ 版本號</string>
+    <string name="shiplyVersionHelpText">填寫用於請求 Shiply 平台的 Android QQ/TIM 版本號</string>
     <string name="uinHelpText">填寫用於請求 Shiply 平台的對象 QQ 號</string>
-    <string name="shiplyWarning">騰訊 QQ 使用 TDS 腾訊端服務 Shiply 容器與發布平台，根據 QQ 號（uin）及其終端資訊分發小範圍灰度測試安裝包。此功能並非每次請求都能成功獲取到更新資料，無法獲取更新資料則表示填寫的參數不在 Shiply 平台認可與分發範圍內。QQ 版本列表實用工具不對此功能及其任何後果作出任何可靠性保證。請明確並確保自身具備足夠的風險辨識和承受能力。</string>
+    <string name="shiplyWarning">騰訊 QQ/TIM 使用 TDS 腾訊端服務 Shiply 容器與發布平台，根據 QQ 號（uin）及其終端資訊分發小範圍灰度測試安裝包。此功能並非每次請求都能成功獲取到更新資料，無法獲取更新資料則表示填寫的參數不在 Shiply 平台認可與分發範圍內。QQ 版本列表實用工具不對此功能及其任何後果作出任何可靠性保證。請明確並確保自身具備足夠的風險辨識和承受能力。</string>
     <string name="defaultDisplayOfFirstListItemDetails">版本列表首項卡片默認顯示詳情</string>
     <string name="versionNumberFontUsesTCloudNumber">版本號字體使用 TCloudNumber</string>
     <string name="versionCardsDisplaysPackageSizeIndicator">QQ 版本卡片展示額定包大小佔比歷史最大包指示條</string>
@@ -117,8 +116,7 @@
     <string name="back">返回</string>
     <string name="shiplyUseAdvancedConfigurations">使用進階配置</string>
     <string name="localQQVersion">本機 QQ：</string>
-    <string name="bracketStart">（</string>
-    <string name="bracketEnd">）</string>
+    <string name="bracket">（%s）</string>
     <string name="localTIMVersion">本機 TIM：</string>
     <string name="localQQVersionDetails">本機 QQ 版本詳情</string>
     <string name="localTIMVersionDetails">本機 TIM 版本詳情</string>
@@ -180,4 +178,11 @@
     <string name="initializedFirebaseServiceItem">Firebase 服務已初始化</string>
     <string name="toSystemSetting">前往系統設定</string>
     <string name="threePartySharedList">個人資訊第三方共用清單</string>
+    <string name="shiplyTargetApp">目標應用</string>
+    <string name="shiplyTargetAppQQ">QQ</string>
+    <string name="shiplyTargetAppTIM">TIM</string>
+    <string name="shiplyTargetHelper">指定 Shiply 平台的目標應用</string>
+    <string name="openSourceLicenseTitle">開放原始碼許可</string>
+    <string name="basedOnQQVer">基於 Android QQ %s 二次開發</string>
+    <string name="getQidianLinkFromTencentAppStore">取得騰訊企點下載直鏈</string>
 </resources>

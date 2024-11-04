@@ -24,6 +24,7 @@ plugins {
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
     id("com.google.gms.google-services")
     kotlin("plugin.serialization") version "2.0.21"
+    id("com.google.android.gms.oss-licenses-plugin")
 }
 
 fun String.execute(currentWorkingDir: File = file("./")): String {
@@ -48,7 +49,7 @@ android {
         minSdk = 24
         targetSdk = 35
         versionCode = gitCommitCount
-        versionName = "1.4.1-$gitCommitHash"
+        versionName = "1.4.2-$gitCommitHash"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
             cmake {
@@ -120,4 +121,6 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.library)
     implementation(libs.androidx.browser)
+    implementation(libs.play.services.oss.licenses)
+    implementation(libs.commons.compress)
 }

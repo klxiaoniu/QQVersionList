@@ -20,7 +20,6 @@ package com.xiaoniu.qqversionlist.ui
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
@@ -44,6 +43,7 @@ class LocalTIMAdapter : RecyclerView.Adapter<LocalTIMAdapter.LocalTIMViewHolder>
         val TIMVersionInstall2 = DataStoreUtil.getStringKV("TIMVersionInstall", "")
         val TIMVersionCodeInstall2 = DataStoreUtil.getStringKV("TIMVersionCodeInstall", "")
         val TIMAppSettingParamsInstall = DataStoreUtil.getStringKV("TIMAppSettingParamsInstall", "")
+        val TIMQua = DataStoreUtil.getStringKV("TIMQua", "")
         val TIMRdmUUIDInstall = if (DataStoreUtil.getStringKV(
                 "TIMRdmUUIDInstall", ""
             ) != ""
@@ -51,15 +51,20 @@ class LocalTIMAdapter : RecyclerView.Adapter<LocalTIMAdapter.LocalTIMViewHolder>
         val TIMChannelInstall = if (TIMAppSettingParamsInstall != "") DataStoreUtil.getStringKV(
             "TIMAppSettingParamsInstall", ""
         ).split("#")[3] else ""
+        val TIMBasedOnQQVer =
+            if (TIMQua != "") DataStoreUtil.getStringKV("TIMQua", "").split("_")[3] else ""
         holder.apply {
             if (TIMVersionInstall2 != "") {
                 itemTimInstallText.text =
-                    if (TIMChannelInstall != "") itemView.context.getString(R.string.localTIMVersion) + DataStoreUtil.getStringKV(
+                    itemView.context.getString(R.string.localTIMVersion) + DataStoreUtil.getStringKV(
                         "TIMVersionInstall", ""
-                    ) + TIMRdmUUIDInstall + (if (TIMVersionCodeInstall2 != "") " (${TIMVersionCodeInstall2})" else "") + " - $TIMChannelInstall" else itemView.context.getString(
-                        R.string.localTIMVersion
-                    ) + DataStoreUtil.getStringKV("TIMVersionInstall", "")
+                    ) + TIMRdmUUIDInstall + (if (TIMVersionCodeInstall2 != "") " (${TIMVersionCodeInstall2})" else "") + (if (TIMChannelInstall != "") " - $TIMChannelInstall" else "")
                 itemTimInstallCard.isVisible = true
+                itemTimInstallBasedOn.text = if (TIMBasedOnQQVer != "") itemView.context.getString(
+                    R.string.basedOnQQVer, TIMBasedOnQQVer
+                ) else ""
+                itemTimInstallBasedOn.isVisible = TIMBasedOnQQVer != ""
+                itemTimInstallBasedOnCard.isVisible = TIMBasedOnQQVer != ""
                 itemTimInstallCard.setOnLongClickListener {
                     if (DataStoreUtil.getBooleanKV("longPressCard", true)) {
                         val tv = TextView(itemView.context).apply {
@@ -110,6 +115,20 @@ class LocalTIMAdapter : RecyclerView.Adapter<LocalTIMAdapter.LocalTIMViewHolder>
                                     DataStoreUtil.getStringKV(
                                         "TIMAppSettingParamsInstall", ""
                                     )
+                                }" else "") + (if (DataStoreUtil.getStringKV(
+                                        "TIMAppSettingParamsPadInstall", ""
+                                    ) != ""
+                                ) "<br><b>AppSetting_params_pad</b>: ${
+                                    DataStoreUtil.getStringKV(
+                                        "TIMAppSettingParamsPadInstall", ""
+                                    )
+                                }" else "") + (if (DataStoreUtil.getStringKV(
+                                        "TIMQua", ""
+                                    ) != ""
+                                ) "<br><b>QUA</b>: ${
+                                    DataStoreUtil.getStringKV(
+                                        "TIMQua", ""
+                                    )
                                 }" else ""), HtmlCompat.FROM_HTML_MODE_LEGACY
                             )
                             setTextIsSelectable(true)
@@ -143,6 +162,8 @@ class LocalTIMAdapter : RecyclerView.Adapter<LocalTIMAdapter.LocalTIMViewHolder>
         RecyclerView.ViewHolder(binding.root) {
         val itemTimInstallCard = binding.itemTimInstallCard
         val itemTimInstallText = binding.itemTimInstallText
+        val itemTimInstallBasedOn = binding.itemTimInstallBasedOn
+        val itemTimInstallBasedOnCard = binding.itemTimInstallBasedOnCard
     }
 }
 

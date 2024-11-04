@@ -12,5 +12,6 @@ buildscript {
     dependencies {
         classpath(libs.secrets.gradle.plugin)
         classpath(libs.google.services)
+        classpath(libs.oss.licenses.plugin)
     }
 }
