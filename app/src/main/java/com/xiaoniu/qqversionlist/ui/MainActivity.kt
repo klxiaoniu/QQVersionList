@@ -954,11 +954,11 @@ class MainActivity : AppCompatActivity() {
                                 }
 
                                 shiplyAdvancedConfigurationsClick.setOnClickListener {
-                                    ShiplyAdvancedConfigSheetFragment().apply {
+                                    ShiplyAdvancedConfigFragment().apply {
                                         isCancelable = false
                                         show(
                                             supportFragmentManager,
-                                            ShiplyAdvancedConfigSheetFragment.TAG
+                                            ShiplyAdvancedConfigFragment.TAG
                                         )
                                     }
                                 }

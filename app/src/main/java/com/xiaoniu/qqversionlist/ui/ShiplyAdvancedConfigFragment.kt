@@ -37,7 +37,7 @@ import com.xiaoniu.qqversionlist.util.DataStoreUtil
 import com.xiaoniu.qqversionlist.util.InfoUtil.showToast
 import java.util.Locale
 
-class ShiplyAdvancedConfigSheetFragment : BottomSheetDialogFragment() {
+class ShiplyAdvancedConfigFragment : BottomSheetDialogFragment() {
     private lateinit var shiplyAdvancedConfigSheetBinding: BottomsheetShiplyAdvancedConfigBinding
 
     override fun onCreateView(
@@ -50,9 +50,9 @@ class ShiplyAdvancedConfigSheetFragment : BottomSheetDialogFragment() {
         shiplyAdvancedConfigSheetBinding = BottomsheetShiplyAdvancedConfigBinding.bind(view)
         val shiplyAdvancedConfigSheetBehavior = (this.dialog as BottomSheetDialog).behavior
         shiplyAdvancedConfigSheetBehavior.isDraggable = false
-        this@ShiplyAdvancedConfigSheetFragment.isCancelable = true
+        this@ShiplyAdvancedConfigFragment.isCancelable = true
         shiplyAdvancedConfigSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-        this@ShiplyAdvancedConfigSheetFragment.isCancelable = false
+        this@ShiplyAdvancedConfigFragment.isCancelable = false
         shiplyAdvancedConfigSheetBinding.apply {
             shiplyAppid.helperText =
                 getString(R.string.shiplyGeneralOptionalHelpText) + SHIPLY_DEFAULT_APPID
@@ -112,7 +112,7 @@ class ShiplyAdvancedConfigSheetFragment : BottomSheetDialogFragment() {
                     )
                     batchPutKVAsync(shiplyConfigList)
                     requireContext().showToast(R.string.saved)
-                    this@ShiplyAdvancedConfigSheetFragment.isCancelable = true
+                    this@ShiplyAdvancedConfigFragment.isCancelable = true
                     shiplyAdvancedConfigSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                 }
             }
@@ -121,7 +121,7 @@ class ShiplyAdvancedConfigSheetFragment : BottomSheetDialogFragment() {
                 val imm =
                     requireContext().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(shiplyLanguage.windowToken, 0)
-                this@ShiplyAdvancedConfigSheetFragment.isCancelable = true
+                this@ShiplyAdvancedConfigFragment.isCancelable = true
                 shiplyAdvancedConfigSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
             }
 
@@ -129,7 +129,7 @@ class ShiplyAdvancedConfigSheetFragment : BottomSheetDialogFragment() {
                 val imm =
                     requireContext().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
                 imm.hideSoftInputFromWindow(shiplyLanguage.windowToken, 0)
-                this@ShiplyAdvancedConfigSheetFragment.isCancelable = true
+                this@ShiplyAdvancedConfigFragment.isCancelable = true
                 shiplyAdvancedConfigSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
             }
         }
