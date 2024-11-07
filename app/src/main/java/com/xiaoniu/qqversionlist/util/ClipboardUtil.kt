@@ -21,13 +21,13 @@ package com.xiaoniu.qqversionlist.util
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
-import android.widget.Toast
 import com.xiaoniu.qqversionlist.R
+import com.xiaoniu.qqversionlist.util.InfoUtil.showToast
 
 object ClipboardUtil {
     fun Context.copyText(text: String) {
         val clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         clipboardManager.setPrimaryClip(ClipData.newPlainText("", text))
-        Toast.makeText(this, "${getString(R.string.copied)}$text", Toast.LENGTH_SHORT).show()
+        this.showToast("${getString(R.string.copied)}$text")
     }
 }

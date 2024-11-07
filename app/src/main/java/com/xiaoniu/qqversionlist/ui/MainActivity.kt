@@ -26,7 +26,6 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.content.res.Resources
@@ -105,12 +104,12 @@ import com.xiaoniu.qqversionlist.util.Extensions.dp
 import com.xiaoniu.qqversionlist.util.InfoUtil.dialogError
 import com.xiaoniu.qqversionlist.util.InfoUtil.showToast
 import com.xiaoniu.qqversionlist.util.ShiplyUtil
+import com.xiaoniu.qqversionlist.util.StringUtil
 import com.xiaoniu.qqversionlist.util.StringUtil.getAllAPKUrl
 import com.xiaoniu.qqversionlist.util.StringUtil.toPrettyFormat
 import com.xiaoniu.qqversionlist.util.StringUtil.trimSubstringAtEnd
 import com.xiaoniu.qqversionlist.util.StringUtil.trimSubstringAtStart
 import com.xiaoniu.qqversionlist.util.VersionBeanUtil
-import com.xiaoniu.qqversionlist.util.ZipFileCompat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -125,7 +124,6 @@ import okhttp3.logging.HttpLoggingInterceptor
 import org.apache.maven.artifact.versioning.ComparableVersion
 import java.io.BufferedReader
 import java.io.ByteArrayInputStream
-import java.io.File
 import java.io.InputStreamReader
 import java.lang.Thread.sleep
 import java.util.Locale
@@ -1395,7 +1393,7 @@ class MainActivity : AppCompatActivity() {
                 val QQMinInstall = QQMetaDataInstall.applicationInfo?.minSdkVersion.toString()
                 val QQCompileInstall = (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
                     QQMetaDataInstall.applicationInfo?.compileSdkVersion.toString() else "")
-                val QQQua = getQua(QQPackageInfo)
+                val QQQua = StringUtil.getQua(QQPackageInfo, this@MainActivity)
                 if (QQVersionInstall != DataStoreUtil.getStringKV(
                         "QQVersionInstall", ""
                     )
@@ -1469,7 +1467,7 @@ class MainActivity : AppCompatActivity() {
                     val TIMMinInstall = TIMMetaDataInstall.applicationInfo?.minSdkVersion.toString()
                     val TIMCompileInstall =
                         (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) TIMMetaDataInstall.applicationInfo?.compileSdkVersion.toString() else "")
-                    val TIMQua = getQua(TIMPackageInfo)
+                    val TIMQua = StringUtil.getQua(TIMPackageInfo, this@MainActivity)
                     if (TIMTargetInstall.isNotEmpty() && TIMTargetInstall != DataStoreUtil.getStringKV(
                             "TIMTargetInstall",
                             ""
@@ -2408,6 +2406,7 @@ class MainActivity : AppCompatActivity() {
 
     // Firebase 云消息传递订阅和退订 API 有问题，会在无法连接 Google 服务器时无限重试，还无法通过生命周期等线程进行管理和关闭甚至杀死相关进程
     // 下面两个方法实现不对，给 Firebase 提了 Issue，接下来等 Firebase 更改相关 API 或者进一步回复再改
+    // 下面的是临时策略，请勿为了缩减 MainActivity 而将其单独分离出去，等 Google 解决后应该可以只用一条语句替代下面的整个函数
     private fun subscribeWithTimeout(
         timeoutMillis: Long, switchPushNotifViaFcm: MaterialSwitch
     ) {
@@ -2498,19 +2497,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun getQua(packageInfo: PackageInfo): String? {
-        val sourceDir = packageInfo.applicationInfo?.sourceDir ?: return null
-        val file = File(sourceDir)
-        if (!file.exists()) return null
-        return runCatching {
-            ZipFileCompat(file).use { zipFile ->
-                val entry = zipFile.getEntry("assets/qua.ini") ?: return null
-                zipFile.getInputStream(entry).use { inputStream ->
-                    return inputStream.reader().use { reader -> reader.readText() }
-                }
-            }
-        }.onFailure { dialogError(Exception(it)) }.getOrElse { null }
-    }
 
     companion object {
         @SuppressLint("StaticFieldLeak")

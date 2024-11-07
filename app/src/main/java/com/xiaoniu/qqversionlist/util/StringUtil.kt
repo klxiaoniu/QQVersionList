@@ -18,6 +18,9 @@
 
 package com.xiaoniu.qqversionlist.util
 
+import android.app.Activity
+import android.content.pm.PackageInfo
+import com.xiaoniu.qqversionlist.util.InfoUtil.dialogError
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -25,6 +28,7 @@ import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
+import java.io.File
 
 object StringUtil {
     @OptIn(ExperimentalSerializationApi::class)
@@ -122,15 +126,36 @@ object StringUtil {
     /**
      * 修剪字符串开头的指定前缀。
      *
-     * 该函数接受两个参数：一个原始字符串`str`和一个需要修剪的前缀字符串`prefix`。
-     * 如果原始字符串`str`的开头包含了前缀字符串`prefix`，则将这部分前缀字符串修剪掉；
-     * 否则，返回原始字符串`str`。
+     * 该函数接受两个参数：一个原始字符串 `str` 和一个需要修剪的前缀字符串 `prefix`。
+     * 如果原始字符串 `str` 的开头包含了前缀字符串 `prefix` ，则将这部分前缀字符串修剪掉；
+     * 否则，返回原始字符串 `str`。
      *
      * @param prefix 需要修剪的前缀字符串。
      * @return 修剪掉开头前缀后的字符串，如果原始字符串没有以该前缀开始，则返回原始字符串。
      */
     fun String.trimSubstringAtStart(prefix: String): String {
         return if (this.startsWith(prefix)) this.substring(prefix.length) else this
+    }
+
+    /**
+     * 从给定的 `PackageInfo` 对象中获取 `qua.ini` 文件的内容
+     *
+     * @param packageInfo 包含应用信息的 `PackageInfo` 对象，用于访问应用的资源
+     * @param activity 用于显示错误对话框的 `Activity` 对象
+     * @return 返回 `qua.ini` 文件的内容作为字符串，如果发生任何错误或文件不存在则返回null
+     */
+    fun getQua(packageInfo: PackageInfo, activity: Activity): String? {
+        val sourceDir = packageInfo.applicationInfo?.sourceDir ?: return null
+        val file = File(sourceDir)
+        if (!file.exists()) return null
+        return runCatching {
+            ZipFileCompat(file).use { zipFile ->
+                val entry = zipFile.getEntry("assets/qua.ini") ?: return null
+                zipFile.getInputStream(entry).use { inputStream ->
+                    return inputStream.reader().use { reader -> reader.readText() }
+                }
+            }
+        }.onFailure { activity.dialogError(Exception(it)) }.getOrElse { null }
     }
 }
 

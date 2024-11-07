@@ -25,7 +25,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity.INPUT_METHOD_SERVICE
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -35,6 +34,7 @@ import com.xiaoniu.qqversionlist.QVTApplication.Companion.SHIPLY_DEFAULT_SDK_VER
 import com.xiaoniu.qqversionlist.R
 import com.xiaoniu.qqversionlist.databinding.BottomsheetShiplyAdvancedConfigBinding
 import com.xiaoniu.qqversionlist.util.DataStoreUtil
+import com.xiaoniu.qqversionlist.util.InfoUtil.showToast
 import java.util.Locale
 
 class ShiplyAdvancedConfigSheetFragment : BottomSheetDialogFragment() {
@@ -111,7 +111,7 @@ class ShiplyAdvancedConfigSheetFragment : BottomSheetDialogFragment() {
                         )
                     )
                     batchPutKVAsync(shiplyConfigList)
-                    Toast.makeText(requireContext(), R.string.saved, Toast.LENGTH_SHORT).show()
+                    requireContext().showToast(R.string.saved)
                     this@ShiplyAdvancedConfigSheetFragment.isCancelable = true
                     shiplyAdvancedConfigSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                 }
