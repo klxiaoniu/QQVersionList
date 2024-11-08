@@ -108,6 +108,7 @@ dependencies {
     implementation(libs.logging.interceptor)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.coil)
+    implementation(libs.coil.network.okhttp)
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.gson)
     implementation(libs.paris)

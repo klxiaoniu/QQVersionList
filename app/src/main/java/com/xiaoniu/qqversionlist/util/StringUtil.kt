@@ -19,7 +19,14 @@
 package com.xiaoniu.qqversionlist.util
 
 import android.app.Activity
+import android.app.DownloadManager
+import android.content.Context
+import android.content.Context.DOWNLOAD_SERVICE
+import android.content.Intent
 import android.content.pm.PackageInfo
+import android.net.Uri
+import android.os.Environment
+import com.google.gson.Gson
 import com.xiaoniu.qqversionlist.util.InfoUtil.dialogError
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.encodeToString
@@ -156,6 +163,61 @@ object StringUtil {
                 }
             }
         }.onFailure { activity.dialogError(Exception(it)) }.getOrElse { null }
+    }
+
+    /**
+     * 解析微信测试版配置信息
+     * 该函数从给定的响应字符串中提取配置信息，并将其解析为一个包含配置数据的Map
+     * 主要处理的是 JSON 格式的数据，使用 Gson 库进行解析
+     *
+     * @param responseData 包含配置信息的响应字符串
+     * @return 包含解析后的配置信息的 Map，包括 URL、MD5、版本名称、版本号以及文本列表和最近列表
+     */
+    fun resolveWeixinAlphaConfig(jsonString: String): Map<String, Any?> {
+        val gson = Gson()
+        val jsonData = gson.fromJson(jsonString, com.google.gson.JsonObject::class.java)
+        val url = jsonData.getAsJsonObject("arm64").getAsJsonPrimitive("url").asString
+        val md5 = jsonData.getAsJsonObject("arm64").getAsJsonPrimitive("md5").asString
+        val versionName = jsonData.getAsJsonObject("arm64").getAsJsonPrimitive("versionName").asString
+        val version = jsonData.getAsJsonObject("arm64").getAsJsonPrimitive("version").asString
+        val direct = jsonData.getAsJsonObject("arm64").getAsJsonPrimitive("direct").asString
+        val textList = jsonData.getAsJsonObject("arm64").getAsJsonArray("textList").asJsonArray
+        val recentList = jsonData.getAsJsonObject("arm64").getAsJsonArray("recentList").asJsonArray
+        return mapOf(
+            "url" to url,
+            "md5" to md5,
+            "versionName" to versionName,
+            "version" to version,
+            "direct" to direct,
+            "textList" to textList.map { it.asString },
+            "recentList" to recentList.map { it.asString }
+        )
+    }
+
+    fun downloadFile(context: Context, url: String, fileName: String? = null) {
+        if (DataStoreUtil.getBooleanKV(
+                "downloadOnSystemManager", false
+            )
+        ) {
+            val requestDownload =
+                DownloadManager.Request(Uri.parse(url))
+            requestDownload.setDestinationInExternalPublicDir(
+                Environment.DIRECTORY_DOWNLOADS,
+                if (fileName != null) fileName else url.substringAfterLast('/')
+            )
+            val downloadManager =
+                context.getSystemService(DOWNLOAD_SERVICE) as DownloadManager
+            downloadManager.enqueue(requestDownload)
+        } else {
+            // 这里不用 Chrome Custom Tab 的原因是 Chrome 不知道咋回事有概率卡在“等待下载”状态
+            val browserIntent =
+                Intent(Intent.ACTION_VIEW, Uri.parse(url))
+            browserIntent.apply {
+                addCategory(Intent.CATEGORY_BROWSABLE)
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            }
+            context.startActivity(browserIntent)
+        }
     }
 }
 

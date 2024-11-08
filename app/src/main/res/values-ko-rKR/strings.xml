@@ -185,4 +185,7 @@
     <string name="openSourceLicenseTitle">开放源代码许可</string>
     <string name="basedOnQQVer">基于 Android QQ %s 二次开发</string>
     <string name="getQidianLinkFromTencentAppStore">获取腾讯企点下载直链</string>
+    <string name="getWeixinAlphaLinkFromWeixinConfig">从腾讯服务器配置拉取微信最新测试版下载直链</string>
+    <string name="successInGetting">获取成功</string>
+    <string name="getWeixinAlphaConfig404">似乎未成功访问腾讯服务器配置文件，可能是微信当前没有测试版或测试版已撤包。</string>
 </resources>

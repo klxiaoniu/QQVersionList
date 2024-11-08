@@ -33,6 +33,7 @@ import com.xiaoniu.qqversionlist.databinding.ExpLinkNextButtonBinding
 import com.xiaoniu.qqversionlist.databinding.ItemExpBackUrlCardBinding
 import com.xiaoniu.qqversionlist.util.ClipboardUtil.copyText
 import com.xiaoniu.qqversionlist.util.DataStoreUtil
+import com.xiaoniu.qqversionlist.util.StringUtil.downloadFile
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -102,29 +103,7 @@ class ExpUrlListAdapter(private val urlList: List<String>) :
 
                                     expNextBtnDownload.setOnClickListener {
                                         expNextMaterialDialog.dismiss()
-                                        if (DataStoreUtil.getBooleanKV(
-                                                "downloadOnSystemManager", false
-                                            )
-                                        ) {
-                                            val requestDownload =
-                                                DownloadManager.Request(Uri.parse(url))
-                                            requestDownload.setDestinationInExternalPublicDir(
-                                                Environment.DIRECTORY_DOWNLOADS,
-                                                url.substringAfterLast('/')
-                                            )
-                                            val downloadManager =
-                                                itemView.context.getSystemService(DOWNLOAD_SERVICE) as DownloadManager
-                                            downloadManager.enqueue(requestDownload)
-                                        } else {
-                                            // 这里不用 Chrome Custom Tab 的原因是 Chrome 不知道咋回事有概率卡在“等待下载”状态
-                                            val browserIntent =
-                                                Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                                            browserIntent.apply {
-                                                addCategory(Intent.CATEGORY_BROWSABLE)
-                                                flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                            }
-                                            itemView.context.startActivity(browserIntent)
-                                        }
+                                        downloadFile(itemView.context, url)
                                     }
 
                                     expNextBtnShare.setOnClickListener {

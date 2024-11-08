@@ -3,7 +3,7 @@ androidGradlePlugin = "8.7.2"
 activityKtxVersion = "1.9.3"
 appcompat = "1.7.0"
 browserVersion = "1.8.0"
-coil = "2.7.0"
+coilVersion = "3.0.1"
 commonsCompressVersion = "1.27.1"
 constraintlayout = "2.2.0"
 coreKtx = "1.15.0"
@@ -44,7 +44,8 @@ androidx-junit = { module = "androidx.test.ext:junit", version.ref = "junitVersi
 androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 androidx-recyclerview = { module = "androidx.recyclerview:recyclerview", version.ref = "recyclerview" }
 androidx-viewpager2 = { module = "androidx.viewpager2:viewpager2", version.ref = "viewpager2" }
-coil = { module = "io.coil-kt:coil", version.ref = "coil" }
+coil = { module = "io.coil-kt.coil3:coil", version.ref = "coilVersion" }
+coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilVersion" }
 commons-compress = { module = "org.apache.commons:commons-compress", version.ref = "commonsCompressVersion" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }

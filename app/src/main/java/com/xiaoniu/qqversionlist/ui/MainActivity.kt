@@ -98,14 +98,17 @@ import com.xiaoniu.qqversionlist.databinding.DialogTencentAppStoreBinding
 import com.xiaoniu.qqversionlist.databinding.SuccessButtonBinding
 import com.xiaoniu.qqversionlist.databinding.UpdateQvtButtonBinding
 import com.xiaoniu.qqversionlist.databinding.UserAgreementBinding
+import com.xiaoniu.qqversionlist.databinding.WeixinAlphaConfigBackButtonBinding
 import com.xiaoniu.qqversionlist.util.ClipboardUtil.copyText
 import com.xiaoniu.qqversionlist.util.DataStoreUtil
 import com.xiaoniu.qqversionlist.util.Extensions.dp
 import com.xiaoniu.qqversionlist.util.InfoUtil.dialogError
 import com.xiaoniu.qqversionlist.util.InfoUtil.showToast
 import com.xiaoniu.qqversionlist.util.ShiplyUtil
-import com.xiaoniu.qqversionlist.util.StringUtil
+import com.xiaoniu.qqversionlist.util.StringUtil.downloadFile
 import com.xiaoniu.qqversionlist.util.StringUtil.getAllAPKUrl
+import com.xiaoniu.qqversionlist.util.StringUtil.getQua
+import com.xiaoniu.qqversionlist.util.StringUtil.resolveWeixinAlphaConfig
 import com.xiaoniu.qqversionlist.util.StringUtil.toPrettyFormat
 import com.xiaoniu.qqversionlist.util.StringUtil.trimSubstringAtEnd
 import com.xiaoniu.qqversionlist.util.StringUtil.trimSubstringAtStart
@@ -862,6 +865,106 @@ class MainActivity : AppCompatActivity() {
                             dialogExperimentalFeatures.dismiss()
                         }
 
+                        dialogGetWeixinAlphaNewest.setOnClickListener {
+                            CoroutineScope(Dispatchers.IO).launch {
+                                class CustomException(message: String) :
+                                    Exception(message)
+                                try {
+                                    val okHttpClient = OkHttpClient()
+                                    val request =
+                                        Request.Builder()
+                                            .url("https://dldir1.qq.com/weixin/android/weixin_android_alpha_config.json")
+                                            .build()
+                                    val response = okHttpClient.newCall(request).execute()
+                                    if (!response.isSuccessful) throw CustomException(getString(R.string.getWeixinAlphaConfig404))
+                                    val responseData = response.body?.string()
+                                    if (responseData == null) throw CustomException("Response data is null.")
+                                    val start = (responseData.indexOf("cb(")) + 3
+                                    val end = responseData.indexOf(")")
+                                    val jsonString = responseData.substring(start, end)
+                                    val map = resolveWeixinAlphaConfig(jsonString)
+                                    val request2 =
+                                        Request.Builder().url(map["url"].toString()).head().build()
+                                    val response2 = okHttpClient.newCall(request2).execute()
+                                    val appSize = "%.2f".format(
+                                        response2.header("Content-Length")?.toDoubleOrNull()
+                                            ?.div(1024 * 1024)
+                                    )
+                                    runOnUiThread {
+                                        val weixinAlphaConfigBackButtonBinding =
+                                            WeixinAlphaConfigBackButtonBinding.inflate(
+                                                layoutInflater
+                                            )
+                                        val weixinAlphaConfigBackDialog =
+                                            MaterialAlertDialogBuilder(this@MainActivity).setTitle(R.string.successInGetting)
+                                                .setIcon(R.drawable.flask_line).setMessage(
+                                                    "${getString(R.string.version)}${map["versionName"].toString()}\n${
+                                                        getString(
+                                                            R.string.downloadLink
+                                                        )
+                                                    }${map["url"].toString()}" + (if (appSize != "" && appSize != "-1" && appSize != "0") "\n\n${
+                                                        getString(
+                                                            R.string.fileSize
+                                                        )
+                                                    }$appSize MB" else null)
+                                                ).setView(weixinAlphaConfigBackButtonBinding.root)
+                                                .show()
+
+                                        weixinAlphaConfigBackButtonBinding.apply {
+                                            weixinAlphaConfigBackBtnCopy.setOnClickListener {
+                                                weixinAlphaConfigBackDialog.dismiss()
+                                                copyText(map["url"].toString())
+                                            }
+
+                                            weixinAlphaConfigBackBtnDownload.setOnClickListener {
+                                                weixinAlphaConfigBackDialog.dismiss()
+                                                downloadFile(
+                                                    this@MainActivity, map["url"].toString()
+                                                )
+                                            }
+
+                                            weixinAlphaConfigBackBtnJsonDetails.setOnClickListener {
+                                                showExpBackDialog(
+                                                    Gson().toJson(map),
+                                                    getString(R.string.jsonDetails)
+                                                )
+                                            }
+
+                                            weixinAlphaConfigBackBtnShare.setOnClickListener {
+                                                weixinAlphaConfigBackDialog.dismiss()
+                                                val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                                                    type = "text/plain"
+                                                    putExtra(
+                                                        Intent.EXTRA_TEXT,
+                                                        "Android 微信测试版 ${map["versionName"].toString()}" + (if (appSize != "" && appSize != "-1" && appSize != "0") "（${
+                                                            getString(
+                                                                R.string.fileSize
+                                                            )
+                                                        }$appSize MB）" else null) + "\n\n${
+                                                            getString(
+                                                                R.string.downloadLink
+                                                            )
+                                                        }${map["url"].toString()}\n\n鉴于微信测试版可能存在不可预知的稳定性问题，您在下载及使用该测试版本之前，必须明确并确保自身具备足够的风险识别和承受能力。"
+                                                    )
+                                                }
+                                                startActivity(
+                                                    Intent.createChooser(
+                                                        shareIntent, getString(R.string.shareTo)
+                                                    )
+                                                )
+                                            }
+                                        }
+                                    }
+
+                                } catch (e: CustomException) {
+                                    dialogError(e, true)
+                                } catch (e: Exception) {
+                                    e.printStackTrace()
+                                    dialogError(e)
+                                }
+                            }
+                        }
+
                         dialogTencentAppStore.setOnClickListener {
                             val dialogTencentAppStoreBinding =
                                 DialogTencentAppStoreBinding.inflate(layoutInflater)
@@ -1393,7 +1496,7 @@ class MainActivity : AppCompatActivity() {
                 val QQMinInstall = QQMetaDataInstall.applicationInfo?.minSdkVersion.toString()
                 val QQCompileInstall = (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
                     QQMetaDataInstall.applicationInfo?.compileSdkVersion.toString() else "")
-                val QQQua = StringUtil.getQua(QQPackageInfo, this@MainActivity)
+                val QQQua = getQua(QQPackageInfo, this@MainActivity)
                 if (QQVersionInstall != DataStoreUtil.getStringKV(
                         "QQVersionInstall", ""
                     )
@@ -1439,8 +1542,7 @@ class MainActivity : AppCompatActivity() {
                     mapOf("key" to "QQAppSettingParamsInstall", "value" to "", "type" to "String"),
                     mapOf(
                         "key" to "QQAppSettingParamsPadInstall",
-                        "value" to "",
-                        "type" to "String"
+                        "value" to "", "type" to "String"
                     ),
                     mapOf("key" to "QQRdmUUIDInstall", "value" to "", "type" to "String"),
                     mapOf("key" to "QQQua", "value" to "", "type" to "String"),
@@ -1467,7 +1569,7 @@ class MainActivity : AppCompatActivity() {
                     val TIMMinInstall = TIMMetaDataInstall.applicationInfo?.minSdkVersion.toString()
                     val TIMCompileInstall =
                         (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) TIMMetaDataInstall.applicationInfo?.compileSdkVersion.toString() else "")
-                    val TIMQua = StringUtil.getQua(TIMPackageInfo, this@MainActivity)
+                    val TIMQua = getQua(TIMPackageInfo, this@MainActivity)
                     if (TIMTargetInstall.isNotEmpty() && TIMTargetInstall != DataStoreUtil.getStringKV(
                             "TIMTargetInstall",
                             ""
@@ -1517,20 +1619,16 @@ class MainActivity : AppCompatActivity() {
                         mapOf("key" to "TIMVersionCodeInstall", "value" to "", "type" to "String"),
                         mapOf(
                             "key" to "TIMAppSettingParamsInstall",
-                            "value" to "",
-                            "type" to "String"
+                            "value" to "", "type" to "String"
                         ), mapOf(
                             "key" to "TIMAppSettingParamsPadInstall",
-                            "value" to "",
-                            "type" to "String"
+                            "value" to "", "type" to "String"
                         ), mapOf(
                             "key" to "TIMRdmUUIDInstall",
-                            "value" to "",
-                            "type" to "String"
+                            "value" to "", "type" to "String"
                         ), mapOf(
                             "key" to "TIMQua",
-                            "value" to "",
-                            "type" to "String"
+                            "value" to "", "type" to "String"
                         )
                     )
                     DataStoreUtil.batchPutKVAsync(localTIMEmptyList)
@@ -1658,14 +1756,12 @@ class MainActivity : AppCompatActivity() {
             val useQQ8958TestFormat = DataStoreUtil.getBooleanKV("useQQ8958TestFormat", false)
             val suf64hb =
                 if (DataStoreUtil.getBooleanKV(
-                        "suffix64HB",
-                        true
+                        "suffix64HB", true
                     )
                 ) listOf("_64_HB") else emptyList()
             val sufHb64 =
                 if (DataStoreUtil.getBooleanKV(
-                        "suffixHB64",
-                        true
+                        "suffixHB64", true
                     )
                 ) listOf("_HB_64") else emptyList()
             val suf64hb1 = if (DataStoreUtil.getBooleanKV(
@@ -1694,14 +1790,12 @@ class MainActivity : AppCompatActivity() {
             ) listOf("_HB3_64") else emptyList()
             val suf64hd =
                 if (DataStoreUtil.getBooleanKV(
-                        "suffix64HD",
-                        true
+                        "suffix64HD", true
                     )
                 ) listOf("_64_HD") else emptyList()
             val sufHd64 =
                 if (DataStoreUtil.getBooleanKV(
-                        "suffixHD64",
-                        true
+                        "suffixHD64", true
                     )
                 ) listOf("_HD_64") else emptyList()
             val suf64hd1 = if (DataStoreUtil.getBooleanKV(
@@ -1740,25 +1834,9 @@ class MainActivity : AppCompatActivity() {
                 if (DataStoreUtil.getBooleanKV("suffixTest", true)) listOf("_test") else emptyList()
 
             val stListPre = listOf("_64") + arrayListOf(
-                suf64hb,
-                suf64hb1,
-                suf64hb2,
-                suf64hb3,
-                suf64hd,
-                suf64hd1,
-                suf64hd2,
-                suf64hd3,
-                suf64hd1hb,
-                sufHb64,
-                sufHb164,
-                sufHb264,
-                sufHb364,
-                sufHd64,
-                sufHd164,
-                sufHd264,
-                sufHd364,
-                sufHd1hb64,
-                sufTest
+                suf64hb, suf64hb1, suf64hb2, suf64hb3, suf64hd, suf64hd1, suf64hd2, suf64hd3,
+                suf64hd1hb, sufHb64, sufHb164, sufHb264, sufHb364, sufHd64, sufHd164, sufHd264,
+                sufHd364, sufHd1hb64, sufTest
             ).flatten()
 
             // ["_64", "_64_HB", "_64_HB1", "_64_HB2", "_64_HB3", "_64_HD", "_64_HD1", "_64_HD2", "_64_HD3", "_64_HD1HB", "_HB_64", "_HB1_64", "_HB2_64", "_HB3_64", "_HD_64", "_HD1_64", "_HD2_64", "_HD3_64", "_HD1HB_64", "_test"]
@@ -1794,17 +1872,8 @@ class MainActivity : AppCompatActivity() {
 
                             MODE_OFFICIAL -> {
                                 val soListPre = listOf(
-                                    "_64",
-                                    "_64_HB",
-                                    "_64_HB1",
-                                    "_64_HB2",
-                                    "_64_HB3",
-                                    "_HB_64",
-                                    "_HB1_64",
-                                    "_HB2_64",
-                                    "_HB3_64",
-                                    "_64_BBPJ",
-                                    "_BBPJ_64"
+                                    "_64", "_64_HB", "_64_HB1", "_64_HB2", "_64_HB3", "_HB_64",
+                                    "_HB1_64", "_HB2_64", "_HB3_64", "_64_BBPJ", "_BBPJ_64"
                                 )
                                 val soList =
                                     if (defineSufList != listOf("")) soListPre + defineSufList else soListPre
@@ -2308,28 +2377,9 @@ class MainActivity : AppCompatActivity() {
 
                             updateQvtButtonBinding.updateQvtDownload.setOnClickListener {
                                 updateQvtMaterialDialog.dismiss()
-                                if (DataStoreUtil.getBooleanKV(
-                                        "downloadOnSystemManager", false
-                                    )
-                                ) {
-                                    val requestDownload =
-                                        DownloadManager.Request(Uri.parse(latestQVTDownloadUrl))
-                                    requestDownload.setDestinationInExternalPublicDir(
-                                        Environment.DIRECTORY_DOWNLOADS, latestQVTFileName
-                                    )
-                                    val downloadManager =
-                                        getSystemService(DOWNLOAD_SERVICE) as DownloadManager
-                                    downloadManager.enqueue(requestDownload)
-                                } else {
-                                    // 这里不用 Chrome Custom Tab 的原因是 Chrome 不知道咋回事有概率卡在“等待下载”状态
-                                    val browserIntent =
-                                        Intent(Intent.ACTION_VIEW, Uri.parse(latestQVTDownloadUrl))
-                                    browserIntent.apply {
-                                        addCategory(Intent.CATEGORY_BROWSABLE)
-                                        flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                    }
-                                    startActivity(browserIntent)
-                                }
+                                downloadFile(
+                                    this@MainActivity, latestQVTDownloadUrl, latestQVTFileName
+                                )
                             }
                         } else showToast(getString(R.string.noAssetsDetected))
                     } else showToast(getString(R.string.noUpdatesDetected))
