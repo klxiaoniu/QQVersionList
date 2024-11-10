@@ -84,6 +84,7 @@ import com.xiaoniu.qqversionlist.R
 import com.xiaoniu.qqversionlist.data.QQVersionBean
 import com.xiaoniu.qqversionlist.data.TIMVersionBean
 import com.xiaoniu.qqversionlist.databinding.ActivityMainBinding
+import com.xiaoniu.qqversionlist.databinding.ApplicationsConfigBackButtonBinding
 import com.xiaoniu.qqversionlist.databinding.DialogAboutBinding
 import com.xiaoniu.qqversionlist.databinding.DialogExpBackBinding
 import com.xiaoniu.qqversionlist.databinding.DialogExperimentalFeaturesBinding
@@ -98,7 +99,6 @@ import com.xiaoniu.qqversionlist.databinding.DialogTencentAppStoreBinding
 import com.xiaoniu.qqversionlist.databinding.SuccessButtonBinding
 import com.xiaoniu.qqversionlist.databinding.UpdateQvtButtonBinding
 import com.xiaoniu.qqversionlist.databinding.UserAgreementBinding
-import com.xiaoniu.qqversionlist.databinding.ApplicationsConfigBackButtonBinding
 import com.xiaoniu.qqversionlist.util.ClipboardUtil.copyText
 import com.xiaoniu.qqversionlist.util.DataStoreUtil
 import com.xiaoniu.qqversionlist.util.Extensions.dp
@@ -892,10 +892,10 @@ class MainActivity : AppCompatActivity() {
                                     val request2 =
                                         Request.Builder().url(map["url"].toString()).head().build()
                                     val response2 = okHttpClient.newCall(request2).execute()
-                                    val appSize = "%.2f".format(
+                                    val appSize = (if (response2.isSuccessful) "%.2f".format(
                                         response2.header("Content-Length")?.toDoubleOrNull()
                                             ?.div(1024 * 1024)
-                                    )
+                                    ) else null)
                                     runOnUiThread {
                                         val applicationsConfigBackButtonBinding =
                                             ApplicationsConfigBackButtonBinding.inflate(
@@ -908,11 +908,11 @@ class MainActivity : AppCompatActivity() {
                                                         getString(
                                                             R.string.downloadLink
                                                         )
-                                                    }${map["url"].toString()}" + (if (appSize != "" && appSize != "-1" && appSize != "0") "\n\n${
+                                                    }${map["url"].toString()}" + (if (appSize != null) "\n\n${
                                                         getString(
                                                             R.string.fileSize
                                                         )
-                                                    }$appSize MB" else null)
+                                                    }$appSize MB" else ("\n\n" + getString(R.string.getWeixinAlphaConfigLink404)))
                                                 ).setView(applicationsConfigBackButtonBinding.root)
                                                 .show()
 
@@ -942,7 +942,7 @@ class MainActivity : AppCompatActivity() {
                                                     type = "text/plain"
                                                     putExtra(
                                                         Intent.EXTRA_TEXT,
-                                                        "Android 微信测试版 ${map["versionName"].toString()}" + (if (appSize != "" && appSize != "-1" && appSize != "0") "（${
+                                                        "Android 微信测试版 ${map["versionName"].toString()}" + (if (appSize != null) "（${
                                                             getString(
                                                                 R.string.fileSize
                                                             )
