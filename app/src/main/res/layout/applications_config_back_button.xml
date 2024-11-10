@@ -17,7 +17,7 @@
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/weixin_alpha_config_back_button_constraint_layout"
+    android:id="@+id/applications_config_back_button_constraint_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
@@ -37,7 +37,7 @@
             android:spacing="0dp">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/weixin_alpha_config_back_btn_json_details"
+                android:id="@+id/applications_config_back_btn_json_details"
                 style="?attr/materialIconButtonFilledTonalStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -45,7 +45,7 @@
                 app:icon="@drawable/braces_line" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/weixin_alpha_config_back_btn_share"
+                android:id="@+id/applications_config_back_btn_share"
                 style="?attr/materialIconButtonFilledTonalStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -53,7 +53,7 @@
                 app:icon="@drawable/share_line" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/weixin_alpha_config_back_btn_download"
+                android:id="@+id/applications_config_back_btn_download"
                 style="?attr/materialIconButtonFilledTonalStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -65,7 +65,7 @@
     </HorizontalScrollView>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/weixin_alpha_config_back_btn_copy"
+        android:id="@+id/applications_config_back_btn_copy"
         style="@style/Widget.Material3.Button.Icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -98,7 +98,7 @@ import com.xiaoniu.qqversionlist.databinding.DialogTencentAppStoreBinding
 import com.xiaoniu.qqversionlist.databinding.SuccessButtonBinding
 import com.xiaoniu.qqversionlist.databinding.UpdateQvtButtonBinding
 import com.xiaoniu.qqversionlist.databinding.UserAgreementBinding
-import com.xiaoniu.qqversionlist.databinding.WeixinAlphaConfigBackButtonBinding
+import com.xiaoniu.qqversionlist.databinding.ApplicationsConfigBackButtonBinding
 import com.xiaoniu.qqversionlist.util.ClipboardUtil.copyText
 import com.xiaoniu.qqversionlist.util.DataStoreUtil
 import com.xiaoniu.qqversionlist.util.Extensions.dp
@@ -186,6 +186,12 @@ class MainActivity : AppCompatActivity() {
         )
 
         initButtons()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val judgeUATarget = JUDGE_UA_TARGET
+        if (DataStoreUtil.getIntKV("userAgreement", 0) == judgeUATarget) getData()
     }
 
     /**
@@ -891,8 +897,8 @@ class MainActivity : AppCompatActivity() {
                                             ?.div(1024 * 1024)
                                     )
                                     runOnUiThread {
-                                        val weixinAlphaConfigBackButtonBinding =
-                                            WeixinAlphaConfigBackButtonBinding.inflate(
+                                        val applicationsConfigBackButtonBinding =
+                                            ApplicationsConfigBackButtonBinding.inflate(
                                                 layoutInflater
                                             )
                                         val weixinAlphaConfigBackDialog =
@@ -907,30 +913,30 @@ class MainActivity : AppCompatActivity() {
                                                             R.string.fileSize
                                                         )
                                                     }$appSize MB" else null)
-                                                ).setView(weixinAlphaConfigBackButtonBinding.root)
+                                                ).setView(applicationsConfigBackButtonBinding.root)
                                                 .show()
 
-                                        weixinAlphaConfigBackButtonBinding.apply {
-                                            weixinAlphaConfigBackBtnCopy.setOnClickListener {
+                                        applicationsConfigBackButtonBinding.apply {
+                                            applicationsConfigBackBtnCopy.setOnClickListener {
                                                 weixinAlphaConfigBackDialog.dismiss()
                                                 copyText(map["url"].toString())
                                             }
 
-                                            weixinAlphaConfigBackBtnDownload.setOnClickListener {
+                                            applicationsConfigBackBtnDownload.setOnClickListener {
                                                 weixinAlphaConfigBackDialog.dismiss()
                                                 downloadFile(
                                                     this@MainActivity, map["url"].toString()
                                                 )
                                             }
 
-                                            weixinAlphaConfigBackBtnJsonDetails.setOnClickListener {
+                                            applicationsConfigBackBtnJsonDetails.setOnClickListener {
                                                 showExpBackDialog(
                                                     Gson().toJson(map),
                                                     getString(R.string.jsonDetails)
                                                 )
                                             }
 
-                                            weixinAlphaConfigBackBtnShare.setOnClickListener {
+                                            applicationsConfigBackBtnShare.setOnClickListener {
                                                 weixinAlphaConfigBackDialog.dismiss()
                                                 val shareIntent = Intent(Intent.ACTION_SEND).apply {
                                                     type = "text/plain"
@@ -2255,9 +2261,7 @@ class MainActivity : AppCompatActivity() {
         btn: MaterialButton
     ) {
         val spec = CircularProgressIndicatorSpec(
-            this@MainActivity,
-            null,
-            0,
+            this@MainActivity, null, 0,
             com.google.android.material.R.style.Widget_Material3_CircularProgressIndicator_ExtraSmall
         )
         val progressIndicatorDrawable =
