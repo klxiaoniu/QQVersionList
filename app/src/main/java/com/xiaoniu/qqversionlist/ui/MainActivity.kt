@@ -131,6 +131,7 @@ import java.io.InputStreamReader
 import java.lang.Thread.sleep
 import java.util.Locale
 import java.util.zip.GZIPInputStream
+import kotlin.text.toDoubleOrNull
 
 
 class MainActivity : AppCompatActivity() {
@@ -988,39 +989,27 @@ class MainActivity : AppCompatActivity() {
                                 }
 
                                 getQq.setOnClickListener {
-                                    tencentAppStoreStart(
-                                        mapOf("packagename" to "com.tencent.mobileqq"), getQq
-                                    )
+                                    tencentAppStoreStart("com.tencent.mobileqq", getQq)
                                 }
 
                                 getTim.setOnClickListener {
-                                    tencentAppStoreStart(
-                                        mapOf("packagename" to "com.tencent.tim"), getTim
-                                    )
+                                    tencentAppStoreStart("com.tencent.tim", getTim)
                                 }
 
                                 getWeixin.setOnClickListener {
-                                    tencentAppStoreStart(
-                                        mapOf("packagename" to "com.tencent.mm"), getWeixin
-                                    )
+                                    tencentAppStoreStart("com.tencent.mm", getWeixin)
                                 }
 
                                 getWecom.setOnClickListener {
-                                    tencentAppStoreStart(
-                                        mapOf("packagename" to "com.tencent.wework"), getWecom
-                                    )
+                                    tencentAppStoreStart("com.tencent.wework", getWecom)
                                 }
 
                                 getWetype.setOnClickListener {
-                                    tencentAppStoreStart(
-                                        mapOf("packagename" to "com.tencent.wetype"), getWetype
-                                    )
+                                    tencentAppStoreStart("com.tencent.wetype", getWetype)
                                 }
 
                                 getQidian.setOnClickListener {
-                                    tencentAppStoreStart(
-                                        mapOf("packagename" to "com.tencent.qidian"), getQidian
-                                    )
+                                    tencentAppStoreStart("com.tencent.qidian", getQidian)
                                 }
                             }
                         }
@@ -2257,7 +2246,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun tencentAppStoreStart(
-        getType: Any,
+        getType: String,
         btn: MaterialButton
     ) {
         val spec = CircularProgressIndicatorSpec(
@@ -2280,7 +2269,9 @@ class MainActivity : AppCompatActivity() {
                         level = HttpLoggingInterceptor.Level.BODY
                     }).build()
                 val mediaType = "application/json; charset=utf-8".toMediaTypeOrNull()
-                val body = GsonBuilder().setStrictness(Strictness.LENIENT).create().toJson(getType)
+                val getTypePost = mapOf("packagename" to getType)
+                val body =
+                    GsonBuilder().setStrictness(Strictness.LENIENT).create().toJson(getTypePost)
                 val request = Request.Builder().url("https://upage.html5.qq.com/wechat-apkinfo")
                     .post(body.toRequestBody(mediaType!!))
                     .addHeader("Content-Type", "application/json")
@@ -2290,13 +2281,71 @@ class MainActivity : AppCompatActivity() {
                 val responseData = response.body?.string()
                 if (response.isSuccessful && !responseData.isNullOrEmpty()) {
                     val gson = GsonBuilder().setPrettyPrinting().create()
-                    val tencentAppStoreResultJson =
-                        gson.toJson(gson.fromJson(responseData, JsonElement::class.java))
+                    val tencentAppStoreResult = gson.fromJson(responseData, JsonObject::class.java)
+                    val tencentAppStoreResultJson = gson.toJson(tencentAppStoreResult)
+                    val appAllData = tencentAppStoreResult.getAsJsonObject("app_detail_records")
+                        .getAsJsonObject(getType).getAsJsonObject("apk_all_data")
+                    val appName = appAllData.getAsJsonPrimitive("name").asString
+                    val appVersionName = appAllData.getAsJsonPrimitive("version_name").asString
+                    val appUrl = appAllData.getAsJsonPrimitive("url").asString
+                    val appSize =
+                        "%.2f".format(appAllData.getAsJsonPrimitive("size_byte").asDouble.div(1024 * 1024))
+
                     runOnUiThread {
-                        showExpBackDialog(
-                            tencentAppStoreResultJson,
-                            getString(R.string.contentReturnedByTencentAppStore)
-                        )
+                        val applicationsConfigBackButtonBinding =
+                            ApplicationsConfigBackButtonBinding.inflate(
+                                layoutInflater
+                            )
+                        val tencentAppStoreConfigBackDialog =
+                            MaterialAlertDialogBuilder(this@MainActivity).setTitle(R.string.contentReturnedByTencentAppStore)
+                                .setIcon(R.drawable.flask_line).setMessage(
+                                    "$appName $appVersionName\n${getString(R.string.downloadLink)}$appUrl" + "\n\n${
+                                        getString(
+                                            R.string.fileSize
+                                        )
+                                    }$appSize MB"
+                                ).setView(applicationsConfigBackButtonBinding.root).show()
+
+                        applicationsConfigBackButtonBinding.apply {
+                            applicationsConfigBackBtnCopy.setOnClickListener {
+                                tencentAppStoreConfigBackDialog.dismiss()
+                                copyText(appUrl)
+                            }
+
+                            applicationsConfigBackBtnDownload.setOnClickListener {
+                                tencentAppStoreConfigBackDialog.dismiss()
+                                downloadFile(
+                                    this@MainActivity, appUrl
+                                )
+                            }
+
+                            applicationsConfigBackBtnJsonDetails.setOnClickListener {
+                                showExpBackDialog(
+                                    tencentAppStoreResultJson,
+                                    getString(R.string.jsonDetails)
+                                )
+                            }
+
+                            applicationsConfigBackBtnShare.setOnClickListener {
+                                tencentAppStoreConfigBackDialog.dismiss()
+                                val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                                    type = "text/plain"
+                                    putExtra(
+                                        Intent.EXTRA_TEXT,
+                                        "Android $appName $appVersionName" + "（${getString(R.string.fileSize)}$appSize MB）" + "\n\n${
+                                            getString(
+                                                R.string.downloadLink
+                                            )
+                                        }$appUrl\n\n来自腾讯应用宝"
+                                    )
+                                }
+                                startActivity(
+                                    Intent.createChooser(
+                                        shareIntent, getString(R.string.shareTo)
+                                    )
+                                )
+                            }
+                        }
                     }
                 }
             } catch (e: Exception) {
