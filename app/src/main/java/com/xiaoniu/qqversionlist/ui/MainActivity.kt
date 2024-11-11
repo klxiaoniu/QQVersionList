@@ -189,12 +189,6 @@ class MainActivity : AppCompatActivity() {
         initButtons()
     }
 
-    override fun onResume() {
-        super.onResume()
-        val judgeUATarget = JUDGE_UA_TARGET
-        if (DataStoreUtil.getIntKV("userAgreement", 0) == judgeUATarget) getData()
-    }
-
     /**
      * 用户协议
      * @param agreed 用户先前是否同意过用户协议
@@ -269,8 +263,6 @@ class MainActivity : AppCompatActivity() {
             )
         }
 
-        // 进度条动画
-        // https://github.com/material-components/material-components-android/blob/master/docs/components/ProgressIndicator.md
         binding.progressLine.apply {
             showAnimationBehavior = LinearProgressIndicator.SHOW_NONE
             hideAnimationBehavior = LinearProgressIndicator.HIDE_ESCAPE
@@ -868,11 +860,18 @@ class MainActivity : AppCompatActivity() {
                         .show()
 
                     dialogExperimentalFeaturesBinding.apply {
+                        progressIndicator.apply {
+                            hide()
+                            showAnimationBehavior = LinearProgressIndicator.SHOW_NONE
+                            hideAnimationBehavior = LinearProgressIndicator.HIDE_ESCAPE
+                        }
+
                         btnExpOk.setOnClickListener {
                             dialogExperimentalFeatures.dismiss()
                         }
 
                         dialogGetWeixinAlphaNewest.setOnClickListener {
+                            progressIndicator.show()
                             CoroutineScope(Dispatchers.IO).launch {
                                 class CustomException(message: String) :
                                     Exception(message)
@@ -947,7 +946,7 @@ class MainActivity : AppCompatActivity() {
                                                             getString(
                                                                 R.string.fileSize
                                                             )
-                                                        }$appSize MB）" else null) + "\n\n${
+                                                        }$appSize MB）" else "") + "\n\n${
                                                             getString(
                                                                 R.string.downloadLink
                                                             )
@@ -968,6 +967,8 @@ class MainActivity : AppCompatActivity() {
                                 } catch (e: Exception) {
                                     e.printStackTrace()
                                     dialogError(e)
+                                } finally {
+                                    runOnUiThread { progressIndicator.hide() }
                                 }
                             }
                         }

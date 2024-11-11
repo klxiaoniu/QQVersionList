@@ -22,8 +22,15 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:paddingStart="20dp"
-    android:paddingTop="6dp"
+    android:paddingTop="2dp"
     android:paddingEnd="20dp">
+
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/progress_indicator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="10dp"
+        android:indeterminate="true" />
 
     <ScrollView
         android:layout_width="match_parent"
