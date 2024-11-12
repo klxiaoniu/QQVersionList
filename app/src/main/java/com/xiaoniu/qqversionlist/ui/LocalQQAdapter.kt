@@ -158,7 +158,7 @@ class LocalQQAdapter : RecyclerView.Adapter<LocalQQAdapter.LocalQQViewHolder>() 
                             .setTitle(R.string.localQQVersionDetails)
                             .setIcon(R.drawable.phone_find_line)
                             .show()
-                    } else itemView.context.showToast(R.string.longPressToViewSourceDetailsIsDisabled)
+                    } else showToast(R.string.longPressToViewSourceDetailsIsDisabled)
                     true
                 }
             } else itemQqInstallCard.isVisible = false

@@ -111,7 +111,7 @@ class ShiplyAdvancedConfigFragment : BottomSheetDialogFragment() {
                         )
                     )
                     batchPutKVAsync(shiplyConfigList)
-                    requireContext().showToast(R.string.saved)
+                    showToast(R.string.saved)
                     this@ShiplyAdvancedConfigFragment.isCancelable = true
                     shiplyAdvancedConfigSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
                 }

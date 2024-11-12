@@ -139,7 +139,7 @@ class LocalTIMAdapter : RecyclerView.Adapter<LocalTIMAdapter.LocalTIMViewHolder>
                             .setTitle(R.string.localTIMVersionDetails)
                             .setIcon(R.drawable.phone_find_line)
                             .show()
-                    } else itemView.context.showToast(R.string.longPressToViewSourceDetailsIsDisabled)
+                    } else showToast(R.string.longPressToViewSourceDetailsIsDisabled)
                     true
                 }
             } else itemTimInstallCard.isVisible = false

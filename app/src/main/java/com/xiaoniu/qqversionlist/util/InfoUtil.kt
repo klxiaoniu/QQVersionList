@@ -28,22 +28,17 @@ import android.provider.Settings
 import android.widget.Toast
 import androidx.annotation.StringRes
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.xiaoniu.qqversionlist.QVTApplication
 import com.xiaoniu.qqversionlist.R
 import com.xiaoniu.qqversionlist.util.ClipboardUtil.copyText
 
 object InfoUtil {
-    fun Context.showToast(text: String) {
-        val activity = findActivity()
-        activity?.runOnUiThread {
-            Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
-        }
+    fun showToast(text: String) {
+        Toast.makeText(QVTApplication.instance, text, Toast.LENGTH_SHORT).show()
     }
 
-    fun Context.showToast(@StringRes textResId: Int) {
-        val activity = findActivity()
-        activity?.runOnUiThread {
-            Toast.makeText(this, textResId, Toast.LENGTH_SHORT).show()
-        }
+    fun showToast(@StringRes textResId: Int) {
+        Toast.makeText(QVTApplication.instance, textResId, Toast.LENGTH_SHORT).show()
     }
 
     /**

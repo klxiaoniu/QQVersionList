@@ -18,14 +18,8 @@
 
 package com.xiaoniu.qqversionlist.util
 
-import android.app.Activity
-import android.app.DownloadManager
 import android.content.Context
-import android.content.Context.DOWNLOAD_SERVICE
-import android.content.Intent
 import android.content.pm.PackageInfo
-import android.net.Uri
-import android.os.Environment
 import com.google.gson.Gson
 import com.xiaoniu.qqversionlist.util.InfoUtil.dialogError
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -148,10 +142,10 @@ object StringUtil {
      * 从给定的 `PackageInfo` 对象中获取 `qua.ini` 文件的内容
      *
      * @param packageInfo 包含应用信息的 `PackageInfo` 对象，用于访问应用的资源
-     * @param activity 用于显示错误对话框的 `Activity` 对象
+     * @param context 用于显示错误对话框的 `Activity` 对象
      * @return 返回 `qua.ini` 文件的内容作为字符串，如果发生任何错误或文件不存在则返回null
      */
-    fun getQua(packageInfo: PackageInfo, activity: Activity): String? {
+    fun getQua(packageInfo: PackageInfo, context: Context): String? {
         val sourceDir = packageInfo.applicationInfo?.sourceDir ?: return null
         val file = File(sourceDir)
         if (!file.exists()) return null
@@ -162,7 +156,7 @@ object StringUtil {
                     return inputStream.reader().use { reader -> reader.readText() }
                 }
             }
-        }.onFailure { activity.dialogError(Exception(it)) }.getOrElse { null }
+        }.onFailure { context.dialogError(Exception(it)) }.getOrElse { null }
     }
 
     /**
@@ -192,32 +186,6 @@ object StringUtil {
             "textList" to textList.map { it.asString },
             "recentList" to recentList.map { it.asString }
         )
-    }
-
-    fun downloadFile(context: Context, url: String, fileName: String? = null) {
-        if (DataStoreUtil.getBooleanKV(
-                "downloadOnSystemManager", false
-            )
-        ) {
-            val requestDownload =
-                DownloadManager.Request(Uri.parse(url))
-            requestDownload.setDestinationInExternalPublicDir(
-                Environment.DIRECTORY_DOWNLOADS,
-                if (fileName != null) fileName else url.substringAfterLast('/')
-            )
-            val downloadManager =
-                context.getSystemService(DOWNLOAD_SERVICE) as DownloadManager
-            downloadManager.enqueue(requestDownload)
-        } else {
-            // 这里不用 Chrome Custom Tab 的原因是 Chrome 不知道咋回事有概率卡在“等待下载”状态
-            val browserIntent =
-                Intent(Intent.ACTION_VIEW, Uri.parse(url))
-            browserIntent.apply {
-                addCategory(Intent.CATEGORY_BROWSABLE)
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            }
-            context.startActivity(browserIntent)
-        }
     }
 }
 

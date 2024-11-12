@@ -174,7 +174,7 @@ class QQVersionAdapter :
     private fun longPressCard(bindingAdapterPosition: Int, it: View) {
         if (DataStoreUtil.getBooleanKV("longPressCard", true)) showDialog(
             it.context, currentList[bindingAdapterPosition].jsonString.toPrettyFormat()
-        ) else it.context.showToast(R.string.longPressToViewSourceDetailsIsDisabled)
+        ) else showToast(R.string.longPressToViewSourceDetailsIsDisabled)
     }
 
     @SuppressLint("SetTextI18n")

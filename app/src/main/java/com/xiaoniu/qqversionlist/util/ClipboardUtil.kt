@@ -28,6 +28,6 @@ object ClipboardUtil {
     fun Context.copyText(text: String) {
         val clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         clipboardManager.setPrimaryClip(ClipData.newPlainText("", text))
-        this.showToast("${getString(R.string.copied)}$text")
+        showToast("${getString(R.string.copied)}$text")
     }
 }
