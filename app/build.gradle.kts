@@ -77,6 +77,9 @@ android {
             )
             signingConfig =
                 signingConfigs.findByName("release") ?: signingConfigs.findByName("debug")
+            signingConfig?.enableV2Signing = true
+            signingConfig?.enableV3Signing = true
+            signingConfig?.enableV4Signing = true
         }
     }
 

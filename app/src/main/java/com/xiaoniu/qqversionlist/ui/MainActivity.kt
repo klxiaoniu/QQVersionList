@@ -1492,7 +1492,7 @@ class MainActivity : AppCompatActivity() {
                 val QQMinInstall = QQMetaDataInstall.applicationInfo?.minSdkVersion.toString()
                 val QQCompileInstall = (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
                     QQMetaDataInstall.applicationInfo?.compileSdkVersion.toString() else "")
-                val QQQua = getQua(QQPackageInfo, this@MainActivity)
+                val QQQua = getQua(QQPackageInfo)
                 if (QQVersionInstall != DataStoreUtil.getStringKV(
                         "QQVersionInstall", ""
                     )
@@ -1565,7 +1565,7 @@ class MainActivity : AppCompatActivity() {
                     val TIMMinInstall = TIMMetaDataInstall.applicationInfo?.minSdkVersion.toString()
                     val TIMCompileInstall =
                         (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) TIMMetaDataInstall.applicationInfo?.compileSdkVersion.toString() else "")
-                    val TIMQua = getQua(TIMPackageInfo, this@MainActivity)
+                    val TIMQua = getQua(TIMPackageInfo)
                     if (TIMTargetInstall.isNotEmpty() && TIMTargetInstall != DataStoreUtil.getStringKV(
                             "TIMTargetInstall",
                             ""
@@ -1838,6 +1838,7 @@ class MainActivity : AppCompatActivity() {
             // ["_64", "_64_HB", "_64_HB1", "_64_HB2", "_64_HB3", "_64_HD", "_64_HD1", "_64_HD2", "_64_HD3", "_64_HD1HB", "_HB_64", "_HB1_64", "_HB2_64", "_HB3_64", "_HD_64", "_HD1_64", "_HD2_64", "_HD3_64", "_HD1HB_64", "_test"]
 
             val stList = if (defineSufList != listOf("")) stListPre + defineSufList else stListPre
+            val weSoList = listOf("", "_1")
             try {
                 var sIndex = 0
                 while (true) when (status) {
@@ -1885,9 +1886,13 @@ class MainActivity : AppCompatActivity() {
 
                             }
 
-                            MODE_WECHAT -> link =
-                                "https://dldir1.qq.com/weixin/android/weixin${versionBig}android${versionTrue}_0x${v16codeStr}_arm64.apk"
-                            // https://dldir1.qq.com/weixin/android/weixin8049android2600_0x2800318a_arm64.apk
+                            MODE_WECHAT -> {
+                                // https://dldir1.qq.com/weixin/android/weixin8049android2600_0x2800318a_arm64.apk
+                                // https://dldir1.qq.com/weixin/android/weixin8054android2740_0x28003630_arm64_1.apk
+                                link =
+                                    "https://dldir1.qq.com/weixin/android/weixin${versionBig}android${versionTrue}_0x${v16codeStr}_arm64${weSoList[sIndex]}.apk"
+                                sIndex += 1
+                            }
                         }
                         runOnUiThread {
                             updateProgressDialogMessage("${getString(R.string.enumeratingDownloadLink)}$link")
@@ -1944,9 +1949,10 @@ class MainActivity : AppCompatActivity() {
                                         }
 
                                         mode == MODE_UNOFFICIAL -> vSmall += if (!guessNot5) 5 else 1
-                                        mode == MODE_WECHAT -> {
+                                        mode == MODE_WECHAT && sIndex == (weSoList.size) -> {
                                             val version16code = v16codeStr.toInt(16) + 1
                                             v16codeStr = version16code.toString(16)
+                                            sIndex = 0
                                         }
                                     }
                                     successMaterialDialog.dismiss()
@@ -2067,9 +2073,10 @@ class MainActivity : AppCompatActivity() {
                                 }
 
                                 mode == MODE_UNOFFICIAL -> vSmall += if (!guessNot5) 5 else 1
-                                mode == MODE_WECHAT -> {
+                                mode == MODE_WECHAT && sIndex == (weSoList.size) -> {
                                     val version16code = v16codeStr.toInt(16) + 1
                                     v16codeStr = version16code.toString(16)
+                                    sIndex = 0
                                 }
                             }
                         }
