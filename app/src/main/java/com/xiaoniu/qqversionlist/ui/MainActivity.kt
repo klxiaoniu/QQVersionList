@@ -34,9 +34,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.text.Editable
-import android.text.SpannableString
 import android.text.TextWatcher
-import android.text.style.URLSpan
 import android.util.Base64
 import android.view.MenuItem
 import android.view.View
@@ -104,6 +102,7 @@ import com.xiaoniu.qqversionlist.util.DataStoreUtil
 import com.xiaoniu.qqversionlist.util.Extensions.downloadFile
 import com.xiaoniu.qqversionlist.util.Extensions.dp
 import com.xiaoniu.qqversionlist.util.InfoUtil.dialogError
+import com.xiaoniu.qqversionlist.util.InfoUtil.qverbowAboutText
 import com.xiaoniu.qqversionlist.util.InfoUtil.showToast
 import com.xiaoniu.qqversionlist.util.ShiplyUtil
 import com.xiaoniu.qqversionlist.util.StringUtil.getAllAPKUrl
@@ -296,97 +295,7 @@ class MainActivity : AppCompatActivity() {
                                 aboutText.movementMethod =
                                     LinkMovementMethodCompat.getInstance()
 
-                                // 九七通知中心因为内容安全原因去掉了 GitHub Releases 更新订阅
-                                aboutText.text = SpannableString(
-                                    "${getString(R.string.aboutAppName)}\n\n" +
-                                            "${getString(R.string.version)}${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})\n" +
-                                            "${getString(R.string.aboutAuthor)}快乐小牛、有鲫雪狐\n" +
-                                            "${getString(R.string.aboutContributor)}Col_or、bggRGjQaUbCoE、Minarx、zwJimRaynor\n" +
-                                            "${getString(R.string.aboutSpecialThanksTo)}owo233、钟路帆\n" +
-                                            "${getString(R.string.aboutOpenSourceRepo)}GitHub\n" +
-                                            "${getString(R.string.aboutGetUpdate)}GitHub Releases、Obtainium\n" +
-                                            "${getString(R.string.facilitateI18n)}Crowdin\n\n" +
-                                            "Since 2023.8.9"
-                                ).apply {
-                                    setSpan(
-                                        URLSpan("https://github.com/klxiaoniu"),
-                                        indexOf("快乐小牛"),
-                                        indexOf("快乐小牛") + "快乐小牛".length,
-                                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-                                    )
-                                    setSpan(
-                                        URLSpan("https://github.com/ArcticFoxPro"),
-                                        indexOf("有鲫雪狐"),
-                                        indexOf("有鲫雪狐") + "有鲫雪狐".length,
-                                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-                                    )
-                                    setSpan(
-                                        URLSpan("https://github.com/color597"),
-                                        indexOf("Col_or"),
-                                        indexOf("Col_or") + "Col_or".length,
-                                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-                                    )
-                                    setSpan(
-                                        URLSpan("https://github.com/bggRGjQaUbCoE"),
-                                        indexOf("bggRGjQaUbCoE"),
-                                        indexOf("bggRGjQaUbCoE") + "bggRGjQaUbCoE".length,
-                                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-                                    )
-                                    setSpan(
-                                        URLSpan("https://github.com/eminarx"),
-                                        indexOf("Minarx"),
-                                        indexOf("Minarx") + "Minarx".length,
-                                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-                                    )
-                                    setSpan(
-                                        URLSpan("https://github.com/zwJimRaynor"),
-                                        indexOf("zwJimRaynor"),
-                                        indexOf("zwJimRaynor") + "zwJimRaynor".length,
-                                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-                                    )
-                                    setSpan(
-                                        URLSpan("https://github.com/callng"),
-                                        indexOf("owo233"),
-                                        indexOf("owo233") + "owo233".length,
-                                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-                                    )
-                                    setSpan(
-                                        URLSpan("https://github.com/Hill-98"),
-                                        indexOf("钟路帆"),
-                                        indexOf("钟路帆") + "钟路帆".length,
-                                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-                                    )
-                                    setSpan(
-                                        URLSpan("https://github.com/klxiaoniu/QQVersionList"),
-                                        indexOf("GitHub"),
-                                        indexOf("GitHub") + "GitHub".length,
-                                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-                                    )
-                                    setSpan(
-                                        URLSpan("https://github.com/klxiaoniu/QQVersionList/releases"),
-                                        indexOf("GitHub Releases"),
-                                        indexOf("GitHub Releases") + "GitHub Releases".length,
-                                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-                                    )
-                                    setSpan(
-                                        URLSpan("https://github.com/klxiaoniu/QQVersionList/blob/master/ReadmeAssets/Get-it-on-Obtainium.md"),
-                                        indexOf("Obtainium"),
-                                        indexOf("Obtainium") + "Obtainium".length,
-                                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-                                    )
-                                    /*setSpan(
-                                        URLSpan("https://github.com/klxiaoniu/QQVersionList/blob/master/ReadmeAssets/Get-it-on-JiuQi-NotifCenter-WeChatMiniProgram.md"),
-                                        indexOf("九七通知中心"),
-                                        indexOf("九七通知中心") + "九七通知中心".length,
-                                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-                                    )*/
-                                    setSpan(
-                                        URLSpan("https://crowdin.com/project/qqversionstool"),
-                                        indexOf("Crowdin"),
-                                        indexOf("Crowdin") + "Crowdin".length,
-                                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-                                    )
-                                }
+                                aboutText.text = this@MainActivity.qverbowAboutText()
                             }
 
                         btnAboutWithdrawConsentUA.setOnClickListener {
@@ -2629,4 +2538,3 @@ class MainActivity : AppCompatActivity() {
         val MODE_TIM: String by lazy { context.getString(R.string.timVersion) }
     }
 }
-
