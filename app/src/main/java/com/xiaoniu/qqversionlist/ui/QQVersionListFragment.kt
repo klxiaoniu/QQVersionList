@@ -30,9 +30,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.xiaoniu.qqversionlist.databinding.RecycleQqVersionBinding
-import com.xiaoniu.qqversionlist.util.Extensions.dp
 import com.xiaoniu.qqversionlist.util.Extensions.pxToDp
-import me.zhanghai.android.fastscroll.FastScrollerBuilder
 
 class QQVersionListFragment : Fragment() {
     private var _fragmentBinding: RecycleQqVersionBinding? = null

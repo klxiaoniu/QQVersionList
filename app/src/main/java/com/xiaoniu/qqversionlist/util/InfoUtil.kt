@@ -20,18 +20,33 @@ package com.xiaoniu.qqversionlist.util
 
 import android.app.Activity
 import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.provider.Settings
+import android.text.SpannableString
+import android.text.style.URLSpan
 import android.widget.Toast
+import androidx.annotation.StringRes
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.xiaoniu.qqversionlist.BuildConfig
+import com.xiaoniu.qqversionlist.QVTApplication
 import com.xiaoniu.qqversionlist.R
 import com.xiaoniu.qqversionlist.util.ClipboardUtil.copyText
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 object InfoUtil {
-    fun Activity.showToast(text: String) {
-        runOnUiThread {
-            Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
+    fun showToast(text: String) {
+        CoroutineScope(Dispatchers.Main).launch {
+            Toast.makeText(QVTApplication.instance, text, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    fun showToast(@StringRes textResId: Int) {
+        CoroutineScope(Dispatchers.Main).launch {
+            Toast.makeText(QVTApplication.instance, textResId, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -92,5 +107,36 @@ object InfoUtil {
         }
     }
 
-
+    fun Context.qverbowAboutText(): SpannableString {
+        return SpannableString(
+            "${getString(R.string.aboutAppName)}\n\n" +
+                    "${getString(R.string.version)}${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})\n" +
+                    "${getString(R.string.aboutAuthor)}快乐小牛、有鲫雪狐\n" +
+                    "${getString(R.string.aboutContributor)}Col_or、bggRGjQaUbCoE、MinaFluo、zwJimRaynor\n" +
+                    "${getString(R.string.aboutSpecialThanksTo)}owo233、钟路帆\n" +
+                    "${getString(R.string.aboutOpenSourceRepo)}GitHub\n" +
+                    "${getString(R.string.aboutGetUpdate)}GitHub Releases、Obtainium\n" +
+                    "${getString(R.string.facilitateI18n)}Crowdin\n\n" +
+                    "Since 2023.8.9"
+        ).apply {
+            listOf(
+                "https://github.com/klxiaoniu" to "快乐小牛",
+                "https://github.com/ArcticFoxPro" to "有鲫雪狐",
+                "https://github.com/color597" to "Col_or",
+                "https://github.com/bggRGjQaUbCoE" to "bggRGjQaUbCoE",
+                "https://github.com/MinaFluo" to "MinaFluo",
+                "https://github.com/zwJimRaynor" to "zwJimRaynor",
+                "https://github.com/callng" to "owo233",
+                "https://github.com/Hill-98" to "钟路帆",
+                "https://github.com/klxiaoniu/QQVersionList" to "GitHub",
+                "https://github.com/klxiaoniu/QQVersionList/releases" to "GitHub Releases",
+                "https://github.com/klxiaoniu/QQVersionList/blob/master/ReadmeAssets/Get-it-on-Obtainium.md" to "Obtainium",
+                "https://crowdin.com/project/qqversionstool" to "Crowdin"
+            ).forEach { (url, text) ->
+                val start = indexOf(text)
+                val end = start + text.length
+                setSpan(URLSpan(url), start, end, SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
+        }
+    }
 }

@@ -26,7 +26,6 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.content.res.Resources
@@ -35,9 +34,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.text.Editable
-import android.text.SpannableString
 import android.text.TextWatcher
-import android.text.style.URLSpan
 import android.util.Base64
 import android.view.MenuItem
 import android.view.View
@@ -85,6 +82,7 @@ import com.xiaoniu.qqversionlist.R
 import com.xiaoniu.qqversionlist.data.QQVersionBean
 import com.xiaoniu.qqversionlist.data.TIMVersionBean
 import com.xiaoniu.qqversionlist.databinding.ActivityMainBinding
+import com.xiaoniu.qqversionlist.databinding.ApplicationsConfigBackButtonBinding
 import com.xiaoniu.qqversionlist.databinding.DialogAboutBinding
 import com.xiaoniu.qqversionlist.databinding.DialogExpBackBinding
 import com.xiaoniu.qqversionlist.databinding.DialogExperimentalFeaturesBinding
@@ -101,16 +99,19 @@ import com.xiaoniu.qqversionlist.databinding.UpdateQvtButtonBinding
 import com.xiaoniu.qqversionlist.databinding.UserAgreementBinding
 import com.xiaoniu.qqversionlist.util.ClipboardUtil.copyText
 import com.xiaoniu.qqversionlist.util.DataStoreUtil
+import com.xiaoniu.qqversionlist.util.Extensions.downloadFile
 import com.xiaoniu.qqversionlist.util.Extensions.dp
 import com.xiaoniu.qqversionlist.util.InfoUtil.dialogError
+import com.xiaoniu.qqversionlist.util.InfoUtil.qverbowAboutText
 import com.xiaoniu.qqversionlist.util.InfoUtil.showToast
 import com.xiaoniu.qqversionlist.util.ShiplyUtil
 import com.xiaoniu.qqversionlist.util.StringUtil.getAllAPKUrl
+import com.xiaoniu.qqversionlist.util.StringUtil.getQua
+import com.xiaoniu.qqversionlist.util.StringUtil.resolveWeixinAlphaConfig
 import com.xiaoniu.qqversionlist.util.StringUtil.toPrettyFormat
 import com.xiaoniu.qqversionlist.util.StringUtil.trimSubstringAtEnd
 import com.xiaoniu.qqversionlist.util.StringUtil.trimSubstringAtStart
 import com.xiaoniu.qqversionlist.util.VersionBeanUtil
-import com.xiaoniu.qqversionlist.util.ZipFileCompat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -125,11 +126,11 @@ import okhttp3.logging.HttpLoggingInterceptor
 import org.apache.maven.artifact.versioning.ComparableVersion
 import java.io.BufferedReader
 import java.io.ByteArrayInputStream
-import java.io.File
 import java.io.InputStreamReader
 import java.lang.Thread.sleep
 import java.util.Locale
 import java.util.zip.GZIPInputStream
+import kotlin.text.toDoubleOrNull
 
 
 class MainActivity : AppCompatActivity() {
@@ -261,8 +262,6 @@ class MainActivity : AppCompatActivity() {
             )
         }
 
-        // 进度条动画
-        // https://github.com/material-components/material-components-android/blob/master/docs/components/ProgressIndicator.md
         binding.progressLine.apply {
             showAnimationBehavior = LinearProgressIndicator.SHOW_NONE
             hideAnimationBehavior = LinearProgressIndicator.HIDE_ESCAPE
@@ -296,97 +295,7 @@ class MainActivity : AppCompatActivity() {
                                 aboutText.movementMethod =
                                     LinkMovementMethodCompat.getInstance()
 
-                                // 九七通知中心因为内容安全原因去掉了 GitHub Releases 更新订阅
-                                aboutText.text = SpannableString(
-                                    "${getString(R.string.aboutAppName)}\n\n" +
-                                            "${getString(R.string.version)}${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})\n" +
-                                            "${getString(R.string.aboutAuthor)}快乐小牛、有鲫雪狐\n" +
-                                            "${getString(R.string.aboutContributor)}Col_or、bggRGjQaUbCoE、GMerge、zwJimRaynor\n" +
-                                            "${getString(R.string.aboutSpecialThanksTo)}owo233、钟路帆\n" +
-                                            "${getString(R.string.aboutOpenSourceRepo)}GitHub\n" +
-                                            "${getString(R.string.aboutGetUpdate)}GitHub Releases、Obtainium\n" +
-                                            "${getString(R.string.facilitateI18n)}Crowdin\n\n" +
-                                            "Since 2023.8.9"
-                                ).apply {
-                                    setSpan(
-                                        URLSpan("https://github.com/klxiaoniu"),
-                                        indexOf("快乐小牛"),
-                                        indexOf("快乐小牛") + "快乐小牛".length,
-                                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-                                    )
-                                    setSpan(
-                                        URLSpan("https://github.com/ArcticFoxPro"),
-                                        indexOf("有鲫雪狐"),
-                                        indexOf("有鲫雪狐") + "有鲫雪狐".length,
-                                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-                                    )
-                                    setSpan(
-                                        URLSpan("https://github.com/color597"),
-                                        indexOf("Col_or"),
-                                        indexOf("Col_or") + "Col_or".length,
-                                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-                                    )
-                                    setSpan(
-                                        URLSpan("https://github.com/bggRGjQaUbCoE"),
-                                        indexOf("bggRGjQaUbCoE"),
-                                        indexOf("bggRGjQaUbCoE") + "bggRGjQaUbCoE".length,
-                                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-                                    )
-                                    setSpan(
-                                        URLSpan("https://github.com/egmsia01"),
-                                        indexOf("GMerge"),
-                                        indexOf("GMerge") + "GMerge".length,
-                                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-                                    )
-                                    setSpan(
-                                        URLSpan("https://github.com/zwJimRaynor"),
-                                        indexOf("zwJimRaynor"),
-                                        indexOf("zwJimRaynor") + "zwJimRaynor".length,
-                                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-                                    )
-                                    setSpan(
-                                        URLSpan("https://github.com/callng"),
-                                        indexOf("owo233"),
-                                        indexOf("owo233") + "owo233".length,
-                                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-                                    )
-                                    setSpan(
-                                        URLSpan("https://github.com/Hill-98"),
-                                        indexOf("钟路帆"),
-                                        indexOf("钟路帆") + "钟路帆".length,
-                                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-                                    )
-                                    setSpan(
-                                        URLSpan("https://github.com/klxiaoniu/QQVersionList"),
-                                        indexOf("GitHub"),
-                                        indexOf("GitHub") + "GitHub".length,
-                                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-                                    )
-                                    setSpan(
-                                        URLSpan("https://github.com/klxiaoniu/QQVersionList/releases"),
-                                        indexOf("GitHub Releases"),
-                                        indexOf("GitHub Releases") + "GitHub Releases".length,
-                                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-                                    )
-                                    setSpan(
-                                        URLSpan("https://github.com/klxiaoniu/QQVersionList/blob/master/ReadmeAssets/Get-it-on-Obtainium.md"),
-                                        indexOf("Obtainium"),
-                                        indexOf("Obtainium") + "Obtainium".length,
-                                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-                                    )
-                                    /*setSpan(
-                                        URLSpan("https://github.com/klxiaoniu/QQVersionList/blob/master/ReadmeAssets/Get-it-on-JiuQi-NotifCenter-WeChatMiniProgram.md"),
-                                        indexOf("九七通知中心"),
-                                        indexOf("九七通知中心") + "九七通知中心".length,
-                                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-                                    )*/
-                                    setSpan(
-                                        URLSpan("https://crowdin.com/project/qqversionstool"),
-                                        indexOf("Crowdin"),
-                                        indexOf("Crowdin") + "Crowdin".length,
-                                        SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
-                                    )
-                                }
+                                aboutText.text = this@MainActivity.qverbowAboutText()
                             }
 
                         btnAboutWithdrawConsentUA.setOnClickListener {
@@ -860,8 +769,117 @@ class MainActivity : AppCompatActivity() {
                         .show()
 
                     dialogExperimentalFeaturesBinding.apply {
+                        progressIndicator.apply {
+                            hide()
+                            showAnimationBehavior = LinearProgressIndicator.SHOW_NONE
+                            hideAnimationBehavior = LinearProgressIndicator.HIDE_ESCAPE
+                        }
+
                         btnExpOk.setOnClickListener {
                             dialogExperimentalFeatures.dismiss()
+                        }
+
+                        dialogGetWeixinAlphaNewest.setOnClickListener {
+                            progressIndicator.show()
+                            CoroutineScope(Dispatchers.IO).launch {
+                                class CustomException(message: String) :
+                                    Exception(message)
+                                try {
+                                    val okHttpClient = OkHttpClient()
+                                    val request =
+                                        Request.Builder()
+                                            .url("https://dldir1.qq.com/weixin/android/weixin_android_alpha_config.json")
+                                            .build()
+                                    val response = okHttpClient.newCall(request).execute()
+                                    if (!response.isSuccessful) throw CustomException(getString(R.string.getWeixinAlphaConfig404))
+                                    val responseData = response.body?.string()
+                                    if (responseData == null) throw CustomException("Response data is null.")
+                                    val start = (responseData.indexOf("cb(")) + 3
+                                    val end = responseData.indexOf(")")
+                                    val jsonString = responseData.substring(start, end)
+                                    val map = resolveWeixinAlphaConfig(jsonString)
+                                    val request2 =
+                                        Request.Builder().url(map["url"].toString()).head().build()
+                                    val response2 = okHttpClient.newCall(request2).execute()
+                                    val appSize = (if (response2.isSuccessful) "%.2f".format(
+                                        response2.header("Content-Length")?.toDoubleOrNull()
+                                            ?.div(1024 * 1024)
+                                    ) else null)
+                                    runOnUiThread {
+                                        val applicationsConfigBackButtonBinding =
+                                            ApplicationsConfigBackButtonBinding.inflate(
+                                                layoutInflater
+                                            )
+                                        val weixinAlphaConfigBackDialog =
+                                            MaterialAlertDialogBuilder(this@MainActivity).setTitle(R.string.successInGetting)
+                                                .setIcon(R.drawable.flask_line).setMessage(
+                                                    "${getString(R.string.version)}${map["versionName"].toString()}\n${
+                                                        getString(
+                                                            R.string.downloadLink
+                                                        )
+                                                    }${map["url"].toString()}" + (if (appSize != null) "\n\n${
+                                                        getString(
+                                                            R.string.fileSize
+                                                        )
+                                                    }$appSize MB" else ("\n\n" + getString(R.string.getWeixinAlphaConfigLink404)))
+                                                ).setView(applicationsConfigBackButtonBinding.root)
+                                                .show()
+
+                                        applicationsConfigBackButtonBinding.apply {
+                                            applicationsConfigBackBtnCopy.setOnClickListener {
+                                                weixinAlphaConfigBackDialog.dismiss()
+                                                copyText(map["url"].toString())
+                                            }
+
+                                            applicationsConfigBackBtnDownload.setOnClickListener {
+                                                weixinAlphaConfigBackDialog.dismiss()
+                                                downloadFile(
+                                                    this@MainActivity, map["url"].toString()
+                                                )
+                                            }
+
+                                            applicationsConfigBackBtnJsonDetails.setOnClickListener {
+                                                showExpBackDialog(
+                                                    Gson().toJson(map),
+                                                    getString(R.string.jsonDetails)
+                                                )
+                                            }
+
+                                            applicationsConfigBackBtnShare.setOnClickListener {
+                                                weixinAlphaConfigBackDialog.dismiss()
+                                                val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                                                    type = "text/plain"
+                                                    putExtra(
+                                                        Intent.EXTRA_TEXT,
+                                                        "Android 微信测试版 ${map["versionName"].toString()}" + (if (appSize != null) "（${
+                                                            getString(
+                                                                R.string.fileSize
+                                                            )
+                                                        }$appSize MB）" else "") + "\n\n${
+                                                            getString(
+                                                                R.string.downloadLink
+                                                            )
+                                                        }${map["url"].toString()}\n\n鉴于微信测试版可能存在不可预知的稳定性问题，您在下载及使用该测试版本之前，必须明确并确保自身具备足够的风险识别和承受能力。"
+                                                    )
+                                                }
+                                                startActivity(
+                                                    Intent.createChooser(
+                                                        shareIntent, getString(R.string.shareTo)
+                                                    )
+                                                )
+                                            }
+                                        }
+                                    }
+
+                                } catch (e: CustomException) {
+                                    dialogError(e, true)
+                                } catch (e: Exception) {
+                                    e.printStackTrace()
+                                    dialogError(e)
+                                } finally {
+                                    runOnUiThread { progressIndicator.hide() }
+                                }
+                            }
                         }
 
                         dialogTencentAppStore.setOnClickListener {
@@ -881,39 +899,27 @@ class MainActivity : AppCompatActivity() {
                                 }
 
                                 getQq.setOnClickListener {
-                                    tencentAppStoreStart(
-                                        mapOf("packagename" to "com.tencent.mobileqq"), getQq
-                                    )
+                                    tencentAppStoreStart("com.tencent.mobileqq", getQq)
                                 }
 
                                 getTim.setOnClickListener {
-                                    tencentAppStoreStart(
-                                        mapOf("packagename" to "com.tencent.tim"), getTim
-                                    )
+                                    tencentAppStoreStart("com.tencent.tim", getTim)
                                 }
 
                                 getWeixin.setOnClickListener {
-                                    tencentAppStoreStart(
-                                        mapOf("packagename" to "com.tencent.mm"), getWeixin
-                                    )
+                                    tencentAppStoreStart("com.tencent.mm", getWeixin)
                                 }
 
                                 getWecom.setOnClickListener {
-                                    tencentAppStoreStart(
-                                        mapOf("packagename" to "com.tencent.wework"), getWecom
-                                    )
+                                    tencentAppStoreStart("com.tencent.wework", getWecom)
                                 }
 
                                 getWetype.setOnClickListener {
-                                    tencentAppStoreStart(
-                                        mapOf("packagename" to "com.tencent.wetype"), getWetype
-                                    )
+                                    tencentAppStoreStart("com.tencent.wetype", getWetype)
                                 }
 
                                 getQidian.setOnClickListener {
-                                    tencentAppStoreStart(
-                                        mapOf("packagename" to "com.tencent.qidian"), getQidian
-                                    )
+                                    tencentAppStoreStart("com.tencent.qidian", getQidian)
                                 }
                             }
                         }
@@ -956,11 +962,11 @@ class MainActivity : AppCompatActivity() {
                                 }
 
                                 shiplyAdvancedConfigurationsClick.setOnClickListener {
-                                    ShiplyAdvancedConfigSheetFragment().apply {
+                                    ShiplyAdvancedConfigFragment().apply {
                                         isCancelable = false
                                         show(
                                             supportFragmentManager,
-                                            ShiplyAdvancedConfigSheetFragment.TAG
+                                            ShiplyAdvancedConfigFragment.TAG
                                         )
                                     }
                                 }
@@ -1441,8 +1447,7 @@ class MainActivity : AppCompatActivity() {
                     mapOf("key" to "QQAppSettingParamsInstall", "value" to "", "type" to "String"),
                     mapOf(
                         "key" to "QQAppSettingParamsPadInstall",
-                        "value" to "",
-                        "type" to "String"
+                        "value" to "", "type" to "String"
                     ),
                     mapOf("key" to "QQRdmUUIDInstall", "value" to "", "type" to "String"),
                     mapOf("key" to "QQQua", "value" to "", "type" to "String"),
@@ -1519,20 +1524,16 @@ class MainActivity : AppCompatActivity() {
                         mapOf("key" to "TIMVersionCodeInstall", "value" to "", "type" to "String"),
                         mapOf(
                             "key" to "TIMAppSettingParamsInstall",
-                            "value" to "",
-                            "type" to "String"
+                            "value" to "", "type" to "String"
                         ), mapOf(
                             "key" to "TIMAppSettingParamsPadInstall",
-                            "value" to "",
-                            "type" to "String"
+                            "value" to "", "type" to "String"
                         ), mapOf(
                             "key" to "TIMRdmUUIDInstall",
-                            "value" to "",
-                            "type" to "String"
+                            "value" to "", "type" to "String"
                         ), mapOf(
                             "key" to "TIMQua",
-                            "value" to "",
-                            "type" to "String"
+                            "value" to "", "type" to "String"
                         )
                     )
                     DataStoreUtil.batchPutKVAsync(localTIMEmptyList)
@@ -1660,14 +1661,12 @@ class MainActivity : AppCompatActivity() {
             val useQQ8958TestFormat = DataStoreUtil.getBooleanKV("useQQ8958TestFormat", false)
             val suf64hb =
                 if (DataStoreUtil.getBooleanKV(
-                        "suffix64HB",
-                        true
+                        "suffix64HB", true
                     )
                 ) listOf("_64_HB") else emptyList()
             val sufHb64 =
                 if (DataStoreUtil.getBooleanKV(
-                        "suffixHB64",
-                        true
+                        "suffixHB64", true
                     )
                 ) listOf("_HB_64") else emptyList()
             val suf64hb1 = if (DataStoreUtil.getBooleanKV(
@@ -1696,14 +1695,12 @@ class MainActivity : AppCompatActivity() {
             ) listOf("_HB3_64") else emptyList()
             val suf64hd =
                 if (DataStoreUtil.getBooleanKV(
-                        "suffix64HD",
-                        true
+                        "suffix64HD", true
                     )
                 ) listOf("_64_HD") else emptyList()
             val sufHd64 =
                 if (DataStoreUtil.getBooleanKV(
-                        "suffixHD64",
-                        true
+                        "suffixHD64", true
                     )
                 ) listOf("_HD_64") else emptyList()
             val suf64hd1 = if (DataStoreUtil.getBooleanKV(
@@ -1742,30 +1739,15 @@ class MainActivity : AppCompatActivity() {
                 if (DataStoreUtil.getBooleanKV("suffixTest", true)) listOf("_test") else emptyList()
 
             val stListPre = listOf("_64") + arrayListOf(
-                suf64hb,
-                suf64hb1,
-                suf64hb2,
-                suf64hb3,
-                suf64hd,
-                suf64hd1,
-                suf64hd2,
-                suf64hd3,
-                suf64hd1hb,
-                sufHb64,
-                sufHb164,
-                sufHb264,
-                sufHb364,
-                sufHd64,
-                sufHd164,
-                sufHd264,
-                sufHd364,
-                sufHd1hb64,
-                sufTest
+                suf64hb, suf64hb1, suf64hb2, suf64hb3, suf64hd, suf64hd1, suf64hd2, suf64hd3,
+                suf64hd1hb, sufHb64, sufHb164, sufHb264, sufHb364, sufHd64, sufHd164, sufHd264,
+                sufHd364, sufHd1hb64, sufTest
             ).flatten()
 
             // ["_64", "_64_HB", "_64_HB1", "_64_HB2", "_64_HB3", "_64_HD", "_64_HD1", "_64_HD2", "_64_HD3", "_64_HD1HB", "_HB_64", "_HB1_64", "_HB2_64", "_HB3_64", "_HD_64", "_HD1_64", "_HD2_64", "_HD3_64", "_HD1HB_64", "_test"]
 
             val stList = if (defineSufList != listOf("")) stListPre + defineSufList else stListPre
+            val weSoList = listOf("", "_1")
             try {
                 var sIndex = 0
                 while (true) when (status) {
@@ -1796,17 +1778,8 @@ class MainActivity : AppCompatActivity() {
 
                             MODE_OFFICIAL -> {
                                 val soListPre = listOf(
-                                    "_64",
-                                    "_64_HB",
-                                    "_64_HB1",
-                                    "_64_HB2",
-                                    "_64_HB3",
-                                    "_HB_64",
-                                    "_HB1_64",
-                                    "_HB2_64",
-                                    "_HB3_64",
-                                    "_64_BBPJ",
-                                    "_BBPJ_64"
+                                    "_64", "_64_HB", "_64_HB1", "_64_HB2", "_64_HB3", "_HB_64",
+                                    "_HB1_64", "_HB2_64", "_HB3_64", "_64_BBPJ", "_BBPJ_64"
                                 )
                                 val soList =
                                     if (defineSufList != listOf("")) soListPre + defineSufList else soListPre
@@ -1822,9 +1795,13 @@ class MainActivity : AppCompatActivity() {
 
                             }
 
-                            MODE_WECHAT -> link =
-                                "https://dldir1.qq.com/weixin/android/weixin${versionBig}android${versionTrue}_0x${v16codeStr}_arm64.apk"
-                            // https://dldir1.qq.com/weixin/android/weixin8049android2600_0x2800318a_arm64.apk
+                            MODE_WECHAT -> {
+                                // https://dldir1.qq.com/weixin/android/weixin8049android2600_0x2800318a_arm64.apk
+                                // https://dldir1.qq.com/weixin/android/weixin8054android2740_0x28003630_arm64_1.apk
+                                link =
+                                    "https://dldir1.qq.com/weixin/android/weixin${versionBig}android${versionTrue}_0x${v16codeStr}_arm64${weSoList[sIndex]}.apk"
+                                sIndex += 1
+                            }
                         }
                         runOnUiThread {
                             updateProgressDialogMessage("${getString(R.string.enumeratingDownloadLink)}$link")
@@ -1881,9 +1858,10 @@ class MainActivity : AppCompatActivity() {
                                         }
 
                                         mode == MODE_UNOFFICIAL -> vSmall += if (!guessNot5) 5 else 1
-                                        mode == MODE_WECHAT -> {
+                                        mode == MODE_WECHAT && sIndex == (weSoList.size) -> {
                                             val version16code = v16codeStr.toInt(16) + 1
                                             v16codeStr = version16code.toString(16)
+                                            sIndex = 0
                                         }
                                     }
                                     successMaterialDialog.dismiss()
@@ -2004,9 +1982,10 @@ class MainActivity : AppCompatActivity() {
                                 }
 
                                 mode == MODE_UNOFFICIAL -> vSmall += if (!guessNot5) 5 else 1
-                                mode == MODE_WECHAT -> {
+                                mode == MODE_WECHAT && sIndex == (weSoList.size) -> {
                                     val version16code = v16codeStr.toInt(16) + 1
                                     v16codeStr = version16code.toString(16)
+                                    sIndex = 0
                                 }
                             }
                         }
@@ -2184,13 +2163,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun tencentAppStoreStart(
-        getType: Any,
+        getType: String,
         btn: MaterialButton
     ) {
         val spec = CircularProgressIndicatorSpec(
-            this@MainActivity,
-            null,
-            0,
+            this@MainActivity, null, 0,
             com.google.android.material.R.style.Widget_Material3_CircularProgressIndicator_ExtraSmall
         )
         val progressIndicatorDrawable =
@@ -2209,7 +2186,9 @@ class MainActivity : AppCompatActivity() {
                         level = HttpLoggingInterceptor.Level.BODY
                     }).build()
                 val mediaType = "application/json; charset=utf-8".toMediaTypeOrNull()
-                val body = GsonBuilder().setStrictness(Strictness.LENIENT).create().toJson(getType)
+                val getTypePost = mapOf("packagename" to getType)
+                val body =
+                    GsonBuilder().setStrictness(Strictness.LENIENT).create().toJson(getTypePost)
                 val request = Request.Builder().url("https://upage.html5.qq.com/wechat-apkinfo")
                     .post(body.toRequestBody(mediaType!!))
                     .addHeader("Content-Type", "application/json")
@@ -2219,13 +2198,71 @@ class MainActivity : AppCompatActivity() {
                 val responseData = response.body?.string()
                 if (response.isSuccessful && !responseData.isNullOrEmpty()) {
                     val gson = GsonBuilder().setPrettyPrinting().create()
-                    val tencentAppStoreResultJson =
-                        gson.toJson(gson.fromJson(responseData, JsonElement::class.java))
+                    val tencentAppStoreResult = gson.fromJson(responseData, JsonObject::class.java)
+                    val tencentAppStoreResultJson = gson.toJson(tencentAppStoreResult)
+                    val appAllData = tencentAppStoreResult.getAsJsonObject("app_detail_records")
+                        .getAsJsonObject(getType).getAsJsonObject("apk_all_data")
+                    val appName = appAllData.getAsJsonPrimitive("name").asString
+                    val appVersionName = appAllData.getAsJsonPrimitive("version_name").asString
+                    val appUrl = appAllData.getAsJsonPrimitive("url").asString
+                    val appSize =
+                        "%.2f".format(appAllData.getAsJsonPrimitive("size_byte").asDouble.div(1024 * 1024))
+
                     runOnUiThread {
-                        showExpBackDialog(
-                            tencentAppStoreResultJson,
-                            getString(R.string.contentReturnedByTencentAppStore)
-                        )
+                        val applicationsConfigBackButtonBinding =
+                            ApplicationsConfigBackButtonBinding.inflate(
+                                layoutInflater
+                            )
+                        val tencentAppStoreConfigBackDialog =
+                            MaterialAlertDialogBuilder(this@MainActivity).setTitle(R.string.contentReturnedByTencentAppStore)
+                                .setIcon(R.drawable.flask_line).setMessage(
+                                    "$appName $appVersionName\n${getString(R.string.downloadLink)}$appUrl" + "\n\n${
+                                        getString(
+                                            R.string.fileSize
+                                        )
+                                    }$appSize MB"
+                                ).setView(applicationsConfigBackButtonBinding.root).show()
+
+                        applicationsConfigBackButtonBinding.apply {
+                            applicationsConfigBackBtnCopy.setOnClickListener {
+                                tencentAppStoreConfigBackDialog.dismiss()
+                                copyText(appUrl)
+                            }
+
+                            applicationsConfigBackBtnDownload.setOnClickListener {
+                                tencentAppStoreConfigBackDialog.dismiss()
+                                downloadFile(
+                                    this@MainActivity, appUrl
+                                )
+                            }
+
+                            applicationsConfigBackBtnJsonDetails.setOnClickListener {
+                                showExpBackDialog(
+                                    tencentAppStoreResultJson,
+                                    getString(R.string.jsonDetails)
+                                )
+                            }
+
+                            applicationsConfigBackBtnShare.setOnClickListener {
+                                tencentAppStoreConfigBackDialog.dismiss()
+                                val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                                    type = "text/plain"
+                                    putExtra(
+                                        Intent.EXTRA_TEXT,
+                                        "Android $appName $appVersionName" + "（${getString(R.string.fileSize)}$appSize MB）" + "\n\n${
+                                            getString(
+                                                R.string.downloadLink
+                                            )
+                                        }$appUrl\n\n来自腾讯应用宝"
+                                    )
+                                }
+                                startActivity(
+                                    Intent.createChooser(
+                                        shareIntent, getString(R.string.shareTo)
+                                    )
+                                )
+                            }
+                        }
                     }
                 }
             } catch (e: Exception) {
@@ -2310,28 +2347,9 @@ class MainActivity : AppCompatActivity() {
 
                             updateQvtButtonBinding.updateQvtDownload.setOnClickListener {
                                 updateQvtMaterialDialog.dismiss()
-                                if (DataStoreUtil.getBooleanKV(
-                                        "downloadOnSystemManager", false
-                                    )
-                                ) {
-                                    val requestDownload =
-                                        DownloadManager.Request(Uri.parse(latestQVTDownloadUrl))
-                                    requestDownload.setDestinationInExternalPublicDir(
-                                        Environment.DIRECTORY_DOWNLOADS, latestQVTFileName
-                                    )
-                                    val downloadManager =
-                                        getSystemService(DOWNLOAD_SERVICE) as DownloadManager
-                                    downloadManager.enqueue(requestDownload)
-                                } else {
-                                    // 这里不用 Chrome Custom Tab 的原因是 Chrome 不知道咋回事有概率卡在“等待下载”状态
-                                    val browserIntent =
-                                        Intent(Intent.ACTION_VIEW, Uri.parse(latestQVTDownloadUrl))
-                                    browserIntent.apply {
-                                        addCategory(Intent.CATEGORY_BROWSABLE)
-                                        flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                                    }
-                                    startActivity(browserIntent)
-                                }
+                                downloadFile(
+                                    this@MainActivity, latestQVTDownloadUrl, latestQVTFileName
+                                )
                             }
                         } else showToast(getString(R.string.noAssetsDetected))
                     } else showToast(getString(R.string.noUpdatesDetected))
@@ -2408,6 +2426,7 @@ class MainActivity : AppCompatActivity() {
 
     // Firebase 云消息传递订阅和退订 API 有问题，会在无法连接 Google 服务器时无限重试，还无法通过生命周期等线程进行管理和关闭甚至杀死相关进程
     // 下面两个方法实现不对，给 Firebase 提了 Issue，接下来等 Firebase 更改相关 API 或者进一步回复再改
+    // 下面的是临时策略，请勿为了缩减 MainActivity 而将其单独分离出去，等 Google 解决后应该可以只用一条语句替代下面的整个函数
     private fun subscribeWithTimeout(
         timeoutMillis: Long, switchPushNotifViaFcm: MaterialSwitch
     ) {
@@ -2498,19 +2517,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun getQua(packageInfo: PackageInfo): String? {
-        val sourceDir = packageInfo.applicationInfo?.sourceDir ?: return null
-        val file = File(sourceDir)
-        if (!file.exists()) return null
-        return runCatching {
-            ZipFileCompat(file).use { zipFile ->
-                val entry = zipFile.getEntry("assets/qua.ini") ?: return null
-                zipFile.getInputStream(entry).use { inputStream ->
-                    return inputStream.reader().use { reader -> reader.readText() }
-                }
-            }
-        }.onFailure { dialogError(Exception(it)) }.getOrElse { null }
-    }
 
     companion object {
         @SuppressLint("StaticFieldLeak")
@@ -2532,4 +2538,3 @@ class MainActivity : AppCompatActivity() {
         val MODE_TIM: String by lazy { context.getString(R.string.timVersion) }
     }
 }
-

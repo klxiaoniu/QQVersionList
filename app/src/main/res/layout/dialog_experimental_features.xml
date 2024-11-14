@@ -22,8 +22,15 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:paddingStart="20dp"
-    android:paddingTop="6dp"
+    android:paddingTop="2dp"
     android:paddingEnd="20dp">
+
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/progress_indicator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="10dp"
+        android:indeterminate="true" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -35,6 +42,18 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingBottom="20dp">
+
+            <TextView
+                android:id="@+id/dialog_get_weixin_alpha_newest"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="8dp"
+                android:gravity="center_vertical"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:text="@string/getWeixinAlphaLinkFromWeixinConfig"
+                android:textColor="?attr/colorOnSurface"
+                app:drawableEndCompat="@drawable/arrow_right_s_line" />
 
             <TextView
                 android:id="@+id/dialog_tencent_app_store"

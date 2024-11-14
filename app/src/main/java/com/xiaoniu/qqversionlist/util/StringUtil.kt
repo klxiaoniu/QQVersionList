@@ -18,6 +18,12 @@
 
 package com.xiaoniu.qqversionlist.util
 
+import android.app.Activity
+import android.content.Context
+import android.content.pm.PackageInfo
+import com.google.gson.Gson
+import com.xiaoniu.qqversionlist.ui.MainActivity
+import com.xiaoniu.qqversionlist.util.InfoUtil.dialogError
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -25,6 +31,7 @@ import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
+import java.io.File
 
 object StringUtil {
     @OptIn(ExperimentalSerializationApi::class)
@@ -122,15 +129,65 @@ object StringUtil {
     /**
      * 修剪字符串开头的指定前缀。
      *
-     * 该函数接受两个参数：一个原始字符串`str`和一个需要修剪的前缀字符串`prefix`。
-     * 如果原始字符串`str`的开头包含了前缀字符串`prefix`，则将这部分前缀字符串修剪掉；
-     * 否则，返回原始字符串`str`。
+     * 该函数接受两个参数：一个原始字符串 `str` 和一个需要修剪的前缀字符串 `prefix`。
+     * 如果原始字符串 `str` 的开头包含了前缀字符串 `prefix` ，则将这部分前缀字符串修剪掉；
+     * 否则，返回原始字符串 `str`。
      *
      * @param prefix 需要修剪的前缀字符串。
      * @return 修剪掉开头前缀后的字符串，如果原始字符串没有以该前缀开始，则返回原始字符串。
      */
     fun String.trimSubstringAtStart(prefix: String): String {
         return if (this.startsWith(prefix)) this.substring(prefix.length) else this
+    }
+
+    /**
+     * 从给定的 `PackageInfo` 对象中获取 `qua.ini` 文件的内容
+     *
+     * @param packageInfo 包含应用信息的 `PackageInfo` 对象，用于访问应用的资源
+     * @param activity 用于显示错误对话框的 `Activity` 对象
+     * @return 返回 `qua.ini` 文件的内容作为字符串，如果发生任何错误或文件不存在则返回null
+     */
+    fun Activity.getQua(packageInfo: PackageInfo): String? {
+        val sourceDir = packageInfo.applicationInfo?.sourceDir ?: return null
+        val file = File(sourceDir)
+        if (!file.exists()) return null
+        return runCatching {
+            ZipFileCompat(file).use { zipFile ->
+                val entry = zipFile.getEntry("assets/qua.ini") ?: return null
+                zipFile.getInputStream(entry).use { inputStream ->
+                    return inputStream.reader().use { reader -> reader.readText() }
+                }
+            }
+        }.onFailure { dialogError(Exception(it)) }.getOrElse { null }
+    }
+
+    /**
+     * 解析微信测试版配置信息
+     * 该函数从给定的响应字符串中提取配置信息，并将其解析为一个包含配置数据的Map
+     * 主要处理的是 JSON 格式的数据，使用 Gson 库进行解析
+     *
+     * @param responseData 包含配置信息的响应字符串
+     * @return 包含解析后的配置信息的 Map，包括 URL、MD5、版本名称、版本号以及文本列表和最近列表
+     */
+    fun resolveWeixinAlphaConfig(jsonString: String): Map<String, Any?> {
+        val gson = Gson()
+        val jsonData = gson.fromJson(jsonString, com.google.gson.JsonObject::class.java)
+        val url = jsonData.getAsJsonObject("arm64").getAsJsonPrimitive("url").asString
+        val md5 = jsonData.getAsJsonObject("arm64").getAsJsonPrimitive("md5").asString
+        val versionName = jsonData.getAsJsonObject("arm64").getAsJsonPrimitive("versionName").asString
+        val version = jsonData.getAsJsonObject("arm64").getAsJsonPrimitive("version").asString
+        val direct = jsonData.getAsJsonObject("arm64").getAsJsonPrimitive("direct").asString
+        val textList = jsonData.getAsJsonObject("arm64").getAsJsonArray("textList").asJsonArray
+        val recentList = jsonData.getAsJsonObject("arm64").getAsJsonArray("recentList").asJsonArray
+        return mapOf(
+            "url" to url,
+            "md5" to md5,
+            "versionName" to versionName,
+            "version" to version,
+            "direct" to direct,
+            "textList" to textList.map { it.asString },
+            "recentList" to recentList.map { it.asString }
+        )
     }
 }
 

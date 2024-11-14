@@ -185,4 +185,8 @@
     <string name="openSourceLicenseTitle">Open Source Licenses</string>
     <string name="basedOnQQVer">Secondary Development Based on Android QQ %s</string>
     <string name="getQidianLinkFromTencentAppStore">Get Tencent Qidian Download Link</string>
+    <string name="getWeixinAlphaLinkFromWeixinConfig">Get the Newest Weixin Alpha Download Link from the Tencent Server Configuration</string>
+    <string name="successInGetting">Success in Getting</string>
+    <string name="getWeixinAlphaConfig404">It seems that the Tencent server configuration file was not accessed successfully, possibly because there is no current alpha version of Weixin or the beta version has been removed.</string>
+    <string name="getWeixinAlphaConfigLink404">It seems that the download address was not successfully accessed, possibly because the current Weixin alpha version has been removed.</string>
 </resources>

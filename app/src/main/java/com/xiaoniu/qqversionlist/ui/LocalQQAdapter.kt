@@ -22,7 +22,6 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
@@ -30,6 +29,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.xiaoniu.qqversionlist.R
 import com.xiaoniu.qqversionlist.databinding.LocalQqBinding
 import com.xiaoniu.qqversionlist.util.DataStoreUtil
+import com.xiaoniu.qqversionlist.util.InfoUtil.showToast
 
 class LocalQQAdapter : RecyclerView.Adapter<LocalQQAdapter.LocalQQViewHolder>() {
 
@@ -158,11 +158,7 @@ class LocalQQAdapter : RecyclerView.Adapter<LocalQQAdapter.LocalQQViewHolder>() 
                             .setTitle(R.string.localQQVersionDetails)
                             .setIcon(R.drawable.phone_find_line)
                             .show()
-                    } else Toast.makeText(
-                        itemView.context,
-                        itemView.context.getString(R.string.longPressToViewSourceDetailsIsDisabled),
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    } else showToast(R.string.longPressToViewSourceDetailsIsDisabled)
                     true
                 }
             } else itemQqInstallCard.isVisible = false

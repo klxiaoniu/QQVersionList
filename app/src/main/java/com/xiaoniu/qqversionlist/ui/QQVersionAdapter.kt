@@ -28,14 +28,15 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
-import coil.transform.RoundedCornersTransformation
+import coil3.load
+import coil3.request.crossfade
+import coil3.request.transformations
+import coil3.transform.RoundedCornersTransformation
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.progressindicator.LinearProgressIndicator
@@ -45,6 +46,7 @@ import com.xiaoniu.qqversionlist.databinding.ItemQqVersionBinding
 import com.xiaoniu.qqversionlist.databinding.ItemQqVersionDetailBinding
 import com.xiaoniu.qqversionlist.util.DataStoreUtil
 import com.xiaoniu.qqversionlist.util.Extensions.dp
+import com.xiaoniu.qqversionlist.util.InfoUtil.showToast
 import com.xiaoniu.qqversionlist.util.StringUtil.toPrettyFormat
 
 class QQVersionAdapter :
@@ -170,13 +172,9 @@ class QQVersionAdapter :
     }
 
     private fun longPressCard(bindingAdapterPosition: Int, it: View) {
-        if (DataStoreUtil.getBooleanKV("longPressCard", true)) {
-            showDialog(
-                it.context, currentList[bindingAdapterPosition].jsonString.toPrettyFormat()
-            )
-        } else Toast.makeText(
-            it.context, R.string.longPressToViewSourceDetailsIsDisabled, Toast.LENGTH_SHORT
-        ).show()
+        if (DataStoreUtil.getBooleanKV("longPressCard", true)) showDialog(
+            it.context, currentList[bindingAdapterPosition].jsonString.toPrettyFormat()
+        ) else showToast(R.string.longPressToViewSourceDetailsIsDisabled)
     }
 
     @SuppressLint("SetTextI18n")

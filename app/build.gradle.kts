@@ -49,7 +49,7 @@ android {
         minSdk = 24
         targetSdk = 35
         versionCode = gitCommitCount
-        versionName = "1.4.2-$gitCommitHash"
+        versionName = "1.4.3-$gitCommitHash"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
             cmake {
@@ -77,6 +77,9 @@ android {
             )
             signingConfig =
                 signingConfigs.findByName("release") ?: signingConfigs.findByName("debug")
+            signingConfig?.enableV2Signing = true
+            signingConfig?.enableV3Signing = true
+            signingConfig?.enableV4Signing = true
         }
     }
 
@@ -108,6 +111,7 @@ dependencies {
     implementation(libs.logging.interceptor)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.coil)
+    implementation(libs.coil.network.okhttp)
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.gson)
     implementation(libs.paris)
