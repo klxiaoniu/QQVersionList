@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?><!--
-    QQ Versions Tool for Android™
+    Qverbow Util
     Copyright (C) 2023 klxiaoniu
 
     This program is free software: you can redistribute it and/or modify
@@ -99,7 +99,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
-                    android:text="QQ 版本列表实用工具提供的服务是指提供 Android QQ 和 Android TIM 版本列表的查看和对腾讯服务器提供的 Android QQ 及其它可能存在的腾讯软件产品的下载链接的枚举法猜测。QQ 版本列表实用工具用户可以通过本应用及时获取到 Android QQ 及其它可能存在的腾讯软件产品的版本更新的最新信息。\n\nQQ 版本列表实用工具不面向中国大陆境内公众用户提供服务。请确认您并非中国大陆公民。\n\n此外，QQ 版本列表实用工具可能以软件实验形式提供一些尚不稳定的服务，您在使用此类服务时，必须明确并确保自身具备足够的风险识别和承受能力。"
+                    android:text="QQ 版本列表实用工具提供的服务是指提供 Android QQ 和 Android TIM 版本列表的查看和对腾讯服务器提供的 Android QQ 及其它可能存在的腾讯软件产品的下载链接的枚举法扫描。QQ 版本列表实用工具用户可以通过本应用及时获取到 Android QQ 及其它可能存在的腾讯软件产品的版本更新的最新信息。\n\nQQ 版本列表实用工具不面向中国大陆境内公众用户提供服务。请确认您并非中国大陆公民。\n\n此外，QQ 版本列表实用工具可能以软件实验形式提供一些尚不稳定的服务，您在使用此类服务时，必须明确并确保自身具备足够的风险识别和承受能力。"
                     tools:ignore="HardcodedText" />
 
                 <TextView

@@ -1,5 +1,5 @@
 /*
-    QQ Versions Tool for Android™
+    Qverbow Util
     Copyright (C) 2023 klxiaoniu
 
     This program is free software: you can redistribute it and/or modify
@@ -30,7 +30,7 @@ import android.widget.Toast
 import androidx.annotation.StringRes
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.xiaoniu.qqversionlist.BuildConfig
-import com.xiaoniu.qqversionlist.QVTApplication
+import com.xiaoniu.qqversionlist.QverbowApplication
 import com.xiaoniu.qqversionlist.R
 import com.xiaoniu.qqversionlist.util.ClipboardUtil.copyText
 import kotlinx.coroutines.CoroutineScope
@@ -40,13 +40,13 @@ import kotlinx.coroutines.launch
 object InfoUtil {
     fun showToast(text: String) {
         CoroutineScope(Dispatchers.Main).launch {
-            Toast.makeText(QVTApplication.instance, text, Toast.LENGTH_SHORT).show()
+            Toast.makeText(QverbowApplication.instance, text, Toast.LENGTH_SHORT).show()
         }
     }
 
     fun showToast(@StringRes textResId: Int) {
         CoroutineScope(Dispatchers.Main).launch {
-            Toast.makeText(QVTApplication.instance, textResId, Toast.LENGTH_SHORT).show()
+            Toast.makeText(QverbowApplication.instance, textResId, Toast.LENGTH_SHORT).show()
         }
     }
 

@@ -1,5 +1,5 @@
 /*
-    QQ Versions Tool for Android™
+    Qverbow Util
     Copyright (C) 2023 klxiaoniu
 
     This program is free software: you can redistribute it and/or modify
@@ -49,7 +49,7 @@ android {
         minSdk = 24
         targetSdk = 35
         versionCode = gitCommitCount
-        versionName = "1.4.3-$gitCommitHash"
+        versionName = "1.4.4-$gitCommitHash"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
             cmake {

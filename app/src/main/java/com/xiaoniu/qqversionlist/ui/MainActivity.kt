@@ -1,5 +1,5 @@
 /*
-    QQ Versions Tool for Android™
+    Qverbow Util
     Copyright (C) 2023 klxiaoniu
 
     This program is free software: you can redistribute it and/or modify
@@ -76,8 +76,8 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.Strictness
 import com.xiaoniu.qqversionlist.BuildConfig
-import com.xiaoniu.qqversionlist.QVTApplication.Companion.SHIPLY_DEFAULT_APPID
-import com.xiaoniu.qqversionlist.QVTApplication.Companion.SHIPLY_DEFAULT_SDK_VERSION
+import com.xiaoniu.qqversionlist.QverbowApplication.Companion.SHIPLY_DEFAULT_APPID
+import com.xiaoniu.qqversionlist.QverbowApplication.Companion.SHIPLY_DEFAULT_SDK_VERSION
 import com.xiaoniu.qqversionlist.R
 import com.xiaoniu.qqversionlist.data.QQVersionBean
 import com.xiaoniu.qqversionlist.data.TIMVersionBean
@@ -99,8 +99,8 @@ import com.xiaoniu.qqversionlist.databinding.UpdateQvtButtonBinding
 import com.xiaoniu.qqversionlist.databinding.UserAgreementBinding
 import com.xiaoniu.qqversionlist.util.ClipboardUtil.copyText
 import com.xiaoniu.qqversionlist.util.DataStoreUtil
-import com.xiaoniu.qqversionlist.util.Extensions.downloadFile
 import com.xiaoniu.qqversionlist.util.Extensions.dp
+import com.xiaoniu.qqversionlist.util.FileUtil.downloadFile
 import com.xiaoniu.qqversionlist.util.InfoUtil.dialogError
 import com.xiaoniu.qqversionlist.util.InfoUtil.qverbowAboutText
 import com.xiaoniu.qqversionlist.util.InfoUtil.showToast
@@ -358,7 +358,7 @@ class MainActivity : AppCompatActivity() {
                         longPressCard.isChecked = DataStoreUtil.getBooleanKV("longPressCard", true)
                         guessNot5.isChecked = DataStoreUtil.getBooleanKV("guessNot5", false)
                         switchGuessTestExtend.isChecked =
-                            DataStoreUtil.getBooleanKV("guessTestExtend", false) // 扩展测试版猜版格式
+                            DataStoreUtil.getBooleanKV("guessTestExtend", false) // 扩展测试版扫版格式
                         downloadOnSystemManager.isChecked =
                             DataStoreUtil.getBooleanKV("downloadOnSystemManager", false)
                         switchAutoCheckUpdates.isChecked =
@@ -1162,7 +1162,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    // 下面三个函数是用于响应猜版对话框 Spinner 所选项的界面变化
+    // 下面三个函数是用于响应扫版对话框 Spinner 所选项的界面变化
     private fun modeTestView(dialogGuessBinding: DialogGuessBinding, mode: String) {
         dialogGuessBinding.apply {
             etVersionSmall.isEnabled = true
@@ -1785,7 +1785,7 @@ class MainActivity : AppCompatActivity() {
                                     if (defineSufList != listOf("")) soListPre + defineSufList else soListPre
                                 if (sIndex == (soList.size)) {
                                     status = STATUS_END
-                                    showToast("未猜测到包")
+                                    showToast("未扫描到包")
                                     continue
                                 } else {
                                     link =
@@ -1845,7 +1845,7 @@ class MainActivity : AppCompatActivity() {
 
                                 // 继续按钮点击事件
                                 successButtonBinding.btnContinue.setOnClickListener {
-                                    // 测试版情况下，未打开扩展猜版或扩展猜版到最后一步时执行小版本号的递增
+                                    // 测试版情况下，未打开扩展扫版或扩展扫版到最后一步时执行小版本号的递增
                                     when {
                                         mode == MODE_TEST && (!guessTestExtend || sIndex == (stList.size)) -> {
                                             vSmall += if (!guessNot5) 5 else 1
@@ -1971,7 +1971,7 @@ class MainActivity : AppCompatActivity() {
 
                         } else {
                             when {
-                                mode == MODE_TEST && (!guessTestExtend || sIndex == (stList.size)) -> { // 测试版情况下，未打开扩展猜版或扩展猜版到最后一步时执行小版本号的递增
+                                mode == MODE_TEST && (!guessTestExtend || sIndex == (stList.size)) -> { // 测试版情况下，未打开扩展扫版或扩展扫版到最后一步时执行小版本号的递增
                                     vSmall += if (!guessNot5) 5 else 1
                                     sIndex = 0
                                 }

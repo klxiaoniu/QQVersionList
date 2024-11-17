@@ -1,5 +1,5 @@
 /*
-    QQ Versions Tool for Android™
+    Qverbow Util
     Copyright (C) 2023 klxiaoniu
 
     This program is free software: you can redistribute it and/or modify
@@ -28,7 +28,7 @@ import com.xiaoniu.qqversionlist.R
 import com.xiaoniu.qqversionlist.databinding.ExpLinkNextButtonBinding
 import com.xiaoniu.qqversionlist.databinding.ItemExpBackUrlCardBinding
 import com.xiaoniu.qqversionlist.util.ClipboardUtil.copyText
-import com.xiaoniu.qqversionlist.util.Extensions.downloadFile
+import com.xiaoniu.qqversionlist.util.FileUtil.downloadFile
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

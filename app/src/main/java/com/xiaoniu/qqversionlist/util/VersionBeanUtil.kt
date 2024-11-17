@@ -1,5 +1,5 @@
 /*
-    QQ Versions Tool for Android™
+    Qverbow Util
     Copyright (C) 2023 klxiaoniu
 
     This program is free software: you can redistribute it and/or modify
@@ -20,9 +20,9 @@ package com.xiaoniu.qqversionlist.util
 
 import com.google.gson.Gson
 import com.google.gson.JsonObject
-import com.xiaoniu.qqversionlist.QVTApplication.Companion.EARLIEST_QQNT_FRAMEWORK_QQ_VERSION_STABLE
-import com.xiaoniu.qqversionlist.QVTApplication.Companion.EARLIEST_QQNT_FRAMEWORK_TIM_VERSION_STABLE
-import com.xiaoniu.qqversionlist.QVTApplication.Companion.EARLIEST_UNREAL_ENGINE_QQ_VERSION_STABLE
+import com.xiaoniu.qqversionlist.QverbowApplication.Companion.EARLIEST_QQNT_FRAMEWORK_QQ_VERSION_STABLE
+import com.xiaoniu.qqversionlist.QverbowApplication.Companion.EARLIEST_QQNT_FRAMEWORK_TIM_VERSION_STABLE
+import com.xiaoniu.qqversionlist.QverbowApplication.Companion.EARLIEST_UNREAL_ENGINE_QQ_VERSION_STABLE
 import com.xiaoniu.qqversionlist.data.QQVersionBean
 import com.xiaoniu.qqversionlist.data.TIMVersionBean
 import com.xiaoniu.qqversionlist.ui.MainActivity
@@ -65,7 +65,7 @@ object VersionBeanUtil {
             )
         ) thisActivity.qqVersion[0].displayType = 1
         // 舍弃 currentQQVersion = qqVersion.first().versionNumber
-        // 大版本号也放持久化存储了，否则猜版 Shortcut 因为加载过快而获取不到东西
+        // 大版本号也放持久化存储了，否则扫版 Shortcut 因为加载过快而获取不到东西
         DataStoreUtil.putStringKVAsync(
             "versionBig", thisActivity.qqVersion.first().versionNumber
         )

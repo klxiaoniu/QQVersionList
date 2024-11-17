@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    QQ Versions Tool for Android™
+    Qverbow Util
     Copyright (C) 2023 klxiaoniu
 
     This program is free software: you can redistribute it and/or modify
@@ -17,8 +17,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <resources>
-    <string name="app_name">QQ Ver. Tool</string>
-    <string name="appTitle">QQ Versions Tool</string>
+    <string name="app_name">Qverbow Util</string>
+    <string name="appTitle">Qverbow Util</string>
     <string name="shortcutLongLabel">Enumerate Versions Extended</string>
     <string name="shortcutShortLabel">Enum. Ver. Extd.</string>
     <string name="start">Start</string>
@@ -51,7 +51,7 @@
     <string name="previewVersion">Preview</string>
     <string name="spaceEnumerateVersion">Space-containing Enum.</string>
     <string name="weixinEnumerateVersion">Weixin</string>
-    <string name="aboutAppName">QQ Versions Tool for Android™</string>
+    <string name="aboutAppName">Qverbow Util</string>
     <string name="aboutAuthor">Author:&#160;</string>
     <string name="aboutContributor">Contributor:&#160;</string>
     <string name="version">Version:&#160;</string>
@@ -75,7 +75,7 @@
     <string name="enumQQPreviewWarning">Given that the QQ preview version may have unpredictable stability issues, you must clearly acknowledge and ensure that you possess adequate risk awareness and tolerance before downloading and using this beta version. According to the relevant terms, when using this software, you should be aware and agree that any direct or indirect losses, damages, and other adverse consequences resulting from the download or use of the QQ preview version shall be borne entirely by you.</string>
     <string name="enumQQMajorVersionHelpText">Format: x.y.z</string>
     <string name="enumWeixinMajorVersionHelpText">Omit the decimal point</string>
-    <string name="enumWeixinWarning">The enumerating Weixin versions function is an experimental feature included in QQ Versions Tool, which may have unpredictable stability issues. Please clearly understand and ensure that you have sufficient capability to identify and bear the risks.</string>
+    <string name="enumWeixinWarning">The enumerating Weixin versions function is an experimental feature included in Qverbow Util, which may have unpredictable stability issues. Please clearly understand and ensure that you have sufficient capability to identify and bear the risks.</string>
     <string name="enumHasBeenStopped">Enumerating has been stopped.</string>
     <string name="missingCipherWarning">Tencent Device-oriented Service (TDS) Shiply Containing and Distributing Platform does not include the \&quot;cipher_text\&quot; key-value pair in the returned JSON content.</string>
     <string name="missingMajorVersionWarning">Enumerating versions requires specifying the major version number, otherwise the enumeration version cannot be executed.</string>
@@ -98,7 +98,7 @@
     <string name="shiplyVersion">Version</string>
     <string name="shiplyVersionHelpText">Enter the Android QQ/TIM version number, used for requesting the Shiply Platform.</string>
     <string name="uinHelpText">Enter the target QQ account number, used for requesting the Shiply Platform.</string>
-    <string name="shiplyWarning">Tencent QQ/TIM utilizes the Tencent Device-oriented Service (TDS) Shiply Containing and Distributing Platform to distribute limited-scale gray testing packages based on the QQ account number (uin) and its terminal information. This feature does not guarantee successful retrieval of update data with each request; failure to obtain update data indicates that the entered parameters fall outside the recognized and distributed scope of the Shiply Platform. The QQ Versions Tool makes no warranty regarding the reliability of this feature or any consequences thereof. Please ensure that you have a clear understanding and sufficient capability to bear the associated risks.</string>
+    <string name="shiplyWarning">Tencent QQ/TIM utilizes the Tencent Device-oriented Service (TDS) Shiply Containing and Distributing Platform to distribute limited-scale gray testing packages based on the QQ account number (uin) and its terminal information. This feature does not guarantee successful retrieval of update data with each request; failure to obtain update data indicates that the entered parameters fall outside the recognized and distributed scope of the Shiply Platform. The Qverbow Util makes no warranty regarding the reliability of this feature or any consequences thereof. Please ensure that you have a clear understanding and sufficient capability to bear the associated risks.</string>
     <string name="defaultDisplayOfFirstListItemDetails">Default display of first version list item details</string>
     <string name="versionNumberFontUsesTCloudNumber">Version number font uses TCloudNumber</string>
     <string name="versionCardsDisplaysPackageSizeIndicator">QQ version cards displays the ratio of current package size to the historical maximum package size indicator</string>
@@ -152,11 +152,11 @@
     <string name="contentReturnedByTencentAppStore">Content Returned By Tencent App Store</string>
     <string name="getWeTypeLinkFromTencentAppStore">Get WeType Download Link</string>
     <string name="tencentAppStoreWarning">腾讯应用宝更新获取功能为 QQ 版本列表实用工具附带的实验性功能，可能存在不可预知的稳定性问题。请明确并确保自身具备足够的风险识别和承受能力。</string>
-    <string name="showOldLoading">猜版对话框使用旧版加载动画</string>
+    <string name="showOldLoading">扫版对话框使用旧版加载动画</string>
     <string name="versionCardsDisplaysPackageSizeText">QQ 版本卡片展示额定包大小占比历史最大包百分比</string>
     <string name="timVersion">TIM</string>
-    <string name="enumTIMWarning">The enumerating TIM versions function is an experimental feature included in QQ Versions Tool, which may have unpredictable stability issues. Please clearly understand and ensure that you have sufficient capability to identify and bear the risks.</string>
-    <string name="useQQ9008_14600Test">猜版类型添加 QQ 9.0.8.14600 空格直链格式</string>
+    <string name="enumTIMWarning">The enumerating TIM versions function is an experimental feature included in Qverbow Util, which may have unpredictable stability issues. Please clearly understand and ensure that you have sufficient capability to identify and bear the risks.</string>
+    <string name="useQQ9008_14600Test">扫版类型添加 QQ 9.0.8.14600 空格直链格式</string>
     <string name="initFirebaseService">Initialize Firebase Services</string>
     <string name="enablingFirebaseServiceWarning">After initializing Firebase services, a registration token will be generated locally by the Firebase SDK, and the identifier and configuration data will be uploaded to the Firebase server. This action cannot be reversed once enabled. Do you want to continue?</string>
     <string name="rainbow_notification_channel_id">rainbow_notification_channel_id</string>

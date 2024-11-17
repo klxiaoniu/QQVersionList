@@ -1,5 +1,5 @@
 /*
-    QQ Versions Tool for Android™
+    Qverbow Util
     Copyright (C) 2023 klxiaoniu
 
     This program is free software: you can redistribute it and/or modify
@@ -29,8 +29,8 @@ import androidx.appcompat.app.AppCompatActivity.INPUT_METHOD_SERVICE
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.xiaoniu.qqversionlist.QVTApplication.Companion.SHIPLY_DEFAULT_APPID
-import com.xiaoniu.qqversionlist.QVTApplication.Companion.SHIPLY_DEFAULT_SDK_VERSION
+import com.xiaoniu.qqversionlist.QverbowApplication.Companion.SHIPLY_DEFAULT_APPID
+import com.xiaoniu.qqversionlist.QverbowApplication.Companion.SHIPLY_DEFAULT_SDK_VERSION
 import com.xiaoniu.qqversionlist.R
 import com.xiaoniu.qqversionlist.databinding.BottomsheetShiplyAdvancedConfigBinding
 import com.xiaoniu.qqversionlist.util.DataStoreUtil
