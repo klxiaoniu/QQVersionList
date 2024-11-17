@@ -189,4 +189,5 @@
     <string name="successInGetting">取得成功</string>
     <string name="getWeixinAlphaConfig404">似乎未能成功訪問騰訊伺服器配置文件，可能是因為微信當前沒有測試版或測試版已撤回。</string>
     <string name="getWeixinAlphaConfigLink404">似乎未能成功訪問此下載地址，可能是因為微信當前測試版已撤回。</string>
+    <string name="suspectedPackageWithdrawal">疑似撤包</string>
 </resources>

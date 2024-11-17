@@ -18,6 +18,9 @@
 
 package com.xiaoniu.qqversionlist.util
 
+import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.xiaoniu.qqversionlist.QverbowApplication.Companion.EARLIEST_QQNT_FRAMEWORK_QQ_VERSION_STABLE
@@ -26,11 +29,12 @@ import com.xiaoniu.qqversionlist.QverbowApplication.Companion.EARLIEST_UNREAL_EN
 import com.xiaoniu.qqversionlist.data.QQVersionBean
 import com.xiaoniu.qqversionlist.data.TIMVersionBean
 import com.xiaoniu.qqversionlist.ui.MainActivity
+import com.xiaoniu.qqversionlist.util.StringUtil.getQua
 import com.xiaoniu.qqversionlist.util.StringUtil.toPrettyFormat
 import kotlinx.serialization.json.Json
 import org.apache.maven.artifact.versioning.ComparableVersion
 
-object VersionBeanUtil {
+object VersionUtil {
     fun resolveQQRainbow(thisActivity: MainActivity, responseData: String) {
         val start = (responseData.indexOf("versions64\":[")) + 12
         val end = (responseData.indexOf(";\n" + "      typeof"))
@@ -97,8 +101,7 @@ object VersionBeanUtil {
                     addProperty("new", "")
                 }).toString(),
                 displayInstall = (DataStoreUtil.getStringKV(
-                    "TIMVersionInstall",
-                    ""
+                    "TIMVersionInstall", ""
                 ) == androidVersion),
                 isQQNTFramework = ComparableVersion(androidVersion) >= ComparableVersion(
                     EARLIEST_QQNT_FRAMEWORK_TIM_VERSION_STABLE
@@ -129,8 +132,7 @@ object VersionBeanUtil {
                             addProperty("new", newFeature)
                         }).toString(),
                         displayInstall = (DataStoreUtil.getStringKV(
-                            "QQVersionInstall",
-                            ""
+                            "QQVersionInstall", ""
                         ) == version),
                         isQQNTFramework = ComparableVersion(version) >= ComparableVersion(
                             EARLIEST_QQNT_FRAMEWORK_TIM_VERSION_STABLE
@@ -165,8 +167,7 @@ object VersionBeanUtil {
                                 addProperty("new", newFeature)
                             }).toString(),
                             displayInstall = (DataStoreUtil.getStringKV(
-                                "QQVersionInstall",
-                                ""
+                                "QQVersionInstall", ""
                             ) == version),
                             isQQNTFramework = ComparableVersion(version) >= ComparableVersion(
                                 EARLIEST_QQNT_FRAMEWORK_TIM_VERSION_STABLE
@@ -185,12 +186,133 @@ object VersionBeanUtil {
         )
 
         if (DataStoreUtil.getBooleanKV(
-                "displayFirst",
-                true
+                "displayFirst", true
             )
         ) thisActivity.timVersion[0].displayType = 1
         DataStoreUtil.putStringKVAsync(
             "TIMVersionBig", thisActivity.timVersion.first().version
         )
+    }
+
+    fun Context.resolveLocalQQ() {
+        // 识别本机 Android QQ 版本并放进持久化存储
+        val QQPackageInfo = packageManager.getPackageInfo("com.tencent.mobileqq", 0)
+        val QQVersionInstall = QQPackageInfo.versionName.toString()
+        val QQVersionCodeInstall =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) QQPackageInfo.longVersionCode.toString() else ""
+        val QQMetaDataInstall = packageManager.getPackageInfo(
+            "com.tencent.mobileqq", PackageManager.GET_META_DATA
+        )
+        val QQAppSettingParamsInstall =
+            QQMetaDataInstall.applicationInfo?.metaData?.getString("AppSetting_params")
+        val QQAppSettingParamsPadInstall =
+            QQMetaDataInstall.applicationInfo?.metaData?.getString("AppSetting_params_pad")
+        val QQRdmUUIDInstall =
+            QQMetaDataInstall.applicationInfo?.metaData?.getString("com.tencent.rdm.uuid")
+        val QQTargetInstall = QQMetaDataInstall.applicationInfo?.targetSdkVersion.toString()
+        val QQMinInstall = QQMetaDataInstall.applicationInfo?.minSdkVersion.toString()
+        val QQCompileInstall =
+            (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) QQMetaDataInstall.applicationInfo?.compileSdkVersion.toString() else "")
+        val QQQua = getQua(QQPackageInfo)
+        if (QQVersionInstall != DataStoreUtil.getStringKV(
+                "QQVersionInstall", ""
+            )
+        ) DataStoreUtil.putStringKV("QQVersionInstall", QQVersionInstall)
+        if (QQVersionCodeInstall != DataStoreUtil.getStringKV(
+                "QQVersionCodeInstall", ""
+            )
+        ) DataStoreUtil.putStringKV("QQVersionCodeInstall", QQVersionCodeInstall)
+        if (QQAppSettingParamsInstall != null && QQAppSettingParamsInstall != DataStoreUtil.getStringKV(
+                "QQAppSettingParamsInstall", ""
+            )
+        ) DataStoreUtil.putStringKV("QQAppSettingParamsInstall", QQAppSettingParamsInstall)
+        if (QQAppSettingParamsPadInstall != null && QQAppSettingParamsPadInstall != DataStoreUtil.getStringKV(
+                "QQAppSettingParamsPadInstall", ""
+            )
+        ) DataStoreUtil.putStringKV(
+            "QQAppSettingParamsPadInstall", QQAppSettingParamsPadInstall
+        )
+        if (QQRdmUUIDInstall != null && QQRdmUUIDInstall != DataStoreUtil.getStringKV(
+                "QQRdmUUIDInstall", ""
+            )
+        ) DataStoreUtil.putStringKV("QQRdmUUIDInstall", QQRdmUUIDInstall)
+        if (QQTargetInstall.isNotEmpty() && QQTargetInstall != DataStoreUtil.getStringKV(
+                "QQTargetInstall", ""
+            )
+        ) DataStoreUtil.putStringKV("QQTargetInstall", QQTargetInstall)
+        if (QQMinInstall.isNotEmpty() && QQMinInstall != DataStoreUtil.getStringKV(
+                "QQMinInstall", ""
+            )
+        ) DataStoreUtil.putStringKV("QQMinInstall", QQMinInstall)
+        if (QQCompileInstall.isNotEmpty() && QQCompileInstall != DataStoreUtil.getStringKV(
+                "QQCompileInstall", ""
+            )
+        ) DataStoreUtil.putStringKV("QQCompileInstall", QQCompileInstall)
+        if (QQQua != null && QQQua.replace("\n", "") != DataStoreUtil.getStringKV(
+                "QQQua", ""
+            )
+        ) DataStoreUtil.putStringKV("QQQua", QQQua.replace("\n", ""))
+    }
+
+    fun Context.resolveLocalTIM() {
+        // 识别本机 Android TIM 版本并放进持久化存储
+        val TIMPackageInfo = packageManager.getPackageInfo("com.tencent.tim", 0)
+        val TIMVersionInstall = TIMPackageInfo.versionName.toString()
+        val TIMVersionCodeInstall =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) TIMPackageInfo.longVersionCode.toString() else ""
+        val TIMMetaDataInstall = packageManager.getPackageInfo(
+            "com.tencent.tim", PackageManager.GET_META_DATA
+        )
+        val TIMAppSettingParamsInstall =
+            TIMMetaDataInstall.applicationInfo?.metaData?.getString("AppSetting_params")
+        val TIMAppSettingParamsPadInstall =
+            TIMMetaDataInstall.applicationInfo?.metaData?.getString("AppSetting_params_pad")
+        val TIMRdmUUIDInstall =
+            TIMMetaDataInstall.applicationInfo?.metaData?.getString("com.tencent.rdm.uuid")
+        val TIMTargetInstall = TIMMetaDataInstall.applicationInfo?.targetSdkVersion.toString()
+        val TIMMinInstall = TIMMetaDataInstall.applicationInfo?.minSdkVersion.toString()
+        val TIMCompileInstall =
+            (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) TIMMetaDataInstall.applicationInfo?.compileSdkVersion.toString() else "")
+        val TIMQua = getQua(TIMPackageInfo)
+        if (TIMTargetInstall.isNotEmpty() && TIMTargetInstall != DataStoreUtil.getStringKV(
+                "TIMTargetInstall", ""
+            )
+        ) DataStoreUtil.putStringKV("TIMTargetInstall", TIMTargetInstall)
+        if (TIMMinInstall.isNotEmpty() && TIMMinInstall != DataStoreUtil.getStringKV(
+                "TIMMinInstall", ""
+            )
+        ) DataStoreUtil.putStringKV("TIMMinInstall", TIMMinInstall)
+        if (TIMCompileInstall.isNotEmpty() && TIMCompileInstall != DataStoreUtil.getStringKV(
+                "TIMCompileInstall", ""
+            )
+        ) DataStoreUtil.putStringKV("TIMCompileInstall", TIMCompileInstall)
+        if (TIMVersionInstall != DataStoreUtil.getStringKV(
+                "TIMVersionInstall", ""
+            )
+        ) DataStoreUtil.putStringKV("TIMVersionInstall", TIMVersionInstall)
+        if (TIMVersionCodeInstall != DataStoreUtil.getStringKV(
+                "TIMVersionCodeInstall", ""
+            )
+        ) DataStoreUtil.putStringKV("TIMVersionCodeInstall", TIMVersionCodeInstall)
+        if (TIMAppSettingParamsInstall != null && TIMAppSettingParamsInstall != DataStoreUtil.getStringKV(
+                "TIMAppSettingParamsInstall", ""
+            )
+        ) DataStoreUtil.putStringKV(
+            "TIMAppSettingParamsInstall", TIMAppSettingParamsInstall
+        )
+        if (TIMAppSettingParamsPadInstall != null && TIMAppSettingParamsPadInstall != DataStoreUtil.getStringKV(
+                "TIMAppSettingParamsPadInstall", ""
+            )
+        ) DataStoreUtil.putStringKV(
+            "TIMAppSettingParamsPadInstall", TIMAppSettingParamsPadInstall
+        )
+        if (TIMRdmUUIDInstall != null && TIMRdmUUIDInstall != DataStoreUtil.getStringKV(
+                "TIMRdmUUIDInstall", ""
+            )
+        ) DataStoreUtil.putStringKV("TIMRdmUUIDInstall", TIMRdmUUIDInstall)
+        if (TIMQua != null && TIMQua.replace("\n", "") != DataStoreUtil.getStringKV(
+                "TIMQua", ""
+            )
+        ) DataStoreUtil.putStringKV("TIMQua", TIMQua.replace("\n", ""))
     }
 }

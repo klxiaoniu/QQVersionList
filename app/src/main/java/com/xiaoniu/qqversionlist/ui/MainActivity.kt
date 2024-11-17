@@ -106,12 +106,13 @@ import com.xiaoniu.qqversionlist.util.InfoUtil.qverbowAboutText
 import com.xiaoniu.qqversionlist.util.InfoUtil.showToast
 import com.xiaoniu.qqversionlist.util.ShiplyUtil
 import com.xiaoniu.qqversionlist.util.StringUtil.getAllAPKUrl
-import com.xiaoniu.qqversionlist.util.StringUtil.getQua
 import com.xiaoniu.qqversionlist.util.StringUtil.resolveWeixinAlphaConfig
 import com.xiaoniu.qqversionlist.util.StringUtil.toPrettyFormat
 import com.xiaoniu.qqversionlist.util.StringUtil.trimSubstringAtEnd
 import com.xiaoniu.qqversionlist.util.StringUtil.trimSubstringAtStart
-import com.xiaoniu.qqversionlist.util.VersionBeanUtil
+import com.xiaoniu.qqversionlist.util.VersionUtil
+import com.xiaoniu.qqversionlist.util.VersionUtil.resolveLocalQQ
+import com.xiaoniu.qqversionlist.util.VersionUtil.resolveLocalTIM
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -312,9 +313,7 @@ class MainActivity : AppCompatActivity() {
 
                         btnAboutUpdate.setOnClickListener {
                             val spec = CircularProgressIndicatorSpec(
-                                this@MainActivity,
-                                null,
-                                0,
+                                this@MainActivity, null, 0,
                                 com.google.android.material.R.style.Widget_Material3_CircularProgressIndicator_ExtraSmall
                             )
                             val progressIndicatorDrawable =
@@ -347,7 +346,6 @@ class MainActivity : AppCompatActivity() {
                                 })
                         }
                     }
-
                     true
                 }
 
@@ -733,8 +731,7 @@ class MainActivity : AppCompatActivity() {
                                         switchPushNotifViaFcm.isChecked = false
                                         dialogError(
                                             Exception(getString(R.string.cannotEnableFirebaseCloudMessaging)),
-                                            true,
-                                            true
+                                            true, true
                                         )
                                     } else {
                                         switchPushNotifViaFcm.isEnabled = false
@@ -811,18 +808,19 @@ class MainActivity : AppCompatActivity() {
                                                 layoutInflater
                                             )
                                         val weixinAlphaConfigBackDialog =
-                                            MaterialAlertDialogBuilder(this@MainActivity).setTitle(R.string.successInGetting)
-                                                .setIcon(R.drawable.flask_line).setMessage(
-                                                    "${getString(R.string.version)}${map["versionName"].toString()}\n${
-                                                        getString(
-                                                            R.string.downloadLink
-                                                        )
-                                                    }${map["url"].toString()}" + (if (appSize != null) "\n\n${
-                                                        getString(
-                                                            R.string.fileSize
-                                                        )
-                                                    }$appSize MB" else ("\n\n" + getString(R.string.getWeixinAlphaConfigLink404)))
-                                                ).setView(applicationsConfigBackButtonBinding.root)
+                                            MaterialAlertDialogBuilder(this@MainActivity).setTitle(
+                                                if (appSize != null) R.string.successInGetting else R.string.suspectedPackageWithdrawal
+                                            ).setIcon(R.drawable.flask_line).setMessage(
+                                                "${getString(R.string.version)}${map["versionName"].toString()}\n${
+                                                    getString(
+                                                        R.string.downloadLink
+                                                    )
+                                                }${map["url"].toString()}" + (if (appSize != null) "\n\n${
+                                                    getString(
+                                                        R.string.fileSize
+                                                    )
+                                                }$appSize MB" else ("\n\n" + getString(R.string.getWeixinAlphaConfigLink404)))
+                                            ).setView(applicationsConfigBackButtonBinding.root)
                                                 .show()
 
                                         applicationsConfigBackButtonBinding.apply {
@@ -1383,63 +1381,7 @@ class MainActivity : AppCompatActivity() {
         if (menu != null) menu.isEnabled = false
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                // 识别本机 Android QQ 版本并放进持久化存储
-                val QQPackageInfo = packageManager.getPackageInfo("com.tencent.mobileqq", 0)
-                val QQVersionInstall = QQPackageInfo.versionName.toString()
-                val QQVersionCodeInstall =
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) QQPackageInfo.longVersionCode.toString() else ""
-                val QQMetaDataInstall = packageManager.getPackageInfo(
-                    "com.tencent.mobileqq", PackageManager.GET_META_DATA
-                )
-                val QQAppSettingParamsInstall =
-                    QQMetaDataInstall.applicationInfo?.metaData?.getString("AppSetting_params")
-                val QQAppSettingParamsPadInstall =
-                    QQMetaDataInstall.applicationInfo?.metaData?.getString("AppSetting_params_pad")
-                val QQRdmUUIDInstall =
-                    QQMetaDataInstall.applicationInfo?.metaData?.getString("com.tencent.rdm.uuid")
-                val QQTargetInstall = QQMetaDataInstall.applicationInfo?.targetSdkVersion.toString()
-                val QQMinInstall = QQMetaDataInstall.applicationInfo?.minSdkVersion.toString()
-                val QQCompileInstall = (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
-                    QQMetaDataInstall.applicationInfo?.compileSdkVersion.toString() else "")
-                val QQQua = getQua(QQPackageInfo)
-                if (QQVersionInstall != DataStoreUtil.getStringKV(
-                        "QQVersionInstall", ""
-                    )
-                ) DataStoreUtil.putStringKV("QQVersionInstall", QQVersionInstall)
-                if (QQVersionCodeInstall != DataStoreUtil.getStringKV(
-                        "QQVersionCodeInstall", ""
-                    )
-                ) DataStoreUtil.putStringKV("QQVersionCodeInstall", QQVersionCodeInstall)
-                if (QQAppSettingParamsInstall != null && QQAppSettingParamsInstall != DataStoreUtil.getStringKV(
-                        "QQAppSettingParamsInstall", ""
-                    )
-                ) DataStoreUtil.putStringKV("QQAppSettingParamsInstall", QQAppSettingParamsInstall)
-                if (QQAppSettingParamsPadInstall != null && QQAppSettingParamsPadInstall != DataStoreUtil.getStringKV(
-                        "QQAppSettingParamsPadInstall", ""
-                    )
-                ) DataStoreUtil.putStringKV(
-                    "QQAppSettingParamsPadInstall", QQAppSettingParamsPadInstall
-                )
-                if (QQRdmUUIDInstall != null && QQRdmUUIDInstall != DataStoreUtil.getStringKV(
-                        "QQRdmUUIDInstall", ""
-                    )
-                ) DataStoreUtil.putStringKV("QQRdmUUIDInstall", QQRdmUUIDInstall)
-                if (QQTargetInstall.isNotEmpty() && QQTargetInstall != DataStoreUtil.getStringKV(
-                        "QQTargetInstall", ""
-                    )
-                ) DataStoreUtil.putStringKV("QQTargetInstall", QQTargetInstall)
-                if (QQMinInstall.isNotEmpty() && QQMinInstall != DataStoreUtil.getStringKV(
-                        "QQMinInstall", ""
-                    )
-                ) DataStoreUtil.putStringKV("QQMinInstall", QQMinInstall)
-                if (QQCompileInstall.isNotEmpty() && QQCompileInstall != DataStoreUtil.getStringKV(
-                        "QQCompileInstall", ""
-                    )
-                ) DataStoreUtil.putStringKV("QQCompileInstall", QQCompileInstall)
-                if (QQQua != null && QQQua.replace("\n", "") != DataStoreUtil.getStringKV(
-                        "QQQua", ""
-                    )
-                ) DataStoreUtil.putStringKV("QQQua", QQQua.replace("\n", ""))
+                resolveLocalQQ()
             } catch (_: Exception) {
                 val localQQEmptyList = listOf(
                     mapOf("key" to "QQVersionInstall", "value" to "", "type" to "String"),
@@ -1455,69 +1397,7 @@ class MainActivity : AppCompatActivity() {
                 DataStoreUtil.batchPutKVAsync(localQQEmptyList)
             } finally {
                 try {
-                    // 识别本机 Android TIM 版本并放进持久化存储
-                    val TIMPackageInfo = packageManager.getPackageInfo("com.tencent.tim", 0)
-                    val TIMVersionInstall = TIMPackageInfo.versionName.toString()
-                    val TIMVersionCodeInstall =
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) TIMPackageInfo.longVersionCode.toString() else ""
-                    val TIMMetaDataInstall = packageManager.getPackageInfo(
-                        "com.tencent.tim", PackageManager.GET_META_DATA
-                    )
-                    val TIMAppSettingParamsInstall =
-                        TIMMetaDataInstall.applicationInfo?.metaData?.getString("AppSetting_params")
-                    val TIMAppSettingParamsPadInstall =
-                        TIMMetaDataInstall.applicationInfo?.metaData?.getString("AppSetting_params_pad")
-                    val TIMRdmUUIDInstall =
-                        TIMMetaDataInstall.applicationInfo?.metaData?.getString("com.tencent.rdm.uuid")
-                    val TIMTargetInstall =
-                        TIMMetaDataInstall.applicationInfo?.targetSdkVersion.toString()
-                    val TIMMinInstall = TIMMetaDataInstall.applicationInfo?.minSdkVersion.toString()
-                    val TIMCompileInstall =
-                        (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) TIMMetaDataInstall.applicationInfo?.compileSdkVersion.toString() else "")
-                    val TIMQua = getQua(TIMPackageInfo)
-                    if (TIMTargetInstall.isNotEmpty() && TIMTargetInstall != DataStoreUtil.getStringKV(
-                            "TIMTargetInstall",
-                            ""
-                        )
-                    ) DataStoreUtil.putStringKV("TIMTargetInstall", TIMTargetInstall)
-                    if (TIMMinInstall.isNotEmpty() && TIMMinInstall != DataStoreUtil.getStringKV(
-                            "TIMMinInstall",
-                            ""
-                        )
-                    ) DataStoreUtil.putStringKV("TIMMinInstall", TIMMinInstall)
-                    if (TIMCompileInstall.isNotEmpty() && TIMCompileInstall != DataStoreUtil.getStringKV(
-                            "TIMCompileInstall",
-                            ""
-                        )
-                    ) DataStoreUtil.putStringKV("TIMCompileInstall", TIMCompileInstall)
-                    if (TIMVersionInstall != DataStoreUtil.getStringKV(
-                            "TIMVersionInstall", ""
-                        )
-                    ) DataStoreUtil.putStringKV("TIMVersionInstall", TIMVersionInstall)
-                    if (TIMVersionCodeInstall != DataStoreUtil.getStringKV(
-                            "TIMVersionCodeInstall", ""
-                        )
-                    ) DataStoreUtil.putStringKV("TIMVersionCodeInstall", TIMVersionCodeInstall)
-                    if (TIMAppSettingParamsInstall != null && TIMAppSettingParamsInstall != DataStoreUtil.getStringKV(
-                            "TIMAppSettingParamsInstall", ""
-                        )
-                    ) DataStoreUtil.putStringKV(
-                        "TIMAppSettingParamsInstall", TIMAppSettingParamsInstall
-                    )
-                    if (TIMAppSettingParamsPadInstall != null && TIMAppSettingParamsPadInstall != DataStoreUtil.getStringKV(
-                            "TIMAppSettingParamsPadInstall", ""
-                        )
-                    ) DataStoreUtil.putStringKV(
-                        "TIMAppSettingParamsPadInstall", TIMAppSettingParamsPadInstall
-                    )
-                    if (TIMRdmUUIDInstall != null && TIMRdmUUIDInstall != DataStoreUtil.getStringKV(
-                            "TIMRdmUUIDInstall", ""
-                        )
-                    ) DataStoreUtil.putStringKV("TIMRdmUUIDInstall", TIMRdmUUIDInstall)
-                    if (TIMQua != null && TIMQua.replace("\n", "") != DataStoreUtil.getStringKV(
-                            "TIMQua", ""
-                        )
-                    ) DataStoreUtil.putStringKV("TIMQua", TIMQua.replace("\n", ""))
+                    resolveLocalTIM()
                 } catch (_: Exception) {
                     val localTIMEmptyList = listOf(
                         mapOf("key" to "TIMVersionInstall", "value" to "", "type" to "String"),
@@ -1558,7 +1438,7 @@ class MainActivity : AppCompatActivity() {
                         val response = okHttpClient.newCall(request).execute()
                         val responseData = response.body?.string()
                         if (responseData != null) {
-                            VersionBeanUtil.resolveQQRainbow(this@MainActivity, responseData)
+                            VersionUtil.resolveQQRainbow(this@MainActivity, responseData)
                             withContext(Dispatchers.Main) {
                                 qqVersionAdapter.submitList(qqVersion)
                             }
@@ -1577,7 +1457,7 @@ class MainActivity : AppCompatActivity() {
                         val response = okHttpClient.newCall(request).execute()
                         val responseData = response.body?.string()
                         if (responseData != null) {
-                            VersionBeanUtil.resolveTIMRainbow(this@MainActivity, responseData)
+                            VersionUtil.resolveTIMRainbow(this@MainActivity, responseData)
                             withContext(Dispatchers.Main) {
                                 timVersionAdapter.submitList(timVersion)
                                 if (!DataStoreUtil.getBooleanKV("closeSwipeLeftForTIM", false)) {
@@ -1593,12 +1473,10 @@ class MainActivity : AppCompatActivity() {
                                             else -> false
                                         }
 
-                                    Snackbar
-                                        .make(
-                                            binding.root,
-                                            R.string.swipeLeftForTIMVersions,
-                                            Snackbar.LENGTH_INDEFINITE
-                                        ).setAction(R.string.ok, TipTIMSnackbarActionListener())
+                                    Snackbar.make(
+                                        binding.root, R.string.swipeLeftForTIMVersions,
+                                        Snackbar.LENGTH_INDEFINITE
+                                    ).setAction(R.string.ok, TipTIMSnackbarActionListener())
                                         .setAnchorView(binding.btnGuess)
                                         .apply {
                                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) if (isDarkTheme) setBackgroundTint(
