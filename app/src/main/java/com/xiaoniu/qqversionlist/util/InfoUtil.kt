@@ -23,6 +23,7 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import android.text.SpannableString
@@ -72,7 +73,8 @@ object InfoUtil {
     fun Context.dialogError(
         e: Exception,
         isCustomMessage: Boolean = false,
-        isShowSystemNotifSetting: Boolean = false
+        isShowSystemNotifSetting: Boolean = false,
+        isShowOfficialRepo: Boolean = false
     ) {
         val activity = findActivity()
         activity?.runOnUiThread {
@@ -95,6 +97,20 @@ object InfoUtil {
                             intent.action = Settings.ACTION_APP_NOTIFICATION_SETTINGS
                             intent.putExtra(Settings.EXTRA_APP_PACKAGE, packageName)
                             startActivity(intent)
+                        }
+                    } else if (isShowOfficialRepo) {
+                        setNegativeButton(R.string.done, null)
+                        setPositiveButton(R.string.toGitHubRelease) { _, _ ->
+                            val browserIntent =
+                                Intent(
+                                    Intent.ACTION_VIEW,
+                                    Uri.parse("https://github.com/klxiaoniu/QQVersionList/releases")
+                                )
+                            browserIntent.apply {
+                                addCategory(Intent.CATEGORY_BROWSABLE)
+                                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            }
+                            context.startActivity(browserIntent)
                         }
                     } else setPositiveButton(R.string.done, null)
                 }
@@ -121,8 +137,7 @@ object InfoUtil {
                     "${getString(R.string.aboutOpenSourceRepo)}GitHub\n" +
                     "${getString(R.string.aboutGetUpdate)}GitHub Releases、Obtainium\n" +
                     "${getString(R.string.facilitateI18n)}Crowdin\n\n" +
-                    "Since 2023.8.9\n\n" +
-                    "SM3${getString(R.string.colon)}${getQverbowSM3()}"
+                    "Since 2023.8.9"
         ).apply {
             listOf(
                 "https://github.com/klxiaoniu" to "快乐小牛",

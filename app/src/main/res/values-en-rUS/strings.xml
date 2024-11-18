@@ -128,14 +128,14 @@
     <string name="skip">Skip</string>
     <string name="qqntTag">Powered by QQNT Framework</string>
     <string name="releaseDateTIM">Release Date:&#160;</string>
-    <string name="checkUpdateViaGitHubAPI">Check for Updates via GitHub API</string>
+    <string name="checkUpdateViaGitHubAPI">Check for Updates via GitHub REST API</string>
     <string name="noUpdatesDetected">No updates detected.</string>
     <string name="noAssetsDetected">No assets detected.</string>
     <string name="cannotGetGitHub">Unable to connect to GitHub. Please ensure your network environment can access GitHub.</string>
     <string name="updateQVTAvailable">Update Available</string>
     <string name="copyLink">Copy Link</string>
     <string name="unrealEngineTag">Unreal® Engine Inside</string>
-    <string name="autoCheckForUpdates">Auto-check Updates With GitHub API on Startup</string>
+    <string name="autoCheckForUpdates">Auto-check Updates With GitHub REST API on Startup</string>
     <string name="useQQ8958Test">Use QQ 8.9.58 Test Version Link Format</string>
     <string name="ciVersionNoSupportUpdates">CI Build No Support Update Check</string>
     <string name="showUnrealEngineTag">Version card displays matching Unreal® Engine logo</string>
@@ -191,4 +191,9 @@
     <string name="getWeixinAlphaConfigLink404">It seems that the download address was not successfully accessed, possibly because the current Weixin alpha version has been removed.</string>
     <string name="suspectedPackageWithdrawal">Suspected Package Withdrawal</string>
     <string name="colon">:&#160;</string>
+    <string name="qverbowHash">Hash Value Verification</string>
+    <string name="verifyHashValueViaGitHubAPI">Verify Hash Value via GitHub REST API</string>
+    <string name="hashIsTrue">Hash value matches GitHub Releases.</string>
+    <string name="hashIsFalse">The hash value of the version you are using does not match the GitHub Releases. For your safety, please uninstall the current version of the application and download the software from the official GitHub Releases.</string>
+    <string name="toGitHubRelease">Go to Download</string>
 </resources>

@@ -128,14 +128,14 @@
     <string name="skip">跳過</string>
     <string name="qqntTag">基於 QQNT 技術架構</string>
     <string name="releaseDateTIM">發佈日期：</string>
-    <string name="checkUpdateViaGitHubAPI">透過 GitHub API 檢查更新</string>
+    <string name="checkUpdateViaGitHubAPI">透過 GitHub REST API 檢查更新</string>
     <string name="noUpdatesDetected">未檢測到更新</string>
     <string name="noAssetsDetected">未檢測到資產文件</string>
     <string name="cannotGetGitHub">無法連接到 GitHub，請確保您所在的網絡環境可以訪問 GitHub。</string>
     <string name="updateQVTAvailable">更新可用</string>
     <string name="copyLink">複製連結</string>
     <string name="unrealEngineTag">內建虛幻引擎</string>
-    <string name="autoCheckForUpdates">啟動時自動使用 GitHub API 檢查更新</string>
+    <string name="autoCheckForUpdates">啟動時自動使用 GitHub REST API 檢查更新</string>
     <string name="useQQ8958Test">使用 QQ 8.9.58 測試版直鏈格式</string>
     <string name="ciVersionNoSupportUpdates">CI 构建版本不支援檢查更新</string>
     <string name="showUnrealEngineTag">版本卡片顯示匹配的虛幻引擎標誌</string>
@@ -191,4 +191,9 @@
     <string name="getWeixinAlphaConfigLink404">似乎未能成功訪問此下載地址，可能是因為微信當前測試版已撤回。</string>
     <string name="suspectedPackageWithdrawal">疑似撤包</string>
     <string name="colon">：</string>
+    <string name="qverbowHash">雜湊值校驗</string>
+    <string name="verifyHashValueViaGitHubAPI">透過 GitHub REST API 校驗雜湊值</string>
+    <string name="hashIsTrue">雜湊值與 GitHub Releases 一致</string>
+    <string name="hashIsFalse">您所使用的版本與 GitHub Releases 雜湊值不一致，為了您的安全，請盡快卸載當前版本應用並前往官方 GitHub Releases 下載此軟件。</string>
+    <string name="toGitHubRelease">前往下載</string>
 </resources>

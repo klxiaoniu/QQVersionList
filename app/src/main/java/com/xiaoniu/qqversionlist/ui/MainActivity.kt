@@ -89,6 +89,7 @@ import com.xiaoniu.qqversionlist.databinding.DialogExperimentalFeaturesBinding
 import com.xiaoniu.qqversionlist.databinding.DialogFirebaseFirstInfoBinding
 import com.xiaoniu.qqversionlist.databinding.DialogFormatDefineBinding
 import com.xiaoniu.qqversionlist.databinding.DialogGuessBinding
+import com.xiaoniu.qqversionlist.databinding.DialogHashBinding
 import com.xiaoniu.qqversionlist.databinding.DialogLoadingBinding
 import com.xiaoniu.qqversionlist.databinding.DialogPersonalizationBinding
 import com.xiaoniu.qqversionlist.databinding.DialogSettingBinding
@@ -102,6 +103,7 @@ import com.xiaoniu.qqversionlist.util.DataStoreUtil
 import com.xiaoniu.qqversionlist.util.Extensions.dp
 import com.xiaoniu.qqversionlist.util.FileUtil.downloadFile
 import com.xiaoniu.qqversionlist.util.InfoUtil.dialogError
+import com.xiaoniu.qqversionlist.util.InfoUtil.getQverbowSM3
 import com.xiaoniu.qqversionlist.util.InfoUtil.qverbowAboutText
 import com.xiaoniu.qqversionlist.util.InfoUtil.showToast
 import com.xiaoniu.qqversionlist.util.ShiplyUtil
@@ -241,6 +243,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+    @SuppressLint("SetTextI18n")
     private fun initButtons() {
         // 删除 version Shared Preferences
         DataStoreUtil.deleteKVAsync("version")
@@ -258,7 +261,7 @@ class MainActivity : AppCompatActivity() {
                     "autoCheckUpdates",
                     false
                 )
-            ) checkQVTUpdates(
+            ) checkQverbowUpdates(
                 BuildConfig.VERSION_NAME.trimSubstringAtEnd("-Release"), false
             )
         }
@@ -327,7 +330,7 @@ class MainActivity : AppCompatActivity() {
                                 icon = progressIndicatorDrawable
                             }
 
-                            checkQVTUpdates(
+                            checkQverbowUpdates(
                                 BuildConfig.VERSION_NAME.trimSubstringAtEnd("-Release"),
                                 true, btnAboutUpdate
                             )
@@ -344,6 +347,48 @@ class MainActivity : AppCompatActivity() {
                                 ).apply {
                                     OssLicensesMenuActivity.setActivityTitle(getString(R.string.openSourceLicenseTitle))
                                 })
+                        }
+
+                        btnAboutHash.setOnClickListener {
+                            val dialogHashBinding = DialogHashBinding.inflate(layoutInflater)
+
+                            val hashDialog = MaterialAlertDialogBuilder(this@MainActivity)
+                                .setTitle(R.string.qverbowHash)
+                                .setIcon(R.drawable.shield_keyhole_line)
+                                .setView(dialogHashBinding.root)
+                                .show().apply {
+                                    dialogHashBinding.aboutHashText.text =
+                                        "SM3${getString(R.string.colon)}${getQverbowSM3()}"
+                                    dialogHashBinding.btnAboutGithubHashVerifiy.isVisible =
+                                        BuildConfig.VERSION_NAME.endsWith("Release")
+                                }
+
+                            dialogHashBinding.btnAboutHashOk.setOnClickListener {
+                                hashDialog.dismiss()
+                            }
+
+                            dialogHashBinding.btnAboutGithubHashVerifiy.setOnClickListener {
+                                val spec = CircularProgressIndicatorSpec(
+                                    this@MainActivity, null, 0,
+                                    com.google.android.material.R.style.Widget_Material3_CircularProgressIndicator_ExtraSmall
+                                )
+                                val progressIndicatorDrawable =
+                                    IndeterminateDrawable.createCircularDrawable(
+                                        this@MainActivity, spec
+                                    )
+
+                                dialogHashBinding.btnAboutGithubHashVerifiy.apply {
+                                    isEnabled = false
+                                    style(com.google.android.material.R.style.Widget_Material3_Button_TonalButton_Icon)
+                                    icon = progressIndicatorDrawable
+                                }
+
+                                checkQverbowHash(
+                                    BuildConfig.VERSION_NAME.trimSubstringAtEnd("-Release"),
+                                    getQverbowSM3(),
+                                    dialogHashBinding.btnAboutGithubHashVerifiy
+                                )
+                            }
                         }
                     }
                     true
@@ -2158,7 +2203,9 @@ class MainActivity : AppCompatActivity() {
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                dialogError(e)
+                runOnUiThread {
+                    dialogError(e)
+                }
             } finally {
                 runOnUiThread {
                     btn.apply {
@@ -2171,7 +2218,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun checkQVTUpdates(
+    private fun checkQverbowUpdates(
         selfVersion: String,
         isManual: Boolean,
         btn: MaterialButton? = null
@@ -2188,28 +2235,28 @@ class MainActivity : AppCompatActivity() {
                 if (responseData != null) {
                     val gson = Gson()
                     val jsonData = gson.fromJson(responseData, JsonObject::class.java)
-                    val latestQVTVersion =
+                    val latestQverbowVersion =
                         jsonData.get("tag_name").asString.trimSubstringAtStart("v")
-                    if (ComparableVersion(latestQVTVersion) > ComparableVersion(selfVersion)) {
-                        val latestQVTAssets = jsonData.get("assets").asJsonArray
-                        var latestQVTDownloadUrl: String? = null
-                        var latestQVTFileName: String? = null
-                        var latestQVTFileSize: String? = null
-                        for (asset in latestQVTAssets) {
+                    if (ComparableVersion(latestQverbowVersion) > ComparableVersion(selfVersion)) {
+                        val latestQverbowAssets = jsonData.get("assets").asJsonArray
+                        var latestQverbowDownloadUrl: String? = null
+                        var latestQverbowFileName: String? = null
+                        var latestQverbowFileSize: String? = null
+                        for (asset in latestQverbowAssets) {
                             val assetObject = asset.asJsonObject
                             val contentType = assetObject.get("content_type").asString
                             val browserDownloadUrl =
                                 assetObject.get("browser_download_url").asString
                             if (contentType == "application/vnd.android.package-archive") {
-                                latestQVTDownloadUrl = browserDownloadUrl
-                                latestQVTFileName = assetObject.get("name").asString
-                                latestQVTFileSize = "%.2f".format(
+                                latestQverbowDownloadUrl = browserDownloadUrl
+                                latestQverbowFileName = assetObject.get("name").asString
+                                latestQverbowFileSize = "%.2f".format(
                                     assetObject.get("size").asLong.toDouble().div(1024 * 1024)
                                 )
                                 break
                             }
                         }
-                        if (latestQVTDownloadUrl != null) withContext(Dispatchers.Main) {
+                        if (latestQverbowDownloadUrl != null) withContext(Dispatchers.Main) {
                             val updateQvtButtonBinding =
                                 UpdateQvtButtonBinding.inflate(layoutInflater)
 
@@ -2219,37 +2266,91 @@ class MainActivity : AppCompatActivity() {
                                     .setIcon(R.drawable.check_circle)
                                     .setView(updateQvtButtonBinding.root)
                                     .setMessage(
-                                        "${getString(R.string.version)}$latestQVTVersion\n${
+                                        "${getString(R.string.version)}$latestQverbowVersion\n${
                                             getString(
                                                 R.string.downloadLink
                                             )
-                                        }$latestQVTDownloadUrl\n${
+                                        }$latestQverbowDownloadUrl\n${
                                             getString(
                                                 R.string.fileSize
                                             )
-                                        }$latestQVTFileSize MB"
+                                        }$latestQverbowFileSize MB"
                                     )
                                     .show()
 
                             updateQvtButtonBinding.updateQvtCopy.setOnClickListener {
-                                copyText(latestQVTDownloadUrl)
+                                copyText(latestQverbowDownloadUrl)
                                 updateQvtMaterialDialog.dismiss()
                             }
 
                             updateQvtButtonBinding.updateQvtDownload.setOnClickListener {
                                 updateQvtMaterialDialog.dismiss()
                                 downloadFile(
-                                    this@MainActivity, latestQVTDownloadUrl, latestQVTFileName
+                                    this@MainActivity,
+                                    latestQverbowDownloadUrl,
+                                    latestQverbowFileName
                                 )
                             }
                         } else showToast(getString(R.string.noAssetsDetected))
                     } else showToast(getString(R.string.noUpdatesDetected))
                 }
             } catch (e: Exception) {
-                if (isManual) dialogError(
-                    RuntimeException(getString(R.string.cannotGetGitHub), e),
-                    true
-                ) else showToast(getString(R.string.cannotGetGitHub))
+                withContext(Dispatchers.Main) {
+                    if (isManual) dialogError(
+                        RuntimeException(getString(R.string.cannotGetGitHub), e), true
+                    ) else showToast(getString(R.string.cannotGetGitHub))
+                }
+            } finally {
+                withContext(Dispatchers.Main) {
+                    btn?.apply {
+                        style(com.google.android.material.R.style.Widget_Material3_Button_TonalButton)
+                        icon = null
+                        isEnabled = true
+                    }
+                }
+            }
+        }
+    }
+
+    private fun checkQverbowHash(
+        selfVersion: String,
+        sm3: String,
+        btn: MaterialButton? = null
+    ) {
+        class HashIsFalseException(message: String) : Exception(message)
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val okHttpClient = OkHttpClient()
+                val request =
+                    Request.Builder()
+                        .url("https://api.github.com/repos/klxiaoniu/QQVersionList/releases/tags/v$selfVersion")
+                        .build()
+                val response = okHttpClient.newCall(request).execute()
+                val responseData = response.body?.string()
+                if (responseData != null) {
+                    val gson = Gson()
+                    val jsonData = gson.fromJson(responseData, JsonObject::class.java)
+                    val githubBody =
+                        jsonData.get("body").asString
+                    withContext(Dispatchers.Main) {
+                        if (githubBody.contains(sm3))
+                            showToast(R.string.hashIsTrue) else throw HashIsFalseException(
+                            getString(R.string.hashIsFalse)
+                        )
+                    }
+                }
+            } catch (e: HashIsFalseException) {
+                withContext(Dispatchers.Main) {
+                    dialogError(
+                        RuntimeException(getString(R.string.hashIsFalse), e), true, false, true
+                    )
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    dialogError(
+                        RuntimeException(getString(R.string.cannotGetGitHub), e), true
+                    )
+                }
             } finally {
                 withContext(Dispatchers.Main) {
                     btn?.apply {

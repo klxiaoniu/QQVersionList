@@ -37,22 +37,13 @@
             android:paddingBottom="20dp">
 
             <TextView
-                android:id="@+id/about_text"
+                android:id="@+id/about_hash_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="4dp" />
 
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:contentDescription="Built with Material 3, Licensed under GNU Affero General Public License Version 3."
-                android:paddingTop="8dp"
-                android:paddingBottom="4dp"
-                android:src="@drawable/built_with_material_licensed_under_agpl_v3"
-                tools:ignore="HardcodedText" />
-
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_about_ok"
+                android:id="@+id/btn_about_hash_ok"
                 style="@style/Widget.Material3.Button.TonalButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -60,42 +51,11 @@
                 android:text="@string/done" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_about_update"
+                android:id="@+id/btn_about_github_hash_verifiy"
                 style="@style/Widget.Material3.Button.TonalButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/checkUpdateViaGitHubAPI" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_about_withdrawConsentUA"
-                style="@style/Widget.Material3.Button.TonalButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/withdrawConsentUA"
-                android:textColor="?attr/colorOnErrorContainer"
-                app:backgroundTint="?attr/colorErrorContainer"
-                app:iconTint="?attr/colorOnErrorContainer" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_about_shared_list"
-                style="@style/Widget.Material3.Button.TextButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/threePartySharedList" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_about_open_source"
-                style="@style/Widget.Material3.Button.TextButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/openSourceLicenseTitle" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_about_hash"
-                style="@style/Widget.Material3.Button.TextButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/qverbowHash" />
+                android:text="@string/verifyHashValueViaGitHubAPI" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
