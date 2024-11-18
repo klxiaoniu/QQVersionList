@@ -127,4 +127,6 @@ dependencies {
     implementation(libs.androidx.browser)
     implementation(libs.play.services.oss.licenses)
     implementation(libs.commons.compress)
+    implementation(libs.kona.crypto)
+    implementation(libs.kona.provider)
 }

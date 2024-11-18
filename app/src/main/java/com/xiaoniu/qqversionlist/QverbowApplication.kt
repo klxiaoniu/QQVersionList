@@ -20,6 +20,8 @@ package com.xiaoniu.qqversionlist
 
 import android.app.Application
 import com.google.android.material.color.DynamicColors
+import com.tencent.kona.crypto.KonaCryptoProvider
+import java.security.Security
 
 class QverbowApplication : Application() {
     companion object {
@@ -40,5 +42,6 @@ class QverbowApplication : Application() {
         DynamicColors.applyToActivitiesIfAvailable(this)
         instance = this
         super.onCreate()
+        Security.addProvider(KonaCryptoProvider())
     }
 }

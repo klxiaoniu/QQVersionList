@@ -16,6 +16,8 @@ googleServices = "4.4.2"
 gson = "2.11.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
+konaCryptoVersion = "1.0.15"
+konaProviderVersion = "1.0.15"
 kotlinxCoroutinesAndroid = "1.9.0"
 kotlinxSerializationJson = "1.7.3"
 library = "1.3.0"
@@ -53,6 +55,8 @@ firebase-messaging = { module = "com.google.firebase:firebase-messaging" }
 google-services = { module = "com.google.gms:google-services", version.ref = "googleServices" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 junit = { module = "junit:junit", version.ref = "junit" }
+kona-crypto = { module = "com.tencent.kona:kona-crypto", version.ref = "konaCryptoVersion" }
+kona-provider = { module = "com.tencent.kona:kona-provider", version.ref = "konaProviderVersion" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinxCoroutinesAndroid" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 library = { module = "me.zhanghai.android.fastscroll:library", version.ref = "library" }

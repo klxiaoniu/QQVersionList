@@ -37,6 +37,8 @@ import com.xiaoniu.qqversionlist.util.ClipboardUtil.copyText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.io.FileInputStream
+import java.security.MessageDigest
 
 object InfoUtil {
     fun showToast(text: String) {
@@ -119,7 +121,8 @@ object InfoUtil {
                     "${getString(R.string.aboutOpenSourceRepo)}GitHub\n" +
                     "${getString(R.string.aboutGetUpdate)}GitHub Releases、Obtainium\n" +
                     "${getString(R.string.facilitateI18n)}Crowdin\n\n" +
-                    "Since 2023.8.9"
+                    "Since 2023.8.9\n\n" +
+                    "SM3${getString(R.string.colon)}${getQverbowSM3()}"
         ).apply {
             listOf(
                 "https://github.com/klxiaoniu" to "快乐小牛",
@@ -150,7 +153,7 @@ object InfoUtil {
      *
      * @return 如果找到 `Activity` 则返回该 `Activity` 实例，否则返回null。
      */
-    fun Context.findActivity(): Activity? {
+    private fun Context.findActivity(): Activity? {
         var context = this
         while (context is ContextWrapper) {
             if (context is Activity) {
@@ -159,5 +162,18 @@ object InfoUtil {
             context = context.baseContext
         }
         return null
+    }
+
+    fun Context.getQverbowSM3(): String {
+        val appSourceDir = packageManager.getApplicationInfo(packageName, 0).sourceDir
+        val messageDigest = MessageDigest.getInstance("SM3")
+        val fileInputStream = FileInputStream(appSourceDir)
+        val buffer = ByteArray(8192)
+        var bytesRead: Int
+        while (fileInputStream.read(buffer).also { bytesRead = it } != -1) messageDigest.update(
+            buffer, 0, bytesRead
+        )
+        val hash = messageDigest.digest().joinToString("") { "%02X".format(it) }
+        return hash
     }
 }

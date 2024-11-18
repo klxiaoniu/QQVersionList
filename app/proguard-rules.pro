@@ -20,4 +20,6 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--keep class com.xiaoniu.qqversionlist.data.* { *;void <init>(); }
+-keep class com.xiaoniu.qqversionlist.data.* { *; }
+-keep class com.tencent.kona.KonaProvider { *; }
+-keep class com.tencent.kona.crypto.provider.** { *; }

@@ -302,6 +302,7 @@ QQ 版本列表实用工具的诞生离不开以下开源项目，感谢以下�
 - [Kotlin Coroutines on Android](https://github.com/Kotlin/kotlinx.coroutines)，Licensed under [Apache License Version 2.0](https://github.com/Kotlin/kotlinx.coroutines/blob/master/LICENSE.txt)
 - [Google Play services Plugins](https://github.com/google/play-services-plugins)，Licensed under [Apache License Version 2.0](https://github.com/google/play-services-plugins/blob/main/LICENSE)
 - [Apache Commons™](https://commons.apache.org/)，Licensed under [Apache License Version 2.0](https://www.apache.org/licenses/LICENSE-2.0)
+- [腾讯 Kona 国密套件](https://github.com/Tencent/TencentKonaSMSuite)，Licensed under [GNU General Public License, version 2 with the Classpath Exception](https://github.com/Tencent/TencentKonaSMSuite/blob/master/LICENSE.txt)
 
 ## 商业服务鸣谢
 
