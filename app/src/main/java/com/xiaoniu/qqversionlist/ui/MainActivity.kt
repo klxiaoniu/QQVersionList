@@ -1625,7 +1625,9 @@ class MainActivity : AppCompatActivity() {
             // ["_64", "_64_HB", "_64_HB1", "_64_HB2", "_64_HB3", "_64_HD", "_64_HD1", "_64_HD2", "_64_HD3", "_64_HD1HB", "_HB_64", "_HB1_64", "_HB2_64", "_HB3_64", "_HD_64", "_HD1_64", "_HD2_64", "_HD3_64", "_HD1HB_64", "_test"]
 
             val stList = if (defineSufList != listOf("")) stListPre + defineSufList else stListPre
-            val weSoList = listOf("", "_1")
+            val wxSoListPre = listOf("", "_1")
+            val wxSoList =
+                if (defineSufList != listOf("")) wxSoListPre + defineSufList else wxSoListPre
             try {
                 var sIndex = 0
                 while (true) when (status) {
@@ -1677,7 +1679,7 @@ class MainActivity : AppCompatActivity() {
                                 // https://dldir1.qq.com/weixin/android/weixin8049android2600_0x2800318a_arm64.apk
                                 // https://dldir1.qq.com/weixin/android/weixin8054android2740_0x28003630_arm64_1.apk
                                 link =
-                                    "https://dldir1.qq.com/weixin/android/weixin${versionBig}android${versionTrue}_0x${v16codeStr}_arm64${weSoList[sIndex]}.apk"
+                                    "https://dldir1.qq.com/weixin/android/weixin${versionBig}android${versionTrue}_0x${v16codeStr}_arm64${wxSoList[sIndex]}.apk"
                                 sIndex += 1
                             }
                         }
@@ -1725,21 +1727,27 @@ class MainActivity : AppCompatActivity() {
                                 successButtonBinding.btnContinue.setOnClickListener {
                                     // 测试版情况下，未打开扩展扫版或扩展扫版到最后一步时执行小版本号的递增
                                     when {
-                                        mode == MODE_TEST && (!guessTestExtend || sIndex == (stList.size)) -> {
+                                        mode == MODE_TEST && (!guessTestExtend || sIndex >= (stList.size)) -> {
                                             vSmall += if (!guessNot5) 5 else 1
                                             sIndex = 0
                                         }
 
-                                        mode == MODE_TIM && (!guessTestExtend || sIndex == (stList.size)) -> {
+                                        mode == MODE_TIM && (!guessTestExtend || sIndex >= (stList.size)) -> {
                                             vSmall += 1
                                             sIndex = 0
                                         }
 
                                         mode == MODE_UNOFFICIAL -> vSmall += if (!guessNot5) 5 else 1
-                                        mode == MODE_WECHAT && sIndex == (weSoList.size) -> {
-                                            val version16code = v16codeStr.toInt(16) + 1
-                                            v16codeStr = version16code.toString(16)
-                                            sIndex = 0
+                                        mode == MODE_WECHAT -> {
+                                            if (sIndex >= wxSoList.size && guessTestExtend) {
+                                                val version16code = v16codeStr.toInt(16) + 1
+                                                v16codeStr = version16code.toString(16)
+                                                sIndex = 0
+                                            } else if (sIndex >= wxSoListPre.size && !guessTestExtend) {
+                                                val version16code = v16codeStr.toInt(16) + 1
+                                                v16codeStr = version16code.toString(16)
+                                                sIndex = 0
+                                            }
                                         }
                                     }
                                     successMaterialDialog.dismiss()
@@ -1860,10 +1868,16 @@ class MainActivity : AppCompatActivity() {
                                 }
 
                                 mode == MODE_UNOFFICIAL -> vSmall += if (!guessNot5) 5 else 1
-                                mode == MODE_WECHAT && sIndex == (weSoList.size) -> {
-                                    val version16code = v16codeStr.toInt(16) + 1
-                                    v16codeStr = version16code.toString(16)
-                                    sIndex = 0
+                                mode == MODE_WECHAT -> {
+                                    if (sIndex >= wxSoList.size && guessTestExtend) {
+                                        val version16code = v16codeStr.toInt(16) + 1
+                                        v16codeStr = version16code.toString(16)
+                                        sIndex = 0
+                                    } else if (sIndex >= wxSoListPre.size && !guessTestExtend) {
+                                        val version16code = v16codeStr.toInt(16) + 1
+                                        v16codeStr = version16code.toString(16)
+                                        sIndex = 0
+                                    }
                                 }
                             }
                         }
@@ -1902,8 +1916,7 @@ class MainActivity : AppCompatActivity() {
             if (parent is ViewGroup) parent.removeView(dialogExpBackBinding.root)
         }
 
-        val shiplyApkUrl =
-            sourceDataJson.toPrettyFormat().getAllAPKUrl()
+        val shiplyApkUrl = sourceDataJson.toPrettyFormat().getAllAPKUrl()
 
         dialogExpBackBinding.apply {
             MaterialAlertDialogBuilder(this@MainActivity)
