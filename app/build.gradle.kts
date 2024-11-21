@@ -16,8 +16,6 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import java.io.ByteArrayOutputStream
-
 plugins {
     alias(libs.plugins.android.application)
     id("org.jetbrains.kotlin.android")
@@ -27,18 +25,20 @@ plugins {
     id("com.google.android.gms.oss-licenses-plugin")
 }
 
-fun String.execute(currentWorkingDir: File = file("./")): String {
-    val byteOut = ByteArrayOutputStream()
-    rootProject.exec {
-        workingDir = currentWorkingDir
-        commandLine = split("\\s".toRegex())
-        standardOutput = byteOut
-    }
-    return String(byteOut.toByteArray()).trim()
+private fun gitCommitHash(project: Project): String {
+    return project.providers.exec {
+        commandLine("git rev-parse --verify --short HEAD".split(" "))
+    }.standardOutput.asText.get().trim()
 }
 
-val gitCommitCount = "git rev-list HEAD --count".execute().toInt()
-val gitCommitHash = "git rev-parse --verify --short HEAD".execute()
+private fun gitCommitCount(project: Project): Int {
+    return project.providers.exec {
+        commandLine("git rev-list HEAD --count".split(" "))
+    }.standardOutput.asText.get().trim().toInt()
+}
+
+val gitCommitCount = gitCommitCount(project)
+val gitCommitHash = gitCommitHash(project)
 
 android {
     namespace = "com.xiaoniu.qqversionlist"
