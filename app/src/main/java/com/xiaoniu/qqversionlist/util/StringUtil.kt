@@ -18,7 +18,6 @@
 
 package com.xiaoniu.qqversionlist.util
 
-import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageInfo
 import com.google.gson.Gson

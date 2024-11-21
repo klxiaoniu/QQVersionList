@@ -26,7 +26,6 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
-import okhttp3.logging.HttpLoggingInterceptor
 import java.io.IOException
 import java.io.InputStream
 import java.io.InputStreamReader
@@ -191,9 +190,7 @@ object ShiplyUtil {
      * @throws IOException 如果网络请求失败或响应体为空时抛出
      */
     fun postJsonWithOkHttp(url: String, data: Any): String {
-        val client = OkHttpClient.Builder().addInterceptor(HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.BODY
-        }).build()
+        val client = OkHttpClient.Builder().build()
 
         val mediaType = "application/json; charset=utf-8".toMediaTypeOrNull()
         val body = GsonBuilder().setStrictness(Strictness.LENIENT).create().toJson(data)

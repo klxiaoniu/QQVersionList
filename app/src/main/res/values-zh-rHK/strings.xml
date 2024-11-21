@@ -196,4 +196,6 @@
     <string name="hashIsTrue">雜湊值與 GitHub Releases 一致</string>
     <string name="hashIsFalse">您所使用的版本與 GitHub Releases 雜湊值不一致，為了您的安全，請盡快卸載當前版本應用並前往官方 GitHub Releases 下載此軟件。</string>
     <string name="toGitHubRelease">前往下載</string>
+    <string name="getWeTypeTestLinkFromWeTypeLatestChannel">從微信輸入法測試管道獲取微信輸入法最新下載直鏈</string>
+    <string name="getWeTypeLatestChannel404">未能成功訪問微信輸入法伺服器，請檢查您的網絡連接。</string>
 </resources>

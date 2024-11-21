@@ -196,4 +196,6 @@
     <string name="hashIsTrue">Hash value matches GitHub Releases.</string>
     <string name="hashIsFalse">The hash value of the version you are using does not match the GitHub Releases. For your safety, please uninstall the current version of the application and download the software from the official GitHub Releases.</string>
     <string name="toGitHubRelease">Go to Download</string>
+    <string name="getWeTypeTestLinkFromWeTypeLatestChannel">Get the WeType Testing Download Link from the WeType Latest Channel</string>
+    <string name="getWeTypeLatestChannel404">Failed to access the WeType server, please check your network connection.</string>
 </resources>

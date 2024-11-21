@@ -125,7 +125,6 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
-import okhttp3.logging.HttpLoggingInterceptor
 import org.apache.maven.artifact.versioning.ComparableVersion
 import java.io.BufferedReader
 import java.io.ByteArrayInputStream
@@ -904,6 +903,93 @@ class MainActivity : AppCompatActivity() {
                                                             )
                                                         }${map["url"].toString()}\n\n鉴于微信测试版可能存在不可预知的稳定性问题，您在下载及使用该测试版本之前，必须明确并确保自身具备足够的风险识别和承受能力。"
                                                     )
+                                                }
+                                                startActivity(
+                                                    Intent.createChooser(
+                                                        shareIntent, getString(R.string.shareTo)
+                                                    )
+                                                )
+                                            }
+                                        }
+                                    }
+
+                                } catch (e: CustomException) {
+                                    dialogError(e, true)
+                                } catch (e: Exception) {
+                                    e.printStackTrace()
+                                    dialogError(e)
+                                } finally {
+                                    runOnUiThread { progressIndicator.hide() }
+                                }
+                            }
+                        }
+
+                        dialogGetWetypeLatest.setOnClickListener {
+                            progressIndicator.show()
+                            CoroutineScope(Dispatchers.IO).launch {
+                                class CustomException(message: String) :
+                                    Exception(message)
+                                try {
+                                    val okHttpClient =
+                                        OkHttpClient.Builder().followRedirects(false).build()
+                                    val request =
+                                        Request.Builder()
+                                            .url("https://z.weixin.qq.com/android/download?channel=latest")
+                                            .build()
+                                    val response = okHttpClient.newCall(request).execute()
+                                    if (!response.isSuccessful && !response.isRedirect) throw CustomException(
+                                        getString(R.string.getWeTypeLatestChannel404)
+                                    )
+                                    val url = response.header("Location")
+                                    if (url == null) throw CustomException("Response data is null.")
+                                    val request2 =
+                                        Request.Builder().url(url.toString()).head().build()
+                                    val response2 = OkHttpClient().newCall(request2).execute()
+                                    val appSize = (if (response2.isSuccessful) "%.2f".format(
+                                        response2.header("Content-Length")?.toDoubleOrNull()
+                                            ?.div(1024 * 1024)
+                                    ) else null)
+                                    runOnUiThread {
+                                        val applicationsConfigBackButtonBinding =
+                                            ApplicationsConfigBackButtonBinding.inflate(
+                                                layoutInflater
+                                            )
+                                        val weixinAlphaConfigBackDialog =
+                                            MaterialAlertDialogBuilder(this@MainActivity).setTitle(
+                                                if (appSize != null) R.string.successInGetting else R.string.suspectedPackageWithdrawal
+                                            ).setIcon(R.drawable.flask_line).setMessage(
+                                                "${
+                                                    getString(
+                                                        R.string.downloadLink
+                                                    )
+                                                }$url" + (if (appSize != null) "\n\n${
+                                                    getString(
+                                                        R.string.fileSize
+                                                    )
+                                                }$appSize MB" else "")
+                                            ).setView(applicationsConfigBackButtonBinding.root)
+                                                .show()
+
+                                        applicationsConfigBackButtonBinding.apply {
+                                            applicationsConfigBackBtnJsonDetails.isVisible = false
+
+                                            applicationsConfigBackBtnCopy.setOnClickListener {
+                                                weixinAlphaConfigBackDialog.dismiss()
+                                                copyText(url.toString())
+                                            }
+
+                                            applicationsConfigBackBtnDownload.setOnClickListener {
+                                                weixinAlphaConfigBackDialog.dismiss()
+                                                downloadFile(
+                                                    this@MainActivity, url.toString()
+                                                )
+                                            }
+
+                                            applicationsConfigBackBtnShare.setOnClickListener {
+                                                weixinAlphaConfigBackDialog.dismiss()
+                                                val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                                                    type = "text/plain"
+                                                    putExtra(Intent.EXTRA_TEXT, url)
                                                 }
                                                 startActivity(
                                                     Intent.createChooser(
@@ -2117,10 +2203,7 @@ class MainActivity : AppCompatActivity() {
         }
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val okHttpClient = OkHttpClient.Builder().addInterceptor(HttpLoggingInterceptor()
-                    .apply {
-                        level = HttpLoggingInterceptor.Level.BODY
-                    }).build()
+                val okHttpClient = OkHttpClient.Builder().build()
                 val mediaType = "application/json; charset=utf-8".toMediaTypeOrNull()
                 val getTypePost = mapOf("packagename" to getType)
                 val body =
