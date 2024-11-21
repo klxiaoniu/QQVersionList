@@ -95,6 +95,7 @@ import com.xiaoniu.qqversionlist.databinding.DialogPersonalizationBinding
 import com.xiaoniu.qqversionlist.databinding.DialogSettingBinding
 import com.xiaoniu.qqversionlist.databinding.DialogShiplyBinding
 import com.xiaoniu.qqversionlist.databinding.DialogTencentAppStoreBinding
+import com.xiaoniu.qqversionlist.databinding.ExpLinkNextButtonBinding
 import com.xiaoniu.qqversionlist.databinding.SuccessButtonBinding
 import com.xiaoniu.qqversionlist.databinding.UpdateQvtButtonBinding
 import com.xiaoniu.qqversionlist.databinding.UserAgreementBinding
@@ -950,11 +951,11 @@ class MainActivity : AppCompatActivity() {
                                             ?.div(1024 * 1024)
                                     ) else null)
                                     runOnUiThread {
-                                        val applicationsConfigBackButtonBinding =
-                                            ApplicationsConfigBackButtonBinding.inflate(
+                                        val expLinkNextButtonBinding =
+                                            ExpLinkNextButtonBinding.inflate(
                                                 layoutInflater
                                             )
-                                        val weixinAlphaConfigBackDialog =
+                                        val weTypeLatestChannelBackDialog =
                                             MaterialAlertDialogBuilder(this@MainActivity).setTitle(
                                                 if (appSize != null) R.string.successInGetting else R.string.suspectedPackageWithdrawal
                                             ).setIcon(R.drawable.flask_line).setMessage(
@@ -967,26 +968,24 @@ class MainActivity : AppCompatActivity() {
                                                         R.string.fileSize
                                                     )
                                                 }$appSize MB" else "")
-                                            ).setView(applicationsConfigBackButtonBinding.root)
+                                            ).setView(expLinkNextButtonBinding.root)
                                                 .show()
 
-                                        applicationsConfigBackButtonBinding.apply {
-                                            applicationsConfigBackBtnJsonDetails.isVisible = false
-
-                                            applicationsConfigBackBtnCopy.setOnClickListener {
-                                                weixinAlphaConfigBackDialog.dismiss()
+                                        expLinkNextButtonBinding.apply {
+                                            expNextBtnCopy.setOnClickListener {
+                                                weTypeLatestChannelBackDialog.dismiss()
                                                 copyText(url.toString())
                                             }
 
-                                            applicationsConfigBackBtnDownload.setOnClickListener {
-                                                weixinAlphaConfigBackDialog.dismiss()
+                                            expNextBtnDownload.setOnClickListener {
+                                                weTypeLatestChannelBackDialog.dismiss()
                                                 downloadFile(
                                                     this@MainActivity, url.toString()
                                                 )
                                             }
 
-                                            applicationsConfigBackBtnShare.setOnClickListener {
-                                                weixinAlphaConfigBackDialog.dismiss()
+                                            expNextBtnShare.setOnClickListener {
+                                                weTypeLatestChannelBackDialog.dismiss()
                                                 val shareIntent = Intent(Intent.ACTION_SEND).apply {
                                                     type = "text/plain"
                                                     putExtra(Intent.EXTRA_TEXT, url)
