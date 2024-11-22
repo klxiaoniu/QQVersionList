@@ -181,7 +181,7 @@ object VersionUtil {
         // 去除重复的版本号
         thisActivity.timVersion =
             thisActivity.timVersion.distinctBy { it.jsonString.toPrettyFormat() }
-        if (thisActivity.timVersion[0].version == thisActivity.timVersion[1].version && thisActivity.timVersion[0].fix == "") (thisActivity.timVersion as MutableList<TIMVersionBean>).removeAt(
+        if (thisActivity.timVersion[0].version == thisActivity.timVersion[1].version) (thisActivity.timVersion as MutableList<TIMVersionBean>).removeAt(
             0
         )
 

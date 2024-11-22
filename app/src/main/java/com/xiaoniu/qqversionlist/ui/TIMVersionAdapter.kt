@@ -22,7 +22,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Typeface
 import android.util.Base64
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -115,20 +114,17 @@ class TIMVersionAdapter :
             is ViewHolderDetail -> {
                 holder.binding.apply {
                     val fix = bean.fix
+                    val new = bean.new
                     tvTimOldVersion.text = bean.version
                     tvTimDetailVersion.text =
                         holder.itemView.context.getString(R.string.version) + bean.version
                     tvTimDetailDate.text =
                         holder.itemView.context.getString(R.string.releaseDateTIM) + bean.datetime
-                    Log.d(bean.version, bean.fix)
-                    if (fix != "" && fix.contains("<br/>")) tvTimDesc.apply {
-                        text = fix.split("<br/>").joinToString(separator = "\n")
-                        tvTimDesc.isVisible = true
-                    } else if (fix != "") tvTimDesc.apply {
-                        text = fix
-                        tvTimDesc.isVisible = true
-                    } else tvTimDesc.isVisible = false
-
+                    if (fix == "" && new == "") tvTimDesc.isVisible = false
+                    else tvTimDesc.text = new.split("<br/>")
+                        .joinToString(separator = "\n") + (if (new != "") "\n" else "") + (if (fix != "") fix.split(
+                        "<br/>"
+                    ).joinToString(separator = "\n") else "")
                     bindDisplayInstall(tvTimOldInstall, tvTimOldInstallCard, bean)
                     bindVersionTCloud(tvTimOldVersion, holder.context)
                     bindAccessibilityTag(accessibilityTimOldTag, holder.context, bean)
