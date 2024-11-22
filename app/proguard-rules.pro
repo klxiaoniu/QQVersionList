@@ -21,5 +21,4 @@
 #-renamesourcefileattribute SourceFile
 
 -keep class com.xiaoniu.qqversionlist.data.* { *; }
--keep class com.tencent.kona.KonaProvider { *; }
 -keep class com.tencent.kona.crypto.provider.** { *; }

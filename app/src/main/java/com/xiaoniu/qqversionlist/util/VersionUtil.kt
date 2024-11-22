@@ -132,7 +132,7 @@ object VersionUtil {
                             addProperty("new", newFeature)
                         }).toString(),
                         displayInstall = (DataStoreUtil.getStringKV(
-                            "QQVersionInstall", ""
+                            "TIMVersionInstall", ""
                         ) == version),
                         isQQNTFramework = ComparableVersion(version) >= ComparableVersion(
                             EARLIEST_QQNT_FRAMEWORK_TIM_VERSION_STABLE
@@ -167,7 +167,7 @@ object VersionUtil {
                                 addProperty("new", newFeature)
                             }).toString(),
                             displayInstall = (DataStoreUtil.getStringKV(
-                                "QQVersionInstall", ""
+                                "TIMVersionInstall", ""
                             ) == version),
                             isQQNTFramework = ComparableVersion(version) >= ComparableVersion(
                                 EARLIEST_QQNT_FRAMEWORK_TIM_VERSION_STABLE
