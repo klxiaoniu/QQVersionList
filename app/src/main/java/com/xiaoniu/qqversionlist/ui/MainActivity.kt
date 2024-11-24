@@ -1,5 +1,5 @@
 /*
-    QQ Versions Tool for Android™
+    Qverbow Util
     Copyright (C) 2023 klxiaoniu
 
     This program is free software: you can redistribute it and/or modify
@@ -76,8 +76,8 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.Strictness
 import com.xiaoniu.qqversionlist.BuildConfig
-import com.xiaoniu.qqversionlist.QVTApplication.Companion.SHIPLY_DEFAULT_APPID
-import com.xiaoniu.qqversionlist.QVTApplication.Companion.SHIPLY_DEFAULT_SDK_VERSION
+import com.xiaoniu.qqversionlist.QverbowApplication.Companion.SHIPLY_DEFAULT_APPID
+import com.xiaoniu.qqversionlist.QverbowApplication.Companion.SHIPLY_DEFAULT_SDK_VERSION
 import com.xiaoniu.qqversionlist.R
 import com.xiaoniu.qqversionlist.data.QQVersionBean
 import com.xiaoniu.qqversionlist.data.TIMVersionBean
@@ -89,29 +89,33 @@ import com.xiaoniu.qqversionlist.databinding.DialogExperimentalFeaturesBinding
 import com.xiaoniu.qqversionlist.databinding.DialogFirebaseFirstInfoBinding
 import com.xiaoniu.qqversionlist.databinding.DialogFormatDefineBinding
 import com.xiaoniu.qqversionlist.databinding.DialogGuessBinding
+import com.xiaoniu.qqversionlist.databinding.DialogHashBinding
 import com.xiaoniu.qqversionlist.databinding.DialogLoadingBinding
 import com.xiaoniu.qqversionlist.databinding.DialogPersonalizationBinding
 import com.xiaoniu.qqversionlist.databinding.DialogSettingBinding
 import com.xiaoniu.qqversionlist.databinding.DialogShiplyBinding
 import com.xiaoniu.qqversionlist.databinding.DialogTencentAppStoreBinding
+import com.xiaoniu.qqversionlist.databinding.ExpLinkNextButtonBinding
 import com.xiaoniu.qqversionlist.databinding.SuccessButtonBinding
 import com.xiaoniu.qqversionlist.databinding.UpdateQvtButtonBinding
 import com.xiaoniu.qqversionlist.databinding.UserAgreementBinding
 import com.xiaoniu.qqversionlist.util.ClipboardUtil.copyText
 import com.xiaoniu.qqversionlist.util.DataStoreUtil
-import com.xiaoniu.qqversionlist.util.Extensions.downloadFile
 import com.xiaoniu.qqversionlist.util.Extensions.dp
+import com.xiaoniu.qqversionlist.util.FileUtil.downloadFile
 import com.xiaoniu.qqversionlist.util.InfoUtil.dialogError
+import com.xiaoniu.qqversionlist.util.InfoUtil.getQverbowSM3
 import com.xiaoniu.qqversionlist.util.InfoUtil.qverbowAboutText
 import com.xiaoniu.qqversionlist.util.InfoUtil.showToast
 import com.xiaoniu.qqversionlist.util.ShiplyUtil
 import com.xiaoniu.qqversionlist.util.StringUtil.getAllAPKUrl
-import com.xiaoniu.qqversionlist.util.StringUtil.getQua
 import com.xiaoniu.qqversionlist.util.StringUtil.resolveWeixinAlphaConfig
 import com.xiaoniu.qqversionlist.util.StringUtil.toPrettyFormat
 import com.xiaoniu.qqversionlist.util.StringUtil.trimSubstringAtEnd
 import com.xiaoniu.qqversionlist.util.StringUtil.trimSubstringAtStart
-import com.xiaoniu.qqversionlist.util.VersionBeanUtil
+import com.xiaoniu.qqversionlist.util.VersionUtil
+import com.xiaoniu.qqversionlist.util.VersionUtil.resolveLocalQQ
+import com.xiaoniu.qqversionlist.util.VersionUtil.resolveLocalTIM
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -122,7 +126,6 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
-import okhttp3.logging.HttpLoggingInterceptor
 import org.apache.maven.artifact.versioning.ComparableVersion
 import java.io.BufferedReader
 import java.io.ByteArrayInputStream
@@ -240,6 +243,7 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+    @SuppressLint("SetTextI18n")
     private fun initButtons() {
         // 删除 version Shared Preferences
         DataStoreUtil.deleteKVAsync("version")
@@ -257,7 +261,7 @@ class MainActivity : AppCompatActivity() {
                     "autoCheckUpdates",
                     false
                 )
-            ) checkQVTUpdates(
+            ) checkQverbowUpdates(
                 BuildConfig.VERSION_NAME.trimSubstringAtEnd("-Release"), false
             )
         }
@@ -312,9 +316,7 @@ class MainActivity : AppCompatActivity() {
 
                         btnAboutUpdate.setOnClickListener {
                             val spec = CircularProgressIndicatorSpec(
-                                this@MainActivity,
-                                null,
-                                0,
+                                this@MainActivity, null, 0,
                                 com.google.android.material.R.style.Widget_Material3_CircularProgressIndicator_ExtraSmall
                             )
                             val progressIndicatorDrawable =
@@ -328,7 +330,7 @@ class MainActivity : AppCompatActivity() {
                                 icon = progressIndicatorDrawable
                             }
 
-                            checkQVTUpdates(
+                            checkQverbowUpdates(
                                 BuildConfig.VERSION_NAME.trimSubstringAtEnd("-Release"),
                                 true, btnAboutUpdate
                             )
@@ -346,8 +348,49 @@ class MainActivity : AppCompatActivity() {
                                     OssLicensesMenuActivity.setActivityTitle(getString(R.string.openSourceLicenseTitle))
                                 })
                         }
-                    }
 
+                        btnAboutHash.setOnClickListener {
+                            val dialogHashBinding = DialogHashBinding.inflate(layoutInflater)
+
+                            val hashDialog = MaterialAlertDialogBuilder(this@MainActivity)
+                                .setTitle(R.string.qverbowHash)
+                                .setIcon(R.drawable.shield_keyhole_line)
+                                .setView(dialogHashBinding.root)
+                                .show().apply {
+                                    dialogHashBinding.aboutHashText.text =
+                                        "SM3${getString(R.string.colon)}${getQverbowSM3()}"
+                                    dialogHashBinding.btnAboutGithubHashVerifiy.isVisible =
+                                        BuildConfig.VERSION_NAME.endsWith("Release")
+                                }
+
+                            dialogHashBinding.btnAboutHashOk.setOnClickListener {
+                                hashDialog.dismiss()
+                            }
+
+                            dialogHashBinding.btnAboutGithubHashVerifiy.setOnClickListener {
+                                val spec = CircularProgressIndicatorSpec(
+                                    this@MainActivity, null, 0,
+                                    com.google.android.material.R.style.Widget_Material3_CircularProgressIndicator_ExtraSmall
+                                )
+                                val progressIndicatorDrawable =
+                                    IndeterminateDrawable.createCircularDrawable(
+                                        this@MainActivity, spec
+                                    )
+
+                                dialogHashBinding.btnAboutGithubHashVerifiy.apply {
+                                    isEnabled = false
+                                    style(com.google.android.material.R.style.Widget_Material3_Button_TonalButton_Icon)
+                                    icon = progressIndicatorDrawable
+                                }
+
+                                checkQverbowHash(
+                                    BuildConfig.VERSION_NAME.trimSubstringAtEnd("-Release"),
+                                    getQverbowSM3(),
+                                    dialogHashBinding.btnAboutGithubHashVerifiy
+                                )
+                            }
+                        }
+                    }
                     true
                 }
 
@@ -358,7 +401,7 @@ class MainActivity : AppCompatActivity() {
                         longPressCard.isChecked = DataStoreUtil.getBooleanKV("longPressCard", true)
                         guessNot5.isChecked = DataStoreUtil.getBooleanKV("guessNot5", false)
                         switchGuessTestExtend.isChecked =
-                            DataStoreUtil.getBooleanKV("guessTestExtend", false) // 扩展测试版猜版格式
+                            DataStoreUtil.getBooleanKV("guessTestExtend", false) // 扩展测试版扫版格式
                         downloadOnSystemManager.isChecked =
                             DataStoreUtil.getBooleanKV("downloadOnSystemManager", false)
                         switchAutoCheckUpdates.isChecked =
@@ -733,8 +776,7 @@ class MainActivity : AppCompatActivity() {
                                         switchPushNotifViaFcm.isChecked = false
                                         dialogError(
                                             Exception(getString(R.string.cannotEnableFirebaseCloudMessaging)),
-                                            true,
-                                            true
+                                            true, true
                                         )
                                     } else {
                                         switchPushNotifViaFcm.isEnabled = false
@@ -811,18 +853,19 @@ class MainActivity : AppCompatActivity() {
                                                 layoutInflater
                                             )
                                         val weixinAlphaConfigBackDialog =
-                                            MaterialAlertDialogBuilder(this@MainActivity).setTitle(R.string.successInGetting)
-                                                .setIcon(R.drawable.flask_line).setMessage(
-                                                    "${getString(R.string.version)}${map["versionName"].toString()}\n${
-                                                        getString(
-                                                            R.string.downloadLink
-                                                        )
-                                                    }${map["url"].toString()}" + (if (appSize != null) "\n\n${
-                                                        getString(
-                                                            R.string.fileSize
-                                                        )
-                                                    }$appSize MB" else ("\n\n" + getString(R.string.getWeixinAlphaConfigLink404)))
-                                                ).setView(applicationsConfigBackButtonBinding.root)
+                                            MaterialAlertDialogBuilder(this@MainActivity).setTitle(
+                                                if (appSize != null) R.string.successInGetting else R.string.suspectedPackageWithdrawal
+                                            ).setIcon(R.drawable.flask_line).setMessage(
+                                                "${getString(R.string.version)}${map["versionName"].toString()}\n${
+                                                    getString(
+                                                        R.string.downloadLink
+                                                    )
+                                                }${map["url"].toString()}" + (if (appSize != null) "\n\n${
+                                                    getString(
+                                                        R.string.fileSize
+                                                    )
+                                                }$appSize MB" else ("\n\n" + getString(R.string.getWeixinAlphaConfigLink404)))
+                                            ).setView(applicationsConfigBackButtonBinding.root)
                                                 .show()
 
                                         applicationsConfigBackButtonBinding.apply {
@@ -861,6 +904,91 @@ class MainActivity : AppCompatActivity() {
                                                             )
                                                         }${map["url"].toString()}\n\n鉴于微信测试版可能存在不可预知的稳定性问题，您在下载及使用该测试版本之前，必须明确并确保自身具备足够的风险识别和承受能力。"
                                                     )
+                                                }
+                                                startActivity(
+                                                    Intent.createChooser(
+                                                        shareIntent, getString(R.string.shareTo)
+                                                    )
+                                                )
+                                            }
+                                        }
+                                    }
+
+                                } catch (e: CustomException) {
+                                    dialogError(e, true)
+                                } catch (e: Exception) {
+                                    e.printStackTrace()
+                                    dialogError(e)
+                                } finally {
+                                    runOnUiThread { progressIndicator.hide() }
+                                }
+                            }
+                        }
+
+                        dialogGetWetypeLatest.setOnClickListener {
+                            progressIndicator.show()
+                            CoroutineScope(Dispatchers.IO).launch {
+                                class CustomException(message: String) :
+                                    Exception(message)
+                                try {
+                                    val okHttpClient =
+                                        OkHttpClient.Builder().followRedirects(false).build()
+                                    val request =
+                                        Request.Builder()
+                                            .url("https://z.weixin.qq.com/android/download?channel=latest")
+                                            .build()
+                                    val response = okHttpClient.newCall(request).execute()
+                                    if (!response.isSuccessful && !response.isRedirect) throw CustomException(
+                                        getString(R.string.getWeTypeLatestChannel404)
+                                    )
+                                    val url = response.header("Location")
+                                    if (url == null) throw CustomException("Response data is null.")
+                                    val request2 =
+                                        Request.Builder().url(url.toString()).head().build()
+                                    val response2 = OkHttpClient().newCall(request2).execute()
+                                    val appSize = (if (response2.isSuccessful) "%.2f".format(
+                                        response2.header("Content-Length")?.toDoubleOrNull()
+                                            ?.div(1024 * 1024)
+                                    ) else null)
+                                    runOnUiThread {
+                                        val expLinkNextButtonBinding =
+                                            ExpLinkNextButtonBinding.inflate(
+                                                layoutInflater
+                                            )
+                                        val weTypeLatestChannelBackDialog =
+                                            MaterialAlertDialogBuilder(this@MainActivity).setTitle(
+                                                if (appSize != null) R.string.successInGetting else R.string.suspectedPackageWithdrawal
+                                            ).setIcon(R.drawable.flask_line).setMessage(
+                                                "${
+                                                    getString(
+                                                        R.string.downloadLink
+                                                    )
+                                                }$url" + (if (appSize != null) "\n\n${
+                                                    getString(
+                                                        R.string.fileSize
+                                                    )
+                                                }$appSize MB" else "")
+                                            ).setView(expLinkNextButtonBinding.root)
+                                                .show()
+
+                                        expLinkNextButtonBinding.apply {
+                                            expNextBtnCopy.setOnClickListener {
+                                                weTypeLatestChannelBackDialog.dismiss()
+                                                copyText(url.toString())
+                                            }
+
+                                            expNextBtnDownload.setOnClickListener {
+                                                weTypeLatestChannelBackDialog.dismiss()
+                                                downloadFile(
+                                                    this@MainActivity, url.toString()
+                                                )
+                                            }
+
+                                            expNextBtnShare.setOnClickListener {
+                                                weTypeLatestChannelBackDialog.dismiss()
+                                                val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                                                    type = "text/plain"
+                                                    putExtra(Intent.EXTRA_TEXT, url)
                                                 }
                                                 startActivity(
                                                     Intent.createChooser(
@@ -1162,7 +1290,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    // 下面三个函数是用于响应猜版对话框 Spinner 所选项的界面变化
+    // 下面三个函数是用于响应扫版对话框 Spinner 所选项的界面变化
     private fun modeTestView(dialogGuessBinding: DialogGuessBinding, mode: String) {
         dialogGuessBinding.apply {
             etVersionSmall.isEnabled = true
@@ -1383,63 +1511,7 @@ class MainActivity : AppCompatActivity() {
         if (menu != null) menu.isEnabled = false
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                // 识别本机 Android QQ 版本并放进持久化存储
-                val QQPackageInfo = packageManager.getPackageInfo("com.tencent.mobileqq", 0)
-                val QQVersionInstall = QQPackageInfo.versionName.toString()
-                val QQVersionCodeInstall =
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) QQPackageInfo.longVersionCode.toString() else ""
-                val QQMetaDataInstall = packageManager.getPackageInfo(
-                    "com.tencent.mobileqq", PackageManager.GET_META_DATA
-                )
-                val QQAppSettingParamsInstall =
-                    QQMetaDataInstall.applicationInfo?.metaData?.getString("AppSetting_params")
-                val QQAppSettingParamsPadInstall =
-                    QQMetaDataInstall.applicationInfo?.metaData?.getString("AppSetting_params_pad")
-                val QQRdmUUIDInstall =
-                    QQMetaDataInstall.applicationInfo?.metaData?.getString("com.tencent.rdm.uuid")
-                val QQTargetInstall = QQMetaDataInstall.applicationInfo?.targetSdkVersion.toString()
-                val QQMinInstall = QQMetaDataInstall.applicationInfo?.minSdkVersion.toString()
-                val QQCompileInstall = (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
-                    QQMetaDataInstall.applicationInfo?.compileSdkVersion.toString() else "")
-                val QQQua = getQua(QQPackageInfo)
-                if (QQVersionInstall != DataStoreUtil.getStringKV(
-                        "QQVersionInstall", ""
-                    )
-                ) DataStoreUtil.putStringKV("QQVersionInstall", QQVersionInstall)
-                if (QQVersionCodeInstall != DataStoreUtil.getStringKV(
-                        "QQVersionCodeInstall", ""
-                    )
-                ) DataStoreUtil.putStringKV("QQVersionCodeInstall", QQVersionCodeInstall)
-                if (QQAppSettingParamsInstall != null && QQAppSettingParamsInstall != DataStoreUtil.getStringKV(
-                        "QQAppSettingParamsInstall", ""
-                    )
-                ) DataStoreUtil.putStringKV("QQAppSettingParamsInstall", QQAppSettingParamsInstall)
-                if (QQAppSettingParamsPadInstall != null && QQAppSettingParamsPadInstall != DataStoreUtil.getStringKV(
-                        "QQAppSettingParamsPadInstall", ""
-                    )
-                ) DataStoreUtil.putStringKV(
-                    "QQAppSettingParamsPadInstall", QQAppSettingParamsPadInstall
-                )
-                if (QQRdmUUIDInstall != null && QQRdmUUIDInstall != DataStoreUtil.getStringKV(
-                        "QQRdmUUIDInstall", ""
-                    )
-                ) DataStoreUtil.putStringKV("QQRdmUUIDInstall", QQRdmUUIDInstall)
-                if (QQTargetInstall.isNotEmpty() && QQTargetInstall != DataStoreUtil.getStringKV(
-                        "QQTargetInstall", ""
-                    )
-                ) DataStoreUtil.putStringKV("QQTargetInstall", QQTargetInstall)
-                if (QQMinInstall.isNotEmpty() && QQMinInstall != DataStoreUtil.getStringKV(
-                        "QQMinInstall", ""
-                    )
-                ) DataStoreUtil.putStringKV("QQMinInstall", QQMinInstall)
-                if (QQCompileInstall.isNotEmpty() && QQCompileInstall != DataStoreUtil.getStringKV(
-                        "QQCompileInstall", ""
-                    )
-                ) DataStoreUtil.putStringKV("QQCompileInstall", QQCompileInstall)
-                if (QQQua != null && QQQua.replace("\n", "") != DataStoreUtil.getStringKV(
-                        "QQQua", ""
-                    )
-                ) DataStoreUtil.putStringKV("QQQua", QQQua.replace("\n", ""))
+                resolveLocalQQ()
             } catch (_: Exception) {
                 val localQQEmptyList = listOf(
                     mapOf("key" to "QQVersionInstall", "value" to "", "type" to "String"),
@@ -1455,69 +1527,7 @@ class MainActivity : AppCompatActivity() {
                 DataStoreUtil.batchPutKVAsync(localQQEmptyList)
             } finally {
                 try {
-                    // 识别本机 Android TIM 版本并放进持久化存储
-                    val TIMPackageInfo = packageManager.getPackageInfo("com.tencent.tim", 0)
-                    val TIMVersionInstall = TIMPackageInfo.versionName.toString()
-                    val TIMVersionCodeInstall =
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) TIMPackageInfo.longVersionCode.toString() else ""
-                    val TIMMetaDataInstall = packageManager.getPackageInfo(
-                        "com.tencent.tim", PackageManager.GET_META_DATA
-                    )
-                    val TIMAppSettingParamsInstall =
-                        TIMMetaDataInstall.applicationInfo?.metaData?.getString("AppSetting_params")
-                    val TIMAppSettingParamsPadInstall =
-                        TIMMetaDataInstall.applicationInfo?.metaData?.getString("AppSetting_params_pad")
-                    val TIMRdmUUIDInstall =
-                        TIMMetaDataInstall.applicationInfo?.metaData?.getString("com.tencent.rdm.uuid")
-                    val TIMTargetInstall =
-                        TIMMetaDataInstall.applicationInfo?.targetSdkVersion.toString()
-                    val TIMMinInstall = TIMMetaDataInstall.applicationInfo?.minSdkVersion.toString()
-                    val TIMCompileInstall =
-                        (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) TIMMetaDataInstall.applicationInfo?.compileSdkVersion.toString() else "")
-                    val TIMQua = getQua(TIMPackageInfo)
-                    if (TIMTargetInstall.isNotEmpty() && TIMTargetInstall != DataStoreUtil.getStringKV(
-                            "TIMTargetInstall",
-                            ""
-                        )
-                    ) DataStoreUtil.putStringKV("TIMTargetInstall", TIMTargetInstall)
-                    if (TIMMinInstall.isNotEmpty() && TIMMinInstall != DataStoreUtil.getStringKV(
-                            "TIMMinInstall",
-                            ""
-                        )
-                    ) DataStoreUtil.putStringKV("TIMMinInstall", TIMMinInstall)
-                    if (TIMCompileInstall.isNotEmpty() && TIMCompileInstall != DataStoreUtil.getStringKV(
-                            "TIMCompileInstall",
-                            ""
-                        )
-                    ) DataStoreUtil.putStringKV("TIMCompileInstall", TIMCompileInstall)
-                    if (TIMVersionInstall != DataStoreUtil.getStringKV(
-                            "TIMVersionInstall", ""
-                        )
-                    ) DataStoreUtil.putStringKV("TIMVersionInstall", TIMVersionInstall)
-                    if (TIMVersionCodeInstall != DataStoreUtil.getStringKV(
-                            "TIMVersionCodeInstall", ""
-                        )
-                    ) DataStoreUtil.putStringKV("TIMVersionCodeInstall", TIMVersionCodeInstall)
-                    if (TIMAppSettingParamsInstall != null && TIMAppSettingParamsInstall != DataStoreUtil.getStringKV(
-                            "TIMAppSettingParamsInstall", ""
-                        )
-                    ) DataStoreUtil.putStringKV(
-                        "TIMAppSettingParamsInstall", TIMAppSettingParamsInstall
-                    )
-                    if (TIMAppSettingParamsPadInstall != null && TIMAppSettingParamsPadInstall != DataStoreUtil.getStringKV(
-                            "TIMAppSettingParamsPadInstall", ""
-                        )
-                    ) DataStoreUtil.putStringKV(
-                        "TIMAppSettingParamsPadInstall", TIMAppSettingParamsPadInstall
-                    )
-                    if (TIMRdmUUIDInstall != null && TIMRdmUUIDInstall != DataStoreUtil.getStringKV(
-                            "TIMRdmUUIDInstall", ""
-                        )
-                    ) DataStoreUtil.putStringKV("TIMRdmUUIDInstall", TIMRdmUUIDInstall)
-                    if (TIMQua != null && TIMQua.replace("\n", "") != DataStoreUtil.getStringKV(
-                            "TIMQua", ""
-                        )
-                    ) DataStoreUtil.putStringKV("TIMQua", TIMQua.replace("\n", ""))
+                    resolveLocalTIM()
                 } catch (_: Exception) {
                     val localTIMEmptyList = listOf(
                         mapOf("key" to "TIMVersionInstall", "value" to "", "type" to "String"),
@@ -1558,7 +1568,7 @@ class MainActivity : AppCompatActivity() {
                         val response = okHttpClient.newCall(request).execute()
                         val responseData = response.body?.string()
                         if (responseData != null) {
-                            VersionBeanUtil.resolveQQRainbow(this@MainActivity, responseData)
+                            VersionUtil.resolveQQRainbow(this@MainActivity, responseData)
                             withContext(Dispatchers.Main) {
                                 qqVersionAdapter.submitList(qqVersion)
                             }
@@ -1577,7 +1587,7 @@ class MainActivity : AppCompatActivity() {
                         val response = okHttpClient.newCall(request).execute()
                         val responseData = response.body?.string()
                         if (responseData != null) {
-                            VersionBeanUtil.resolveTIMRainbow(this@MainActivity, responseData)
+                            VersionUtil.resolveTIMRainbow(this@MainActivity, responseData)
                             withContext(Dispatchers.Main) {
                                 timVersionAdapter.submitList(timVersion)
                                 if (!DataStoreUtil.getBooleanKV("closeSwipeLeftForTIM", false)) {
@@ -1593,12 +1603,10 @@ class MainActivity : AppCompatActivity() {
                                             else -> false
                                         }
 
-                                    Snackbar
-                                        .make(
-                                            binding.root,
-                                            R.string.swipeLeftForTIMVersions,
-                                            Snackbar.LENGTH_INDEFINITE
-                                        ).setAction(R.string.ok, TipTIMSnackbarActionListener())
+                                    Snackbar.make(
+                                        binding.root, R.string.swipeLeftForTIMVersions,
+                                        Snackbar.LENGTH_INDEFINITE
+                                    ).setAction(R.string.ok, TipTIMSnackbarActionListener())
                                         .setAnchorView(binding.btnGuess)
                                         .apply {
                                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) if (isDarkTheme) setBackgroundTint(
@@ -1747,7 +1755,9 @@ class MainActivity : AppCompatActivity() {
             // ["_64", "_64_HB", "_64_HB1", "_64_HB2", "_64_HB3", "_64_HD", "_64_HD1", "_64_HD2", "_64_HD3", "_64_HD1HB", "_HB_64", "_HB1_64", "_HB2_64", "_HB3_64", "_HD_64", "_HD1_64", "_HD2_64", "_HD3_64", "_HD1HB_64", "_test"]
 
             val stList = if (defineSufList != listOf("")) stListPre + defineSufList else stListPre
-            val weSoList = listOf("", "_1")
+            val wxSoListPre = listOf("", "_1")
+            val wxSoList =
+                if (defineSufList != listOf("")) wxSoListPre + defineSufList else wxSoListPre
             try {
                 var sIndex = 0
                 while (true) when (status) {
@@ -1785,7 +1795,7 @@ class MainActivity : AppCompatActivity() {
                                     if (defineSufList != listOf("")) soListPre + defineSufList else soListPre
                                 if (sIndex == (soList.size)) {
                                     status = STATUS_END
-                                    showToast("未猜测到包")
+                                    showToast("未扫描到包")
                                     continue
                                 } else {
                                     link =
@@ -1799,7 +1809,7 @@ class MainActivity : AppCompatActivity() {
                                 // https://dldir1.qq.com/weixin/android/weixin8049android2600_0x2800318a_arm64.apk
                                 // https://dldir1.qq.com/weixin/android/weixin8054android2740_0x28003630_arm64_1.apk
                                 link =
-                                    "https://dldir1.qq.com/weixin/android/weixin${versionBig}android${versionTrue}_0x${v16codeStr}_arm64${weSoList[sIndex]}.apk"
+                                    "https://dldir1.qq.com/weixin/android/weixin${versionBig}android${versionTrue}_0x${v16codeStr}_arm64${wxSoList[sIndex]}.apk"
                                 sIndex += 1
                             }
                         }
@@ -1845,23 +1855,29 @@ class MainActivity : AppCompatActivity() {
 
                                 // 继续按钮点击事件
                                 successButtonBinding.btnContinue.setOnClickListener {
-                                    // 测试版情况下，未打开扩展猜版或扩展猜版到最后一步时执行小版本号的递增
+                                    // 测试版情况下，未打开扩展扫版或扩展扫版到最后一步时执行小版本号的递增
                                     when {
-                                        mode == MODE_TEST && (!guessTestExtend || sIndex == (stList.size)) -> {
+                                        mode == MODE_TEST && (!guessTestExtend || sIndex >= (stList.size)) -> {
                                             vSmall += if (!guessNot5) 5 else 1
                                             sIndex = 0
                                         }
 
-                                        mode == MODE_TIM && (!guessTestExtend || sIndex == (stList.size)) -> {
+                                        mode == MODE_TIM && (!guessTestExtend || sIndex >= (stList.size)) -> {
                                             vSmall += 1
                                             sIndex = 0
                                         }
 
                                         mode == MODE_UNOFFICIAL -> vSmall += if (!guessNot5) 5 else 1
-                                        mode == MODE_WECHAT && sIndex == (weSoList.size) -> {
-                                            val version16code = v16codeStr.toInt(16) + 1
-                                            v16codeStr = version16code.toString(16)
-                                            sIndex = 0
+                                        mode == MODE_WECHAT -> {
+                                            if (sIndex >= wxSoList.size && guessTestExtend) {
+                                                val version16code = v16codeStr.toInt(16) + 1
+                                                v16codeStr = version16code.toString(16)
+                                                sIndex = 0
+                                            } else if (sIndex >= wxSoListPre.size && !guessTestExtend) {
+                                                val version16code = v16codeStr.toInt(16) + 1
+                                                v16codeStr = version16code.toString(16)
+                                                sIndex = 0
+                                            }
                                         }
                                     }
                                     successMaterialDialog.dismiss()
@@ -1971,7 +1987,7 @@ class MainActivity : AppCompatActivity() {
 
                         } else {
                             when {
-                                mode == MODE_TEST && (!guessTestExtend || sIndex == (stList.size)) -> { // 测试版情况下，未打开扩展猜版或扩展猜版到最后一步时执行小版本号的递增
+                                mode == MODE_TEST && (!guessTestExtend || sIndex == (stList.size)) -> { // 测试版情况下，未打开扩展扫版或扩展扫版到最后一步时执行小版本号的递增
                                     vSmall += if (!guessNot5) 5 else 1
                                     sIndex = 0
                                 }
@@ -1982,10 +1998,16 @@ class MainActivity : AppCompatActivity() {
                                 }
 
                                 mode == MODE_UNOFFICIAL -> vSmall += if (!guessNot5) 5 else 1
-                                mode == MODE_WECHAT && sIndex == (weSoList.size) -> {
-                                    val version16code = v16codeStr.toInt(16) + 1
-                                    v16codeStr = version16code.toString(16)
-                                    sIndex = 0
+                                mode == MODE_WECHAT -> {
+                                    if (sIndex >= wxSoList.size && guessTestExtend) {
+                                        val version16code = v16codeStr.toInt(16) + 1
+                                        v16codeStr = version16code.toString(16)
+                                        sIndex = 0
+                                    } else if (sIndex >= wxSoListPre.size && !guessTestExtend) {
+                                        val version16code = v16codeStr.toInt(16) + 1
+                                        v16codeStr = version16code.toString(16)
+                                        sIndex = 0
+                                    }
                                 }
                             }
                         }
@@ -2024,8 +2046,7 @@ class MainActivity : AppCompatActivity() {
             if (parent is ViewGroup) parent.removeView(dialogExpBackBinding.root)
         }
 
-        val shiplyApkUrl =
-            sourceDataJson.toPrettyFormat().getAllAPKUrl()
+        val shiplyApkUrl = sourceDataJson.toPrettyFormat().getAllAPKUrl()
 
         dialogExpBackBinding.apply {
             MaterialAlertDialogBuilder(this@MainActivity)
@@ -2181,10 +2202,7 @@ class MainActivity : AppCompatActivity() {
         }
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val okHttpClient = OkHttpClient.Builder().addInterceptor(HttpLoggingInterceptor()
-                    .apply {
-                        level = HttpLoggingInterceptor.Level.BODY
-                    }).build()
+                val okHttpClient = OkHttpClient.Builder().build()
                 val mediaType = "application/json; charset=utf-8".toMediaTypeOrNull()
                 val getTypePost = mapOf("packagename" to getType)
                 val body =
@@ -2267,7 +2285,9 @@ class MainActivity : AppCompatActivity() {
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                dialogError(e)
+                runOnUiThread {
+                    dialogError(e)
+                }
             } finally {
                 runOnUiThread {
                     btn.apply {
@@ -2280,7 +2300,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun checkQVTUpdates(
+    private fun checkQverbowUpdates(
         selfVersion: String,
         isManual: Boolean,
         btn: MaterialButton? = null
@@ -2297,28 +2317,28 @@ class MainActivity : AppCompatActivity() {
                 if (responseData != null) {
                     val gson = Gson()
                     val jsonData = gson.fromJson(responseData, JsonObject::class.java)
-                    val latestQVTVersion =
+                    val latestQverbowVersion =
                         jsonData.get("tag_name").asString.trimSubstringAtStart("v")
-                    if (ComparableVersion(latestQVTVersion) > ComparableVersion(selfVersion)) {
-                        val latestQVTAssets = jsonData.get("assets").asJsonArray
-                        var latestQVTDownloadUrl: String? = null
-                        var latestQVTFileName: String? = null
-                        var latestQVTFileSize: String? = null
-                        for (asset in latestQVTAssets) {
+                    if (ComparableVersion(latestQverbowVersion) > ComparableVersion(selfVersion)) {
+                        val latestQverbowAssets = jsonData.get("assets").asJsonArray
+                        var latestQverbowDownloadUrl: String? = null
+                        var latestQverbowFileName: String? = null
+                        var latestQverbowFileSize: String? = null
+                        for (asset in latestQverbowAssets) {
                             val assetObject = asset.asJsonObject
                             val contentType = assetObject.get("content_type").asString
                             val browserDownloadUrl =
                                 assetObject.get("browser_download_url").asString
                             if (contentType == "application/vnd.android.package-archive") {
-                                latestQVTDownloadUrl = browserDownloadUrl
-                                latestQVTFileName = assetObject.get("name").asString
-                                latestQVTFileSize = "%.2f".format(
+                                latestQverbowDownloadUrl = browserDownloadUrl
+                                latestQverbowFileName = assetObject.get("name").asString
+                                latestQverbowFileSize = "%.2f".format(
                                     assetObject.get("size").asLong.toDouble().div(1024 * 1024)
                                 )
                                 break
                             }
                         }
-                        if (latestQVTDownloadUrl != null) withContext(Dispatchers.Main) {
+                        if (latestQverbowDownloadUrl != null) withContext(Dispatchers.Main) {
                             val updateQvtButtonBinding =
                                 UpdateQvtButtonBinding.inflate(layoutInflater)
 
@@ -2328,37 +2348,91 @@ class MainActivity : AppCompatActivity() {
                                     .setIcon(R.drawable.check_circle)
                                     .setView(updateQvtButtonBinding.root)
                                     .setMessage(
-                                        "${getString(R.string.version)}$latestQVTVersion\n${
+                                        "${getString(R.string.version)}$latestQverbowVersion\n${
                                             getString(
                                                 R.string.downloadLink
                                             )
-                                        }$latestQVTDownloadUrl\n${
+                                        }$latestQverbowDownloadUrl\n${
                                             getString(
                                                 R.string.fileSize
                                             )
-                                        }$latestQVTFileSize MB"
+                                        }$latestQverbowFileSize MB"
                                     )
                                     .show()
 
                             updateQvtButtonBinding.updateQvtCopy.setOnClickListener {
-                                copyText(latestQVTDownloadUrl)
+                                copyText(latestQverbowDownloadUrl)
                                 updateQvtMaterialDialog.dismiss()
                             }
 
                             updateQvtButtonBinding.updateQvtDownload.setOnClickListener {
                                 updateQvtMaterialDialog.dismiss()
                                 downloadFile(
-                                    this@MainActivity, latestQVTDownloadUrl, latestQVTFileName
+                                    this@MainActivity,
+                                    latestQverbowDownloadUrl,
+                                    latestQverbowFileName
                                 )
                             }
                         } else showToast(getString(R.string.noAssetsDetected))
                     } else showToast(getString(R.string.noUpdatesDetected))
                 }
             } catch (e: Exception) {
-                if (isManual) dialogError(
-                    RuntimeException(getString(R.string.cannotGetGitHub), e),
-                    true
-                ) else showToast(getString(R.string.cannotGetGitHub))
+                withContext(Dispatchers.Main) {
+                    if (isManual) dialogError(
+                        RuntimeException(getString(R.string.cannotGetGitHub), e), true
+                    ) else showToast(getString(R.string.cannotGetGitHub))
+                }
+            } finally {
+                withContext(Dispatchers.Main) {
+                    btn?.apply {
+                        style(com.google.android.material.R.style.Widget_Material3_Button_TonalButton)
+                        icon = null
+                        isEnabled = true
+                    }
+                }
+            }
+        }
+    }
+
+    private fun checkQverbowHash(
+        selfVersion: String,
+        sm3: String,
+        btn: MaterialButton? = null
+    ) {
+        class HashIsFalseException(message: String) : Exception(message)
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val okHttpClient = OkHttpClient()
+                val request =
+                    Request.Builder()
+                        .url("https://api.github.com/repos/klxiaoniu/QQVersionList/releases/tags/v$selfVersion")
+                        .build()
+                val response = okHttpClient.newCall(request).execute()
+                val responseData = response.body?.string()
+                if (responseData != null) {
+                    val gson = Gson()
+                    val jsonData = gson.fromJson(responseData, JsonObject::class.java)
+                    val githubBody =
+                        jsonData.get("body").asString
+                    withContext(Dispatchers.Main) {
+                        if (githubBody.contains(sm3))
+                            showToast(R.string.hashIsTrue) else throw HashIsFalseException(
+                            getString(R.string.hashIsFalse)
+                        )
+                    }
+                }
+            } catch (e: HashIsFalseException) {
+                withContext(Dispatchers.Main) {
+                    dialogError(
+                        RuntimeException(getString(R.string.hashIsFalse), e), true, false, true
+                    )
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    dialogError(
+                        RuntimeException(getString(R.string.cannotGetGitHub), e), true
+                    )
+                }
             } finally {
                 withContext(Dispatchers.Main) {
                     btn?.apply {

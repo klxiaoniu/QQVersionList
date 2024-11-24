@@ -1,5 +1,5 @@
 <!--
-    QQ Versions Tool for Android™
+    Qverbow Util
     Copyright (C) 2023 klxiaoniu
 
     This program is free software: you can redistribute it and/or modify
@@ -18,8 +18,8 @@
 <resources>
     <string name="app_name">QQ 版本列表实用工具</string>
     <string name="appTitle">QQ 版本列表实用工具</string>
-    <string name="shortcutLongLabel">猜版 Extended</string>
-    <string name="shortcutShortLabel">猜版 Extd.</string>
+    <string name="shortcutLongLabel">扫版 Extended</string>
+    <string name="shortcutShortLabel">扫版 Extd.</string>
     <string name="start">开始</string>
     <string name="cancel">取消</string>
     <string name="done">确定</string>
@@ -32,15 +32,15 @@
     <string name="withdrawConsentUA">撤回同意用户协议</string>
     <string name="withdrawConsentAndExit">撤回同意并退出</string>
     <string name="userAgreement">用户协议</string>
-    <string name="enumerateVersionsFAB">猜版</string>
-    <string name="enumerateVersionsDialogTitle">猜版 Extended</string>
+    <string name="enumerateVersionsFAB">扫版</string>
+    <string name="enumerateVersionsDialogTitle">扫版 Extended</string>
     <string name="setting">设置</string>
     <string name="personalization">个性化</string>
     <string name="about">关于</string>
-    <string name="enumerateVersionsFormatSetting">猜版直链格式设置</string>
+    <string name="enumerateVersionsFormatSetting">扫版直链格式设置</string>
     <string name="getUpdateFromTDSShiplyDistributionPlatform">TDS 腾讯端服务 Shiply 容器与发布平台更新获取（实验性）</string>
     <string name="getUpdateFromShiplyPlatform">Shiply 平台更新获取（实验性）</string>
-    <string name="acceptedEnumerateVersion">猜测成功</string>
+    <string name="acceptedEnumerateVersion">扫版成功</string>
     <string name="contentReturnedByShiplyPlatform">Shiply 平台返回内容</string>
     <string name="applicationError">程序出错</string>
     <string name="additionalActions">进一步操作</string>
@@ -48,8 +48,8 @@
     <string name="jsonDetails">JSON 详情</string>
     <string name="stableVersion">正式版</string>
     <string name="previewVersion">测试版</string>
-    <string name="spaceEnumerateVersion">空格猜版</string>
-    <string name="weixinEnumerateVersion">微信猜版</string>
+    <string name="spaceEnumerateVersion">空格扫版</string>
+    <string name="weixinEnumerateVersion">微信扫版</string>
     <string name="aboutAppName">QQ 版本列表实用工具 for Android™</string>
     <string name="aboutAuthor">作者：</string>
     <string name="aboutContributor">贡献者：</string>
@@ -57,41 +57,41 @@
     <string name="aboutSpecialThanksTo">特别感谢：</string>
     <string name="aboutOpenSourceRepo">开源仓库：</string>
     <string name="aboutGetUpdate">获取更新：</string>
-    <string name="aboutDescription">提供 Android QQ 版本列表的查看和对 Android QQ 下载链接的枚举法猜测。</string>
+    <string name="aboutDescription">提供 Android QQ 版本列表的查看和对 Android QQ 下载链接的枚举法扫描。</string>
     <string name="copied">已复制：</string>
     <string name="reatedFileSize">额定大小：</string>
     <string name="sourceJSON">源 JSON</string>
     <string name="recommendations">建议的内容</string>
     <string name="longPressTheVersionCardToViewSourceDetails">长按版本卡片查看源详情</string>
     <string name="useTheSystemDownloadManagerToTakeOverTheDownloadIntent">使用系统下载管理器接管下载意图</string>
-    <string name="removeMultiplesOf5ForQQPreviewVersions">解除 QQ 测试版猜版小版本号遵循 5 的倍数限制</string>
+    <string name="removeMultiplesOf5ForQQPreviewVersions">解除 QQ 测试版扫版小版本号遵循 5 的倍数限制</string>
     <string name="longPressToViewSourceDetailsIsDisabled">未开启长按查看源详情功能，请前往设置开启</string>
     <string name="currentSizeVsLargestHistoricalPackage">占比历史最大包（%s）：</string>
-    <string name="extendTheSuffixForDirectDownloadLinksOfEnumeratedPreviewVersions">扩展测试版猜版直链后缀</string>
+    <string name="extendTheSuffixForDirectDownloadLinksOfEnumeratedPreviewVersions">扩展测试版扫版直链后缀</string>
     <string name="fileSize">大小：</string>
     <string name="downloadLink">下载地址：</string>
     <string name="saved">已保存</string>
     <string name="enumQQPreviewWarning">鉴于 QQ 测试版可能存在不可预知的稳定性问题，您在下载及使用该测试版本之前，必须明确并确保自身具备足够的风险识别和承受能力。根据相关条款，您使用本软件时应当已了解并同意，因下载或使用 QQ 测试版而可能产生的任何直接或间接损失、损害以及其他不利后果，均由您自行承担全部责任。</string>
     <string name="enumQQMajorVersionHelpText">填写格式为 x.y.z</string>
     <string name="enumWeixinMajorVersionHelpText">无需填写小数点</string>
-    <string name="enumWeixinWarning">微信猜版功能为 QQ 版本列表实用工具附带的实验性功能，可能存在不可预知的稳定性问题。请明确并确保自身具备足够的风险识别和承受能力。</string>
-    <string name="enumHasBeenStopped">已停止猜测</string>
+    <string name="enumWeixinWarning">微信扫版功能为 QQ 版本列表实用工具附带的实验性功能，可能存在不可预知的稳定性问题。请明确并确保自身具备足够的风险识别和承受能力。</string>
+    <string name="enumHasBeenStopped">已停止扫描</string>
     <string name="missingCipherWarning">TDS 腾讯端服务 Shiply 容器与发布平台返回 JSON 内容中未包含“cipher_text”键值对。</string>
-    <string name="missingMajorVersionWarning">猜版需要填写主版本号，否则无法执行猜版。</string>
-    <string name="missingQQPreviewMinorVersionWarning">测试版猜版（含空格猜版）需要填写小版本号，否则无法猜测测试版。</string>
+    <string name="missingMajorVersionWarning">扫版需要填写主版本号，否则无法执行扫版。</string>
+    <string name="missingQQPreviewMinorVersionWarning">测试版扫版（含空格扫版）需要填写小版本号，否则无法扫描测试版。</string>
     <string name="QQPreviewMinorNot5Warning">小版本号需填写 5 的倍数。如需解除此限制，请前往设置进行解除。</string>
-    <string name="missingWeixinTrueVersionWarning">微信猜版需要填写真实版本号，否则无法猜测微信版本。</string>
-    <string name="missingWeixin16CodeWarning">微信猜版需要填写十六进制代码，否则无法猜测微信版本。</string>
-    <string name="enumeratingDownloadLink">正在猜测下载地址：</string>
+    <string name="missingWeixinTrueVersionWarning">微信扫版需要填写真实版本号，否则无法扫描微信版本。</string>
+    <string name="missingWeixin16CodeWarning">微信扫版需要填写十六进制代码，否则无法扫描微信版本。</string>
+    <string name="enumeratingDownloadLink">正在扫描下载地址：</string>
     <string name="majorVersion">主版本号</string>
     <string name="initialMinorVersion">起始小版本号</string>
     <string name="hexadecimalCode">十六进制代码</string>
-    <string name="initialMinorVersionHelpText">填写起始猜测小版本号，猜正式版时无需填写</string>
-    <string name="hexadecimalCodeHelpText">填写十六进制代码，仅微信猜版使用</string>
-    <string name="enumType">猜版类型</string>
-    <string name="enumTypeHelpText">指定猜版目标类型</string>
+    <string name="initialMinorVersionHelpText">填写起始扫描小版本号，扫正式版时无需填写</string>
+    <string name="hexadecimalCodeHelpText">填写十六进制代码，仅微信扫版使用</string>
+    <string name="enumType">扫版类型</string>
+    <string name="enumTypeHelpText">指定扫版目标类型</string>
     <string name="trueVersion">真实版本号</string>
-    <string name="trueVersionHelpText">填写真实版本号（版本码），仅微信猜版使用</string>
+    <string name="trueVersionHelpText">填写真实版本号（版本码），仅微信扫版使用</string>
     <string name="appidOptional">appid（非必填）</string>
     <string name="shiplyGeneralOptionalHelpText">默认值：</string>
     <string name="shiplyVersion">版本</string>
@@ -101,7 +101,7 @@
     <string name="defaultDisplayOfFirstListItemDetails">版本列表首项卡片默认显示详情</string>
     <string name="versionNumberFontUsesTCloudNumber">版本号字体使用 TCloudNumber</string>
     <string name="versionCardsDisplaysPackageSizeIndicator">QQ 版本卡片展示额定包大小占比历史最大包指示条</string>
-    <string name="customVersionEnumSuffix">自定义猜版后缀</string>
+    <string name="customVersionEnumSuffix">自定义扫版后缀</string>
     <string name="customVersionEnumSuffixHelpText">请使用“, ”（西文逗号+空格）分割</string>
     <string name="facilitateI18n">协助翻译：</string>
     <string name="versionCardExpandButtonContentDescription">展开详情</string>
@@ -127,14 +127,14 @@
     <string name="skip">跳过</string>
     <string name="qqntTag">基于 QQNT 技术架构</string>
     <string name="releaseDateTIM">发布日期：</string>
-    <string name="checkUpdateViaGitHubAPI">使用 GitHub API 检查更新</string>
+    <string name="checkUpdateViaGitHubAPI">使用 GitHub REST API 检查更新</string>
     <string name="noUpdatesDetected">未检测到更新</string>
     <string name="noAssetsDetected">未检测到资产文件</string>
     <string name="cannotGetGitHub">无法连接到 GitHub，请确保您所在网络环境可以访问 GitHub。</string>
     <string name="updateQVTAvailable">更新可用</string>
     <string name="copyLink">复制链接</string>
     <string name="unrealEngineTag">内置虚幻引擎</string>
-    <string name="autoCheckForUpdates">启动时自动使用 GitHub API 检查更新</string>
+    <string name="autoCheckForUpdates">启动时自动使用 GitHub REST API 检查更新</string>
     <string name="useQQ8958Test">使用 QQ 8.9.58 测试版直链格式</string>
     <string name="ciVersionNoSupportUpdates">CI 构建版本不支持检查更新</string>
     <string name="showUnrealEngineTag">版本卡片显示匹配的虚幻引擎标识</string>
@@ -151,11 +151,11 @@
     <string name="contentReturnedByTencentAppStore">腾讯应用宝返回内容</string>
     <string name="getWeTypeLinkFromTencentAppStore">获取微信输入法下载直链</string>
     <string name="tencentAppStoreWarning">腾讯应用宝更新获取功能为 QQ 版本列表实用工具附带的实验性功能，可能存在不可预知的稳定性问题。请明确并确保自身具备足够的风险识别和承受能力。</string>
-    <string name="showOldLoading">猜版对话框使用旧版加载动画</string>
+    <string name="showOldLoading">扫版对话框使用旧版加载动画</string>
     <string name="versionCardsDisplaysPackageSizeText">QQ 版本卡片展示额定包大小占比历史最大包百分比</string>
-    <string name="timVersion">TIM 猜版</string>
-    <string name="enumTIMWarning">TIM 猜版功能为 QQ 版本列表实用工具附带的实验性功能，可能存在不可预知的稳定性问题。请明确并确保自身具备足够的风险识别和承受能力。</string>
-    <string name="useQQ9008_14600Test">猜版类型添加 QQ 9.0.8.14600 空格直链格式</string>
+    <string name="timVersion">TIM 扫版</string>
+    <string name="enumTIMWarning">TIM 扫版功能为 QQ 版本列表实用工具附带的实验性功能，可能存在不可预知的稳定性问题。请明确并确保自身具备足够的风险识别和承受能力。</string>
+    <string name="useQQ9008_14600Test">扫版类型添加 QQ 9.0.8.14600 空格直链格式</string>
     <string name="initFirebaseService">初始化 Firebase 服务</string>
     <string name="enablingFirebaseServiceWarning">初始化 Firebase 服务后，将立即在本地由 Firebase SDK 生成注册令牌，并将标识符和配置数据上传到 Firebase 服务器。此操作一经启用即无法撤销，是否继续？</string>
     <string name="rainbow_notification_channel_id">rainbow_notification_channel_id</string>
@@ -188,4 +188,13 @@
     <string name="successInGetting">获取成功</string>
     <string name="getWeixinAlphaConfig404">似乎未成功访问腾讯服务器配置文件，可能是微信当前没有测试版或测试版已撤包。</string>
     <string name="getWeixinAlphaConfigLink404">似乎未成功访问此下载地址，可能是微信当前测试版已撤包。</string>
+    <string name="suspectedPackageWithdrawal">疑似撤包</string>
+    <string name="colon">：</string>
+    <string name="qverbowHash">杂凑值校验</string>
+    <string name="verifyHashValueViaGitHubAPI">通过 GitHub REST API 校验杂凑值</string>
+    <string name="hashIsTrue">杂凑值与 GitHub Releases 一致</string>
+    <string name="hashIsFalse">您所使用的版本与 GitHub Releases 杂凑值不一致，为了您的安全，请尽快卸载当前版本应用并前往官方 GitHub Releases 下载此软件。</string>
+    <string name="toGitHubRelease">前往下载</string>
+    <string name="getWeTypeTestLinkFromWeTypeLatestChannel">从微信输入法测试通道获取微信输入法最新下载直链</string>
+    <string name="getWeTypeLatestChannel404">未成功访问微信输入法服务器，请检查您的网络连接。</string>
 </resources>

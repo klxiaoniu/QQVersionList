@@ -1,5 +1,5 @@
 /*
-    QQ Versions Tool for Android™
+    Qverbow Util
     Copyright (C) 2023 klxiaoniu
 
     This program is free software: you can redistribute it and/or modify
@@ -30,7 +30,7 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import com.xiaoniu.qqversionlist.QVTApplication
+import com.xiaoniu.qqversionlist.QverbowApplication
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
@@ -49,7 +49,7 @@ object DataStoreUtil {
         })
 
     private val dataStore: DataStore<Preferences> by lazy {
-        QVTApplication.instance.dataStore
+        QverbowApplication.instance.dataStore
     }
 
     fun getIntKV(key: String, defValue: Int): Int {

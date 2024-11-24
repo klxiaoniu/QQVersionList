@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?><!--
-    QQ Versions Tool for Android™
+    Qverbow Util
     Copyright (C) 2023 klxiaoniu
 
     This program is free software: you can redistribute it and/or modify
@@ -52,6 +52,18 @@
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
                 android:text="@string/getWeixinAlphaLinkFromWeixinConfig"
+                android:textColor="?attr/colorOnSurface"
+                app:drawableEndCompat="@drawable/arrow_right_s_line" />
+
+            <TextView
+                android:id="@+id/dialog_get_wetype_latest"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="8dp"
+                android:gravity="center_vertical"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:text="@string/getWeTypeTestLinkFromWeTypeLatestChannel"
                 android:textColor="?attr/colorOnSurface"
                 app:drawableEndCompat="@drawable/arrow_right_s_line" />
 

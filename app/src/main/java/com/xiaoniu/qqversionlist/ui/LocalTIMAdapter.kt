@@ -1,5 +1,5 @@
 /*
-    QQ Versions Tool for Android™
+    Qverbow Util
     Copyright (C) 2023 klxiaoniu
 
     This program is free software: you can redistribute it and/or modify
@@ -72,60 +72,60 @@ class LocalTIMAdapter : RecyclerView.Adapter<LocalTIMAdapter.LocalTIMViewHolder>
                                 (if (DataStoreUtil.getStringKV(
                                         "TIMTargetInstall", ""
                                     ) != ""
-                                ) "<b>Target SDK</b>: ${
+                                ) "<b>Target SDK</b>${itemView.context.getString(R.string.colon)}${
                                     DataStoreUtil.getStringKV(
                                         "TIMTargetInstall", ""
                                     )
                                 }" else "") + (if (DataStoreUtil.getStringKV(
                                         "TIMMinInstall", ""
                                     ) != ""
-                                ) "<br><b>Min SDK</b>: ${
+                                ) "<br><b>Min SDK</b>${itemView.context.getString(R.string.colon)}${
                                     DataStoreUtil.getStringKV(
                                         "TIMMinInstall", ""
                                     )
                                 }" else "") + (if (DataStoreUtil.getStringKV(
                                         "TIMCompileInstall", ""
                                     ) != ""
-                                ) "<br><b>Compile SDK</b>: ${
+                                ) "<br><b>Compile SDK</b>${itemView.context.getString(R.string.colon)}${
                                     DataStoreUtil.getStringKV(
                                         "TIMCompileInstall", ""
                                     )
-                                }" else "") + "<br><b>Version Name</b>: ${
+                                }" else "") + "<br><b>Version Name</b>${itemView.context.getString(R.string.colon)}${
                                     DataStoreUtil.getStringKV(
                                         "TIMVersionInstall", ""
                                     )
                                 }" + (if (DataStoreUtil.getStringKV(
                                         "TIMRdmUUIDInstall", ""
                                     ) != ""
-                                ) "<br><b>Rdm UUID</b>: ${
+                                ) "<br><b>Rdm UUID</b>${itemView.context.getString(R.string.colon)}${
                                     DataStoreUtil.getStringKV(
                                         "TIMRdmUUIDInstall", ""
                                     )
                                 }" else "") + (if (DataStoreUtil.getStringKV(
                                         "TIMVersionCodeInstall", ""
                                     ) != ""
-                                ) "<br><b>Version Code</b>: ${
+                                ) "<br><b>Version Code</b>${itemView.context.getString(R.string.colon)}${
                                     DataStoreUtil.getStringKV(
                                         "TIMVersionCodeInstall", ""
                                     )
                                 }" else "") + (if (DataStoreUtil.getStringKV(
                                         "TIMAppSettingParamsInstall", ""
                                     ) != ""
-                                ) "<br><b>AppSetting_params</b>: ${
+                                ) "<br><b>AppSetting_params</b>${itemView.context.getString(R.string.colon)}${
                                     DataStoreUtil.getStringKV(
                                         "TIMAppSettingParamsInstall", ""
                                     )
                                 }" else "") + (if (DataStoreUtil.getStringKV(
                                         "TIMAppSettingParamsPadInstall", ""
                                     ) != ""
-                                ) "<br><b>AppSetting_params_pad</b>: ${
+                                ) "<br><b>AppSetting_params_pad</b>${itemView.context.getString(R.string.colon)}${
                                     DataStoreUtil.getStringKV(
                                         "TIMAppSettingParamsPadInstall", ""
                                     )
                                 }" else "") + (if (DataStoreUtil.getStringKV(
                                         "TIMQua", ""
                                     ) != ""
-                                ) "<br><b>QUA</b>: ${
+                                ) "<br><b>QUA</b>${itemView.context.getString(R.string.colon)}${
                                     DataStoreUtil.getStringKV(
                                         "TIMQua", ""
                                     )

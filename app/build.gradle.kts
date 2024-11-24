@@ -1,5 +1,5 @@
 /*
-    QQ Versions Tool for Android™
+    Qverbow Util
     Copyright (C) 2023 klxiaoniu
 
     This program is free software: you can redistribute it and/or modify
@@ -16,8 +16,6 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-import java.io.ByteArrayOutputStream
-
 plugins {
     alias(libs.plugins.android.application)
     id("org.jetbrains.kotlin.android")
@@ -27,18 +25,20 @@ plugins {
     id("com.google.android.gms.oss-licenses-plugin")
 }
 
-fun String.execute(currentWorkingDir: File = file("./")): String {
-    val byteOut = ByteArrayOutputStream()
-    rootProject.exec {
-        workingDir = currentWorkingDir
-        commandLine = split("\\s".toRegex())
-        standardOutput = byteOut
-    }
-    return String(byteOut.toByteArray()).trim()
+private fun gitCommitHash(project: Project): String {
+    return project.providers.exec {
+        commandLine("git rev-parse --verify --short HEAD".split(" "))
+    }.standardOutput.asText.get().trim()
 }
 
-val gitCommitCount = "git rev-list HEAD --count".execute().toInt()
-val gitCommitHash = "git rev-parse --verify --short HEAD".execute()
+private fun gitCommitCount(project: Project): Int {
+    return project.providers.exec {
+        commandLine("git rev-list HEAD --count".split(" "))
+    }.standardOutput.asText.get().trim().toInt()
+}
+
+val gitCommitCount = gitCommitCount(project)
+val gitCommitHash = gitCommitHash(project)
 
 android {
     namespace = "com.xiaoniu.qqversionlist"
@@ -49,7 +49,7 @@ android {
         minSdk = 24
         targetSdk = 35
         versionCode = gitCommitCount
-        versionName = "1.4.3-$gitCommitHash"
+        versionName = "1.4.4-$gitCommitHash"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
             cmake {
@@ -108,7 +108,6 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(libs.okhttp)
-    implementation(libs.logging.interceptor)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.coil)
     implementation(libs.coil.network.okhttp)
@@ -127,4 +126,6 @@ dependencies {
     implementation(libs.androidx.browser)
     implementation(libs.play.services.oss.licenses)
     implementation(libs.commons.compress)
+    implementation(libs.kona.crypto)
+    implementation(libs.kona.provider)
 }

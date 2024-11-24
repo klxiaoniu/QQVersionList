@@ -1,5 +1,5 @@
 /*
-    QQ Versions Tool for Android™
+    Qverbow Util
     Copyright (C) 2023 klxiaoniu
 
     This program is free software: you can redistribute it and/or modify
@@ -18,41 +18,9 @@
 
 package com.xiaoniu.qqversionlist.util
 
-import android.app.DownloadManager
-import android.content.Context
-import android.content.Context.DOWNLOAD_SERVICE
-import android.content.Intent
 import android.content.res.Resources
-import android.net.Uri
-import android.os.Environment
 
 object Extensions {
     val Number.dp get() = (toFloat() * Resources.getSystem().displayMetrics.density).toInt()
     val Number.pxToDp get() = (toFloat() / Resources.getSystem().displayMetrics.density).toInt()
-
-    fun downloadFile(context: Context, url: String, fileName: String? = null) {
-        if (DataStoreUtil.getBooleanKV(
-                "downloadOnSystemManager", false
-            )
-        ) {
-            val requestDownload =
-                DownloadManager.Request(Uri.parse(url))
-            requestDownload.setDestinationInExternalPublicDir(
-                Environment.DIRECTORY_DOWNLOADS,
-                if (fileName != null) fileName else url.substringAfterLast('/')
-            )
-            val downloadManager =
-                context.getSystemService(DOWNLOAD_SERVICE) as DownloadManager
-            downloadManager.enqueue(requestDownload)
-        } else {
-            // 这里不用 Chrome Custom Tab 的原因是 Chrome 不知道咋回事有概率卡在“等待下载”状态
-            val browserIntent =
-                Intent(Intent.ACTION_VIEW, Uri.parse(url))
-            browserIntent.apply {
-                addCategory(Intent.CATEGORY_BROWSABLE)
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            }
-            context.startActivity(browserIntent)
-        }
-    }
 }

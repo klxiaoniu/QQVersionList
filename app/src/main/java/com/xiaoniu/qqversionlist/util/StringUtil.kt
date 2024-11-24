@@ -1,5 +1,5 @@
 /*
-    QQ Versions Tool for Android™
+    Qverbow Util
     Copyright (C) 2023 klxiaoniu
 
     This program is free software: you can redistribute it and/or modify
@@ -18,11 +18,10 @@
 
 package com.xiaoniu.qqversionlist.util
 
-import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageInfo
 import com.google.gson.Gson
-import com.xiaoniu.qqversionlist.ui.MainActivity
+import com.xiaoniu.qqversionlist.util.FileUtil.ZipFileCompat
 import com.xiaoniu.qqversionlist.util.InfoUtil.dialogError
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.encodeToString
@@ -144,10 +143,10 @@ object StringUtil {
      * 从给定的 `PackageInfo` 对象中获取 `qua.ini` 文件的内容
      *
      * @param packageInfo 包含应用信息的 `PackageInfo` 对象，用于访问应用的资源
-     * @param activity 用于显示错误对话框的 `Activity` 对象
+     * @param Context 用于显示错误对话框的 `Context` 对象
      * @return 返回 `qua.ini` 文件的内容作为字符串，如果发生任何错误或文件不存在则返回null
      */
-    fun Activity.getQua(packageInfo: PackageInfo): String? {
+    fun Context.getQua(packageInfo: PackageInfo): String? {
         val sourceDir = packageInfo.applicationInfo?.sourceDir ?: return null
         val file = File(sourceDir)
         if (!file.exists()) return null
@@ -164,9 +163,9 @@ object StringUtil {
     /**
      * 解析微信测试版配置信息
      * 该函数从给定的响应字符串中提取配置信息，并将其解析为一个包含配置数据的Map
-     * 主要处理的是 JSON 格式的数据，使用 Gson 库进行解析
+     * 主要处理的是 JSON5 格式的数据，使用 Gson 库进行解析
      *
-     * @param responseData 包含配置信息的响应字符串
+     * @param jsonString 包含配置信息的响应字符串
      * @return 包含解析后的配置信息的 Map，包括 URL、MD5、版本名称、版本号以及文本列表和最近列表
      */
     fun resolveWeixinAlphaConfig(jsonString: String): Map<String, Any?> {
@@ -174,7 +173,8 @@ object StringUtil {
         val jsonData = gson.fromJson(jsonString, com.google.gson.JsonObject::class.java)
         val url = jsonData.getAsJsonObject("arm64").getAsJsonPrimitive("url").asString
         val md5 = jsonData.getAsJsonObject("arm64").getAsJsonPrimitive("md5").asString
-        val versionName = jsonData.getAsJsonObject("arm64").getAsJsonPrimitive("versionName").asString
+        val versionName =
+            jsonData.getAsJsonObject("arm64").getAsJsonPrimitive("versionName").asString
         val version = jsonData.getAsJsonObject("arm64").getAsJsonPrimitive("version").asString
         val direct = jsonData.getAsJsonObject("arm64").getAsJsonPrimitive("direct").asString
         val textList = jsonData.getAsJsonObject("arm64").getAsJsonArray("textList").asJsonArray

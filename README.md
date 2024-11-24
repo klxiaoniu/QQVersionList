@@ -54,7 +54,7 @@ QQ 版本列表实用工具的源代码依据经过开源促进会（[Open Sourc
 
 ## 简介
 
-QQ 版本列表实用工具 for Android 是一个使用 Material 3 组件库构建，旨在提供 Android QQ 版本列表的查看和对 Android QQ 下载链接的枚举法猜测的 Android 软件。QQ 版本列表实用工具用户可以通过本应用及时获取到 Android QQ 版本更新的最新信息。
+QQ 版本列表实用工具 for Android 是一个使用 Material 3 组件库构建，旨在提供 Android QQ 版本列表的查看和对 Android QQ 下载链接的枚举法扫描的 Android 软件。QQ 版本列表实用工具用户可以通过本应用及时获取到 Android QQ 版本更新的最新信息。
 
 <span id="如何使用"></span>
 
@@ -70,15 +70,15 @@ QQ 版本列表实用工具 for Android 是一个使用 Material 3 组件库构�
 
 默认情况下，长按卡片文字会弹出展示卡片原始 JSON 字符串的对话框，长按对话框文字可选择复制字符串内容。可在设置中关闭此功能。
 
-### 猜版 Extended
+### 扫版 Extended
 
 在 Android QQ - 首页侧滑菜单 - 设置 - 关于QQ与帮助 中可得知，Android QQ 的版本号通常为 `x.y.z.nnnnn`。其中 `x.y.z` 在这里被称为“主版本号”，而 `nnnnn` 被称为“小版本号”。
 
-在 QQ 版本列表实用工具界面，点击右下角放大镜图标浮动按钮即可进入“猜版 Extended”对话框。
+在 QQ 版本列表实用工具界面，点击右下角放大镜图标浮动按钮即可进入“扫版 Extended”对话框。
 
-对话框含有三个输入框，分别是“主版本号”、“猜版类型”和“小版本号”。“主版本号”已经预填入了版本列表显示的最新版本号，也可自行修改。
+对话框含有三个输入框，分别是“主版本号”、“扫版类型”和“小版本号”。“主版本号”已经预填入了版本列表显示的最新版本号，也可自行修改。
 
-- 若选择猜正式版，无需填写小版本号，软件将尝试访问以下链接：
+- 若选择扫正式版，无需填写小版本号，软件将尝试访问以下链接：
   - `https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_<主版本号>_64.apk`
   - `https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_<主版本号>_64_HB.apk`
   - `https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_<主版本号>_64_HB1.apk`
@@ -91,11 +91,11 @@ QQ 版本列表实用工具 for Android 是一个使用 Material 3 组件库构�
   - `https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_<主版本号>_HB3_64.apk`
   - `https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_<主版本号>_BBPJ_64.apk`
 
-- 若选择猜测试版，则需要填写起始小版本号：
+- 若选择扫测试版，则需要填写起始小版本号：
 
   - 默认情况下，软件将尝试访问 `https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_<主版本号>.<小版本号>_64.apk` ，若当次访问未果，默认情况下将按照设置逻辑自动递增小版本号后再次尝试访问，直到访问成功为止。
 
-  - 在设置中打开扩展测试版猜版格式后，软件将尝试访问以下链接：
+  - 在设置中打开扩展测试版扫版格式后，软件将尝试访问以下链接：
     <details>
     <summary>点击展开</summary>
 
@@ -123,20 +123,20 @@ QQ 版本列表实用工具 for Android 是一个使用 Material 3 组件库构�
 
     若当次访问未果，默认情况下将按照设置逻辑自动递增小版本号后再次尝试访问，直到访问成功为止。
   
-  - 设置自定义猜版后缀后，可以猜测以下直链格式：
+  - 设置自定义扫版后缀后，可以扫描以下直链格式：
   
     - `https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_<主版本号><自定义后缀>.apk`
     - `https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_<主版本号>.<小版本号><自定义后缀>.apk`
 
 > [!TIP]
-> QQ 版本列表实用工具实验性支持了 Android 微信的猜版。若选择微信猜版，对话框将变更为四个输入框，分别是“主版本号”、“猜版类型”、“真实版本号”和“十六进制代码”，对应的直链为：
+> QQ 版本列表实用工具实验性支持了 Android 微信的扫版。若选择微信扫版，对话框将变更为四个输入框，分别是“主版本号”、“扫版类型”、“真实版本号”和“十六进制代码”，对应的直链为：
 >
 > `http://dldir1.qq.com/weixin/android/weixin<主版本号>android<真实版本号>_<十六进制代码>_arm64.apk`
 >
 > 填入相应输入框内容后，软件将尝试访问上述链接。若当次访问未果，默认情况下将自动递增十六进制代码后再次尝试访问，直到访问成功为止。
 
 > [!TIP]
-> QQ 版本列表实用工具实验性支持了 Android TIM 的猜版。若选择 TIM 猜版，对应的直链为：
+> QQ 版本列表实用工具实验性支持了 Android TIM 的扫版。若选择 TIM 扫版，对应的直链为：
 >
 > `https://downv6.qq.com/qqweb/QQ_1/android_apk/TIM_<主版本号>.<小版本号><自定义后缀>.apk`
 > 
@@ -145,7 +145,7 @@ QQ 版本列表实用工具 for Android 是一个使用 Material 3 组件库构�
 访问成功后，软件会弹出成功对话框，对话框下方提供了一系列动作按钮，依次是“分享”、“下载”、“停止”、“跳过”和“复制”。
 
 > [!WARNING]
-> 微信猜版、TIM 猜版功能为 QQ 版本列表实用工具附带的实验性功能，可能存在不可预知的稳定性问题。请明确并确保自身具备足够的风险识别和承受能力。
+> 微信扫版、TIM 扫版功能为 QQ 版本列表实用工具附带的实验性功能，可能存在不可预知的稳定性问题。请明确并确保自身具备足够的风险识别和承受能力。
 
 ### 实验性功能
 
@@ -214,36 +214,31 @@ QQ、TIM、微信、企业微信、微信输入法使用腾讯应用宝（[腾�
 
 <a href='https://github.com/klxiaoniu/QQVersionList/blob/master/ReadmeAssets/Get-it-on-Obtainium.md'><img src='https://raw.githubusercontent.com/ImranR98/Obtainium/main/assets/graphics/badge_obtainium.png' width="300" alt="Obtanium"></a>
 
-> [!warning]
-> 2024 年 10 月 17 日，九七公司「通知中心」微信小程序改名为「通知侠」重新上线，但因内容安全为由去掉了 GitHub Releases 更新订阅。故下方内容不再可用。
-> 
-> <a href='https://github.com/klxiaoniu/QQVersionList/blob/master/ReadmeAssets/Get-it-on-JiuQi-NotifCenter-WeChatMiniProgram.md'><img src='https://raw.githubusercontent.com/klxiaoniu/QQVersionList/master/ReadmeAssets/JiuQi-NotifCenter-Badge-Dark-zh-Hans.png' width="300" alt="Get it on Notif Center"></a>
-
 ## 常见问题
 
 ### QQ 版本列表实用工具能否实现“检测到新测试版本下载直链自动提醒您”的功能？
 
 QQ 版本列表实用工具不能实现“检测到新测试版本下载直链自动提醒您”的功能，因为这需要自有服务器，并且需要自有服务器去长时间请求腾讯服务器，存在法律和技术风险。
 
-### 设置 - 猜版直链格式设置 里的“其它”是什么？
+### 设置 - 扫版直链格式设置 里的“其它”是什么？
 
 #### “使用 QQ 8.9.58 测试版直链格式”
 
 腾讯 QQ 团队曾在且目前仅在 QQ 8.9.58 测试 QQNT 技术架构时使用了 `https://downv6.qq.com/qqweb/QQ_1/android_apk/qq_<主版本号>.<小版本号>_64.apk` 直链格式。鉴于此，QQ 版本列表实用工具添加了支持此类非标准但实际存在的直链的选项。
 
-勾选“使用 QQ 8.9.58 测试版直链格式”后，“正式版”“测试版”猜版格式将变更为 `https://downv6.qq.com/qqweb/QQ_1/android_apk/qq_<主版本号><自定义后缀>.apk` 或 `https://downv6.qq.com/qqweb/QQ_1/android_apk/qq_<主版本号>.<小版本号><自定义后缀>.apk`。
+勾选“使用 QQ 8.9.58 测试版直链格式”后，“正式版”“测试版”扫版格式将变更为 `https://downv6.qq.com/qqweb/QQ_1/android_apk/qq_<主版本号><自定义后缀>.apk` 或 `https://downv6.qq.com/qqweb/QQ_1/android_apk/qq_<主版本号>.<小版本号><自定义后缀>.apk`。
 
-#### “猜版类型添加 QQ 9.0.8.14600 空格直链格式”
+#### “扫版类型添加 QQ 9.0.8.14600 空格直链格式”
 
-2023 年 12 月 22 日，腾讯 QQ 官方团队在上传 Android QQ 9.0.8.14600 版本时，不慎将常规链接格式 `https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_9.0.8.14600.64_apk` 错误配置为包含 URL 编码空格形式的链接地址 `https://downv6.qq.com/qqweb/QQ_1/android_apk/Android%209.0.8.14600%2064.apk` 。 鉴于此，QQ 版本列表实用工具增设了“空格猜版”猜版模式，该功能在原有的“测试版”猜版模式上将版本号中的 `.` 字符替换为 URL 编码的空格符 `%20`，以适应并支持此类非标准但实际存在的直链。
+2023 年 12 月 22 日，腾讯 QQ 官方团队在上传 Android QQ 9.0.8.14600 版本时，不慎将常规链接格式 `https://downv6.qq.com/qqweb/QQ_1/android_apk/Android_9.0.8.14600.64_apk` 错误配置为包含 URL 编码空格形式的链接地址 `https://downv6.qq.com/qqweb/QQ_1/android_apk/Android%209.0.8.14600%2064.apk` 。 鉴于此，QQ 版本列表实用工具增设了“空格扫版”扫版模式，该功能在原有的“测试版”扫版模式上将版本号中的 `.` 字符替换为 URL 编码的空格符 `%20`，以适应并支持此类非标准但实际存在的直链。
 
-勾选“猜版类型添加 QQ 9.0.8.14600 空格直链格式”后，QQ 版本列表实用工具将会在猜版类型下拉菜单添加“空格猜版”选项，选中即可使用上述格式。
+勾选“扫版类型添加 QQ 9.0.8.14600 空格直链格式”后，QQ 版本列表实用工具将会在扫版类型下拉菜单添加“空格扫版”选项，选中即可使用上述格式。
 
-### 为什么默认添加了 QQ 测试版猜版小版本号必须为 5 的倍数这项限制？
+### 为什么默认添加了 QQ 测试版扫版小版本号必须为 5 的倍数这项限制？
 
-基于对 Android QQ 长期以来的版本号发布规律进行深入观察和分析的结果，我们发现 Android QQ 小版本号更新通常遵循每增加一个有效版本即递增 5 的倍数这一特定模式。为了贴近这一潜在实际规范并确保 QQ 版本列表实用工具的快捷性，QQ 版本列表实用工具依据最佳实践原则，默认设置小版本号和猜版必须为 5 的倍数的限制规则。此限制并非强制，用户可随时进入设置解除此限制。
+基于对 Android QQ 长期以来的版本号发布规律进行深入观察和分析的结果，我们发现 Android QQ 小版本号更新通常遵循每增加一个有效版本即递增 5 的倍数这一特定模式。为了贴近这一潜在实际规范并确保 QQ 版本列表实用工具的快捷性，QQ 版本列表实用工具依据最佳实践原则，默认设置小版本号和扫版必须为 5 的倍数的限制规则。此限制并非强制，用户可随时进入设置解除此限制。
 
-### 版本列表中已经有新的版本号了，为什么我使用枚举猜版却获取不到下载链接？
+### 版本列表中已经有新的版本号了，为什么我使用枚举扫版却获取不到下载链接？
 
 即使版本列表已出现了新的版本号，也并不意味着 QQ 团队已经完成了新版本（含测试版）安装包在腾讯公网服务器的部署和发布。一种可能的情况是，QQ 团队正在进行新版本的内部测试阶段或小范围灰度推送阶段，因而尚未对外提供广泛公网下载渠道。
 
@@ -302,6 +297,7 @@ QQ 版本列表实用工具的诞生离不开以下开源项目，感谢以下�
 - [Kotlin Coroutines on Android](https://github.com/Kotlin/kotlinx.coroutines)，Licensed under [Apache License Version 2.0](https://github.com/Kotlin/kotlinx.coroutines/blob/master/LICENSE.txt)
 - [Google Play services Plugins](https://github.com/google/play-services-plugins)，Licensed under [Apache License Version 2.0](https://github.com/google/play-services-plugins/blob/main/LICENSE)
 - [Apache Commons™](https://commons.apache.org/)，Licensed under [Apache License Version 2.0](https://www.apache.org/licenses/LICENSE-2.0)
+- [腾讯 Kona 国密套件](https://github.com/Tencent/TencentKonaSMSuite)，Licensed under [GNU General Public License, version 2 with the Classpath Exception](https://github.com/Tencent/TencentKonaSMSuite/blob/master/LICENSE.txt)
 
 ## 商业服务鸣谢
 
@@ -313,6 +309,6 @@ QQ 版本列表实用工具的诞生离不开以下开源项目，感谢以下�
 
 ## 孪生项目
 
-[QQ 版本列表 Lite for WeChat MiniProgram](https://github.com/ArcticFoxPro/QQVersionListTool-WeChatMiniProgram)，Licensed under [木兰公共许可证, 第2版](https://github.com/ArcticFoxPro/QQVersionListTool-WeChatMiniProgram/blob/main/LICENSE)
+[QQ 版本列表 Vigor for WeChat MiniProgram](https://github.com/ArcticFoxPro/QQVersionListTool-WeChatMiniProgram)，Licensed under [木兰公共许可证, 第2版](https://github.com/ArcticFoxPro/QQVersionListTool-WeChatMiniProgram/blob/main/LICENSE)
 
-[![QQ 版本列表 Lite Banner](https://raw.githubusercontent.com/ArcticFoxPro/QQVersionListTool-WeChatMiniProgram/main/QQVerLiteBanner.png)](https://github.com/ArcticFoxPro/QQVersionListTool-WeChatMiniProgram)
+[![QQ 版本列表 Vigor Banner](https://raw.githubusercontent.com/ArcticFoxPro/QQVersionListTool-WeChatMiniProgram/main/QQVerLiteBanner.png)](https://github.com/ArcticFoxPro/QQVersionListTool-WeChatMiniProgram)

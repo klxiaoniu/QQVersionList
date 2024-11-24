@@ -1,5 +1,5 @@
 /*
-    QQ Versions Tool for Android™
+    Qverbow Util
     Copyright (C) 2023 klxiaoniu
 
     This program is free software: you can redistribute it and/or modify
@@ -87,7 +87,7 @@ class LocalQQAdapter : RecyclerView.Adapter<LocalQQAdapter.LocalQQViewHolder>() 
                                         "QQTargetInstall",
                                         ""
                                     ) != ""
-                                ) "<b>Target SDK</b>: ${
+                                ) "<b>Target SDK</b>${itemView.context.getString(R.string.colon)}${
                                     DataStoreUtil.getStringKV(
                                         "QQTargetInstall",
                                         ""
@@ -96,7 +96,7 @@ class LocalQQAdapter : RecyclerView.Adapter<LocalQQAdapter.LocalQQViewHolder>() 
                                         "QQMinInstall",
                                         ""
                                     ) != ""
-                                ) "<br><b>Min SDK</b>: ${
+                                ) "<br><b>Min SDK</b>${itemView.context.getString(R.string.colon)}${
                                     DataStoreUtil.getStringKV(
                                         "QQMinInstall",
                                         ""
@@ -105,46 +105,46 @@ class LocalQQAdapter : RecyclerView.Adapter<LocalQQAdapter.LocalQQViewHolder>() 
                                         "QQCompileInstall",
                                         ""
                                     ) != ""
-                                ) "<br><b>Compile SDK</b>: ${
+                                ) "<br><b>Compile SDK</b>${itemView.context.getString(R.string.colon)}${
                                     DataStoreUtil.getStringKV(
                                         "QQCompileInstall", ""
                                     )
-                                }" else "") + "<br><b>Version Name</b>: ${
+                                }" else "") + "<br><b>Version Name</b>${itemView.context.getString(R.string.colon)}${
                                     DataStoreUtil.getStringKV(
                                         "QQVersionInstall", ""
                                     )
                                 }" + (if (DataStoreUtil.getStringKV(
                                         "QQRdmUUIDInstall", ""
                                     ) != ""
-                                ) "<br><b>Rdm UUID</b>: ${
+                                ) "<br><b>Rdm UUID</b>${itemView.context.getString(R.string.colon)}${
                                     DataStoreUtil.getStringKV(
                                         "QQRdmUUIDInstall", ""
                                     )
                                 }" else "") + (if (DataStoreUtil.getStringKV(
                                         "QQVersionCodeInstall", ""
                                     ) != ""
-                                ) "<br><b>Version Code</b>: ${
+                                ) "<br><b>Version Code</b>${itemView.context.getString(R.string.colon)}${
                                     DataStoreUtil.getStringKV(
                                         "QQVersionCodeInstall", ""
                                     )
                                 }" else "") + (if (DataStoreUtil.getStringKV(
                                         "QQAppSettingParamsInstall", ""
                                     ) != ""
-                                ) "<br><b>AppSetting_params</b>: ${
+                                ) "<br><b>AppSetting_params</b>${itemView.context.getString(R.string.colon)}${
                                     DataStoreUtil.getStringKV(
                                         "QQAppSettingParamsInstall", ""
                                     )
                                 }" else "") + (if (DataStoreUtil.getStringKV(
                                         "QQAppSettingParamsPadInstall", ""
                                     ) != ""
-                                ) "<br><b>AppSetting_params_pad</b>: ${
+                                ) "<br><b>AppSetting_params_pad</b>${itemView.context.getString(R.string.colon)}${
                                     DataStoreUtil.getStringKV(
                                         "QQAppSettingParamsPadInstall", ""
                                     )
                                 }" else "") + (if (DataStoreUtil.getStringKV(
                                         "QQQua", ""
                                     ) != ""
-                                ) "<br><b>QUA</b>: ${
+                                ) "<br><b>QUA</b>${itemView.context.getString(R.string.colon)}${
                                     DataStoreUtil.getStringKV(
                                         "QQQua", ""
                                     )
