@@ -18,6 +18,7 @@
 
 package com.xiaoniu.qqversionlist.ui
 
+import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Bundle
@@ -65,27 +66,48 @@ class QQVersionListFragment : Fragment() {
         versionListStaggeredGridLayout(this.activity as MainActivity)
     }
 
+    override fun onResume() {
+        super.onResume()
+        versionListStaggeredGridLayout(this.activity as MainActivity)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        versionListStaggeredGridLayout(this.activity as MainActivity)
+    }
+
+    // RecyclerView 在某些机型上不会根据视图更新列表高度，所以需要通知列表重绘
+    @SuppressLint("NotifyDataSetChanged")
     private fun versionListStaggeredGridLayout(thisActivity: MainActivity) {
         val concatenated = ConcatAdapter(thisActivity.localQQAdapter, thisActivity.qqVersionAdapter)
         val screenWidthDp = (Resources.getSystem().displayMetrics.widthPixels).pxToDp
         val screenHeightDp = (Resources.getSystem().displayMetrics.heightPixels).pxToDp
-        fragmentBinding.apply {
-            rvContent.adapter = concatenated
+        fragmentBinding.rvContent.apply {
             // 当横纵逻辑像素都大于 600 时，根据横向逻辑像素的不同区间显示不同的瀑布流布局
             // 小于 600 时显示线性布局
-            rvContent.layoutManager = if (screenHeightDp >= 600) {
-                when {
-                    screenWidthDp in 600..840 -> StaggeredGridLayoutManager(
+            if (screenHeightDp >= 600) when {
+                screenWidthDp in 600..840 -> {
+                    adapter = concatenated
+                    layoutManager = StaggeredGridLayoutManager(
                         2, StaggeredGridLayoutManager.VERTICAL
                     )
+                }
 
-                    screenWidthDp > 840 -> StaggeredGridLayoutManager(
+                screenWidthDp > 840 -> {
+                    adapter = concatenated
+                    layoutManager = StaggeredGridLayoutManager(
                         3, StaggeredGridLayoutManager.VERTICAL
                     )
-
-                    else -> LinearLayoutManager(thisActivity)
                 }
-            } else LinearLayoutManager(thisActivity)
+
+                else -> if (layoutManager is LinearLayoutManager) adapter?.notifyDataSetChanged() else {
+                    adapter = concatenated
+                    layoutManager = LinearLayoutManager(thisActivity)
+                }
+            } else if (layoutManager is LinearLayoutManager) adapter?.notifyDataSetChanged() else {
+                adapter = concatenated
+                layoutManager = LinearLayoutManager(thisActivity)
+            }
         }
     }
 
