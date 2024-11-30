@@ -927,7 +927,6 @@ class MainActivity : AppCompatActivity() {
                                             }
                                         }
                                     }
-
                                 } catch (e: CustomException) {
                                     dialogError(e, true)
                                 } catch (e: Exception) {
@@ -1012,7 +1011,6 @@ class MainActivity : AppCompatActivity() {
                                             }
                                         }
                                     }
-
                                 } catch (e: CustomException) {
                                     dialogError(e, true)
                                 } catch (e: Exception) {

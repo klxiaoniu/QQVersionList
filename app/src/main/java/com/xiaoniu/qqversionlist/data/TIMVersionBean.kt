@@ -23,8 +23,8 @@ import kotlinx.serialization.Serializable
 /**
  * @param version TIM 版本号
  * @param datetime TIM 版本发布日期
- * @param fix TIM 版本特性描述
- * @param new 未知，目前获取到的 `new` 全是空
+ * @param fix TIM 版本优化描述
+ * @param new TIM 版本新功能描述
  * @param jsonString 该 TIM 版本 JSON 字符串详情
  * @param displayType 卡片展示类型，0 为收起态，1 为展开态
  * @param displayInstall 展示是否安装到本机的标签

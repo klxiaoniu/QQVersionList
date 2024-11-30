@@ -44,6 +44,6 @@ class QverbowApplication : Application() {
         DynamicColors.applyToActivitiesIfAvailable(this)
         instance = this
         super.onCreate()
-        Security.addProvider(KonaCryptoProvider())
+        Security.addProvider(KonaCryptoProvider()) // 腾讯 Kona 国密套件需要在应用启动时添加 Provider
     }
 }
