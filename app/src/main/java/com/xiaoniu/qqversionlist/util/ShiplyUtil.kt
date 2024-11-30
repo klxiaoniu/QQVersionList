@@ -149,7 +149,7 @@ object ShiplyUtil {
             val cipher = Cipher.getInstance(method)
             cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivParameterSpec)
             return cipher.doFinal(dataByteArray)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             return null
         }
     }
@@ -165,7 +165,7 @@ object ShiplyUtil {
             cipher.init(Cipher.DECRYPT_MODE, secretKey, ivParameterSpec)
             val decryptedData = cipher.doFinal(data)
             return decryptedData
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             return null
         }
     }

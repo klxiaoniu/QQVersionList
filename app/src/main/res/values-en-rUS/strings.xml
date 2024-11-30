@@ -198,4 +198,6 @@
     <string name="toGitHubRelease">Go to Download</string>
     <string name="getWeTypeTestLinkFromWeTypeLatestChannel">Get the WeType Testing Download Link from the WeType Latest Channel</string>
     <string name="getWeTypeLatestChannel404">Failed to access the WeType server, please check your network connection.</string>
+    <string name="kuiklyTag">Existence of Tencent Device-oriented Service (TDS) Kuikly Framework</string>
+    <string name="showKuiklyTag">版本卡片显示匹配的 TDS 腾讯端服务 Kuikly 开发框架标识</string>
 </resources>

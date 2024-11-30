@@ -48,6 +48,7 @@ class TIMVersionAdapter :
     private var getVersionTCloud = DataStoreUtil.getBooleanKV("versionTCloud", true)
     private var getVersionTCloudThickness =
         DataStoreUtil.getStringKV("versionTCloudThickness", "System")
+    private var getShowKuiklyTag = DataStoreUtil.getBooleanKV("kuiklyTag", true)
 
     class ViewHolder(val binding: ItemTimVersionBinding, val context: Context) :
         RecyclerView.ViewHolder(binding.root)
@@ -108,6 +109,7 @@ class TIMVersionAdapter :
                     bindVersionTCloud(tvTimVersion, holder.context)
                     bindAccessibilityTag(accessibilityTimTag, holder.context, bean)
                     bindQQNTTag(qqntTimTag, bean)
+                    bindKuiklyTag(kuiklyTimTag, bean)
                 }
             }
 
@@ -129,6 +131,7 @@ class TIMVersionAdapter :
                     bindVersionTCloud(tvTimOldVersion, holder.context)
                     bindAccessibilityTag(accessibilityTimOldTag, holder.context, bean)
                     bindQQNTTag(qqntTimOldTag, bean)
+                    bindKuiklyTag(kuiklyTimOldTag, bean)
                 }
             }
         }
@@ -146,7 +149,7 @@ class TIMVersionAdapter :
         if (bean.displayInstall) {
             tvInstallCard.isVisible = true
             tvInstall.text = tvInstall.context.getString(R.string.installed)
-            if (bean.isAccessibility || bean.isQQNTFramework) {
+            if (bean.isAccessibility || bean.isQQNTFramework || (getShowKuiklyTag && bean.isKuiklyInside)) {
                 val marginLayoutParams = tvInstallCard.layoutParams as ViewGroup.MarginLayoutParams
                 marginLayoutParams.marginStart = 3.dp
                 tvInstallCard.layoutParams = marginLayoutParams
@@ -173,6 +176,10 @@ class TIMVersionAdapter :
 
     private fun bindQQNTTag(qqntTag: ImageView, bean: TIMVersionBean) {
         qqntTag.isVisible = bean.isQQNTFramework
+    }
+
+    private fun bindKuiklyTag(kuiklyTag: ImageView, bean: TIMVersionBean) {
+        kuiklyTag.isVisible = (getShowKuiklyTag && bean.isKuiklyInside)
     }
 
     private fun bindVersionTCloud(tvVersion: TextView, context: Context) {
@@ -217,6 +224,22 @@ class TIMVersionAdapter :
                 ) else if (holder is ViewHolderDetail) bindVersionTCloud(
                     holder.binding.tvTimOldVersion, holder.context
                 )
+
+                "isShowKuiklyTag" -> if (holder is ViewHolder) {
+                    bindKuiklyTag(holder.binding.kuiklyTimTag, bean)
+                    bindDisplayInstall(
+                        holder.binding.tvTimInstall,
+                        holder.binding.tvTimInstallCard,
+                        bean
+                    )
+                } else if (holder is ViewHolderDetail) {
+                    bindKuiklyTag(holder.binding.kuiklyTimOldTag, bean)
+                    bindDisplayInstall(
+                        holder.binding.tvTimOldInstall,
+                        holder.binding.tvTimOldInstallCard,
+                        bean
+                    )
+                }
             }
         }
     }
@@ -228,6 +251,11 @@ class TIMVersionAdapter :
                 getVersionTCloudThickness =
                     DataStoreUtil.getStringKV("versionTCloudThickness", "System")
                 notifyItemRangeChanged(0, currentList.size, "isTCloud")
+            }
+
+            "isShowKuiklyTag" -> {
+                getShowKuiklyTag = DataStoreUtil.getBooleanKV("kuiklyTag", true)
+                notifyItemRangeChanged(0, currentList.size, "isShowKuiklyTag")
             }
         }
     }

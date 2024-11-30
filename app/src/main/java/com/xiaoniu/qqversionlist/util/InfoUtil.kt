@@ -168,7 +168,7 @@ object InfoUtil {
      *
      * @return 如果找到 `Activity` 则返回该 `Activity` 实例，否则返回null。
      */
-    private fun Context.findActivity(): Activity? {
+    fun Context.findActivity(): Activity? {
         var context = this
         while (context is ContextWrapper) {
             if (context is Activity) {

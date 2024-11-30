@@ -197,4 +197,6 @@
     <string name="toGitHubRelease">前往下载</string>
     <string name="getWeTypeTestLinkFromWeTypeLatestChannel">从微信输入法测试通道获取微信输入法最新下载直链</string>
     <string name="getWeTypeLatestChannel404">未成功访问微信输入法服务器，请检查您的网络连接。</string>
+    <string name="kuiklyTag">存在 TDS 腾讯端服务 Kuikly 开发框架</string>
+    <string name="showKuiklyTag">版本卡片显示匹配的 TDS 腾讯端服务 Kuikly 开发框架标识</string>
 </resources>

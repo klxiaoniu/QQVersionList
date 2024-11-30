@@ -23,6 +23,8 @@ import android.content.pm.PackageManager
 import android.os.Build
 import com.google.gson.Gson
 import com.google.gson.JsonObject
+import com.xiaoniu.qqversionlist.QverbowApplication.Companion.EARLIEST_KUIKLY_FRAMEWORK_QQ_VERSION_STABLE
+import com.xiaoniu.qqversionlist.QverbowApplication.Companion.EARLIEST_KUIKLY_FRAMEWORK_TIM_VERSION_STABLE
 import com.xiaoniu.qqversionlist.QverbowApplication.Companion.EARLIEST_QQNT_FRAMEWORK_QQ_VERSION_STABLE
 import com.xiaoniu.qqversionlist.QverbowApplication.Companion.EARLIEST_QQNT_FRAMEWORK_TIM_VERSION_STABLE
 import com.xiaoniu.qqversionlist.QverbowApplication.Companion.EARLIEST_UNREAL_ENGINE_QQ_VERSION_STABLE
@@ -60,6 +62,9 @@ object VersionUtil {
                     )
                     isUnrealEngine = ComparableVersion(versionNumber) >= ComparableVersion(
                         EARLIEST_UNREAL_ENGINE_QQ_VERSION_STABLE
+                    )
+                    isKuiklyInside = ComparableVersion(versionNumber) >= ComparableVersion(
+                        EARLIEST_KUIKLY_FRAMEWORK_QQ_VERSION_STABLE
                     )
                 }
             }
@@ -105,6 +110,9 @@ object VersionUtil {
                 ) == androidVersion),
                 isQQNTFramework = ComparableVersion(androidVersion) >= ComparableVersion(
                     EARLIEST_QQNT_FRAMEWORK_TIM_VERSION_STABLE
+                ),
+                isKuiklyInside = ComparableVersion(androidVersion) >= ComparableVersion(
+                    EARLIEST_KUIKLY_FRAMEWORK_TIM_VERSION_STABLE
                 )
             )
         )
@@ -136,6 +144,9 @@ object VersionUtil {
                         ) == version),
                         isQQNTFramework = ComparableVersion(version) >= ComparableVersion(
                             EARLIEST_QQNT_FRAMEWORK_TIM_VERSION_STABLE
+                        ),
+                        isKuiklyInside = ComparableVersion(version) >= ComparableVersion(
+                            EARLIEST_KUIKLY_FRAMEWORK_TIM_VERSION_STABLE
                         )
                     )
                 )
@@ -171,6 +182,9 @@ object VersionUtil {
                             ) == version),
                             isQQNTFramework = ComparableVersion(version) >= ComparableVersion(
                                 EARLIEST_QQNT_FRAMEWORK_TIM_VERSION_STABLE
+                            ),
+                            isKuiklyInside = ComparableVersion(version) >= ComparableVersion(
+                                EARLIEST_KUIKLY_FRAMEWORK_TIM_VERSION_STABLE
                             )
                         )
                     )

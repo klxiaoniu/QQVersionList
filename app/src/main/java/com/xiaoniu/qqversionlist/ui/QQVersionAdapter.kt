@@ -57,6 +57,7 @@ class QQVersionAdapter :
     private var getVersionTCloudThickness =
         DataStoreUtil.getStringKV("versionTCloudThickness", "System")
     private var getShowUnrealEngineTag = DataStoreUtil.getBooleanKV("unrealEngineTag", false)
+    private var getShowKuiklyTag = DataStoreUtil.getBooleanKV("kuiklyTag", true)
 
     class ViewHolder(val binding: ItemQqVersionBinding, val context: Context) :
         RecyclerView.ViewHolder(binding.root)
@@ -122,6 +123,7 @@ class QQVersionAdapter :
                     bindAccessibilityTag(accessibilityTag, holder.context, bean)
                     bindQQNTTag(qqntTag, bean)
                     bindUnrealEngineTag(ueTag, bean)
+                    bindKuiklyTag(kuiklyTag, bean)
                 }
             }
 
@@ -157,6 +159,7 @@ class QQVersionAdapter :
                     bindAccessibilityTag(accessibilityOldTag, holder.context, bean)
                     bindQQNTTag(qqntOldTag, bean)
                     bindUnrealEngineTag(ueOldTag, bean)
+                    bindKuiklyTag(kuiklyOldTag, bean)
 
                     bindProgress(
                         listDetailProgressLine,
@@ -233,7 +236,7 @@ class QQVersionAdapter :
             tvInstall.text = tvInstall.context.getString(R.string.installed)
             val marginLayoutParams = tvInstallCard.layoutParams as ViewGroup.MarginLayoutParams
             marginLayoutParams.marginStart =
-                if (bean.isAccessibility || bean.isQQNTFramework || (getShowUnrealEngineTag && bean.isUnrealEngine)) 3.dp else 6.dp
+                if (bean.isAccessibility || bean.isQQNTFramework || (getShowKuiklyTag && bean.isKuiklyInside)) 3.dp else 6.dp
             tvInstallCard.layoutParams = marginLayoutParams
         } else tvInstallCard.isVisible = false
     }
@@ -257,6 +260,10 @@ class QQVersionAdapter :
 
     private fun bindUnrealEngineTag(ueTag: ImageView, bean: QQVersionBean) {
         ueTag.isVisible = (getShowUnrealEngineTag && bean.isUnrealEngine)
+    }
+
+    private fun bindKuiklyTag(kuikly: ImageView, bean: QQVersionBean) {
+        kuikly.isVisible = (getShowKuiklyTag&&bean.isKuiklyInside)
     }
 
     private fun bindVersionTCloud(tvVersion: TextView, context: Context) {
@@ -329,6 +336,18 @@ class QQVersionAdapter :
                         bean
                     )
                 }
+
+                "isShowKuiklyTag" -> if (holder is ViewHolder) {
+                    bindKuiklyTag(holder.binding.kuiklyTag, bean)
+                    bindDisplayInstall(holder.binding.tvInstall, holder.binding.tvInstallCard, bean)
+                } else if (holder is ViewHolderDetail) {
+                    bindKuiklyTag(holder.binding.kuiklyOldTag, bean)
+                    bindDisplayInstall(
+                        holder.binding.tvOldInstall,
+                        holder.binding.tvOldInstallCard,
+                        bean
+                    )
+                }
             }
         }
     }
@@ -355,6 +374,11 @@ class QQVersionAdapter :
             "isShowUnrealEngineTag" -> {
                 getShowUnrealEngineTag = DataStoreUtil.getBooleanKV("unrealEngineTag", false)
                 notifyItemRangeChanged(0, currentList.size, "isShowUnrealEngineTag")
+            }
+
+            "isShowKuiklyTag" -> {
+                getShowKuiklyTag = DataStoreUtil.getBooleanKV("kuiklyTag", true)
+                notifyItemRangeChanged(0, currentList.size, "isShowKuiklyTag")
             }
         }
     }

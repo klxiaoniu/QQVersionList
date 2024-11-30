@@ -351,6 +351,7 @@ class MainActivity : AppCompatActivity() {
 
                         btnAboutHash.setOnClickListener {
                             val dialogHashBinding = DialogHashBinding.inflate(layoutInflater)
+                            val qverbowSM3 = getQverbowSM3()
 
                             val hashDialog = MaterialAlertDialogBuilder(this@MainActivity)
                                 .setTitle(R.string.qverbowHash)
@@ -358,36 +359,42 @@ class MainActivity : AppCompatActivity() {
                                 .setView(dialogHashBinding.root)
                                 .show().apply {
                                     dialogHashBinding.aboutHashText.text =
-                                        "SM3${getString(R.string.colon)}${getQverbowSM3()}"
+                                        "SM3${getString(R.string.colon)}${qverbowSM3}"
                                     dialogHashBinding.btnAboutGithubHashVerifiy.isVisible =
                                         BuildConfig.VERSION_NAME.endsWith("Release")
                                 }
 
-                            dialogHashBinding.btnAboutHashOk.setOnClickListener {
-                                hashDialog.dismiss()
-                            }
-
-                            dialogHashBinding.btnAboutGithubHashVerifiy.setOnClickListener {
-                                val spec = CircularProgressIndicatorSpec(
-                                    this@MainActivity, null, 0,
-                                    com.google.android.material.R.style.Widget_Material3_CircularProgressIndicator_ExtraSmall
-                                )
-                                val progressIndicatorDrawable =
-                                    IndeterminateDrawable.createCircularDrawable(
-                                        this@MainActivity, spec
-                                    )
-
-                                dialogHashBinding.btnAboutGithubHashVerifiy.apply {
-                                    isEnabled = false
-                                    style(com.google.android.material.R.style.Widget_Material3_Button_TonalButton_Icon)
-                                    icon = progressIndicatorDrawable
+                            dialogHashBinding.apply {
+                                btnAboutHashOk.setOnClickListener {
+                                    hashDialog.dismiss()
                                 }
 
-                                checkQverbowHash(
-                                    BuildConfig.VERSION_NAME.trimSubstringAtEnd("-Release"),
-                                    getQverbowSM3(),
-                                    dialogHashBinding.btnAboutGithubHashVerifiy
-                                )
+                                btnAboutHashCopy.setOnClickListener {
+                                    copyText(qverbowSM3)
+                                }
+
+                                btnAboutGithubHashVerifiy.setOnClickListener {
+                                    val spec = CircularProgressIndicatorSpec(
+                                        this@MainActivity, null, 0,
+                                        com.google.android.material.R.style.Widget_Material3_CircularProgressIndicator_ExtraSmall
+                                    )
+                                    val progressIndicatorDrawable =
+                                        IndeterminateDrawable.createCircularDrawable(
+                                            this@MainActivity, spec
+                                        )
+
+                                    btnAboutGithubHashVerifiy.apply {
+                                        isEnabled = false
+                                        style(com.google.android.material.R.style.Widget_Material3_Button_TonalButton_Icon)
+                                        icon = progressIndicatorDrawable
+                                    }
+
+                                    checkQverbowHash(
+                                        BuildConfig.VERSION_NAME.trimSubstringAtEnd("-Release"),
+                                        getQverbowSM3(),
+                                        btnAboutGithubHashVerifiy
+                                    )
+                                }
                             }
                         }
                     }
@@ -463,6 +470,8 @@ class MainActivity : AppCompatActivity() {
                             dialogPersonalization.apply {
                                 switchDisplayFirst.isChecked =
                                     DataStoreUtil.getBooleanKV("displayFirst", true)
+                                switchKuiklyTag.isChecked =
+                                    DataStoreUtil.getBooleanKV("kuiklyTag", true)
                                 switchUnrealEngineTag.isChecked =
                                     DataStoreUtil.getBooleanKV("unrealEngineTag", false)
                                 switchProgressSize.isChecked =
@@ -496,7 +505,12 @@ class MainActivity : AppCompatActivity() {
                                     DataStoreUtil.putBooleanKVAsync("showOldLoading", isChecked)
                                 }
 
-                                // 下四个设置不能异步持久化存储，否则视图更新读不到更新值
+                                // 下五个设置不能异步持久化存储，否则视图更新读不到更新值
+                                switchKuiklyTag.setOnCheckedChangeListener { _, isChecked ->
+                                    DataStoreUtil.putBooleanKV("kuiklyTag", isChecked)
+                                    qqVersionAdapter.updateItemProperty("isShowKuiklyTag")
+                                    timVersionAdapter.updateItemProperty("isShowKuiklyTag")
+                                }
                                 switchUnrealEngineTag.setOnCheckedChangeListener { _, isChecked ->
                                     DataStoreUtil.putBooleanKV("unrealEngineTag", isChecked)
                                     qqVersionAdapter.updateItemProperty("isShowUnrealEngineTag")
