@@ -278,7 +278,7 @@ Kuikly（Kotlin UI Kit）开发框架，是 TDS 腾讯端服务（Tencent Device
 ## 贡献成员
 
 <a href="https://github.com/klxiaoniu/QQVersionList/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=klxiaoniu/QQVersionList"  alt="贡献成员"/>
+  <img src="https://contrib.rocks/image?repo=klxiaoniu/QQVersionList" alt="贡献成员"/>
 </a>
 
 ## 开源相关
