@@ -257,7 +257,7 @@ QQNT 技术架构是腾讯 QQ 客户端全新的跨平台技术架构体系。QQ
 
 ### 什么是 Kuikly？
 
-Kuikly（Kotlin UI Kit）开发框架，是 TDS 腾讯端服务（Tencent Device-oriented Service）的一部分。Kuikly 通过自研 Kotlin MultiPlatform 逻辑与终端界面原生控件渲染映射协议层，并采用声明式与响应式设计，使采用 Kuikly 的 Kotlin 开发者能拥有原生高效的 Android 开发体验并构建具有原生性能的跨平台应用。Kuikly 更可依托于 [TDS 腾讯端服务 Shiply 容器与发布平台](https://shiply.tds.qq.com/)，实现按页颗粒度的完备客户端界面动态化能力。
+Kuikly（Kotlin UI Kit）跨端开发框架，是 TDS 腾讯端服务（Tencent Device-oriented Service）的一部分。Kuikly 通过自研 Kotlin MultiPlatform 逻辑与终端界面原生控件渲染映射协议层，并采用声明式与响应式设计，使采用 Kuikly 的 Kotlin 开发者能拥有原生高效的 Android 开发体验并构建具有原生性能的跨平台应用。Kuikly 更可依托于 [TDS 腾讯端服务 Shiply 容器与发布平台](https://shiply.tds.qq.com/)，实现按页颗粒度的完备客户端界面动态化能力。
 
 ## 其它
 

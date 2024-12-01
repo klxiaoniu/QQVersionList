@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="@id/ib_tim_collapse"
-            app:layout_constraintEnd_toStartOf="@id/ib_tim_collapse"
+            app:layout_constraintEnd_toStartOf="@id/ib_tim_old_link"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/ib_tim_collapse">
 
@@ -157,6 +157,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_tim_detail_date"
             tools:text="- 优化性能和体验问题，给你更好的使用体验。" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/ib_tim_old_link"
+            style="?attr/materialIconButtonFilledTonalStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/download"
+            app:icon="@drawable/link"
+            app:layout_constraintBottom_toBottomOf="@id/ib_tim_collapse"
+            app:layout_constraintEnd_toStartOf="@id/ib_tim_collapse"
+            app:layout_constraintTop_toTopOf="@id/ib_tim_collapse" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/ib_tim_collapse"

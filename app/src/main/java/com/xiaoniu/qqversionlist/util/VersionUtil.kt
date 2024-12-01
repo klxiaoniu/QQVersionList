@@ -92,6 +92,7 @@ object VersionUtil {
         val download = jsonData.getAsJsonObject("app").getAsJsonObject("download")
         val androidVersion = download.get("androidVersion").asString
         val androidDatetime = download.get("androidDatetime").asString
+        val androidLink = download.get("androidLink").asString
 
         (thisActivity.timVersion as MutableList<TIMVersionBean>).add(
             TIMVersionBean(
@@ -198,6 +199,15 @@ object VersionUtil {
         if (thisActivity.timVersion[0].version == thisActivity.timVersion[1].version) (thisActivity.timVersion as MutableList<TIMVersionBean>).removeAt(
             0
         )
+
+        thisActivity.timVersion[0].link = androidLink
+        thisActivity.timVersion[0].jsonString = gson.toJson(JsonObject().apply {
+            addProperty("version", thisActivity.timVersion[0].version)
+            addProperty("datetime", thisActivity.timVersion[0].datetime)
+            addProperty("fix", thisActivity.timVersion[0].fix)
+            addProperty("new", thisActivity.timVersion[0].new)
+            addProperty("link", androidLink)
+        }).toString()
 
         if (DataStoreUtil.getBooleanKV(
                 "displayFirst", true

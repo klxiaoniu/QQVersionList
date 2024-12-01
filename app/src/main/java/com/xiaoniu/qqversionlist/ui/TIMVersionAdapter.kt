@@ -20,6 +20,7 @@ package com.xiaoniu.qqversionlist.ui
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.graphics.Typeface
 import android.util.Base64
 import android.view.LayoutInflater
@@ -32,16 +33,26 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.xiaoniu.qqversionlist.R
 import com.xiaoniu.qqversionlist.data.TIMVersionBean
+import com.xiaoniu.qqversionlist.databinding.ExpLinkNextButtonBinding
 import com.xiaoniu.qqversionlist.databinding.ItemTimVersionBinding
 import com.xiaoniu.qqversionlist.databinding.ItemTimVersionDetailBinding
+import com.xiaoniu.qqversionlist.util.ClipboardUtil.copyText
 import com.xiaoniu.qqversionlist.util.DataStoreUtil
 import com.xiaoniu.qqversionlist.util.Extensions.dp
+import com.xiaoniu.qqversionlist.util.FileUtil.downloadFile
 import com.xiaoniu.qqversionlist.util.InfoUtil.showToast
 import com.xiaoniu.qqversionlist.util.StringUtil.toPrettyFormat
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
+import okhttp3.Request
 
 class TIMVersionAdapter :
     ListAdapter<TIMVersionBean, RecyclerView.ViewHolder>(TIMVersionDiffCallback()) {
@@ -110,6 +121,7 @@ class TIMVersionAdapter :
                     bindAccessibilityTag(accessibilityTimTag, holder.context, bean)
                     bindQQNTTag(qqntTimTag, bean)
                     bindKuiklyTag(kuiklyTimTag, bean)
+                    bindNewestDownloadLink(ibTimLink, bean)
                 }
             }
 
@@ -132,6 +144,7 @@ class TIMVersionAdapter :
                     bindAccessibilityTag(accessibilityTimOldTag, holder.context, bean)
                     bindQQNTTag(qqntTimOldTag, bean)
                     bindKuiklyTag(kuiklyTimOldTag, bean)
+                    bindNewestDownloadLink(ibTimOldLink, bean)
                 }
             }
         }
@@ -192,6 +205,84 @@ class TIMVersionAdapter :
             }
             tvVersion.typeface = TCloudFont
         } else tvVersion.setTypeface(null, Typeface.NORMAL)
+    }
+
+    private fun bindNewestDownloadLink(button: MaterialButton, bean: TIMVersionBean) {
+        if (bean.link !== "") {
+            button.isVisible = true
+            button.setOnClickListener {
+                button.isEnabled = false
+                CoroutineScope(Dispatchers.IO).launch {
+                    var appSize = ""
+                    try {
+                        val okHttpClient = OkHttpClient()
+                        val request = Request.Builder().url(bean.link).head().build()
+                        val response = okHttpClient.newCall(request).execute()
+                        appSize = "%.2f".format(
+                            response.header("Content-Length")?.toDoubleOrNull()
+                                ?.div(1024 * 1024)
+                        )
+                    } catch (_: Exception) {
+                    } finally {
+                        withContext(Dispatchers.Main) {
+                            button.isEnabled = true
+                            val expLinkNextButtonBinding = ExpLinkNextButtonBinding.inflate(
+                                LayoutInflater.from(button.context), null, false
+                            )
+                            val TIMLinkDialog = MaterialAlertDialogBuilder(button.context)
+                                .setTitle("TIM ${bean.version}")
+                                .setIcon(R.drawable.link)
+                                .setMessage(
+                                    "${button.context.getString(R.string.downloadLink)}${bean.link}" + (if (appSize != "") "\n\n${
+                                        button.context.getString(R.string.fileSize)
+                                    }: $appSize MB" else "")
+                                )
+                                .setView(expLinkNextButtonBinding.root)
+                                .show()
+
+                            expLinkNextButtonBinding.apply {
+                                expNextBtnCopy.setOnClickListener {
+                                    button.context.copyText(bean.link)
+                                    TIMLinkDialog.dismiss()
+                                }
+
+                                expNextBtnDownload.setOnClickListener {
+                                    TIMLinkDialog.dismiss()
+                                    downloadFile(button.context, bean.link)
+                                }
+
+                                expNextBtnShare.setOnClickListener {
+                                    TIMLinkDialog.dismiss()
+                                    val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                                        type = "text/plain"
+                                        putExtra(
+                                            Intent.EXTRA_TEXT,
+                                            "Android TIM ${bean.version} ${
+                                                button.context.getString(
+                                                    R.string.stableVersion
+                                                )
+                                            }" + (if (appSize != "") "（${
+                                                button.context.getString(R.string.fileSize)
+                                            }$appSize MB）" else "") + "\n\n${
+                                                button.context.getString(
+                                                    R.string.downloadLink
+                                                )
+                                            }${bean.link}"
+                                        )
+                                    }
+                                    button.context.startActivity(
+                                        Intent.createChooser(
+                                            shareIntent,
+                                            button.context.getString(R.string.shareTo)
+                                        )
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } else button.isVisible = false
     }
 
     private fun showDialog(context: Context, s: String) {
