@@ -235,7 +235,7 @@ class TIMVersionAdapter :
                                 .setMessage(
                                     "${button.context.getString(R.string.downloadLink)}${bean.link}" + (if (appSize != "") "\n\n${
                                         button.context.getString(R.string.fileSize)
-                                    }: $appSize MB" else "")
+                                    }$appSize MB" else "")
                                 )
                                 .setView(expLinkNextButtonBinding.root)
                                 .show()
