@@ -45,14 +45,13 @@ import com.xiaoniu.qqversionlist.util.ClipboardUtil.copyText
 import com.xiaoniu.qqversionlist.util.DataStoreUtil
 import com.xiaoniu.qqversionlist.util.Extensions.dp
 import com.xiaoniu.qqversionlist.util.FileUtil.downloadFile
+import com.xiaoniu.qqversionlist.util.FileUtil.getFileSize
 import com.xiaoniu.qqversionlist.util.InfoUtil.showToast
 import com.xiaoniu.qqversionlist.util.StringUtil.toPrettyFormat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.OkHttpClient
-import okhttp3.Request
 
 class TIMVersionAdapter :
     ListAdapter<TIMVersionBean, RecyclerView.ViewHolder>(TIMVersionDiffCallback()) {
@@ -213,15 +212,9 @@ class TIMVersionAdapter :
             button.setOnClickListener {
                 button.isEnabled = false
                 CoroutineScope(Dispatchers.IO).launch {
-                    var appSize = ""
+                    var appSize: String? = null
                     try {
-                        val okHttpClient = OkHttpClient()
-                        val request = Request.Builder().url(bean.link).head().build()
-                        val response = okHttpClient.newCall(request).execute()
-                        appSize = "%.2f".format(
-                            response.header("Content-Length")?.toDoubleOrNull()
-                                ?.div(1024 * 1024)
-                        )
+                        appSize = getFileSize(bean.link)
                     } catch (_: Exception) {
                     } finally {
                         withContext(Dispatchers.Main) {
@@ -233,7 +226,7 @@ class TIMVersionAdapter :
                                 .setTitle("TIM ${bean.version}")
                                 .setIcon(R.drawable.link)
                                 .setMessage(
-                                    "${button.context.getString(R.string.downloadLink)}${bean.link}" + (if (appSize != "") "\n\n${
+                                    "${button.context.getString(R.string.downloadLink)}${bean.link}" + (if (appSize != null) "\n\n${
                                         button.context.getString(R.string.fileSize)
                                     }$appSize MB" else "")
                                 )
@@ -261,7 +254,7 @@ class TIMVersionAdapter :
                                                 button.context.getString(
                                                     R.string.stableVersion
                                                 )
-                                            }" + (if (appSize != "") "（${
+                                            }" + (if (appSize != null) "（${
                                                 button.context.getString(R.string.fileSize)
                                             }$appSize MB）" else "") + "\n\n${
                                                 button.context.getString(

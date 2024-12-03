@@ -103,6 +103,7 @@ import com.xiaoniu.qqversionlist.util.ClipboardUtil.copyText
 import com.xiaoniu.qqversionlist.util.DataStoreUtil
 import com.xiaoniu.qqversionlist.util.Extensions.dp
 import com.xiaoniu.qqversionlist.util.FileUtil.downloadFile
+import com.xiaoniu.qqversionlist.util.FileUtil.getFileSize
 import com.xiaoniu.qqversionlist.util.InfoUtil.dialogError
 import com.xiaoniu.qqversionlist.util.InfoUtil.getQverbowSM3
 import com.xiaoniu.qqversionlist.util.InfoUtil.qverbowAboutText
@@ -854,13 +855,7 @@ class MainActivity : AppCompatActivity() {
                                     val end = responseData.indexOf(")")
                                     val jsonString = responseData.substring(start, end)
                                     val map = resolveWeixinAlphaConfig(jsonString)
-                                    val request2 =
-                                        Request.Builder().url(map["url"].toString()).head().build()
-                                    val response2 = okHttpClient.newCall(request2).execute()
-                                    val appSize = (if (response2.isSuccessful) "%.2f".format(
-                                        response2.header("Content-Length")?.toDoubleOrNull()
-                                            ?.div(1024 * 1024)
-                                    ) else null)
+                                    val appSize = getFileSize(map["url"].toString())
                                     runOnUiThread {
                                         val applicationsConfigBackButtonBinding =
                                             ApplicationsConfigBackButtonBinding.inflate(
@@ -956,13 +951,7 @@ class MainActivity : AppCompatActivity() {
                                     )
                                     val url = response.header("Location")
                                     if (url == null) throw CustomException("Response data is null.")
-                                    val request2 =
-                                        Request.Builder().url(url.toString()).head().build()
-                                    val response2 = OkHttpClient().newCall(request2).execute()
-                                    val appSize = (if (response2.isSuccessful) "%.2f".format(
-                                        response2.header("Content-Length")?.toDoubleOrNull()
-                                            ?.div(1024 * 1024)
-                                    ) else null)
+                                    val appSize = getFileSize(url.toString())
                                     runOnUiThread {
                                         val expLinkNextButtonBinding =
                                             ExpLinkNextButtonBinding.inflate(

@@ -20,10 +20,11 @@ package com.xiaoniu.qqversionlist.util
 
 import android.app.DownloadManager
 import android.content.Context
-import android.content.Context.DOWNLOAD_SERVICE
 import android.content.Intent
 import android.net.Uri
 import android.os.Environment
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry
 import java.io.File
 import java.io.InputStream
@@ -79,7 +80,7 @@ object FileUtil {
                 if (fileName != null) fileName else url.substringAfterLast('/')
             )
             val downloadManager =
-                context.getSystemService(DOWNLOAD_SERVICE) as DownloadManager
+                context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
             downloadManager.enqueue(requestDownload)
         } else {
             // 这里不用 Chrome Custom Tab 的原因是 Chrome 不知道咋回事有概率卡在“等待下载”状态
@@ -91,5 +92,23 @@ object FileUtil {
             }
             context.startActivity(browserIntent)
         }
+    }
+
+    /**
+     * 获取文件大小
+     *
+     * **需在后台线程调用**
+     *
+     * @param url 文件下载地址
+     * @return 单位为 MB
+     */
+    fun getFileSize(url: String): String? {
+        val okHttpClient = OkHttpClient()
+        val request = Request.Builder().url(url).head().build()
+        val response = okHttpClient.newCall(request).execute()
+        return if (!response.isSuccessful) null else "%.2f".format(
+            response.header("Content-Length")?.toDoubleOrNull()
+                ?.div(1024 * 1024)
+        )
     }
 }
