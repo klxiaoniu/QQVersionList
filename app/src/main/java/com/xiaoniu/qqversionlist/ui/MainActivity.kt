@@ -134,7 +134,6 @@ import java.io.InputStreamReader
 import java.lang.Thread.sleep
 import java.util.Locale
 import java.util.zip.GZIPInputStream
-import kotlin.text.toDoubleOrNull
 
 
 class MainActivity : AppCompatActivity() {
