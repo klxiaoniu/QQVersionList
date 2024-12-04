@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+    ** 专有代码声明 **
+
+    此矢量图片文件由 QQ 版本列表实用工具（以下简称“本项目”）根据 Kuikly 标识临摹绘制，
+    文件所包含的 Kuikly 标识商标（如有）和原创权利人为深圳市腾讯计算机系统有限公司和/或其关联公司。
+
+    QQ 版本列表实用工具承诺不将此文件用于或授权任何非权利人用于任何形式的商业用途。
+
+    此矢量图片文件及其代码不受本项目 GNU Affero General Public License Version 3 开源许可约束，
+    未经许可，不得用于任何形式的商业用途或其他未经授权的用途。
+
+    本项目对“QQ”、Kuikly 标识、“Kuikly”的使用旨在注明和指向对应主体，
+    并非表示对“QQ”、Kuikly 标识、“Kuikly”商标（如有）的注册和拥有。
+
+    此文本如有任何中英文版本之间的差异，以中文版本为准。
+
+    ** Proprietary Code Statement **
+
+    This vector image file was recreated by the Qverbow Util (hereinafter referred to as "this project") based on the Kuikly logo.
+    Any trademarks of Kuikly logos contained in this file and their original rights belong to 深圳市腾讯计算机系统有限公司 and/or its affiliates.
+
+    The Qverbow Util commits to not using this file for or authorizing any non-right holders to use it for any commercial purposes.
+
+    This vector image file and its code are not subject to the open-source license of this project, the GNU Affero General Public License Version 3.
+    Without permission, it shall not be used for any commercial purposes or other unauthorized uses.
+
+    The use of "QQ", the Kuikly logo, and "Kuikly" by this project is intended only to refer to the corresponding entities,
+    and does not imply registration or ownership of the trademarks "QQ", the Kuikly logo, and "Kuikly" (if any).
+
+    In case of any discrepancies between the Chinese and English versions of this text, the Chinese version shall prevail.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="15dp"
+    android:height="15dp"
+    android:viewportWidth="723.21"
+    android:viewportHeight="726.23">
+
+    <path
+        android:fillColor="?attr/colorControlNormal"
+        android:fillType="evenOdd"
+        android:pathData="M468.44,255.84L256.07,468.2C197.49,526.79 197.49,621.75 256.07,680.34L43.94,468.2C-14.65,409.62 -14.65,314.66 43.94,256.07L256.07,43.94C314.66,-14.65 409.62,-14.65 468.2,43.94C526.72,102.45 526.79,197.23 468.44,255.84L468.44,255.84ZM467.14,682.29C413.96,735.47 330.81,740.38 272.1,697.02C228.74,638.31 233.65,555.16 286.83,501.98L499.19,289.61C519.58,269.14 532.84,244.25 538.96,218.03C587.78,206.63 641.2,219.96 679.27,258.03C737.86,316.61 737.86,411.57 679.27,470.16L467.14,682.29L467.14,682.29Z" />
+
+</vector>

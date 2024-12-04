@@ -131,14 +131,15 @@ QQ 版本列表实用工具 for Android 是一个使用 Material 3 组件库构�
 > [!TIP]
 > QQ 版本列表实用工具实验性支持了 Android 微信的扫版。若选择微信扫版，对话框将变更为四个输入框，分别是“主版本号”、“扫版类型”、“真实版本号”和“十六进制代码”，对应的直链为：
 >
-> `http://dldir1.qq.com/weixin/android/weixin<主版本号>android<真实版本号>_<十六进制代码>_arm64.apk`
+> - `http://dldir1.qq.com/weixin/android/weixin<主版本号>android<真实版本号>_<十六进制代码>_arm64.apk`
+> - `http://dldir1.qq.com/weixin/android/weixin<主版本号>android<真实版本号>_<十六进制代码>_arm64_1.apk`
 >
 > 填入相应输入框内容后，软件将尝试访问上述链接。若当次访问未果，默认情况下将自动递增十六进制代码后再次尝试访问，直到访问成功为止。
 
 > [!TIP]
 > QQ 版本列表实用工具实验性支持了 Android TIM 的扫版。若选择 TIM 扫版，对应的直链为：
 >
-> `https://downv6.qq.com/qqweb/QQ_1/android_apk/TIM_<主版本号>.<小版本号><自定义后缀>.apk`
+> - `https://downv6.qq.com/qqweb/QQ_1/android_apk/TIM_<主版本号>.<小版本号><自定义后缀>.apk`
 > 
 > 填入相应输入框内容后，软件将尝试访问上述链接。若当次访问未果，默认情况下将自动递增小版本号后再次尝试访问，直到访问成功为止。
 
@@ -160,6 +161,10 @@ Android 微信测试版相关信息配置在[腾讯服务器配置文件](https:
 
 > [!WARNING]
 > 此功能并非每次请求都能成功获取到 Android 微信测试版下载直链，当无法获取下载直链时可能存在的情况是微信还未发布测试版或测试版已撤包。QQ 版本列表实用工具不对此功能及其任何后果作出任何可靠性保证。请明确并确保自身具备足够的风险识别和承受能力。
+
+#### 从微信输入法测试通道获取微信输入法最新测试版下载直链
+
+Android 微信输入法测试版下载直链可由[微信输入法公网测试通道](https://z.weixin.qq.com/android/download?channel=latest)重定向获取。可使用 QQ 版本列表实用工具提供的“从微信输入法测试通道获取微信输入法最新测试版下载直链”功能尝试获取微信输入法最新测试版下载直链。
 
 #### 腾讯应用宝更新获取（实验性）
 
@@ -246,6 +251,14 @@ QQ 版本列表实用工具不能实现“检测到新测试版本下载直链�
 
 目前还没有找到来自官方的可靠且请求次数少而信息密度大的 Android 微信版本列表数据源，因此 QQ 版本列表实用工具无法提供 Android 微信的版本列表。如果您发现了可靠的 Android 微信版本列表数据源，欢迎提出 Issue(s) 或提交 PR。
 
+### 什么是 QQNT 技术架构？
+
+QQNT 技术架构是腾讯 QQ 客户端全新的跨平台技术架构体系。QQNT 技术架构将 QQ 客户端核心功能——如核心登录、消息系统、关系链、富媒体、长连接、数据库等——下沉至 QQNT 内核层，使用 C++ 抽象逻辑封装为原生库并提供多平台多语言一致性接口，以实现 QQ 客户端核心逻辑代码跨平台与程序高性能运作。
+
+### 什么是 Kuikly？
+
+Kuikly（Kotlin UI Kit）跨端开发框架，是 TDS 腾讯端服务（Tencent Device-oriented Service）的一部分。Kuikly 通过自研 Kotlin MultiPlatform 逻辑与终端界面原生控件渲染映射协议层，并采用声明式与响应式设计，使采用 Kuikly 的 Kotlin 开发者能拥有原生高效的 Android 开发体验并构建具有原生性能的跨平台应用。Kuikly 更可依托于 [TDS 腾讯端服务 Shiply 容器与发布平台](https://shiply.tds.qq.com/)，实现按页颗粒度的完备客户端界面动态化能力。
+
 ## 其它
 
 欢迎[帮助我们完成本地化翻译](https://crowdin.com/project/qqversionstool)！提交翻译则代表您同意您的译文将跟随 QQ 版本列表实用工具项目采用 [GNU Affero General Public License Version 3](/LICENSE) 开源许可。
@@ -265,7 +278,7 @@ QQ 版本列表实用工具不能实现“检测到新测试版本下载直链�
 ## 贡献成员
 
 <a href="https://github.com/klxiaoniu/QQVersionList/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=klxiaoniu/QQVersionList"  alt="贡献成员"/>
+  <img src="https://contrib.rocks/image?repo=klxiaoniu/QQVersionList" alt="贡献成员"/>
 </a>
 
 ## 开源相关

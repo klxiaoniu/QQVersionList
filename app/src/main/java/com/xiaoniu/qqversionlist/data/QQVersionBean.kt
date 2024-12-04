@@ -31,6 +31,8 @@ import kotlinx.serialization.Serializable
  * @param displayType 卡片展示类型，0 为收起态，1 为展开态
  * @param displayInstall 展示是否安装到本机的标签
  * @param isQQNTFramework 该版本是否基于 QQNT 技术架构
+ * @param isUnrealEngine 该版本是否存在 Unreal Engine Lib
+ * @param isKuiklyInside 该版本是否存在 TDS 腾讯端服务 Kukily 开发框架
  */
 @Serializable
 data class QQVersionBean(
@@ -46,5 +48,6 @@ data class QQVersionBean(
     var displayInstall: Boolean = false, // false 为不展示
     var isAccessibility: Boolean = false,
     var isQQNTFramework: Boolean = false,
-    var isUnrealEngine: Boolean = false
+    var isUnrealEngine: Boolean = false,
+    var isKuiklyInside: Boolean = false
 )

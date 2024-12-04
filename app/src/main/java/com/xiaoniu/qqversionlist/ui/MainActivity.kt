@@ -103,6 +103,7 @@ import com.xiaoniu.qqversionlist.util.ClipboardUtil.copyText
 import com.xiaoniu.qqversionlist.util.DataStoreUtil
 import com.xiaoniu.qqversionlist.util.Extensions.dp
 import com.xiaoniu.qqversionlist.util.FileUtil.downloadFile
+import com.xiaoniu.qqversionlist.util.FileUtil.getFileSize
 import com.xiaoniu.qqversionlist.util.InfoUtil.dialogError
 import com.xiaoniu.qqversionlist.util.InfoUtil.getQverbowSM3
 import com.xiaoniu.qqversionlist.util.InfoUtil.qverbowAboutText
@@ -133,7 +134,6 @@ import java.io.InputStreamReader
 import java.lang.Thread.sleep
 import java.util.Locale
 import java.util.zip.GZIPInputStream
-import kotlin.text.toDoubleOrNull
 
 
 class MainActivity : AppCompatActivity() {
@@ -351,6 +351,7 @@ class MainActivity : AppCompatActivity() {
 
                         btnAboutHash.setOnClickListener {
                             val dialogHashBinding = DialogHashBinding.inflate(layoutInflater)
+                            val qverbowSM3 = getQverbowSM3()
 
                             val hashDialog = MaterialAlertDialogBuilder(this@MainActivity)
                                 .setTitle(R.string.qverbowHash)
@@ -358,36 +359,42 @@ class MainActivity : AppCompatActivity() {
                                 .setView(dialogHashBinding.root)
                                 .show().apply {
                                     dialogHashBinding.aboutHashText.text =
-                                        "SM3${getString(R.string.colon)}${getQverbowSM3()}"
+                                        "SM3${getString(R.string.colon)}${qverbowSM3}"
                                     dialogHashBinding.btnAboutGithubHashVerifiy.isVisible =
                                         BuildConfig.VERSION_NAME.endsWith("Release")
                                 }
 
-                            dialogHashBinding.btnAboutHashOk.setOnClickListener {
-                                hashDialog.dismiss()
-                            }
-
-                            dialogHashBinding.btnAboutGithubHashVerifiy.setOnClickListener {
-                                val spec = CircularProgressIndicatorSpec(
-                                    this@MainActivity, null, 0,
-                                    com.google.android.material.R.style.Widget_Material3_CircularProgressIndicator_ExtraSmall
-                                )
-                                val progressIndicatorDrawable =
-                                    IndeterminateDrawable.createCircularDrawable(
-                                        this@MainActivity, spec
-                                    )
-
-                                dialogHashBinding.btnAboutGithubHashVerifiy.apply {
-                                    isEnabled = false
-                                    style(com.google.android.material.R.style.Widget_Material3_Button_TonalButton_Icon)
-                                    icon = progressIndicatorDrawable
+                            dialogHashBinding.apply {
+                                btnAboutHashOk.setOnClickListener {
+                                    hashDialog.dismiss()
                                 }
 
-                                checkQverbowHash(
-                                    BuildConfig.VERSION_NAME.trimSubstringAtEnd("-Release"),
-                                    getQverbowSM3(),
-                                    dialogHashBinding.btnAboutGithubHashVerifiy
-                                )
+                                btnAboutHashCopy.setOnClickListener {
+                                    copyText(qverbowSM3)
+                                }
+
+                                btnAboutGithubHashVerifiy.setOnClickListener {
+                                    val spec = CircularProgressIndicatorSpec(
+                                        this@MainActivity, null, 0,
+                                        com.google.android.material.R.style.Widget_Material3_CircularProgressIndicator_ExtraSmall
+                                    )
+                                    val progressIndicatorDrawable =
+                                        IndeterminateDrawable.createCircularDrawable(
+                                            this@MainActivity, spec
+                                        )
+
+                                    btnAboutGithubHashVerifiy.apply {
+                                        isEnabled = false
+                                        style(com.google.android.material.R.style.Widget_Material3_Button_TonalButton_Icon)
+                                        icon = progressIndicatorDrawable
+                                    }
+
+                                    checkQverbowHash(
+                                        BuildConfig.VERSION_NAME.trimSubstringAtEnd("-Release"),
+                                        getQverbowSM3(),
+                                        btnAboutGithubHashVerifiy
+                                    )
+                                }
                             }
                         }
                     }
@@ -463,6 +470,8 @@ class MainActivity : AppCompatActivity() {
                             dialogPersonalization.apply {
                                 switchDisplayFirst.isChecked =
                                     DataStoreUtil.getBooleanKV("displayFirst", true)
+                                switchKuiklyTag.isChecked =
+                                    DataStoreUtil.getBooleanKV("kuiklyTag", true)
                                 switchUnrealEngineTag.isChecked =
                                     DataStoreUtil.getBooleanKV("unrealEngineTag", false)
                                 switchProgressSize.isChecked =
@@ -496,7 +505,12 @@ class MainActivity : AppCompatActivity() {
                                     DataStoreUtil.putBooleanKVAsync("showOldLoading", isChecked)
                                 }
 
-                                // 下四个设置不能异步持久化存储，否则视图更新读不到更新值
+                                // 下五个设置不能异步持久化存储，否则视图更新读不到更新值
+                                switchKuiklyTag.setOnCheckedChangeListener { _, isChecked ->
+                                    DataStoreUtil.putBooleanKV("kuiklyTag", isChecked)
+                                    qqVersionAdapter.updateItemProperty("isShowKuiklyTag")
+                                    timVersionAdapter.updateItemProperty("isShowKuiklyTag")
+                                }
                                 switchUnrealEngineTag.setOnCheckedChangeListener { _, isChecked ->
                                     DataStoreUtil.putBooleanKV("unrealEngineTag", isChecked)
                                     qqVersionAdapter.updateItemProperty("isShowUnrealEngineTag")
@@ -840,13 +854,7 @@ class MainActivity : AppCompatActivity() {
                                     val end = responseData.indexOf(")")
                                     val jsonString = responseData.substring(start, end)
                                     val map = resolveWeixinAlphaConfig(jsonString)
-                                    val request2 =
-                                        Request.Builder().url(map["url"].toString()).head().build()
-                                    val response2 = okHttpClient.newCall(request2).execute()
-                                    val appSize = (if (response2.isSuccessful) "%.2f".format(
-                                        response2.header("Content-Length")?.toDoubleOrNull()
-                                            ?.div(1024 * 1024)
-                                    ) else null)
+                                    val appSize = getFileSize(map["url"].toString())
                                     runOnUiThread {
                                         val applicationsConfigBackButtonBinding =
                                             ApplicationsConfigBackButtonBinding.inflate(
@@ -913,7 +921,6 @@ class MainActivity : AppCompatActivity() {
                                             }
                                         }
                                     }
-
                                 } catch (e: CustomException) {
                                     dialogError(e, true)
                                 } catch (e: Exception) {
@@ -943,13 +950,7 @@ class MainActivity : AppCompatActivity() {
                                     )
                                     val url = response.header("Location")
                                     if (url == null) throw CustomException("Response data is null.")
-                                    val request2 =
-                                        Request.Builder().url(url.toString()).head().build()
-                                    val response2 = OkHttpClient().newCall(request2).execute()
-                                    val appSize = (if (response2.isSuccessful) "%.2f".format(
-                                        response2.header("Content-Length")?.toDoubleOrNull()
-                                            ?.div(1024 * 1024)
-                                    ) else null)
+                                    val appSize = getFileSize(url.toString())
                                     runOnUiThread {
                                         val expLinkNextButtonBinding =
                                             ExpLinkNextButtonBinding.inflate(
@@ -998,7 +999,6 @@ class MainActivity : AppCompatActivity() {
                                             }
                                         }
                                     }
-
                                 } catch (e: CustomException) {
                                     dialogError(e, true)
                                 } catch (e: Exception) {

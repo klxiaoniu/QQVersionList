@@ -35,6 +35,8 @@ class QverbowApplication : Application() {
         const val EARLIEST_QQNT_FRAMEWORK_QQ_VERSION_STABLE = "8.9.63"
         const val EARLIEST_QQNT_FRAMEWORK_TIM_VERSION_STABLE = "4.0.0"
         const val EARLIEST_UNREAL_ENGINE_QQ_VERSION_STABLE = "8.8.55"
+        const val EARLIEST_KUIKLY_FRAMEWORK_QQ_VERSION_STABLE = "8.9.73"
+        const val EARLIEST_KUIKLY_FRAMEWORK_TIM_VERSION_STABLE = "4.0.0"
     }
 
     override fun onCreate() {
@@ -42,6 +44,6 @@ class QverbowApplication : Application() {
         DynamicColors.applyToActivitiesIfAvailable(this)
         instance = this
         super.onCreate()
-        Security.addProvider(KonaCryptoProvider())
+        Security.addProvider(KonaCryptoProvider()) // 腾讯 Kona 国密套件需要在应用启动时添加 Provider
     }
 }

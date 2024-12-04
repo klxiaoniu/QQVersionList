@@ -49,6 +49,13 @@
                 android:text="@string/done" />
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_about_hash_copy"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/copy" />
+
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_about_github_hash_verifiy"
                 style="@style/Widget.Material3.Button.TonalButton"
                 android:layout_width="match_parent"

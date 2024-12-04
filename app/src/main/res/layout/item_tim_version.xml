@@ -43,7 +43,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/ib_tim_expand"
+                app:layout_constraintEnd_toStartOf="@id/ib_tim_link"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.5"
@@ -75,6 +75,23 @@
                     app:tint="?attr/colorPrimary" />
 
                 <ImageView
+                    android:id="@+id/kuikly_tim_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="3dp"
+                    android:layout_marginEnd="0dp"
+                    android:contentDescription="@string/kuiklyTag"
+                    android:paddingStart="0dp"
+                    android:paddingTop="3dp"
+                    android:paddingEnd="3dp"
+                    android:paddingBottom="3dp"
+                    android:src="@drawable/kuikly_logo_unofficial"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/qqnt_tim_tag"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="?attr/colorPrimary" />
+
+                <ImageView
                     android:id="@+id/accessibility_tim_tag"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -84,7 +101,7 @@
                     android:focusable="true"
                     android:src="@drawable/accessibility_new_20px"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/qqnt_tim_tag"
+                    app:layout_constraintStart_toEndOf="@id/kuikly_tim_tag"
                     app:layout_constraintTop_toTopOf="parent"
                     app:tint="?attr/colorPrimary" />
 
@@ -120,6 +137,17 @@
                 </com.google.android.material.card.MaterialCardView>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/ib_tim_link"
+                style="?attr/materialIconButtonFilledTonalStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/download"
+                app:icon="@drawable/link"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/ib_tim_expand"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/ib_tim_expand"

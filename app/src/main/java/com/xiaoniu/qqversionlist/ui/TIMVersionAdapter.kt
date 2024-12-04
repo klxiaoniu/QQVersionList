@@ -20,6 +20,7 @@ package com.xiaoniu.qqversionlist.ui
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.graphics.Typeface
 import android.util.Base64
 import android.view.LayoutInflater
@@ -32,22 +33,32 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.xiaoniu.qqversionlist.R
 import com.xiaoniu.qqversionlist.data.TIMVersionBean
+import com.xiaoniu.qqversionlist.databinding.ExpLinkNextButtonBinding
 import com.xiaoniu.qqversionlist.databinding.ItemTimVersionBinding
 import com.xiaoniu.qqversionlist.databinding.ItemTimVersionDetailBinding
+import com.xiaoniu.qqversionlist.util.ClipboardUtil.copyText
 import com.xiaoniu.qqversionlist.util.DataStoreUtil
 import com.xiaoniu.qqversionlist.util.Extensions.dp
+import com.xiaoniu.qqversionlist.util.FileUtil.downloadFile
+import com.xiaoniu.qqversionlist.util.FileUtil.getFileSize
 import com.xiaoniu.qqversionlist.util.InfoUtil.showToast
 import com.xiaoniu.qqversionlist.util.StringUtil.toPrettyFormat
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class TIMVersionAdapter :
     ListAdapter<TIMVersionBean, RecyclerView.ViewHolder>(TIMVersionDiffCallback()) {
     private var getVersionTCloud = DataStoreUtil.getBooleanKV("versionTCloud", true)
     private var getVersionTCloudThickness =
         DataStoreUtil.getStringKV("versionTCloudThickness", "System")
+    private var getShowKuiklyTag = DataStoreUtil.getBooleanKV("kuiklyTag", true)
 
     class ViewHolder(val binding: ItemTimVersionBinding, val context: Context) :
         RecyclerView.ViewHolder(binding.root)
@@ -108,6 +119,8 @@ class TIMVersionAdapter :
                     bindVersionTCloud(tvTimVersion, holder.context)
                     bindAccessibilityTag(accessibilityTimTag, holder.context, bean)
                     bindQQNTTag(qqntTimTag, bean)
+                    bindKuiklyTag(kuiklyTimTag, bean)
+                    bindNewestDownloadLink(ibTimLink, bean)
                 }
             }
 
@@ -129,6 +142,8 @@ class TIMVersionAdapter :
                     bindVersionTCloud(tvTimOldVersion, holder.context)
                     bindAccessibilityTag(accessibilityTimOldTag, holder.context, bean)
                     bindQQNTTag(qqntTimOldTag, bean)
+                    bindKuiklyTag(kuiklyTimOldTag, bean)
+                    bindNewestDownloadLink(ibTimOldLink, bean)
                 }
             }
         }
@@ -146,7 +161,7 @@ class TIMVersionAdapter :
         if (bean.displayInstall) {
             tvInstallCard.isVisible = true
             tvInstall.text = tvInstall.context.getString(R.string.installed)
-            if (bean.isAccessibility || bean.isQQNTFramework) {
+            if (bean.isAccessibility || bean.isQQNTFramework || (getShowKuiklyTag && bean.isKuiklyInside)) {
                 val marginLayoutParams = tvInstallCard.layoutParams as ViewGroup.MarginLayoutParams
                 marginLayoutParams.marginStart = 3.dp
                 tvInstallCard.layoutParams = marginLayoutParams
@@ -175,6 +190,10 @@ class TIMVersionAdapter :
         qqntTag.isVisible = bean.isQQNTFramework
     }
 
+    private fun bindKuiklyTag(kuiklyTag: ImageView, bean: TIMVersionBean) {
+        kuiklyTag.isVisible = (getShowKuiklyTag && bean.isKuiklyInside)
+    }
+
     private fun bindVersionTCloud(tvVersion: TextView, context: Context) {
         if (getVersionTCloud) {
             val TCloudFont: Typeface = when (getVersionTCloudThickness) {
@@ -185,6 +204,78 @@ class TIMVersionAdapter :
             }
             tvVersion.typeface = TCloudFont
         } else tvVersion.setTypeface(null, Typeface.NORMAL)
+    }
+
+    private fun bindNewestDownloadLink(button: MaterialButton, bean: TIMVersionBean) {
+        if (bean.link !== "") {
+            button.isVisible = true
+            button.setOnClickListener {
+                button.isEnabled = false
+                CoroutineScope(Dispatchers.IO).launch {
+                    var appSize: String? = null
+                    try {
+                        appSize = getFileSize(bean.link)
+                    } catch (_: Exception) {
+                    } finally {
+                        withContext(Dispatchers.Main) {
+                            button.isEnabled = true
+                            val expLinkNextButtonBinding = ExpLinkNextButtonBinding.inflate(
+                                LayoutInflater.from(button.context), null, false
+                            )
+                            val TIMLinkDialog = MaterialAlertDialogBuilder(button.context)
+                                .setTitle("TIM ${bean.version}")
+                                .setIcon(R.drawable.link)
+                                .setMessage(
+                                    "${button.context.getString(R.string.downloadLink)}${bean.link}" + (if (appSize != null) "\n\n${
+                                        button.context.getString(R.string.fileSize)
+                                    }$appSize MB" else "")
+                                )
+                                .setView(expLinkNextButtonBinding.root)
+                                .show()
+
+                            expLinkNextButtonBinding.apply {
+                                expNextBtnCopy.setOnClickListener {
+                                    button.context.copyText(bean.link)
+                                    TIMLinkDialog.dismiss()
+                                }
+
+                                expNextBtnDownload.setOnClickListener {
+                                    TIMLinkDialog.dismiss()
+                                    downloadFile(button.context, bean.link)
+                                }
+
+                                expNextBtnShare.setOnClickListener {
+                                    TIMLinkDialog.dismiss()
+                                    val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                                        type = "text/plain"
+                                        putExtra(
+                                            Intent.EXTRA_TEXT,
+                                            "Android TIM ${bean.version} ${
+                                                button.context.getString(
+                                                    R.string.stableVersion
+                                                )
+                                            }" + (if (appSize != null) "（${
+                                                button.context.getString(R.string.fileSize)
+                                            }$appSize MB）" else "") + "\n\n${
+                                                button.context.getString(
+                                                    R.string.downloadLink
+                                                )
+                                            }${bean.link}"
+                                        )
+                                    }
+                                    button.context.startActivity(
+                                        Intent.createChooser(
+                                            shareIntent,
+                                            button.context.getString(R.string.shareTo)
+                                        )
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } else button.isVisible = false
     }
 
     private fun showDialog(context: Context, s: String) {
@@ -217,6 +308,22 @@ class TIMVersionAdapter :
                 ) else if (holder is ViewHolderDetail) bindVersionTCloud(
                     holder.binding.tvTimOldVersion, holder.context
                 )
+
+                "isShowKuiklyTag" -> if (holder is ViewHolder) {
+                    bindKuiklyTag(holder.binding.kuiklyTimTag, bean)
+                    bindDisplayInstall(
+                        holder.binding.tvTimInstall,
+                        holder.binding.tvTimInstallCard,
+                        bean
+                    )
+                } else if (holder is ViewHolderDetail) {
+                    bindKuiklyTag(holder.binding.kuiklyTimOldTag, bean)
+                    bindDisplayInstall(
+                        holder.binding.tvTimOldInstall,
+                        holder.binding.tvTimOldInstallCard,
+                        bean
+                    )
+                }
             }
         }
     }
@@ -228,6 +335,11 @@ class TIMVersionAdapter :
                 getVersionTCloudThickness =
                     DataStoreUtil.getStringKV("versionTCloudThickness", "System")
                 notifyItemRangeChanged(0, currentList.size, "isTCloud")
+            }
+
+            "isShowKuiklyTag" -> {
+                getShowKuiklyTag = DataStoreUtil.getBooleanKV("kuiklyTag", true)
+                notifyItemRangeChanged(0, currentList.size, "isShowKuiklyTag")
             }
         }
     }
