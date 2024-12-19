@@ -32,6 +32,7 @@ import com.xiaoniu.qqversionlist.data.QQVersionBean
 import com.xiaoniu.qqversionlist.data.TIMVersionBean
 import com.xiaoniu.qqversionlist.ui.MainActivity
 import com.xiaoniu.qqversionlist.util.StringUtil.getQua
+import com.xiaoniu.qqversionlist.util.StringUtil.jsonArrayToList
 import com.xiaoniu.qqversionlist.util.StringUtil.toPrettyFormat
 import kotlinx.serialization.json.Json
 import org.apache.maven.artifact.versioning.ComparableVersion
@@ -81,102 +82,36 @@ object VersionUtil {
     }
 
     fun resolveTIMRainbow(thisActivity: MainActivity, responseData: String) {
-        val start = (responseData.indexOf("var params= ")) + 12
-        val end = (responseData.indexOf(";\n" + "      typeof"))
-        val jsonString = responseData.substring(start, end)
         val gson = Gson()
-        val jsonData = gson.fromJson(jsonString, JsonObject::class.java)
+        val jsonData = gson.fromJson(responseData, JsonObject::class.java)
 
         thisActivity.timVersion = mutableListOf()
 
-        val download = jsonData.getAsJsonObject("app").getAsJsonObject("download")
-        val androidVersion = download.get("androidVersion").asString
-        val androidDatetime = download.get("androidDatetime").asString
-        val androidLink = download.get("androidLink").asString
+        val androidLink = jsonData.get("download_link").asJsonObject.get("android").asString
 
-        (thisActivity.timVersion as MutableList<TIMVersionBean>).add(
-            TIMVersionBean(
-                version = androidVersion,
-                datetime = androidDatetime,
-                fix = "",
-                new = "",
-                jsonString = gson.toJson(JsonObject().apply {
-                    addProperty("version", androidVersion)
-                    addProperty("datetime", androidDatetime)
-                    addProperty("fix", "")
-                    addProperty("new", "")
-                }).toString(),
-                displayInstall = (DataStoreUtil.getStringKV(
-                    "TIMVersionInstall", ""
-                ) == androidVersion),
-                isQQNTFramework = ComparableVersion(androidVersion) >= ComparableVersion(
-                    EARLIEST_QQNT_FRAMEWORK_TIM_VERSION_STABLE
-                ),
-                isKuiklyInside = ComparableVersion(androidVersion) >= ComparableVersion(
-                    EARLIEST_KUIKLY_FRAMEWORK_TIM_VERSION_STABLE
-                )
-            )
-        )
-
-        // 从 latest 项中获取 Android 版本
-        val latest = jsonData.getAsJsonObject("app").getAsJsonArray("latest")
-        latest.forEach { item ->
-            val platform = item.asJsonObject.get("platform").asString
-            if (platform == "Android") {
-                val version = item.asJsonObject.get("version").asString
-                val datetime = item.asJsonObject.get("datetime").asString
-                val fix = item.asJsonObject.get("fix").asString
-                val newFeature = item.asJsonObject.get("new").asString
-
-                (thisActivity.timVersion as MutableList<TIMVersionBean>).add(
-                    TIMVersionBean(
-                        version = version,
-                        datetime = datetime,
-                        fix = fix,
-                        new = newFeature,
-                        jsonString = gson.toJson(JsonObject().apply {
-                            addProperty("version", version)
-                            addProperty("datetime", datetime)
-                            addProperty("fix", fix)
-                            addProperty("new", newFeature)
-                        }).toString(),
-                        displayInstall = (DataStoreUtil.getStringKV(
-                            "TIMVersionInstall", ""
-                        ) == version),
-                        isQQNTFramework = ComparableVersion(version) >= ComparableVersion(
-                            EARLIEST_QQNT_FRAMEWORK_TIM_VERSION_STABLE
-                        ),
-                        isKuiklyInside = ComparableVersion(version) >= ComparableVersion(
-                            EARLIEST_KUIKLY_FRAMEWORK_TIM_VERSION_STABLE
-                        )
-                    )
-                )
-            }
-        }
-
-        // 从 history 项中获取 Android 版本
-        val history = jsonData.getAsJsonObject("app").getAsJsonArray("history")
+        // 从 `version_history` 项中获取 Android 版本
+        val history = jsonData.getAsJsonArray("version_history")
         history.forEach { versionItem ->
-            val version = versionItem.asJsonObject.get("version").asString
+            val version = versionItem.asJsonObject.get("version_code").asString
             val logs = versionItem.asJsonObject.getAsJsonArray("logs")
             logs.forEach { logItem ->
                 val platform = logItem.asJsonObject.get("platform").asString
-                if (platform == "Android") {
+                if (platform == "android") {
                     val datetime = logItem.asJsonObject.get("datetime").asString
-                    val fix = logItem.asJsonObject.get("fix").asString
-                    val newFeature = logItem.asJsonObject.get("new").asString
+                    val fix = logItem.asJsonObject.get("fix").asJsonArray
+                    val feature = logItem.asJsonObject.get("feature").asJsonArray
 
                     (thisActivity.timVersion as MutableList<TIMVersionBean>).add(
                         TIMVersionBean(
                             version = version,
                             datetime = datetime,
-                            fix = fix,
-                            new = newFeature,
+                            fix = jsonArrayToList(fix),
+                            feature = jsonArrayToList(feature),
                             jsonString = gson.toJson(JsonObject().apply {
-                                addProperty("version", version)
+                                addProperty("version_code", version)
                                 addProperty("datetime", datetime)
-                                addProperty("fix", fix)
-                                addProperty("new", newFeature)
+                                addProperty("fix", fix.toString())
+                                addProperty("feature", feature.toString())
                             }).toString(),
                             displayInstall = (DataStoreUtil.getStringKV(
                                 "TIMVersionInstall", ""
@@ -193,19 +128,12 @@ object VersionUtil {
             }
         }
 
-        // 去除重复的版本号
-        thisActivity.timVersion =
-            thisActivity.timVersion.distinctBy { it.jsonString.toPrettyFormat() }
-        if (thisActivity.timVersion[0].version == thisActivity.timVersion[1].version) (thisActivity.timVersion as MutableList<TIMVersionBean>).removeAt(
-            0
-        )
-
         thisActivity.timVersion[0].link = androidLink
         thisActivity.timVersion[0].jsonString = gson.toJson(JsonObject().apply {
-            addProperty("version", thisActivity.timVersion[0].version)
+            addProperty("version_code", thisActivity.timVersion[0].version)
             addProperty("datetime", thisActivity.timVersion[0].datetime)
-            addProperty("fix", thisActivity.timVersion[0].fix)
-            addProperty("new", thisActivity.timVersion[0].new)
+            addProperty("fix", thisActivity.timVersion[0].fix.toString())
+            addProperty("feature", thisActivity.timVersion[0].feature.toString())
             addProperty("link", androidLink)
         }).toString()
 

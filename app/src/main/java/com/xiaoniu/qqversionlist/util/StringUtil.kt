@@ -21,6 +21,7 @@ package com.xiaoniu.qqversionlist.util
 import android.content.Context
 import android.content.pm.PackageInfo
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.xiaoniu.qqversionlist.util.FileUtil.ZipFileCompat
 import com.xiaoniu.qqversionlist.util.InfoUtil.dialogError
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -188,5 +189,17 @@ object StringUtil {
             "textList" to textList.map { it.asString },
             "recentList" to recentList.map { it.asString }
         )
+    }
+
+    /**
+     * 将 JsonArray 对象转换为 List<String> 类型列表
+     *
+     * @param jsonArray 一个包含字符串的 JsonArray 对象
+     * @return 返回一个字符串列表，列表中的字符串是从 JsonArray 中解析出来的
+     */
+    fun jsonArrayToList(jsonArray: com.google.gson.JsonArray): List<String> {
+        val gson = Gson()
+        val listType = object : TypeToken<List<String>>() {}.type
+        return gson.fromJson(jsonArray.toString(), listType)
     }
 }
