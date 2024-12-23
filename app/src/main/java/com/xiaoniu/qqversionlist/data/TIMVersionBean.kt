@@ -24,7 +24,7 @@ import kotlinx.serialization.Serializable
  * @param version TIM 版本号
  * @param datetime TIM 版本发布日期
  * @param fix TIM 版本优化描述
- * @param new TIM 版本新功能描述
+ * @param feature TIM 版本新功能描述
  * @param link TIM 最新官网正式版下载链接
  * @param jsonString 该 TIM 版本 JSON 字符串详情
  * @param displayType 卡片展示类型，0 为收起态，1 为展开态
@@ -36,8 +36,8 @@ import kotlinx.serialization.Serializable
 data class TIMVersionBean(
     val version: String,
     val datetime: String,
-    val fix: String,
-    val new: String,
+    val fix: List<String>,
+    val feature: List<String>,
 
     var link: String = "",
     var jsonString: String = "",

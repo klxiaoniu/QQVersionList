@@ -1580,42 +1580,58 @@ class MainActivity : AppCompatActivity() {
                         withContext(Dispatchers.Main) { endProgress() }
                     }
                     try {
+                        // https://im.qq.com/rainbow/TIMDownload/ 已弃用
                         val okHttpClient = OkHttpClient()
-                        val request =
-                            Request.Builder().url("https://im.qq.com/rainbow/TIMDownload/")
+                        val preRequest =
+                            Request.Builder().url("https://tim.qq.com/support.html").build()
+                        val preResponse = okHttpClient.newCall(preRequest).execute()
+                        val htmlData = preResponse.body?.string()
+                        val regex =
+                            """jQuery\.ajax\(\{\s*url:\s*'([^']+)'\s*\}\)\.done\(function \(versionData\)""".toRegex()
+                        val matchResult = regex.find(htmlData!!)
+                        val match = matchResult?.groupValues?.getOrNull(1)
+                        if (match != null && (match.startsWith("https://") || match.startsWith("http://"))) {
+                            val request = Request.Builder()
+                                .url(match.replace("http://", "https://"))
                                 .build()
-                        val response = okHttpClient.newCall(request).execute()
-                        val responseData = response.body?.string()
-                        if (responseData != null) {
-                            VersionUtil.resolveTIMRainbow(this@MainActivity, responseData)
-                            withContext(Dispatchers.Main) {
-                                timVersionAdapter.submitList(timVersion)
-                                if (!DataStoreUtil.getBooleanKV("closeSwipeLeftForTIM", false)) {
-                                    class TipTIMSnackbarActionListener : View.OnClickListener {
-                                        override fun onClick(v: View?) {
-                                            DataStoreUtil.putBooleanKV("closeSwipeLeftForTIM", true)
+                            val response = okHttpClient.newCall(request).execute()
+                            val responseData = response.body?.string()
+                            if (responseData != null) {
+                                VersionUtil.resolveTIMRainbow(this@MainActivity, responseData)
+                                withContext(Dispatchers.Main) {
+                                    timVersionAdapter.submitList(timVersion)
+                                    if (!DataStoreUtil.getBooleanKV(
+                                            "closeSwipeLeftForTIM", false
+                                        )
+                                    ) {
+                                        class TipTIMSnackbarActionListener : View.OnClickListener {
+                                            override fun onClick(v: View?) {
+                                                DataStoreUtil.putBooleanKV(
+                                                    "closeSwipeLeftForTIM", true
+                                                )
+                                            }
                                         }
+
+                                        val isDarkTheme: Boolean =
+                                            when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
+                                                Configuration.UI_MODE_NIGHT_YES -> true
+                                                else -> false
+                                            }
+
+                                        Snackbar.make(
+                                            binding.root, R.string.swipeLeftForTIMVersions,
+                                            Snackbar.LENGTH_INDEFINITE
+                                        ).setAction(R.string.ok, TipTIMSnackbarActionListener())
+                                            .setAnchorView(binding.btnGuess)
+                                            .apply {
+                                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) if (isDarkTheme) setBackgroundTint(
+                                                    getColor(com.google.android.material.R.color.m3_sys_color_dynamic_dark_secondary)
+                                                ) else setBackgroundTint(getColor(com.google.android.material.R.color.m3_sys_color_dynamic_light_secondary))
+                                            }.show()
                                     }
-
-                                    val isDarkTheme: Boolean =
-                                        when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
-                                            Configuration.UI_MODE_NIGHT_YES -> true
-                                            else -> false
-                                        }
-
-                                    Snackbar.make(
-                                        binding.root, R.string.swipeLeftForTIMVersions,
-                                        Snackbar.LENGTH_INDEFINITE
-                                    ).setAction(R.string.ok, TipTIMSnackbarActionListener())
-                                        .setAnchorView(binding.btnGuess)
-                                        .apply {
-                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) if (isDarkTheme) setBackgroundTint(
-                                                getColor(com.google.android.material.R.color.m3_sys_color_dynamic_dark_secondary)
-                                            ) else setBackgroundTint(getColor(com.google.android.material.R.color.m3_sys_color_dynamic_light_secondary))
-                                        }.show()
                                 }
                             }
-                        }
+                        } else throw Exception("Can not get TIM version data.")
                     } catch (e: Exception) {
                         e.printStackTrace()
                         dialogError(e)

@@ -127,17 +127,18 @@ class TIMVersionAdapter :
             is ViewHolderDetail -> {
                 holder.binding.apply {
                     val fix = bean.fix
-                    val new = bean.new
+                    val new = bean.feature
                     tvTimOldVersion.text = bean.version
                     tvTimDetailVersion.text =
                         holder.itemView.context.getString(R.string.version) + bean.version
                     tvTimDetailDate.text =
                         holder.itemView.context.getString(R.string.releaseDateTIM) + bean.datetime
-                    if (fix == "" && new == "") tvTimDesc.isVisible = false
-                    else tvTimDesc.text = new.split("<br/>")
-                        .joinToString(separator = "\n") + (if (new != "") "\n" else "") + (if (fix != "") fix.split(
-                        "<br/>"
-                    ).joinToString(separator = "\n") else "")
+                    if (fix.isEmpty() && new.isEmpty()) tvTimDesc.isVisible = false
+                    else tvTimDesc.text = (if (new.isEmpty()) "" else new.joinToString(
+                        separator = "\n- ", prefix = "- "
+                    )) + (if (new.isEmpty()) "" else "\n") + fix.joinToString(
+                        separator = "\n- ", prefix = "- "
+                    )
                     bindDisplayInstall(tvTimOldInstall, tvTimOldInstallCard, bean)
                     bindVersionTCloud(tvTimOldVersion, holder.context)
                     bindAccessibilityTag(accessibilityTimOldTag, holder.context, bean)
