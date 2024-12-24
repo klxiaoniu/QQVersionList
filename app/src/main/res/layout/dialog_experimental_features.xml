@@ -43,29 +43,20 @@
             android:orientation="vertical"
             android:paddingBottom="20dp">
 
-            <TextView
+            <com.xiaoniu.qqversionlist.ui.components.cell.CellTopClick
+                android:layout_marginTop="8dp"
                 android:id="@+id/dialog_get_weixin_alpha_newest"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawablePadding="8dp"
-                android:gravity="center_vertical"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:text="@string/getWeixinAlphaLinkFromWeixinConfig"
-                android:textColor="?attr/colorOnSurface"
-                app:drawableEndCompat="@drawable/arrow_right_s_line" />
+                app:cellDescription="@string/getWeixinAlphaLinkFromWeixinConfigDesc"
+                app:cellTitle="@string/getWeixinAlphaLinkFromWeixinConfig" />
 
-            <TextView
+            <com.xiaoniu.qqversionlist.ui.components.cell.CellBottomClick
                 android:id="@+id/dialog_get_wetype_latest"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawablePadding="8dp"
-                android:gravity="center_vertical"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:text="@string/getWeTypeTestLinkFromWeTypeLatestChannel"
-                android:textColor="?attr/colorOnSurface"
-                app:drawableEndCompat="@drawable/arrow_right_s_line" />
+                app:cellDescription="@string/getWeTypeTestLinkFromWeTypeLatestChannelDesc"
+                app:cellTitle="@string/getWeTypeTestLinkFromWeTypeLatestChannel" />
 
             <TextView
                 android:id="@+id/dialog_tencent_app_store"

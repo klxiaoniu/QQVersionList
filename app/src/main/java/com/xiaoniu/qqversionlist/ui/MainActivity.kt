@@ -835,7 +835,7 @@ class MainActivity : AppCompatActivity() {
                             dialogExperimentalFeatures.dismiss()
                         }
 
-                        dialogGetWeixinAlphaNewest.setOnClickListener {
+                        dialogGetWeixinAlphaNewest.setCellOnClickListener {
                             progressIndicator.show()
                             CoroutineScope(Dispatchers.IO).launch {
                                 class CustomException(message: String) :
@@ -932,7 +932,7 @@ class MainActivity : AppCompatActivity() {
                             }
                         }
 
-                        dialogGetWetypeLatest.setOnClickListener {
+                        dialogGetWetypeLatest.setCellOnClickListener {
                             progressIndicator.show()
                             CoroutineScope(Dispatchers.IO).launch {
                                 class CustomException(message: String) :
@@ -1135,9 +1135,7 @@ class MainActivity : AppCompatActivity() {
 
                                     try {
                                         val spec = CircularProgressIndicatorSpec(
-                                            this@MainActivity,
-                                            null,
-                                            0,
+                                            this@MainActivity, null, 0,
                                             com.google.android.material.R.style.Widget_Material3_CircularProgressIndicator_ExtraSmall
                                         )
                                         val progressIndicatorDrawable =

@@ -184,7 +184,7 @@
     <string name="openSourceLicenseTitle">开放源代码许可</string>
     <string name="basedOnQQVer">基于 Android QQ %s 二次开发</string>
     <string name="getQidianLinkFromTencentAppStore">获取腾讯企点下载直链</string>
-    <string name="getWeixinAlphaLinkFromWeixinConfig">从腾讯服务器配置拉取微信最新测试版下载直链</string>
+    <string name="getWeixinAlphaLinkFromWeixinConfigDesc">从腾讯服务器配置拉取微信最新测试版下载直链</string>
     <string name="successInGetting">获取成功</string>
     <string name="getWeixinAlphaConfig404">似乎未成功访问腾讯服务器配置文件，可能是微信当前没有测试版或测试版已撤包。</string>
     <string name="getWeixinAlphaConfigLink404">似乎未成功访问此下载地址，可能是微信当前测试版已撤包。</string>
@@ -195,8 +195,10 @@
     <string name="hashIsTrue">杂凑值与 GitHub Releases 一致</string>
     <string name="hashIsFalse">您所使用的版本与 GitHub Releases 杂凑值不一致，为了您的安全，请尽快卸载当前版本应用并前往官方 GitHub Releases 下载此软件。</string>
     <string name="toGitHubRelease">前往下载</string>
-    <string name="getWeTypeTestLinkFromWeTypeLatestChannel">从微信输入法测试通道获取微信输入法最新下载直链</string>
+    <string name="getWeTypeTestLinkFromWeTypeLatestChannelDesc">从微信输入法测试通道获取微信输入法最新下载直链</string>
     <string name="getWeTypeLatestChannel404">未成功访问微信输入法服务器，请检查您的网络连接。</string>
     <string name="kuiklyTag">存在 TDS 腾讯端服务 Kuikly 开发框架</string>
     <string name="showKuiklyTag">版本卡片显示匹配的 TDS 腾讯端服务 Kuikly 开发框架标识</string>
+    <string name="getWeTypeTestLinkFromWeTypeLatestChannel">获取微信输入法测试版</string>
+    <string name="getWeixinAlphaLinkFromWeixinConfig">获取微信测试版</string>
 </resources>

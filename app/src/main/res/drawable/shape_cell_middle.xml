@@ -20,10 +20,10 @@
     <item>
         <shape>
             <corners
-                android:bottomLeftRadius="4dp"
-                android:bottomRightRadius="4dp"
-                android:topLeftRadius="4dp"
-                android:topRightRadius="4dp" />
+                android:bottomLeftRadius="6dp"
+                android:bottomRightRadius="6dp"
+                android:topLeftRadius="6dp"
+                android:topRightRadius="6dp" />
             <solid android:color="?attr/colorSurfaceVariant" />
         </shape>
     </item>

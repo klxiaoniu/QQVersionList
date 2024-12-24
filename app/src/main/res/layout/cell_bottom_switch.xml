@@ -19,19 +19,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginTop="3dp"
     android:background="@drawable/shape_cell_bottom"
     android:clickable="true"
     android:focusable="true"
     android:gravity="center_vertical"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:paddingStart="12dp"
+    android:paddingTop="8dp"
+    android:paddingEnd="12dp"
+    android:paddingBottom="8dp">
 
     <ImageView
         android:id="@+id/icon"
         android:layout_width="28dp"
         android:layout_height="28dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
         android:src="@drawable/apps_line"
         app:tint="?attr/colorPrimary" />
 
@@ -39,15 +41,13 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="6dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="6dp"
-        android:layout_marginBottom="8dp"
         android:layout_weight="1"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/title"
-            style="?attr/textAppearanceTitleMedium"
+            style="?attr/textAppearanceTitleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="我是标题"
@@ -66,8 +66,7 @@
         android:id="@+id/switchCompat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="12dp"
-        android:layout_marginBottom="8dp"
-        android:checked="false" />
+        android:checked="false"
+        android:clickable="false"
+        android:focusable="false" />
 </LinearLayout>

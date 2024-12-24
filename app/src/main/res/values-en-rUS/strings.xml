@@ -185,7 +185,7 @@
     <string name="openSourceLicenseTitle">Open Source Licenses</string>
     <string name="basedOnQQVer">Secondary Development Based on Android QQ %s</string>
     <string name="getQidianLinkFromTencentAppStore">Get Tencent Qidian Download Link</string>
-    <string name="getWeixinAlphaLinkFromWeixinConfig">Get the Newest Weixin Alpha Download Link from the Tencent Server Configuration</string>
+    <string name="getWeixinAlphaLinkFromWeixinConfigDesc">Get the Newest Weixin Alpha Download Link from the Tencent Server Configuration</string>
     <string name="successInGetting">Success in Getting</string>
     <string name="getWeixinAlphaConfig404">It seems that the Tencent server configuration file was not accessed successfully, possibly because there is no current alpha version of Weixin or the beta version has been removed.</string>
     <string name="getWeixinAlphaConfigLink404">It seems that the download address was not successfully accessed, possibly because the current Weixin alpha version has been removed.</string>
@@ -196,8 +196,10 @@
     <string name="hashIsTrue">Hash value matches GitHub Releases.</string>
     <string name="hashIsFalse">The hash value of the version you are using does not match the GitHub Releases. For your safety, please uninstall the current version of the application and download the software from the official GitHub Releases.</string>
     <string name="toGitHubRelease">Go to Download</string>
-    <string name="getWeTypeTestLinkFromWeTypeLatestChannel">Get the WeType Testing Download Link from the WeType Latest Channel</string>
+    <string name="getWeTypeTestLinkFromWeTypeLatestChannelDesc">Get the WeType Testing Download Link from the WeType Latest Channel</string>
     <string name="getWeTypeLatestChannel404">Failed to access the WeType server, please check your network connection.</string>
     <string name="kuiklyTag">Existence of Tencent Device-oriented Service (TDS) Kuikly Framework</string>
     <string name="showKuiklyTag">版本卡片显示匹配的 TDS 腾讯端服务 Kuikly 开发框架标识</string>
+    <string name="getWeTypeTestLinkFromWeTypeLatestChannel">Get WeType Testing Version</string>
+    <string name="getWeixinAlphaLinkFromWeixinConfig">Get Weixin Alpha Version</string>
 </resources>

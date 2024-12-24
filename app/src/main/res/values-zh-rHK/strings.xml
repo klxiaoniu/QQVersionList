@@ -185,7 +185,7 @@
     <string name="openSourceLicenseTitle">開放原始碼許可</string>
     <string name="basedOnQQVer">基於 Android QQ %s 二次開發</string>
     <string name="getQidianLinkFromTencentAppStore">取得騰訊企點下載直鏈</string>
-    <string name="getWeixinAlphaLinkFromWeixinConfig">從騰訊伺服器配置拉取微信最新測試版下載直鏈</string>
+    <string name="getWeixinAlphaLinkFromWeixinConfigDesc">從騰訊伺服器配置拉取微信最新測試版下載直鏈</string>
     <string name="successInGetting">取得成功</string>
     <string name="getWeixinAlphaConfig404">似乎未能成功訪問騰訊伺服器配置文件，可能是因為微信當前沒有測試版或測試版已撤回。</string>
     <string name="getWeixinAlphaConfigLink404">似乎未能成功訪問此下載地址，可能是因為微信當前測試版已撤回。</string>
@@ -196,8 +196,10 @@
     <string name="hashIsTrue">雜湊值與 GitHub Releases 一致</string>
     <string name="hashIsFalse">您所使用的版本與 GitHub Releases 雜湊值不一致，為了您的安全，請盡快卸載當前版本應用並前往官方 GitHub Releases 下載此軟件。</string>
     <string name="toGitHubRelease">前往下載</string>
-    <string name="getWeTypeTestLinkFromWeTypeLatestChannel">從微信輸入法測試管道獲取微信輸入法最新下載直鏈</string>
+    <string name="getWeTypeTestLinkFromWeTypeLatestChannelDesc">從微信輸入法測試管道獲取微信輸入法最新下載直鏈</string>
     <string name="getWeTypeLatestChannel404">未能成功訪問微信輸入法伺服器，請檢查您的網絡連接。</string>
     <string name="kuiklyTag">存在 TDS 腾訊端服務 Kuikly 開發框架</string>
     <string name="showKuiklyTag">版本卡片顯示匹配的 TDS 腾訊端服務 Kuikly 開發框架標識</string>
+    <string name="getWeTypeTestLinkFromWeTypeLatestChannel">取得微信輸入法測試版</string>
+    <string name="getWeixinAlphaLinkFromWeixinConfig">拉取微信測試版</string>
 </resources>

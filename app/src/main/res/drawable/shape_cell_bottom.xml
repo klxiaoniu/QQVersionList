@@ -22,8 +22,8 @@
             <corners
                 android:bottomLeftRadius="12dp"
                 android:bottomRightRadius="12dp"
-                android:topLeftRadius="4dp"
-                android:topRightRadius="4dp" />
+                android:topLeftRadius="6dp"
+                android:topRightRadius="6dp" />
             <solid android:color="?attr/colorSurfaceVariant" />
         </shape>
     </item>
