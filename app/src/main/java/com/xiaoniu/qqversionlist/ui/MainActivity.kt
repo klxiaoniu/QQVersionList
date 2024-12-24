@@ -812,10 +812,10 @@ class MainActivity : AppCompatActivity() {
                     val dialogExperimentalFeaturesBinding =
                         DialogExperimentalFeaturesBinding.inflate(layoutInflater)
 
-                    dialogExperimentalFeaturesBinding.dialogFirebase.setText(
+                    dialogExperimentalFeaturesBinding.dialogFirebase.setCellDescription(
                         if (GoogleApiAvailability.getInstance()
                                 .isGooglePlayServicesAvailable(this@MainActivity) == ConnectionResult.SUCCESS && Firebase.messaging.isAutoInitEnabled
-                        ) R.string.initializedFirebaseServiceItem else R.string.initFirebaseService
+                        ) getString(R.string.initializedFirebaseServiceItem) else null
                     )
 
                     val dialogExperimentalFeatures = MaterialAlertDialogBuilder(this)

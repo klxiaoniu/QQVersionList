@@ -19,14 +19,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="3dp"
-    android:layout_marginBottom="3dp"
+    android:layout_marginTop="2dp"
+    android:layout_marginBottom="2dp"
     android:background="@drawable/shape_cell_middle"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-
     android:paddingStart="12dp"
-    android:paddingTop="8dp"
+    android:paddingTop="9dp"
     android:paddingEnd="12dp"
     android:paddingBottom="8dp">
 

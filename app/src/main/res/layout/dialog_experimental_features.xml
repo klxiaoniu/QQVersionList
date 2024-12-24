@@ -58,41 +58,26 @@
                 app:cellDescription="@string/getWeTypeTestLinkFromWeTypeLatestChannelDesc"
                 app:cellTitle="@string/getWeTypeTestLinkFromWeTypeLatestChannel" />
 
-            <TextView
+            <com.xiaoniu.qqversionlist.ui.components.cell.CellTopClick
+                android:layout_marginTop="16dp"
                 android:id="@+id/dialog_tencent_app_store"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawablePadding="8dp"
-                android:gravity="center_vertical"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:text="@string/getUpdateFromTencentAppStore"
-                android:textColor="?attr/colorOnSurface"
-                app:drawableEndCompat="@drawable/arrow_right_s_line" />
+                app:cellTitle="@string/getUpdateFromTencentAppStore" />
 
-            <TextView
+            <com.xiaoniu.qqversionlist.ui.components.cell.CellBottomClick
                 android:id="@+id/dialog_shiply"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawablePadding="8dp"
-                android:gravity="center_vertical"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:text="@string/getUpdateFromTDSShiplyDistributionPlatform"
-                android:textColor="?attr/colorOnSurface"
-                app:drawableEndCompat="@drawable/arrow_right_s_line" />
+                app:cellTitle="@string/getUpdateFromTDSShiplyDistributionPlatform" />
 
-            <TextView
+            <com.xiaoniu.qqversionlist.ui.components.cell.CellSingleClick
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="14dp"
                 android:id="@+id/dialog_firebase"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawablePadding="8dp"
-                android:gravity="center_vertical"
-                android:paddingTop="8dp"
-                android:paddingBottom="16dp"
-                android:text="@string/initFirebaseService"
-                android:textColor="?attr/colorOnSurface"
-                app:drawableEndCompat="@drawable/arrow_right_s_line" />
+                app:cellTitle="@string/initFirebaseService" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_exp_ok"

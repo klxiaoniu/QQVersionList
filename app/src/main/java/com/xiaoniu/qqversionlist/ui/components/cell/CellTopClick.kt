@@ -65,4 +65,26 @@ class CellTopClick @JvmOverloads constructor(
     fun setCellOnClickListener(listener: (View) -> Unit) {
         onClick = listener
     }
+
+    fun setCellTitle(title: String) {
+        binding.title.text = title
+    }
+
+    fun setCellDescription(description: String?) {
+        if (description == null) binding.description.isVisible = false
+        else binding.description.apply {
+            isVisible = true
+            text = description
+        }
+
+    }
+
+    fun setCellIcon(iconResId: Int?) {
+        if (iconResId == null)
+            binding.icon.isVisible = false
+        else binding.icon.apply {
+            isVisible = true
+            setImageResource(iconResId)
+        }
+    }
 }
