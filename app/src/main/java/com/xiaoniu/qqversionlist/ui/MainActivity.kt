@@ -835,7 +835,7 @@ class MainActivity : AppCompatActivity() {
                             dialogExperimentalFeatures.dismiss()
                         }
 
-                        dialogGetWeixinAlphaNewest.setCellOnClickListener {
+                        dialogGetWeixinAlphaNewest.setOnClickListener {
                             progressIndicator.show()
                             CoroutineScope(Dispatchers.IO).launch {
                                 class CustomException(message: String) :
@@ -903,13 +903,9 @@ class MainActivity : AppCompatActivity() {
                                                     putExtra(
                                                         Intent.EXTRA_TEXT,
                                                         "Android 微信测试版 ${map["versionName"].toString()}" + (if (appSize != null) "（${
-                                                            getString(
-                                                                R.string.fileSize
-                                                            )
+                                                            getString(R.string.fileSize)
                                                         }$appSize MB）" else "") + "\n\n${
-                                                            getString(
-                                                                R.string.downloadLink
-                                                            )
+                                                            getString(R.string.downloadLink)
                                                         }${map["url"].toString()}\n\n鉴于微信测试版可能存在不可预知的稳定性问题，您在下载及使用该测试版本之前，必须明确并确保自身具备足够的风险识别和承受能力。"
                                                     )
                                                 }
@@ -932,7 +928,7 @@ class MainActivity : AppCompatActivity() {
                             }
                         }
 
-                        dialogGetWetypeLatest.setCellOnClickListener {
+                        dialogGetWetypeLatest.setOnClickListener {
                             progressIndicator.show()
                             CoroutineScope(Dispatchers.IO).launch {
                                 class CustomException(message: String) :
@@ -953,21 +949,15 @@ class MainActivity : AppCompatActivity() {
                                     val appSize = getFileSize(url.toString())
                                     runOnUiThread {
                                         val expLinkNextButtonBinding =
-                                            ExpLinkNextButtonBinding.inflate(
-                                                layoutInflater
-                                            )
+                                            ExpLinkNextButtonBinding.inflate(layoutInflater)
                                         val weTypeLatestChannelBackDialog =
                                             MaterialAlertDialogBuilder(this@MainActivity).setTitle(
                                                 if (appSize != null) R.string.successInGetting else R.string.suspectedPackageWithdrawal
                                             ).setIcon(R.drawable.flask_line).setMessage(
                                                 "${
-                                                    getString(
-                                                        R.string.downloadLink
-                                                    )
+                                                    getString(R.string.downloadLink)
                                                 }$url" + (if (appSize != null) "\n\n${
-                                                    getString(
-                                                        R.string.fileSize
-                                                    )
+                                                    getString(R.string.fileSize)
                                                 }$appSize MB" else "")
                                             ).setView(expLinkNextButtonBinding.root)
                                                 .show()
@@ -980,9 +970,7 @@ class MainActivity : AppCompatActivity() {
 
                                             expNextBtnDownload.setOnClickListener {
                                                 weTypeLatestChannelBackDialog.dismiss()
-                                                downloadFile(
-                                                    this@MainActivity, url.toString()
-                                                )
+                                                downloadFile(this@MainActivity, url.toString())
                                             }
 
                                             expNextBtnShare.setOnClickListener {

@@ -63,10 +63,6 @@ class CellTopSwitch @JvmOverloads constructor(
 
     var onClick: ((View) -> Unit)? = null
 
-    fun setCellOnClickListener(listener: (View) -> Unit) {
-        onClick = listener
-    }
-
     fun setSwitchChecked(checked: Boolean) {
         binding.switchCompat.isChecked = checked
     }

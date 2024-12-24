@@ -20,10 +20,8 @@ package com.xiaoniu.qqversionlist.ui.components.cell
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Rect
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
@@ -63,10 +61,6 @@ class CellBottomClick @JvmOverloads constructor(
     }
 
     var onClick: ((View) -> Unit)? = null
-
-    fun setCellOnClickListener(listener: (View) -> Unit) {
-        onClick = listener
-    }
 
     fun setCellTitle(title: String) {
         binding.title.text = title

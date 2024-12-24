@@ -63,10 +63,6 @@ class CellBottomSwitch @JvmOverloads constructor(
 
     var onClick: ((View) -> Unit)? = null
 
-    fun setCellOnClickListener(listener: (View) -> Unit) {
-        onClick = listener
-    }
-
     fun setCellTitle(title: String) {
         binding.title.text = title
     }
