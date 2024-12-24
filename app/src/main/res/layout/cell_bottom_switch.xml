@@ -21,8 +21,6 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="3dp"
     android:background="@drawable/shape_cell_bottom"
-    android:clickable="true"
-    android:focusable="true"
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:paddingStart="12dp"
