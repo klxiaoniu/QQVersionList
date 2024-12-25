@@ -64,7 +64,7 @@
     <string name="sourceJSON">源 JSON</string>
     <string name="recommendations">建議的內容</string>
     <string name="longPressTheVersionCardToViewSourceDetails">長按版本卡片查看源詳情</string>
-    <string name="useTheSystemDownloadManagerToTakeOverTheDownloadIntent">使用系統下載管理器接管下載意圖</string>
+    <string name="useTheSystemDownloadManagerToTakeOverTheDownloadIntent">使用系統下載管理器</string>
     <string name="removeMultiplesOf5ForQQPreviewVersions">解除 QQ 測試版掃版小版本號遵循 5 的倍數限制</string>
     <string name="longPressToViewSourceDetailsIsDisabled">未開啟長按查看源詳情功能，請前往設定開啟</string>
     <string name="currentSizeVsLargestHistoricalPackage">占比歷史最大包（%s）：</string>
@@ -135,7 +135,7 @@
     <string name="updateQVTAvailable">更新可用</string>
     <string name="copyLink">複製連結</string>
     <string name="unrealEngineTag">內建虛幻引擎</string>
-    <string name="autoCheckForUpdates">啟動時自動使用 GitHub REST API 檢查更新</string>
+    <string name="autoCheckForUpdates">啟動時檢查更新</string>
     <string name="useQQ8958Test">使用 QQ 8.9.58 測試版直鏈格式</string>
     <string name="ciVersionNoSupportUpdates">CI 构建版本不支援檢查更新</string>
     <string name="showUnrealEngineTag">版本卡片顯示匹配的虛幻引擎標誌</string>
@@ -168,7 +168,7 @@
     <string name="continueKey">繼續</string>
     <string name="initializedFirebaseService">Firebase 服務已初始化，無法撤銷</string>
     <string name="cannotEnableFirebaseCloudMessaging">接收版本列表更新通知提醒必須打開系統通知權限，否則無法接收版本列表更新提醒。</string>
-    <string name="pushSystemNotificationsWhenVersionListUpdates">版本列表更新時推送系統通知（通過 Firebase 雲訊息傳遞）</string>
+    <string name="pushSystemNotificationsWhenVersionListUpdates">版本列表更新時推送系統通知</string>
     <string name="unsubscribeTimeout">取消訂閱超時</string>
     <string name="unsubscribeSuccess">取消訂閱成功</string>
     <string name="unsubscribeFailed">取消訂閱失敗</string>
@@ -202,4 +202,6 @@
     <string name="showKuiklyTag">版本卡片顯示匹配的 TDS 腾訊端服務 Kuikly 開發框架標識</string>
     <string name="getWeTypeTestLinkFromWeTypeLatestChannel">取得微信輸入法測試版</string>
     <string name="getWeixinAlphaLinkFromWeixinConfig">拉取微信測試版</string>
+    <string name="autoCheckForUpdatesDesc">每次啟動時將通過 GitHub REST API 檢查一次更新</string>
+    <string name="useTheSystemDownloadManagerToTakeOverTheDownloadIntentDesc">啟用後，軟件全局觸發下載意圖時將不再打開瀏覽器</string>
 </resources>

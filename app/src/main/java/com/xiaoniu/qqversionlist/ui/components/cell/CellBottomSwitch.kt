@@ -56,7 +56,6 @@ class CellBottomSwitch @JvmOverloads constructor(
         } else binding.description.isVisible = false
 
         setOnClickListener { v ->
-            performClick()
             onClick?.invoke(v)
         }
     }

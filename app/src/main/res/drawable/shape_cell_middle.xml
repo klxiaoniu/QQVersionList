@@ -20,7 +20,7 @@
     <item>
         <shape>
             <corners android:radius="6dp" />
-            <solid android:color="?attr/colorSurfaceVariant" />
+            <solid android:color="?attr/colorSurfaceBright" />
         </shape>
     </item>
 </ripple>

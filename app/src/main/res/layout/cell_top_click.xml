@@ -26,12 +26,12 @@
     android:paddingStart="12dp"
     android:paddingTop="12dp"
     android:paddingEnd="12dp"
-    android:paddingBottom="9dp">
+    android:paddingBottom="10dp">
 
     <ImageView
         android:id="@+id/icon"
-        android:layout_width="28dp"
-        android:layout_height="28dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:src="@drawable/apps_line"
         app:tint="?attr/colorPrimary" />
 

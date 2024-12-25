@@ -64,7 +64,7 @@
     <string name="sourceJSON">Source JSON</string>
     <string name="recommendations">Recommendations</string>
     <string name="longPressTheVersionCardToViewSourceDetails">Long press the version card to view source details</string>
-    <string name="useTheSystemDownloadManagerToTakeOverTheDownloadIntent">Use the system download manager to take over the download intent</string>
+    <string name="useTheSystemDownloadManagerToTakeOverTheDownloadIntent">Use system download manager</string>
     <string name="removeMultiplesOf5ForQQPreviewVersions">Remove the restriction of adhering to multiples of 5 when enumerating minor version numbers for QQ preview versions</string>
     <string name="longPressToViewSourceDetailsIsDisabled">Long press to view source details is disabled. Please go to settings to turn it on.</string>
     <string name="currentSizeVsLargestHistoricalPackage">Current Size VS Largest Historical Package(%s):&#160;</string>
@@ -135,7 +135,7 @@
     <string name="updateQVTAvailable">Update Available</string>
     <string name="copyLink">Copy Link</string>
     <string name="unrealEngineTag">Unreal® Engine Inside</string>
-    <string name="autoCheckForUpdates">Auto-check Updates With GitHub REST API on Startup</string>
+    <string name="autoCheckForUpdates">Check for Updates on Startup</string>
     <string name="useQQ8958Test">Use QQ 8.9.58 Test Version Link Format</string>
     <string name="ciVersionNoSupportUpdates">CI Build No Support Update Check</string>
     <string name="showUnrealEngineTag">Version card displays matching Unreal® Engine logo</string>
@@ -168,7 +168,7 @@
     <string name="continueKey">Continue</string>
     <string name="initializedFirebaseService">Firebase services has been initialized and cannot be reversed.</string>
     <string name="cannotEnableFirebaseCloudMessaging">To receive notifications for version list updates, system notification permissions must be enabled; otherwise, you will not be able to receive version list update notifications.</string>
-    <string name="pushSystemNotificationsWhenVersionListUpdates">Push system notifications when the version list is updated (via Firebase Cloud Messaging)</string>
+    <string name="pushSystemNotificationsWhenVersionListUpdates">Push system notifications when the version list is updated</string>
     <string name="unsubscribeTimeout">Unsubscribing Timeout</string>
     <string name="unsubscribeSuccess">Unsubscribing Success</string>
     <string name="unsubscribeFailed">Unsubscribing Failed</string>
@@ -202,4 +202,6 @@
     <string name="showKuiklyTag">版本卡片显示匹配的 TDS 腾讯端服务 Kuikly 开发框架标识</string>
     <string name="getWeTypeTestLinkFromWeTypeLatestChannel">Get WeType Testing Version</string>
     <string name="getWeixinAlphaLinkFromWeixinConfig">Get Weixin Alpha Version</string>
+    <string name="autoCheckForUpdatesDesc">On each startup, an update check will be performed using the GitHub REST API.</string>
+    <string name="useTheSystemDownloadManagerToTakeOverTheDownloadIntentDesc">When enabled, the software will no longer open the browser when a global download intent is triggered.</string>
 </resources>

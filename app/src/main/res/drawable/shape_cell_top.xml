@@ -24,7 +24,7 @@
                 android:bottomRightRadius="6dp"
                 android:topLeftRadius="12dp"
                 android:topRightRadius="12dp" />
-            <solid android:color="?attr/colorSurfaceVariant" />
+            <solid android:color="?attr/colorSurfaceBright" />
         </shape>
     </item>
 </ripple>
