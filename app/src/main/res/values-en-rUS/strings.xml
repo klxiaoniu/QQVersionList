@@ -100,8 +100,8 @@
     <string name="uinHelpText">Enter the target QQ account number, used for requesting the Shiply Platform.</string>
     <string name="shiplyWarning">Tencent QQ/TIM utilizes the Tencent Device-oriented Service (TDS) Shiply Containing and Distributing Platform to distribute limited-scale gray testing packages based on the QQ account number (uin) and its terminal information. This feature does not guarantee successful retrieval of update data with each request; failure to obtain update data indicates that the entered parameters fall outside the recognized and distributed scope of the Shiply Platform. The Qverbow Util makes no warranty regarding the reliability of this feature or any consequences thereof. Please ensure that you have a clear understanding and sufficient capability to bear the associated risks.</string>
     <string name="defaultDisplayOfFirstListItemDetails">Default display of first version list item details</string>
-    <string name="versionNumberFontUsesTCloudNumber">Version number font uses TCloudNumber</string>
-    <string name="versionCardsDisplaysPackageSizeIndicator">QQ version cards displays the ratio of current package size to the historical maximum package size indicator</string>
+    <string name="versionNumberFontUsesTCloudNumber">Uses TCloudNumber font</string>
+    <string name="versionCardsDisplaysPackageSizeIndicator">Display the ratio of current package size to the historical maximum package size indicator</string>
     <string name="customVersionEnumSuffix">Custom Version Enum. Suffix</string>
     <string name="customVersionEnumSuffixHelpText">Please separate using \&quot;, \&quot; (comma + space).</string>
     <string name="facilitateI18n">Facilitate I18n:&#160;</string>
@@ -138,7 +138,7 @@
     <string name="autoCheckForUpdates">Check for Updates on Startup</string>
     <string name="useQQ8958Test">Use QQ 8.9.58 Test Version Link Format</string>
     <string name="ciVersionNoSupportUpdates">CI Build No Support Update Check</string>
-    <string name="showUnrealEngineTag">Version card displays matching Unreal® Engine logo</string>
+    <string name="showUnrealEngineTag">Display Unreal® Engine logo</string>
     <string name="suffixSetting">Suffix Settings</string>
     <string name="others">Others</string>
     <string name="ok">OK</string>
@@ -153,7 +153,7 @@
     <string name="getWeTypeLinkFromTencentAppStore">Get WeType Download Link</string>
     <string name="tencentAppStoreWarning">腾讯应用宝更新获取功能为 QQ 版本列表实用工具附带的实验性功能，可能存在不可预知的稳定性问题。请明确并确保自身具备足够的风险识别和承受能力。</string>
     <string name="showOldLoading">扫版对话框使用旧版加载动画</string>
-    <string name="versionCardsDisplaysPackageSizeText">QQ 版本卡片展示额定包大小占比历史最大包百分比</string>
+    <string name="versionCardsDisplaysPackageSizeText">展示额定包大小占比历史最大包百分比</string>
     <string name="timVersion">TIM</string>
     <string name="enumTIMWarning">The enumerating TIM versions function is an experimental feature included in Qverbow Util, which may have unpredictable stability issues. Please clearly understand and ensure that you have sufficient capability to identify and bear the risks.</string>
     <string name="useQQ9008_14600Test">扫版类型添加 QQ 9.0.8.14600 空格直链格式</string>
@@ -199,9 +199,14 @@
     <string name="getWeTypeTestLinkFromWeTypeLatestChannelDesc">Get the WeType Testing Download Link from the WeType Latest Channel</string>
     <string name="getWeTypeLatestChannel404">Failed to access the WeType server, please check your network connection.</string>
     <string name="kuiklyTag">Existence of Tencent Device-oriented Service (TDS) Kuikly Framework</string>
-    <string name="showKuiklyTag">版本卡片显示匹配的 TDS 腾讯端服务 Kuikly 开发框架标识</string>
+    <string name="showKuiklyTag">显示 Kuikly 开发框架标识</string>
     <string name="getWeTypeTestLinkFromWeTypeLatestChannel">Get WeType Testing Version</string>
     <string name="getWeixinAlphaLinkFromWeixinConfig">Get Weixin Alpha Version</string>
     <string name="autoCheckForUpdatesDesc">On each startup, an update check will be performed using the GitHub REST API.</string>
     <string name="useTheSystemDownloadManagerToTakeOverTheDownloadIntentDesc">When enabled, the software will no longer open the browser when a global download intent is triggered.</string>
+    <string name="showKuiklyTagDesc">Kuikly 跨端开发框架通过自研 KMP 逻辑与终端界面原生控件渲染映射协议层，和其声明式与响应式设计，可为开发者提供原生高效的 Android 开发体验和原生性能的跨平台应用开发能力。</string>
+    <string name="versionCardsDisplaysPackageSizeDesc">Applicable only to QQ version cards.</string>
+    <string name="aboutVersionCards">Version List and Cards</string>
+    <string name="showUnrealEngineTagDesc">The built-in status of Unreal® Engine is determined based on the official QQ release version.</string>
+    <string name="general">General</string>
 </resources>

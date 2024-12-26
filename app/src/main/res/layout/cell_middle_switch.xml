@@ -58,6 +58,7 @@
             style="?attr/textAppearanceBodySmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
             android:text="我是长文本描述占位符我是长文本描述占位符我是长文本描述占位符我是长文本描述占位符我是长文本描述占位符"
             android:textColor="?attr/colorOnSurfaceVariant" />
     </LinearLayout>

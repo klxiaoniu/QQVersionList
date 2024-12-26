@@ -469,22 +469,22 @@ class MainActivity : AppCompatActivity() {
                                 .show()
 
                             dialogPersonalization.apply {
-                                switchDisplayFirst.isChecked =
+                                switchDisplayFirst.switchChecked =
                                     DataStoreUtil.getBooleanKV("displayFirst", true)
-                                switchKuiklyTag.isChecked =
+                                switchKuiklyTag.switchChecked =
                                     DataStoreUtil.getBooleanKV("kuiklyTag", true)
-                                switchUnrealEngineTag.isChecked =
+                                switchUnrealEngineTag.switchChecked =
                                     DataStoreUtil.getBooleanKV("unrealEngineTag", false)
-                                switchProgressSize.isChecked =
+                                switchProgressSize.switchChecked =
                                     DataStoreUtil.getBooleanKV("progressSize", false)
-                                switchProgressSizeText.isChecked =
+                                switchProgressSizeText.switchChecked =
                                     DataStoreUtil.getBooleanKV("progressSizeText", false)
-                                switchVersionTcloud.isChecked =
+                                switchVersionTcloud.switchChecked =
                                     DataStoreUtil.getBooleanKV("versionTCloud", true)
-                                switchOldLoading.isChecked =
+                                switchOldLoading.switchChecked =
                                     DataStoreUtil.getBooleanKV("showOldLoading", false)
 
-                                switchDisplayFirst.setOnCheckedChangeListener { _, isChecked ->
+                                switchDisplayFirst.setOnCheckedChangeListener { isChecked ->
                                     DataStoreUtil.putBooleanKVAsync("displayFirst", isChecked)
                                     qqVersion = qqVersion.mapIndexed { index, qqVersionBean ->
                                         if (index == 0) qqVersionBean.copy(
@@ -502,29 +502,29 @@ class MainActivity : AppCompatActivity() {
                                     timVersionAdapter.submitList(timVersion)
                                 }
 
-                                switchOldLoading.setOnCheckedChangeListener { _, isChecked ->
+                                switchOldLoading.setOnCheckedChangeListener { isChecked ->
                                     DataStoreUtil.putBooleanKVAsync("showOldLoading", isChecked)
                                 }
 
                                 // 下五个设置不能异步持久化存储，否则视图更新读不到更新值
-                                switchKuiklyTag.setOnCheckedChangeListener { _, isChecked ->
+                                switchKuiklyTag.setOnCheckedChangeListener { isChecked ->
                                     DataStoreUtil.putBooleanKV("kuiklyTag", isChecked)
                                     qqVersionAdapter.updateItemProperty("isShowKuiklyTag")
                                     timVersionAdapter.updateItemProperty("isShowKuiklyTag")
                                 }
-                                switchUnrealEngineTag.setOnCheckedChangeListener { _, isChecked ->
+                                switchUnrealEngineTag.setOnCheckedChangeListener { isChecked ->
                                     DataStoreUtil.putBooleanKV("unrealEngineTag", isChecked)
                                     qqVersionAdapter.updateItemProperty("isShowUnrealEngineTag")
                                 }
-                                switchProgressSize.setOnCheckedChangeListener { _, isChecked ->
+                                switchProgressSize.setOnCheckedChangeListener { isChecked ->
                                     DataStoreUtil.putBooleanKV("progressSize", isChecked)
                                     qqVersionAdapter.updateItemProperty("isShowProgressSize")
                                 }
-                                switchProgressSizeText.setOnCheckedChangeListener { _, isChecked ->
+                                switchProgressSizeText.setOnCheckedChangeListener { isChecked ->
                                     DataStoreUtil.putBooleanKV("progressSizeText", isChecked)
                                     qqVersionAdapter.updateItemProperty("isShowProgressSizeText")
                                 }
-                                switchVersionTcloud.setOnCheckedChangeListener { _, isChecked ->
+                                switchVersionTcloud.setOnCheckedChangeListener { isChecked ->
                                     DataStoreUtil.putBooleanKV("versionTCloud", isChecked)
                                     dialogPersonalization.versionTcloudThickness.setEnabled(
                                         isChecked

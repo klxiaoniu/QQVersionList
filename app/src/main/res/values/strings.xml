@@ -98,9 +98,9 @@
     <string name="shiplyVersionHelpText">填写用于请求 Shiply 平台的 Android QQ/TIM 版本号</string>
     <string name="uinHelpText">填写用于请求 Shiply 平台的对象 QQ 号</string>
     <string name="shiplyWarning">腾讯 QQ/TIM 使用 TDS 腾讯端服务 Shiply 容器与发布平台，根据 QQ 号（uin）及其终端信息分发小范围灰度测试安装包。此功能并非每次请求都能成功获取到更新数据，无法获取更新数据则表示填写的参数不在 Shiply 平台认可与分发范围内。QQ 版本列表实用工具不对此功能及其任何后果作出任何可靠性保证。请明确并确保自身具备足够的风险识别和承受能力。</string>
-    <string name="defaultDisplayOfFirstListItemDetails">版本列表首项卡片默认显示详情</string>
-    <string name="versionNumberFontUsesTCloudNumber">版本号字体使用 TCloudNumber</string>
-    <string name="versionCardsDisplaysPackageSizeIndicator">QQ 版本卡片展示额定包大小占比历史最大包指示条</string>
+    <string name="defaultDisplayOfFirstListItemDetails">首项卡片默认显示详情</string>
+    <string name="versionNumberFontUsesTCloudNumber">使用 TCloudNumber 字体</string>
+    <string name="versionCardsDisplaysPackageSizeIndicator">展示额定包大小占比历史最大包指示条</string>
     <string name="customVersionEnumSuffix">自定义扫版后缀</string>
     <string name="customVersionEnumSuffixHelpText">请使用“, ”（西文逗号+空格）分割</string>
     <string name="facilitateI18n">协助翻译：</string>
@@ -137,7 +137,7 @@
     <string name="autoCheckForUpdates">启动时检查更新</string>
     <string name="useQQ8958Test">使用 QQ 8.9.58 测试版直链格式</string>
     <string name="ciVersionNoSupportUpdates">CI 构建版本不支持检查更新</string>
-    <string name="showUnrealEngineTag">版本卡片显示匹配的虚幻引擎标识</string>
+    <string name="showUnrealEngineTag">显示虚幻引擎标识</string>
     <string name="suffixSetting">后缀设置</string>
     <string name="others">其它</string>
     <string name="ok">好</string>
@@ -152,7 +152,7 @@
     <string name="getWeTypeLinkFromTencentAppStore">获取微信输入法下载直链</string>
     <string name="tencentAppStoreWarning">腾讯应用宝更新获取功能为 QQ 版本列表实用工具附带的实验性功能，可能存在不可预知的稳定性问题。请明确并确保自身具备足够的风险识别和承受能力。</string>
     <string name="showOldLoading">扫版对话框使用旧版加载动画</string>
-    <string name="versionCardsDisplaysPackageSizeText">QQ 版本卡片展示额定包大小占比历史最大包百分比</string>
+    <string name="versionCardsDisplaysPackageSizeText">展示额定包大小占比历史最大包百分比</string>
     <string name="timVersion">TIM 扫版</string>
     <string name="enumTIMWarning">TIM 扫版功能为 QQ 版本列表实用工具附带的实验性功能，可能存在不可预知的稳定性问题。请明确并确保自身具备足够的风险识别和承受能力。</string>
     <string name="useQQ9008_14600Test">扫版类型添加 QQ 9.0.8.14600 空格直链格式</string>
@@ -198,9 +198,14 @@
     <string name="getWeTypeTestLinkFromWeTypeLatestChannelDesc">从微信输入法测试通道获取微信输入法最新下载直链</string>
     <string name="getWeTypeLatestChannel404">未成功访问微信输入法服务器，请检查您的网络连接。</string>
     <string name="kuiklyTag">存在 TDS 腾讯端服务 Kuikly 开发框架</string>
-    <string name="showKuiklyTag">版本卡片显示匹配的 TDS 腾讯端服务 Kuikly 开发框架标识</string>
+    <string name="showKuiklyTag">显示 Kuikly 开发框架标识</string>
     <string name="getWeTypeTestLinkFromWeTypeLatestChannel">获取微信输入法测试版</string>
     <string name="getWeixinAlphaLinkFromWeixinConfig">获取微信测试版</string>
     <string name="autoCheckForUpdatesDesc">每次启动时将通过 GitHub REST API 检查一次更新</string>
     <string name="useTheSystemDownloadManagerToTakeOverTheDownloadIntentDesc">开启后，软件全局触发下载意图时将不再打开浏览器</string>
+    <string name="showKuiklyTagDesc">Kuikly 跨端开发框架通过自研 KMP 逻辑与终端界面原生控件渲染映射协议层，和其声明式与响应式设计，可为开发者提供原生高效的 Android 开发体验和原生性能的跨平台应用开发能力。</string>
+    <string name="versionCardsDisplaysPackageSizeDesc">仅对 QQ 版本卡片生效</string>
+    <string name="aboutVersionCards">版本列表与卡片</string>
+    <string name="showUnrealEngineTagDesc">虚幻引擎内置情况以 QQ 正式版为判断来源</string>
+    <string name="general">通用</string>
 </resources>
