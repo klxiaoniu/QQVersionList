@@ -34,6 +34,7 @@ class CellBottomSwitch @JvmOverloads constructor(
 ) : LinearLayout(context, attrs, defStyleAttr) {
     private val binding: CellBottomSwitchBinding =
         CellBottomSwitchBinding.inflate(LayoutInflater.from(context), this, true)
+    private var onCheckedChangeListener: ((Boolean) -> Unit)? = null
 
     init {
         val a = context.obtainStyledAttributes(attrs, R.styleable.Cell, defStyleAttr, 0)
@@ -56,6 +57,7 @@ class CellBottomSwitch @JvmOverloads constructor(
         } else binding.description.isVisible = false
 
         setOnClickListener { v ->
+            toggleSwitch()
             onClick?.invoke(v)
         }
     }
@@ -84,19 +86,28 @@ class CellBottomSwitch @JvmOverloads constructor(
         }
     }
 
-    fun setSwitchChecked(checked: Boolean) {
-        binding.switchCompat.isChecked = checked
+    var switchChecked: Boolean
+        get() = binding.switchCompat.isChecked
+        set(value) {
+            binding.switchCompat.isChecked = value
+        }
+
+    var switchEnabled: Boolean
+        get() = binding.switchCompat.isEnabled
+        set(value) {
+            binding.switchCompat.isEnabled = value
+        }
+
+    fun setOnCheckedChangeListener(listener: (Boolean) -> Unit) {
+        onCheckedChangeListener = listener
     }
 
-    fun setSwitchEnabled(enabled: Boolean) {
-        binding.switchCompat.isEnabled = enabled
-    }
-
-    fun getSwitchChecked(): Boolean {
-        return binding.switchCompat.isChecked
-    }
-
-    fun getSwitchEnabled(): Boolean {
-        return binding.switchCompat.isEnabled
+    private fun toggleSwitch() {
+        val isChecked = !binding.switchCompat.isChecked
+        val isEnabled = binding.switchCompat.isEnabled
+        if (isEnabled) {
+            binding.switchCompat.isChecked = isChecked
+            onCheckedChangeListener?.invoke(isChecked)
+        }
     }
 }

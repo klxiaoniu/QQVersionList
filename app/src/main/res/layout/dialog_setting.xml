@@ -37,6 +37,7 @@
             android:paddingBottom="20dp">
 
             <com.xiaoniu.qqversionlist.ui.components.cell.CellTopSwitch
+                android:id="@+id/long_press_card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
@@ -44,6 +45,7 @@
                 app:cellTitle="@string/longPressTheVersionCardToViewSourceDetails" />
 
             <com.xiaoniu.qqversionlist.ui.components.cell.CellMiddleSwitch
+                android:id="@+id/download_on_system_manager"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cellDescription="@string/useTheSystemDownloadManagerToTakeOverTheDownloadIntentDesc"
@@ -58,6 +60,7 @@
                 app:cellTitle="@string/personalization" />
 
             <com.xiaoniu.qqversionlist.ui.components.cell.CellTopSwitch
+                android:id="@+id/switch_guess_test_extend"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -70,6 +73,7 @@
                 app:cellTitle="@string/enumerateVersionsFormatSetting" />
 
             <com.xiaoniu.qqversionlist.ui.components.cell.CellSingleSwitch
+                android:id="@+id/switch_auto_check_updates"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -77,6 +81,7 @@
                 app:cellTitle="@string/autoCheckForUpdates" />
 
             <com.xiaoniu.qqversionlist.ui.components.cell.CellSingleSwitch
+                android:id="@+id/switch_push_notif_via_fcm"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -84,65 +89,18 @@
                 app:cellTitle="@string/pushSystemNotificationsWhenVersionListUpdates" />
 
             <com.xiaoniu.qqversionlist.ui.components.cell.CellSingleSwitch
+                android:id="@+id/guess_not_5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 app:cellTitle="@string/removeMultiplesOf5ForQQPreviewVersions" />
-
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/long_press_card"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:paddingTop="16dp"
-                android:text="@string/longPressTheVersionCardToViewSourceDetails" />
-
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/download_on_system_manager"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:text="@string/useTheSystemDownloadManagerToTakeOverTheDownloadIntent" />
-
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/switch_guess_test_extend"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:text="@string/extendTheSuffixForDirectDownloadLinksOfEnumeratedPreviewVersions" />
-
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/switch_auto_check_updates"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:text="@string/autoCheckForUpdates" />
-
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/switch_push_notif_via_fcm"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:text="@string/pushSystemNotificationsWhenVersionListUpdates" />
-
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/guess_not_5"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="8dp"
-                android:paddingBottom="16dp"
-                android:text="@string/removeMultiplesOf5ForQQPreviewVersions" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_setting_ok"
                 style="@style/Widget.Material3.Button.TonalButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="14dp"
                 android:text="@string/done" />
         </LinearLayout>
     </ScrollView>

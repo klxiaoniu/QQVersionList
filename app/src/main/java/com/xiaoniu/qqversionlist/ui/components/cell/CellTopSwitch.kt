@@ -34,6 +34,7 @@ class CellTopSwitch @JvmOverloads constructor(
 ) : LinearLayout(context, attrs, defStyleAttr) {
     private val binding: CellTopSwitchBinding =
         CellTopSwitchBinding.inflate(LayoutInflater.from(context), this, true)
+    private var onCheckedChangeListener: ((Boolean) -> Unit)? = null
 
     init {
         val a = context.obtainStyledAttributes(attrs, R.styleable.Cell, defStyleAttr, 0)
@@ -56,27 +57,12 @@ class CellTopSwitch @JvmOverloads constructor(
         } else binding.description.isVisible = false
 
         setOnClickListener { v ->
+            toggleSwitch()
             onClick?.invoke(v)
         }
     }
 
     var onClick: ((View) -> Unit)? = null
-
-    fun setSwitchChecked(checked: Boolean) {
-        binding.switchCompat.isChecked = checked
-    }
-
-    fun setSwitchEnabled(enabled: Boolean) {
-        binding.switchCompat.isEnabled = enabled
-    }
-
-    fun getSwitchChecked(): Boolean {
-        return binding.switchCompat.isChecked
-    }
-
-    fun getSwitchEnabled(): Boolean {
-        return binding.switchCompat.isEnabled
-    }
 
     fun setCellTitle(title: String) {
         binding.title.text = title
@@ -97,6 +83,31 @@ class CellTopSwitch @JvmOverloads constructor(
         else binding.icon.apply {
             isVisible = true
             setImageResource(iconResId)
+        }
+    }
+
+    var switchChecked: Boolean
+        get() = binding.switchCompat.isChecked
+        set(value) {
+            binding.switchCompat.isChecked = value
+        }
+
+    var switchEnabled: Boolean
+        get() = binding.switchCompat.isEnabled
+        set(value) {
+            binding.switchCompat.isEnabled = value
+        }
+
+    fun setOnCheckedChangeListener(listener: (Boolean) -> Unit) {
+        onCheckedChangeListener = listener
+    }
+
+    private fun toggleSwitch() {
+        val isChecked = !binding.switchCompat.isChecked
+        val isEnabled = binding.switchCompat.isEnabled
+        if (isEnabled) {
+            binding.switchCompat.isChecked = isChecked
+            onCheckedChangeListener?.invoke(isChecked)
         }
     }
 }
