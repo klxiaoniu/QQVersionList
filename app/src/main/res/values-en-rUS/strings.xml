@@ -153,7 +153,7 @@
     <string name="getWeTypeLinkFromTencentAppStore">Get WeType Download Link</string>
     <string name="tencentAppStoreWarning">腾讯应用宝更新获取功能为 QQ 版本列表实用工具附带的实验性功能，可能存在不可预知的稳定性问题。请明确并确保自身具备足够的风险识别和承受能力。</string>
     <string name="showOldLoading">扫版对话框使用旧版加载动画</string>
-    <string name="versionCardsDisplaysPackageSizeText">展示额定包大小占比历史最大包百分比</string>
+    <string name="versionCardsDisplaysPackageSizeText">显示额定包大小占比历史最大包百分比</string>
     <string name="timVersion">TIM</string>
     <string name="enumTIMWarning">The enumerating TIM versions function is an experimental feature included in Qverbow Util, which may have unpredictable stability issues. Please clearly understand and ensure that you have sufficient capability to identify and bear the risks.</string>
     <string name="useQQ9008_14600Test">扫版类型添加 QQ 9.0.8.14600 空格直链格式</string>
@@ -209,4 +209,5 @@
     <string name="aboutVersionCards">Version List and Cards</string>
     <string name="showUnrealEngineTagDesc">The built-in status of Unreal® Engine is determined based on the official QQ release version.</string>
     <string name="general">General</string>
+    <string name="copyAll">Copy All</string>
 </resources>

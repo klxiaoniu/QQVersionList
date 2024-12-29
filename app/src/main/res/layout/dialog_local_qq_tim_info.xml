@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+    Qverbow Util
+    Copyright (C) 2023 klxiaoniu
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as
+    published by the Free Software Foundation, either version 3 of the
+    License, or (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
+
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/experimental_features"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingStart="20dp"
+    android:paddingTop="2dp"
+    android:paddingEnd="20dp">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="20dp">
+
+            <com.xiaoniu.qqversionlist.ui.components.cell.CellTopClick
+                android:layout_marginTop="12dp"
+                android:id="@+id/dialog_local_sdk"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cellDescription="Target 31 | Min 23 | Compile 31"
+                app:cellTitle="Android SDK" />
+
+            <com.xiaoniu.qqversionlist.ui.components.cell.CellMiddleClick
+                android:id="@+id/dialog_local_version_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cellDescription="9.1.33"
+                app:cellTitle="Version Name" />
+
+            <com.xiaoniu.qqversionlist.ui.components.cell.CellMiddleClick
+                android:id="@+id/dialog_local_rdm_uuid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cellDescription="22305_7"
+                app:cellTitle="Rdm UUID" />
+
+            <com.xiaoniu.qqversionlist.ui.components.cell.CellMiddleClick
+                android:id="@+id/dialog_local_version_code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cellDescription="8568"
+                app:cellTitle="Version Code" />
+
+            <com.xiaoniu.qqversionlist.ui.components.cell.CellMiddleClick
+                android:id="@+id/dialog_local_appsetting_params"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cellDescription="537262981#7631A8B2D35EEDD4#0#LiteGray#ffffffffffffffffffffffffffffffff"
+                app:cellTitle="AppSetting_params" />
+
+            <com.xiaoniu.qqversionlist.ui.components.cell.CellMiddleClick
+                android:id="@+id/dialog_local_appsetting_params_pad"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cellDescription="537262992#EEDDC09F5EF18F5D#0#LiteGray#ffffffffffffffffffffffffffffffff"
+                app:cellTitle="AppSetting_params_pad" />
+
+            <com.xiaoniu.qqversionlist.ui.components.cell.CellMiddleClick
+                android:id="@+id/dialog_local_qua"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cellDescription="V1_AND_SQ_9.1.33_8568_HDBM_T"
+                app:cellTitle="QUA" />
+
+            <com.xiaoniu.qqversionlist.ui.components.cell.CellBottomClick
+                android:id="@+id/dialog_local_copy_all"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cellIcon="@drawable/file_copy_line"
+                app:cellTitle="@string/copyAll" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

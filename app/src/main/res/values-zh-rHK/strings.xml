@@ -101,7 +101,7 @@
     <string name="shiplyWarning">騰訊 QQ/TIM 使用 TDS 腾訊端服務 Shiply 容器與發布平台，根據 QQ 號（uin）及其終端資訊分發小範圍灰度測試安裝包。此功能並非每次請求都能成功獲取到更新資料，無法獲取更新資料則表示填寫的參數不在 Shiply 平台認可與分發範圍內。QQ 版本列表實用工具不對此功能及其任何後果作出任何可靠性保證。請明確並確保自身具備足夠的風險辨識和承受能力。</string>
     <string name="defaultDisplayOfFirstListItemDetails">首項卡片默認顯示詳情</string>
     <string name="versionNumberFontUsesTCloudNumber">使用 TCloudNumber 字體</string>
-    <string name="versionCardsDisplaysPackageSizeIndicator">展示額定包大小佔比歷史最大包指示條</string>
+    <string name="versionCardsDisplaysPackageSizeIndicator">顯示額定包大小佔比歷史最大包指示條</string>
     <string name="customVersionEnumSuffix">自定義掃版後綴</string>
     <string name="customVersionEnumSuffixHelpText">請使用“, ”（西文逗號+空格）分割</string>
     <string name="facilitateI18n">協助翻譯：</string>
@@ -153,7 +153,7 @@
     <string name="getWeTypeLinkFromTencentAppStore">取得微信輸入法下載直鏈</string>
     <string name="tencentAppStoreWarning">騰訊應用寶更新取得功能為 QQ 版本列表實用工具附帶的實驗性功能，可能存在不可預知的穩定性問題。請明確並確保自身具備足夠的風險識別和承受能力。</string>
     <string name="showOldLoading">掃版對話框使用舊版加載動畫</string>
-    <string name="versionCardsDisplaysPackageSizeText">展示額定包大小佔比歷史最大包百分比</string>
+    <string name="versionCardsDisplaysPackageSizeText">顯示額定包大小佔比歷史最大包百分比</string>
     <string name="timVersion">TIM 掃版</string>
     <string name="enumTIMWarning">TIM 掃版功能為 QQ 版本列表實用工具附帶的實驗性功能，可能存在無法預知的穩定性問題。請明確並確保自身具備足夠的風險辨識和承受能力。</string>
     <string name="useQQ9008_14600Test">掃版類型添加 QQ 9.0.8.14600 空格直鏈格式</string>
@@ -209,4 +209,5 @@
     <string name="aboutVersionCards">版本列表與卡片</string>
     <string name="showUnrealEngineTagDesc">虚幻引擎的內置情況以 QQ 正式版為判斷依據</string>
     <string name="general">通用</string>
+    <string name="copyAll">複製全部</string>
 </resources>
