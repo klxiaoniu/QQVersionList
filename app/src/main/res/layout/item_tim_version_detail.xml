@@ -57,32 +57,32 @@
                 tools:text="9.0.25" />
 
             <ImageView
-                android:id="@+id/qqnt_tim_old_tag"
+                android:id="@+id/kuikly_tim_old_tag"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="3dp"
+                android:layout_marginStart="1dp"
                 android:layout_marginEnd="0dp"
-                android:contentDescription="@string/qqntTag"
-                android:src="@drawable/qqnt_logo_unofficial"
+                android:contentDescription="@string/kuiklyTag"
+                android:paddingStart="3dp"
+                android:paddingTop="3dp"
+                android:paddingEnd="2dp"
+                android:paddingBottom="3dp"
+                android:src="@drawable/kuikly_logo_unofficial"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@id/tv_tim_old_version"
                 app:layout_constraintTop_toTopOf="parent"
                 app:tint="?attr/colorPrimary" />
 
             <ImageView
-                android:id="@+id/kuikly_tim_old_tag"
+                android:id="@+id/qqnt_tim_old_tag"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="3dp"
+                android:layout_marginStart="1dp"
                 android:layout_marginEnd="0dp"
-                android:contentDescription="@string/kuiklyTag"
-                android:paddingStart="0dp"
-                android:paddingTop="3dp"
-                android:paddingEnd="3dp"
-                android:paddingBottom="3dp"
-                android:src="@drawable/kuikly_logo_unofficial"
+                android:contentDescription="@string/qqntTag"
+                android:src="@drawable/qqnt_logo_unofficial"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/qqnt_tim_old_tag"
+                app:layout_constraintStart_toEndOf="@id/kuikly_tim_old_tag"
                 app:layout_constraintTop_toTopOf="parent"
                 app:tint="?attr/colorPrimary" />
 
@@ -96,7 +96,7 @@
                 android:focusable="true"
                 android:src="@drawable/accessibility_new_20px"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/kuikly_tim_old_tag"
+                app:layout_constraintStart_toEndOf="@id/qqnt_tim_old_tag"
                 app:layout_constraintTop_toTopOf="parent"
                 app:tint="?attr/colorPrimary" />
 

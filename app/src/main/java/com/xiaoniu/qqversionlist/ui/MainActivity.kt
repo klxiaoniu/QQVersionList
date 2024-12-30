@@ -61,7 +61,6 @@ import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.materialswitch.MaterialSwitch
 import com.google.android.material.progressindicator.CircularProgressIndicatorSpec
 import com.google.android.material.progressindicator.IndeterminateDrawable
 import com.google.android.material.progressindicator.LinearProgressIndicator
@@ -99,6 +98,7 @@ import com.xiaoniu.qqversionlist.databinding.ExpLinkNextButtonBinding
 import com.xiaoniu.qqversionlist.databinding.SuccessButtonBinding
 import com.xiaoniu.qqversionlist.databinding.UpdateQvtButtonBinding
 import com.xiaoniu.qqversionlist.databinding.UserAgreementBinding
+import com.xiaoniu.qqversionlist.ui.components.cell.CellSingleSwitch
 import com.xiaoniu.qqversionlist.util.ClipboardUtil.copyText
 import com.xiaoniu.qqversionlist.util.DataStoreUtil
 import com.xiaoniu.qqversionlist.util.Extensions.dp
@@ -405,18 +405,19 @@ class MainActivity : AppCompatActivity() {
                     val dialogSettingBinding = DialogSettingBinding.inflate(layoutInflater)
 
                     dialogSettingBinding.apply {
-                        longPressCard.isChecked = DataStoreUtil.getBooleanKV("longPressCard", true)
-                        guessNot5.isChecked = DataStoreUtil.getBooleanKV("guessNot5", false)
-                        switchGuessTestExtend.isChecked =
+                        longPressCard.switchChecked =
+                            DataStoreUtil.getBooleanKV("longPressCard", true)
+                        guessNot5.switchChecked = DataStoreUtil.getBooleanKV("guessNot5", false)
+                        switchGuessTestExtend.switchChecked =
                             DataStoreUtil.getBooleanKV("guessTestExtend", false) // 扩展测试版扫版格式
-                        downloadOnSystemManager.isChecked =
+                        downloadOnSystemManager.switchChecked =
                             DataStoreUtil.getBooleanKV("downloadOnSystemManager", false)
-                        switchAutoCheckUpdates.isChecked =
+                        switchAutoCheckUpdates.switchChecked =
                             DataStoreUtil.getBooleanKV("autoCheckUpdates", false)
                         switchPushNotifViaFcm.isVisible =
                             Firebase.messaging.isAutoInitEnabled && GoogleApiAvailability.getInstance()
                                 .isGooglePlayServicesAvailable(this@MainActivity) == ConnectionResult.SUCCESS
-                        switchPushNotifViaFcm.isChecked =
+                        switchPushNotifViaFcm.switchChecked =
                             DataStoreUtil.getBooleanKV("rainbowFCMSubscribed", false)
                     }
 
@@ -430,10 +431,10 @@ class MainActivity : AppCompatActivity() {
                         btnSettingOk.setOnClickListener {
                             dialogSetting.dismiss()
                         }
-                        longPressCard.setOnCheckedChangeListener { _, isChecked ->
+                        longPressCard.setOnCheckedChangeListener { isChecked ->
                             DataStoreUtil.putBooleanKVAsync("longPressCard", isChecked)
                         }
-                        guessNot5.setOnCheckedChangeListener { _, isChecked ->
+                        guessNot5.setOnCheckedChangeListener { isChecked ->
                             DataStoreUtil.putBooleanKVAsync("guessNot5", isChecked)
                         }
                         dialogPersonalization.setOnClickListener {
@@ -468,22 +469,22 @@ class MainActivity : AppCompatActivity() {
                                 .show()
 
                             dialogPersonalization.apply {
-                                switchDisplayFirst.isChecked =
+                                switchDisplayFirst.switchChecked =
                                     DataStoreUtil.getBooleanKV("displayFirst", true)
-                                switchKuiklyTag.isChecked =
+                                switchKuiklyTag.switchChecked =
                                     DataStoreUtil.getBooleanKV("kuiklyTag", true)
-                                switchUnrealEngineTag.isChecked =
+                                switchUnrealEngineTag.switchChecked =
                                     DataStoreUtil.getBooleanKV("unrealEngineTag", false)
-                                switchProgressSize.isChecked =
+                                switchProgressSize.switchChecked =
                                     DataStoreUtil.getBooleanKV("progressSize", false)
-                                switchProgressSizeText.isChecked =
+                                switchProgressSizeText.switchChecked =
                                     DataStoreUtil.getBooleanKV("progressSizeText", false)
-                                switchVersionTcloud.isChecked =
+                                switchVersionTcloud.switchChecked =
                                     DataStoreUtil.getBooleanKV("versionTCloud", true)
-                                switchOldLoading.isChecked =
+                                switchOldLoading.switchChecked =
                                     DataStoreUtil.getBooleanKV("showOldLoading", false)
 
-                                switchDisplayFirst.setOnCheckedChangeListener { _, isChecked ->
+                                switchDisplayFirst.setOnCheckedChangeListener { isChecked ->
                                     DataStoreUtil.putBooleanKVAsync("displayFirst", isChecked)
                                     qqVersion = qqVersion.mapIndexed { index, qqVersionBean ->
                                         if (index == 0) qqVersionBean.copy(
@@ -501,29 +502,29 @@ class MainActivity : AppCompatActivity() {
                                     timVersionAdapter.submitList(timVersion)
                                 }
 
-                                switchOldLoading.setOnCheckedChangeListener { _, isChecked ->
+                                switchOldLoading.setOnCheckedChangeListener { isChecked ->
                                     DataStoreUtil.putBooleanKVAsync("showOldLoading", isChecked)
                                 }
 
                                 // 下五个设置不能异步持久化存储，否则视图更新读不到更新值
-                                switchKuiklyTag.setOnCheckedChangeListener { _, isChecked ->
+                                switchKuiklyTag.setOnCheckedChangeListener { isChecked ->
                                     DataStoreUtil.putBooleanKV("kuiklyTag", isChecked)
                                     qqVersionAdapter.updateItemProperty("isShowKuiklyTag")
                                     timVersionAdapter.updateItemProperty("isShowKuiklyTag")
                                 }
-                                switchUnrealEngineTag.setOnCheckedChangeListener { _, isChecked ->
+                                switchUnrealEngineTag.setOnCheckedChangeListener { isChecked ->
                                     DataStoreUtil.putBooleanKV("unrealEngineTag", isChecked)
                                     qqVersionAdapter.updateItemProperty("isShowUnrealEngineTag")
                                 }
-                                switchProgressSize.setOnCheckedChangeListener { _, isChecked ->
+                                switchProgressSize.setOnCheckedChangeListener { isChecked ->
                                     DataStoreUtil.putBooleanKV("progressSize", isChecked)
                                     qqVersionAdapter.updateItemProperty("isShowProgressSize")
                                 }
-                                switchProgressSizeText.setOnCheckedChangeListener { _, isChecked ->
+                                switchProgressSizeText.setOnCheckedChangeListener { isChecked ->
                                     DataStoreUtil.putBooleanKV("progressSizeText", isChecked)
                                     qqVersionAdapter.updateItemProperty("isShowProgressSizeText")
                                 }
-                                switchVersionTcloud.setOnCheckedChangeListener { _, isChecked ->
+                                switchVersionTcloud.setOnCheckedChangeListener { isChecked ->
                                     DataStoreUtil.putBooleanKV("versionTCloud", isChecked)
                                     dialogPersonalization.versionTcloudThickness.setEnabled(
                                         isChecked
@@ -569,13 +570,13 @@ class MainActivity : AppCompatActivity() {
                             }
                         }
 
-                        switchGuessTestExtend.setOnCheckedChangeListener { _, isChecked ->
+                        switchGuessTestExtend.setOnCheckedChangeListener { isChecked ->
                             DataStoreUtil.putBooleanKVAsync("guessTestExtend", isChecked)
                         }
-                        switchAutoCheckUpdates.setOnCheckedChangeListener { _, isChecked ->
+                        switchAutoCheckUpdates.setOnCheckedChangeListener { isChecked ->
                             DataStoreUtil.putBooleanKVAsync("autoCheckUpdates", isChecked)
                         }
-                        downloadOnSystemManager.setOnCheckedChangeListener { _, isChecked ->
+                        downloadOnSystemManager.setOnCheckedChangeListener { isChecked ->
                             DataStoreUtil.putBooleanKVAsync("downloadOnSystemManager", isChecked)
                         }
 //                        settingSuffixSave.setOnClickListener { _ ->
@@ -770,7 +771,7 @@ class MainActivity : AppCompatActivity() {
                                 }
                             }
                         }
-                        switchPushNotifViaFcm.setOnCheckedChangeListener { _, isChecked ->
+                        switchPushNotifViaFcm.setOnCheckedChangeListener { isChecked ->
                             if (isChecked != DataStoreUtil.getBooleanKV(
                                     "rainbowFCMSubscribed",
                                     false
@@ -782,23 +783,23 @@ class MainActivity : AppCompatActivity() {
                                     ) askNotificationPermission()
                                     if (!NotificationManagerCompat.from(this@MainActivity)
                                             .areNotificationsEnabled()
-                                    ) switchPushNotifViaFcm.isChecked = false
+                                    ) switchPushNotifViaFcm.switchChecked = false
                                     else if (!checkNotificationChannelEnabled(
                                             getString(R.string.rainbow_notification_channel_id)
                                         )
                                     ) {
-                                        switchPushNotifViaFcm.isChecked = false
+                                        switchPushNotifViaFcm.switchChecked = false
                                         dialogError(
                                             Exception(getString(R.string.cannotEnableFirebaseCloudMessaging)),
                                             true, true
                                         )
                                     } else {
-                                        switchPushNotifViaFcm.isEnabled = false
+                                        switchPushNotifViaFcm.switchEnabled = false
                                         Firebase.analytics.setAnalyticsCollectionEnabled(true)
                                         subscribeWithTimeout(10000L, switchPushNotifViaFcm)
                                     }
                                 } else {
-                                    switchPushNotifViaFcm.isEnabled = false
+                                    switchPushNotifViaFcm.switchEnabled = false
                                     Firebase.analytics.setAnalyticsCollectionEnabled(true)
                                     unsubscribeWithTimeout(10000L, switchPushNotifViaFcm)
                                 }
@@ -812,10 +813,10 @@ class MainActivity : AppCompatActivity() {
                     val dialogExperimentalFeaturesBinding =
                         DialogExperimentalFeaturesBinding.inflate(layoutInflater)
 
-                    dialogExperimentalFeaturesBinding.dialogFirebase.setText(
+                    dialogExperimentalFeaturesBinding.dialogFirebase.setCellDescription(
                         if (GoogleApiAvailability.getInstance()
                                 .isGooglePlayServicesAvailable(this@MainActivity) == ConnectionResult.SUCCESS && Firebase.messaging.isAutoInitEnabled
-                        ) R.string.initializedFirebaseServiceItem else R.string.initFirebaseService
+                        ) getString(R.string.initializedFirebaseServiceItem) else null
                     )
 
                     val dialogExperimentalFeatures = MaterialAlertDialogBuilder(this)
@@ -903,13 +904,9 @@ class MainActivity : AppCompatActivity() {
                                                     putExtra(
                                                         Intent.EXTRA_TEXT,
                                                         "Android 微信测试版 ${map["versionName"].toString()}" + (if (appSize != null) "（${
-                                                            getString(
-                                                                R.string.fileSize
-                                                            )
+                                                            getString(R.string.fileSize)
                                                         }$appSize MB）" else "") + "\n\n${
-                                                            getString(
-                                                                R.string.downloadLink
-                                                            )
+                                                            getString(R.string.downloadLink)
                                                         }${map["url"].toString()}\n\n鉴于微信测试版可能存在不可预知的稳定性问题，您在下载及使用该测试版本之前，必须明确并确保自身具备足够的风险识别和承受能力。"
                                                     )
                                                 }
@@ -953,21 +950,15 @@ class MainActivity : AppCompatActivity() {
                                     val appSize = getFileSize(url.toString())
                                     runOnUiThread {
                                         val expLinkNextButtonBinding =
-                                            ExpLinkNextButtonBinding.inflate(
-                                                layoutInflater
-                                            )
+                                            ExpLinkNextButtonBinding.inflate(layoutInflater)
                                         val weTypeLatestChannelBackDialog =
                                             MaterialAlertDialogBuilder(this@MainActivity).setTitle(
                                                 if (appSize != null) R.string.successInGetting else R.string.suspectedPackageWithdrawal
                                             ).setIcon(R.drawable.flask_line).setMessage(
                                                 "${
-                                                    getString(
-                                                        R.string.downloadLink
-                                                    )
+                                                    getString(R.string.downloadLink)
                                                 }$url" + (if (appSize != null) "\n\n${
-                                                    getString(
-                                                        R.string.fileSize
-                                                    )
+                                                    getString(R.string.fileSize)
                                                 }$appSize MB" else "")
                                             ).setView(expLinkNextButtonBinding.root)
                                                 .show()
@@ -980,9 +971,7 @@ class MainActivity : AppCompatActivity() {
 
                                             expNextBtnDownload.setOnClickListener {
                                                 weTypeLatestChannelBackDialog.dismiss()
-                                                downloadFile(
-                                                    this@MainActivity, url.toString()
-                                                )
+                                                downloadFile(this@MainActivity, url.toString())
                                             }
 
                                             expNextBtnShare.setOnClickListener {
@@ -1135,9 +1124,7 @@ class MainActivity : AppCompatActivity() {
 
                                     try {
                                         val spec = CircularProgressIndicatorSpec(
-                                            this@MainActivity,
-                                            null,
-                                            0,
+                                            this@MainActivity, null, 0,
                                             com.google.android.material.R.style.Widget_Material3_CircularProgressIndicator_ExtraSmall
                                         )
                                         val progressIndicatorDrawable =
@@ -2518,31 +2505,31 @@ class MainActivity : AppCompatActivity() {
     // 下面两个方法实现不对，给 Firebase 提了 Issue，接下来等 Firebase 更改相关 API 或者进一步回复再改
     // 下面的是临时策略，请勿为了缩减 MainActivity 而将其单独分离出去，等 Google 解决后应该可以只用一条语句替代下面的整个函数
     private fun subscribeWithTimeout(
-        timeoutMillis: Long, switchPushNotifViaFcm: MaterialSwitch
+        timeoutMillis: Long, switchPushNotifViaFcm: CellSingleSwitch
     ) {
         var status = false
         val job = lifecycleScope.launch {
             Firebase.messaging.subscribeToTopic("rainbowUpdates").addOnCanceledListener {
                 status = true
                 showToast(getString(R.string.subscribeFailed))
-                switchPushNotifViaFcm.isEnabled = true
-                switchPushNotifViaFcm.isChecked = false
+                switchPushNotifViaFcm.switchEnabled = true
+                switchPushNotifViaFcm.switchChecked = false
                 DataStoreUtil.putBooleanKV(
                     "rainbowFCMSubscribed", false
                 )
             }.addOnSuccessListener {
                 status = true
                 showToast(getString(R.string.subscribeSuccess))
-                switchPushNotifViaFcm.isEnabled = true
-                switchPushNotifViaFcm.isChecked = true
+                switchPushNotifViaFcm.switchEnabled = true
+                switchPushNotifViaFcm.switchChecked = true
                 DataStoreUtil.putBooleanKV(
                     "rainbowFCMSubscribed", true
                 )
             }.addOnFailureListener {
                 status = true
                 showToast(getString(R.string.subscribeFailed))
-                switchPushNotifViaFcm.isEnabled = true
-                switchPushNotifViaFcm.isChecked = false
+                switchPushNotifViaFcm.switchEnabled = true
+                switchPushNotifViaFcm.switchChecked = false
                 DataStoreUtil.putBooleanKV(
                     "rainbowFCMSubscribed", false
                 )
@@ -2553,8 +2540,8 @@ class MainActivity : AppCompatActivity() {
             if (!status) {
                 job.cancel()
                 showToast(getString(R.string.subscribeTimeout))
-                switchPushNotifViaFcm.isEnabled = true
-                switchPushNotifViaFcm.isChecked = false
+                switchPushNotifViaFcm.switchEnabled = true
+                switchPushNotifViaFcm.switchChecked = false
                 DataStoreUtil.putBooleanKV(
                     "rainbowFCMSubscribed", false
                 )
@@ -2563,31 +2550,31 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun unsubscribeWithTimeout(
-        timeoutMillis: Long, switchPushNotifViaFcm: MaterialSwitch
+        timeoutMillis: Long, switchPushNotifViaFcm: CellSingleSwitch
     ) {
         var status = false
         val job = lifecycleScope.launch {
             Firebase.messaging.unsubscribeFromTopic("rainbowUpdates").addOnCanceledListener {
                 status = true
                 showToast(getString(R.string.unsubscribeFailed))
-                switchPushNotifViaFcm.isEnabled = true
-                switchPushNotifViaFcm.isChecked = true
+                switchPushNotifViaFcm.switchEnabled = true
+                switchPushNotifViaFcm.switchChecked = true
                 DataStoreUtil.putBooleanKV(
                     "rainbowFCMSubscribed", true
                 )
             }.addOnSuccessListener {
                 status = true
                 showToast(getString(R.string.unsubscribeSuccess))
-                switchPushNotifViaFcm.isEnabled = true
-                switchPushNotifViaFcm.isChecked = false
+                switchPushNotifViaFcm.switchEnabled = true
+                switchPushNotifViaFcm.switchChecked = false
                 DataStoreUtil.putBooleanKV(
                     "rainbowFCMSubscribed", false
                 )
             }.addOnFailureListener {
                 status = true
                 showToast(getString(R.string.unsubscribeFailed))
-                switchPushNotifViaFcm.isEnabled = true
-                switchPushNotifViaFcm.isChecked = true
+                switchPushNotifViaFcm.switchEnabled = true
+                switchPushNotifViaFcm.switchChecked = true
                 DataStoreUtil.putBooleanKV(
                     "rainbowFCMSubscribed", true
                 )
@@ -2598,8 +2585,8 @@ class MainActivity : AppCompatActivity() {
             if (!status) {
                 job.cancel()
                 showToast(getString(R.string.unsubscribeTimeout))
-                switchPushNotifViaFcm.isEnabled = true
-                switchPushNotifViaFcm.isChecked = true
+                switchPushNotifViaFcm.switchEnabled = true
+                switchPushNotifViaFcm.switchChecked = true
                 DataStoreUtil.putBooleanKV(
                     "rainbowFCMSubscribed", true
                 )

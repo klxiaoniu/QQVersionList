@@ -21,13 +21,13 @@ package com.xiaoniu.qqversionlist.ui
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.xiaoniu.qqversionlist.R
+import com.xiaoniu.qqversionlist.databinding.DialogLocalQqTimInfoBinding
 import com.xiaoniu.qqversionlist.databinding.LocalTimBinding
+import com.xiaoniu.qqversionlist.util.ClipboardUtil.copyText
 import com.xiaoniu.qqversionlist.util.DataStoreUtil
 import com.xiaoniu.qqversionlist.util.InfoUtil.showToast
 
@@ -40,25 +40,26 @@ class LocalTIMAdapter : RecyclerView.Adapter<LocalTIMAdapter.LocalTIMViewHolder>
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: LocalTIMViewHolder, position: Int) {
-        val TIMVersionInstall2 = DataStoreUtil.getStringKV("TIMVersionInstall", "")
-        val TIMVersionCodeInstall2 = DataStoreUtil.getStringKV("TIMVersionCodeInstall", "")
-        val TIMAppSettingParamsInstall = DataStoreUtil.getStringKV("TIMAppSettingParamsInstall", "")
-        val TIMQua = DataStoreUtil.getStringKV("TIMQua", "")
-        val TIMRdmUUIDInstall = if (DataStoreUtil.getStringKV(
-                "TIMRdmUUIDInstall", ""
-            ) != ""
-        ) ".${DataStoreUtil.getStringKV("TIMRdmUUIDInstall", "").split("_")[0]}" else ""
-        val TIMChannelInstall = if (TIMAppSettingParamsInstall != "") DataStoreUtil.getStringKV(
-            "TIMAppSettingParamsInstall", ""
-        ).split("#")[3] else ""
-        val TIMBasedOnQQVer =
-            if (TIMQua != "") DataStoreUtil.getStringKV("TIMQua", "").split("_")[3] else ""
+        val TIMTargetInstallKV = DataStoreUtil.getStringKV("TIMTargetInstall", "")
+        val TIMMinInstallKV = DataStoreUtil.getStringKV("TIMMinInstall", "")
+        val TIMCompileInstallKV = DataStoreUtil.getStringKV("TIMCompileInstall", "")
+        val TIMVersionInstallKV = DataStoreUtil.getStringKV("TIMVersionInstall", "")
+        val TIMRdmUUIDInstallKV = DataStoreUtil.getStringKV("TIMRdmUUIDInstall", "")
+        val TIMVersionCodeInstallKV = DataStoreUtil.getStringKV("TIMVersionCodeInstall", "")
+        val TIMAppSettingParamsInstallKV =
+            DataStoreUtil.getStringKV("TIMAppSettingParamsInstall", "")
+        val TIMAppSettingParamsPadInstallKV =
+            DataStoreUtil.getStringKV("TIMAppSettingParamsPadInstall", "")
+        val TIMQuaKV = DataStoreUtil.getStringKV("TIMQua", "")
+        val TIMRdmUUIDInstallProcessed = if (TIMRdmUUIDInstallKV != ""
+        ) ".${TIMRdmUUIDInstallKV.split("_")[0]}" else ""
+        val TIMChannelInstallProcessed =
+            if (TIMAppSettingParamsInstallKV != "") TIMAppSettingParamsInstallKV.split("#")[3] else ""
+        val TIMBasedOnQQVer = if (TIMQuaKV != "") TIMQuaKV.split("_")[3] else ""
         holder.apply {
-            if (TIMVersionInstall2 != "") {
+            if (TIMVersionInstallKV != "") {
                 itemTimInstallText.text =
-                    itemView.context.getString(R.string.localTIMVersion) + DataStoreUtil.getStringKV(
-                        "TIMVersionInstall", ""
-                    ) + TIMRdmUUIDInstall + (if (TIMVersionCodeInstall2 != "") " (${TIMVersionCodeInstall2})" else "") + (if (TIMChannelInstall != "") " - $TIMChannelInstall" else "")
+                    itemView.context.getString(R.string.localTIMVersion) + TIMVersionInstallKV + TIMRdmUUIDInstallProcessed + (if (TIMVersionCodeInstallKV != "") " (${TIMVersionCodeInstallKV})" else "") + (if (TIMChannelInstallProcessed != "") " - $TIMChannelInstallProcessed" else "")
                 itemTimInstallCard.isVisible = true
                 itemTimInstallBasedOn.text = if (TIMBasedOnQQVer != "") itemView.context.getString(
                     R.string.basedOnQQVer, TIMBasedOnQQVer
@@ -67,78 +68,127 @@ class LocalTIMAdapter : RecyclerView.Adapter<LocalTIMAdapter.LocalTIMViewHolder>
                 itemTimInstallBasedOnCard.isVisible = TIMBasedOnQQVer != ""
                 itemTimInstallCard.setOnLongClickListener {
                     if (DataStoreUtil.getBooleanKV("longPressCard", true)) {
-                        val tv = TextView(itemView.context).apply {
-                            text = HtmlCompat.fromHtml(
-                                (if (DataStoreUtil.getStringKV(
-                                        "TIMTargetInstall", ""
-                                    ) != ""
-                                ) "<b>Target SDK</b>${itemView.context.getString(R.string.colon)}${
-                                    DataStoreUtil.getStringKV(
-                                        "TIMTargetInstall", ""
-                                    )
-                                }" else "") + (if (DataStoreUtil.getStringKV(
-                                        "TIMMinInstall", ""
-                                    ) != ""
-                                ) "<br><b>Min SDK</b>${itemView.context.getString(R.string.colon)}${
-                                    DataStoreUtil.getStringKV(
-                                        "TIMMinInstall", ""
-                                    )
-                                }" else "") + (if (DataStoreUtil.getStringKV(
-                                        "TIMCompileInstall", ""
-                                    ) != ""
-                                ) "<br><b>Compile SDK</b>${itemView.context.getString(R.string.colon)}${
-                                    DataStoreUtil.getStringKV(
-                                        "TIMCompileInstall", ""
-                                    )
-                                }" else "") + "<br><b>Version Name</b>${itemView.context.getString(R.string.colon)}${
-                                    DataStoreUtil.getStringKV(
-                                        "TIMVersionInstall", ""
-                                    )
-                                }" + (if (DataStoreUtil.getStringKV(
-                                        "TIMRdmUUIDInstall", ""
-                                    ) != ""
-                                ) "<br><b>Rdm UUID</b>${itemView.context.getString(R.string.colon)}${
-                                    DataStoreUtil.getStringKV(
-                                        "TIMRdmUUIDInstall", ""
-                                    )
-                                }" else "") + (if (DataStoreUtil.getStringKV(
-                                        "TIMVersionCodeInstall", ""
-                                    ) != ""
-                                ) "<br><b>Version Code</b>${itemView.context.getString(R.string.colon)}${
-                                    DataStoreUtil.getStringKV(
-                                        "TIMVersionCodeInstall", ""
-                                    )
-                                }" else "") + (if (DataStoreUtil.getStringKV(
-                                        "TIMAppSettingParamsInstall", ""
-                                    ) != ""
-                                ) "<br><b>AppSetting_params</b>${itemView.context.getString(R.string.colon)}${
-                                    DataStoreUtil.getStringKV(
-                                        "TIMAppSettingParamsInstall", ""
-                                    )
-                                }" else "") + (if (DataStoreUtil.getStringKV(
-                                        "TIMAppSettingParamsPadInstall", ""
-                                    ) != ""
-                                ) "<br><b>AppSetting_params_pad</b>${itemView.context.getString(R.string.colon)}${
-                                    DataStoreUtil.getStringKV(
-                                        "TIMAppSettingParamsPadInstall", ""
-                                    )
-                                }" else "") + (if (DataStoreUtil.getStringKV(
-                                        "TIMQua", ""
-                                    ) != ""
-                                ) "<br><b>QUA</b>${itemView.context.getString(R.string.colon)}${
-                                    DataStoreUtil.getStringKV(
-                                        "TIMQua", ""
-                                    )
-                                }" else ""), HtmlCompat.FROM_HTML_MODE_LEGACY
-                            )
-                            setTextIsSelectable(true)
-                            setPadding(96, 48, 96, 96)
-                        }
+                        val localInfoAllText = (if (TIMTargetInstallKV != ""
+                        ) "Target SDK${itemView.context.getString(R.string.colon)}${
+                            TIMTargetInstallKV
+                        }" else "") + (if (TIMMinInstallKV != ""
+                        ) "\nMin SDK${itemView.context.getString(R.string.colon)}${
+                            TIMMinInstallKV
+                        }" else "") + (if (TIMCompileInstallKV != ""
+                        ) "\nCompile SDK${itemView.context.getString(R.string.colon)}${
+                            TIMCompileInstallKV
+                        }" else "") + "\nVersion Name${itemView.context.getString(R.string.colon)}${
+                            TIMVersionInstallKV
+                        }" + (if (TIMRdmUUIDInstallKV != ""
+                        ) "\nRdm UUID${itemView.context.getString(R.string.colon)}${
+                            TIMRdmUUIDInstallKV
+                        }" else "") + (if (TIMVersionCodeInstallKV != ""
+                        ) "\nVersion Code${itemView.context.getString(R.string.colon)}${
+                            TIMVersionCodeInstallKV
+                        }" else "") + (if (TIMAppSettingParamsInstallKV != ""
+                        ) "\nAppSetting_params${itemView.context.getString(R.string.colon)}${
+                            TIMAppSettingParamsInstallKV
+                        }" else "") + (if (TIMAppSettingParamsPadInstallKV != ""
+                        ) "\nAppSetting_params_pad${itemView.context.getString(R.string.colon)}${
+                            TIMAppSettingParamsPadInstallKV
+                        }" else "") + (if (TIMQuaKV != ""
+                        ) "\nQUA${itemView.context.getString(R.string.colon)}${
+                            TIMQuaKV
+                        }" else "")
+
+                        val dialogLocalQqTimInfoBinding = DialogLocalQqTimInfoBinding.inflate(
+                            LayoutInflater.from(itemView.context)
+                        )
+
                         MaterialAlertDialogBuilder(itemView.context)
-                            .setView(tv)
+                            .setView(dialogLocalQqTimInfoBinding.root)
                             .setTitle(R.string.localTIMVersionDetails)
-                            .setIcon(R.drawable.phone_find_line)
-                            .show()
+                            .setIcon(R.drawable.phone_find_line).apply {
+                                dialogLocalQqTimInfoBinding.apply {
+                                    val dialogLocalSdkDesc =
+                                        if (TIMTargetInstallKV != "" && TIMMinInstallKV != "" && TIMChannelInstallProcessed != "") "Target $TIMTargetInstallKV | Min $TIMMinInstallKV | Compile $TIMCompileInstallKV" else "Target $TIMTargetInstallKV | Min $TIMMinInstallKV"
+
+                                    dialogLocalSdk.apply {
+                                        setCellDescription(dialogLocalSdkDesc)
+                                        this.setOnClickListener {
+                                            context.copyText(
+                                                "Android SDK${
+                                                    itemView.context.getString(R.string.colon)
+                                                }$dialogLocalSdkDesc"
+                                            )
+                                        }
+                                    }
+                                    dialogLocalVersionName.apply {
+                                        setCellDescription(TIMVersionInstallKV)
+                                        this.setOnClickListener {
+                                            context.copyText(
+                                                "Version Name${
+                                                    itemView.context.getString(R.string.colon)
+                                                }$TIMVersionInstallKV"
+                                            )
+                                        }
+                                    }
+                                    dialogLocalRdmUuid.apply {
+                                        if (TIMRdmUUIDInstallKV != "") {
+                                            setCellDescription(TIMRdmUUIDInstallKV)
+                                            this.setOnClickListener {
+                                                context.copyText(
+                                                    "Rdm UUID${
+                                                        itemView.context.getString(R.string.colon)
+                                                    }$TIMRdmUUIDInstallKV"
+                                                )
+                                            }
+                                        } else dialogLocalRdmUuid.isVisible = false
+                                    }
+                                    dialogLocalVersionCode.apply {
+                                        if (TIMVersionCodeInstallKV != "") {
+                                            setCellDescription(TIMVersionCodeInstallKV)
+                                            this.setOnClickListener {
+                                                context.copyText(
+                                                    "Version Code${
+                                                        itemView.context.getString(R.string.colon)
+                                                    }$TIMVersionCodeInstallKV"
+                                                )
+                                            }
+                                        } else dialogLocalVersionCode.isVisible = false
+                                    }
+                                    dialogLocalAppsettingParams.apply {
+                                        if (TIMAppSettingParamsInstallKV != "") {
+                                            setCellDescription(TIMAppSettingParamsInstallKV)
+                                            this.setOnClickListener {
+                                                context.copyText(
+                                                    "AppSetting_params${
+                                                        itemView.context.getString(R.string.colon)
+                                                    }$TIMAppSettingParamsInstallKV"
+                                                )
+                                            }
+                                        } else dialogLocalAppsettingParams.isVisible = false
+                                    }
+                                    dialogLocalAppsettingParamsPad.apply {
+                                        if (TIMAppSettingParamsPadInstallKV != "") {
+                                            setCellDescription(TIMAppSettingParamsPadInstallKV)
+                                            this.setOnClickListener {
+                                                context.copyText(
+                                                    "AppSetting_params_pad${
+                                                        itemView.context.getString(R.string.colon)
+                                                    }$TIMAppSettingParamsPadInstallKV"
+                                                )
+                                            }
+                                        } else dialogLocalAppsettingParamsPad.isVisible = false
+                                    }
+                                    dialogLocalQua.apply {
+                                        if (TIMQuaKV != "") {
+                                            setCellDescription(TIMQuaKV)
+                                            this.setOnClickListener {
+                                                context.copyText("QUA${itemView.context.getString(R.string.colon)}$TIMQuaKV")
+                                            }
+                                        } else dialogLocalQua.isVisible = false
+                                    }
+                                    dialogLocalCopyAll.setOnClickListener {
+                                        context.copyText(localInfoAllText)
+                                    }
+                                }
+                            }.show()
                     } else showToast(R.string.longPressToViewSourceDetailsIsDisabled)
                     true
                 }

@@ -36,84 +36,93 @@
             android:orientation="vertical"
             android:paddingBottom="20dp">
 
-            <com.google.android.material.materialswitch.MaterialSwitch
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="12dp"
+                android:paddingTop="6dp"
+                android:paddingEnd="12dp"
+                android:paddingBottom="6dp"
+                android:text="@string/general"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+
+            <com.xiaoniu.qqversionlist.ui.components.cell.CellTopSwitch
                 android:id="@+id/long_press_card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:paddingTop="16dp"
-                android:text="@string/longPressTheVersionCardToViewSourceDetails" />
+                app:cellIcon="@drawable/braces_line"
+                app:cellTitle="@string/longPressTheVersionCardToViewSourceDetails" />
 
-            <com.google.android.material.materialswitch.MaterialSwitch
+            <com.xiaoniu.qqversionlist.ui.components.cell.CellMiddleSwitch
                 android:id="@+id/download_on_system_manager"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:text="@string/useTheSystemDownloadManagerToTakeOverTheDownloadIntent" />
+                app:cellDescription="@string/useTheSystemDownloadManagerToTakeOverTheDownloadIntentDesc"
+                app:cellIcon="@drawable/download_line"
+                app:cellTitle="@string/useTheSystemDownloadManagerToTakeOverTheDownloadIntent" />
 
-            <TextView
+            <com.xiaoniu.qqversionlist.ui.components.cell.CellBottomClick
                 android:id="@+id/dialog_personalization"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawablePadding="8dp"
-                android:gravity="center_vertical"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:text="@string/personalization"
-                android:textColor="?attr/colorOnSurface"
-                app:drawableEndCompat="@drawable/arrow_right_s_line" />
+                app:cellIcon="@drawable/palette_line"
+                app:cellTitle="@string/personalization" />
 
-            <com.google.android.material.materialswitch.MaterialSwitch
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="12dp"
+                android:paddingTop="12dp"
+                android:paddingEnd="12dp"
+                android:paddingBottom="6dp"
+                android:text="@string/enumerateVersionsFAB"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+
+            <com.xiaoniu.qqversionlist.ui.components.cell.CellTopSwitch
                 android:id="@+id/switch_guess_test_extend"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:text="@string/extendTheSuffixForDirectDownloadLinksOfEnumeratedPreviewVersions" />
+                app:cellTitle="@string/extendTheSuffixForDirectDownloadLinksOfEnumeratedPreviewVersions" />
 
-            <TextView
+            <com.xiaoniu.qqversionlist.ui.components.cell.CellBottomClick
                 android:id="@+id/dialog_suffix_define_click"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawablePadding="8dp"
-                android:gravity="center_vertical"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:text="@string/enumerateVersionsFormatSetting"
-                android:textColor="?attr/colorOnSurface"
-                app:drawableEndCompat="@drawable/arrow_right_s_line" />
+                app:cellTitle="@string/enumerateVersionsFormatSetting" />
 
-            <com.google.android.material.materialswitch.MaterialSwitch
+            <com.xiaoniu.qqversionlist.ui.components.cell.CellSingleSwitch
                 android:id="@+id/switch_auto_check_updates"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:text="@string/autoCheckForUpdates" />
+                android:layout_marginTop="16dp"
+                app:cellDescription="@string/autoCheckForUpdatesDesc"
+                app:cellTitle="@string/autoCheckForUpdates" />
 
-            <com.google.android.material.materialswitch.MaterialSwitch
+            <com.xiaoniu.qqversionlist.ui.components.cell.CellSingleSwitch
                 android:id="@+id/switch_push_notif_via_fcm"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:text="@string/pushSystemNotificationsWhenVersionListUpdates" />
+                android:layout_marginTop="16dp"
+                app:cellDescription="@string/rainbow_notification_channel_description"
+                app:cellTitle="@string/pushSystemNotificationsWhenVersionListUpdates" />
 
-            <com.google.android.material.materialswitch.MaterialSwitch
+            <com.xiaoniu.qqversionlist.ui.components.cell.CellSingleSwitch
                 android:id="@+id/guess_not_5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="8dp"
-                android:paddingBottom="16dp"
-                android:text="@string/removeMultiplesOf5ForQQPreviewVersions" />
+                android:layout_marginTop="16dp"
+                app:cellTitle="@string/removeMultiplesOf5ForQQPreviewVersions" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_setting_ok"
                 style="@style/Widget.Material3.Button.TonalButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="14dp"
                 android:text="@string/done" />
         </LinearLayout>
     </ScrollView>

@@ -25,13 +25,6 @@
     android:paddingTop="2dp"
     android:paddingEnd="20dp">
 
-    <com.google.android.material.progressindicator.LinearProgressIndicator
-        android:id="@+id/progress_indicator"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:elevation="10dp"
-        android:indeterminate="true" />
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -44,47 +37,61 @@
             android:paddingBottom="20dp">
 
             <com.xiaoniu.qqversionlist.ui.components.cell.CellTopClick
-                android:layout_marginTop="8dp"
-                android:id="@+id/dialog_get_weixin_alpha_newest"
+                android:layout_marginTop="12dp"
+                android:id="@+id/dialog_local_sdk"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cellDescription="@string/getWeixinAlphaLinkFromWeixinConfigDesc"
-                app:cellTitle="@string/getWeixinAlphaLinkFromWeixinConfig" />
+                app:cellDescription="Target 31 | Min 23 | Compile 31"
+                app:cellTitle="Android SDK" />
+
+            <com.xiaoniu.qqversionlist.ui.components.cell.CellMiddleClick
+                android:id="@+id/dialog_local_version_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cellDescription="9.1.33"
+                app:cellTitle="Version Name" />
+
+            <com.xiaoniu.qqversionlist.ui.components.cell.CellMiddleClick
+                android:id="@+id/dialog_local_rdm_uuid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cellDescription="22305_7"
+                app:cellTitle="Rdm UUID" />
+
+            <com.xiaoniu.qqversionlist.ui.components.cell.CellMiddleClick
+                android:id="@+id/dialog_local_version_code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cellDescription="8568"
+                app:cellTitle="Version Code" />
+
+            <com.xiaoniu.qqversionlist.ui.components.cell.CellMiddleClick
+                android:id="@+id/dialog_local_appsetting_params"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cellDescription="537262981#7631A8B2D35EEDD4#0#LiteGray#ffffffffffffffffffffffffffffffff"
+                app:cellTitle="AppSetting_params" />
+
+            <com.xiaoniu.qqversionlist.ui.components.cell.CellMiddleClick
+                android:id="@+id/dialog_local_appsetting_params_pad"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cellDescription="537262992#EEDDC09F5EF18F5D#0#LiteGray#ffffffffffffffffffffffffffffffff"
+                app:cellTitle="AppSetting_params_pad" />
+
+            <com.xiaoniu.qqversionlist.ui.components.cell.CellMiddleClick
+                android:id="@+id/dialog_local_qua"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cellDescription="V1_AND_SQ_9.1.33_8568_HDBM_T"
+                app:cellTitle="QUA" />
 
             <com.xiaoniu.qqversionlist.ui.components.cell.CellBottomClick
-                android:id="@+id/dialog_get_wetype_latest"
+                android:id="@+id/dialog_local_copy_all"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cellDescription="@string/getWeTypeTestLinkFromWeTypeLatestChannelDesc"
-                app:cellTitle="@string/getWeTypeTestLinkFromWeTypeLatestChannel" />
-
-            <com.xiaoniu.qqversionlist.ui.components.cell.CellTopClick
-                android:layout_marginTop="16dp"
-                android:id="@+id/dialog_tencent_app_store"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cellTitle="@string/getUpdateFromTencentAppStore" />
-
-            <com.xiaoniu.qqversionlist.ui.components.cell.CellBottomClick
-                android:id="@+id/dialog_shiply"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cellTitle="@string/getUpdateFromTDSShiplyDistributionPlatform" />
-
-            <com.xiaoniu.qqversionlist.ui.components.cell.CellSingleClick
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="14dp"
-                android:id="@+id/dialog_firebase"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cellTitle="@string/initFirebaseService" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_exp_ok"
-                style="@style/Widget.Material3.Button.TonalButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/back" />
+                app:cellIcon="@drawable/file_copy_line"
+                app:cellTitle="@string/copyAll" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

@@ -33,7 +33,6 @@ import com.xiaoniu.qqversionlist.data.TIMVersionBean
 import com.xiaoniu.qqversionlist.ui.MainActivity
 import com.xiaoniu.qqversionlist.util.StringUtil.getQua
 import com.xiaoniu.qqversionlist.util.StringUtil.jsonArrayToList
-import com.xiaoniu.qqversionlist.util.StringUtil.toPrettyFormat
 import kotlinx.serialization.json.Json
 import org.apache.maven.artifact.versioning.ComparableVersion
 

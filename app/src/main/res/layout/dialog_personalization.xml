@@ -16,6 +16,7 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/ll_personalization"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -36,78 +37,86 @@
             android:orientation="vertical"
             android:paddingBottom="20dp">
 
-            <com.google.android.material.materialswitch.MaterialSwitch
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="12dp"
+                android:paddingTop="6dp"
+                android:paddingEnd="12dp"
+                android:paddingBottom="6dp"
+                android:text="@string/aboutVersionCards"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+
+            <com.xiaoniu.qqversionlist.ui.components.cell.CellTopSwitch
                 android:id="@+id/switch_display_first"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:paddingTop="16dp"
-                android:text="@string/defaultDisplayOfFirstListItemDetails" />
+                app:cellTitle="@string/defaultDisplayOfFirstListItemDetails" />
 
-            <com.google.android.material.materialswitch.MaterialSwitch
+            <com.xiaoniu.qqversionlist.ui.components.cell.CellMiddleSwitch
                 android:id="@+id/switch_kuikly_tag"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:text="@string/showKuiklyTag" />
+                app:cellDescription="@string/showKuiklyTagDesc"
+                app:cellTitle="@string/showKuiklyTag" />
 
-            <com.google.android.material.materialswitch.MaterialSwitch
+            <com.xiaoniu.qqversionlist.ui.components.cell.CellMiddleSwitch
                 android:id="@+id/switch_unreal_engine_tag"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:text="@string/showUnrealEngineTag" />
+                app:cellDescription="@string/showUnrealEngineTagDesc"
+                app:cellTitle="@string/showUnrealEngineTag" />
 
-            <com.google.android.material.materialswitch.MaterialSwitch
+            <com.xiaoniu.qqversionlist.ui.components.cell.CellMiddleSwitch
                 android:id="@+id/switch_progress_size"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:text="@string/versionCardsDisplaysPackageSizeIndicator" />
+                app:cellDescription="@string/versionCardsDisplaysPackageSizeDesc"
+                app:cellTitle="@string/versionCardsDisplaysPackageSizeIndicator" />
 
-            <com.google.android.material.materialswitch.MaterialSwitch
+            <com.xiaoniu.qqversionlist.ui.components.cell.CellMiddleSwitch
                 android:id="@+id/switch_progress_size_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:text="@string/versionCardsDisplaysPackageSizeText" />
+                app:cellDescription="@string/versionCardsDisplaysPackageSizeDesc"
+                app:cellTitle="@string/versionCardsDisplaysPackageSizeText" />
 
-            <com.google.android.material.materialswitch.MaterialSwitch
+            <com.xiaoniu.qqversionlist.ui.components.cell.CellMiddleSwitch
                 android:id="@+id/switch_version_tcloud"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:text="@string/versionNumberFontUsesTCloudNumber" />
+                app:cellTitle="@string/versionNumberFontUsesTCloudNumber" />
 
             <com.google.android.material.slider.Slider
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
                 android:id="@+id/version_tcloud_thickness"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:background="@drawable/shape_cell_bottom"
+                android:paddingStart="12dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="12dp"
+                android:paddingBottom="12dp"
                 android:stepSize="1.0"
                 android:valueFrom="1.0"
                 android:valueTo="4.0" />
 
-            <com.google.android.material.materialswitch.MaterialSwitch
+            <com.xiaoniu.qqversionlist.ui.components.cell.CellSingleSwitch
                 android:id="@+id/switch_old_loading"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:text="@string/showOldLoading" />
+                android:layout_marginTop="16dp"
+                app:cellTitle="@string/showOldLoading" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_personalization_ok"
                 style="@style/Widget.Material3.Button.TonalButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="14dp"
                 android:text="@string/done" />
-
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
