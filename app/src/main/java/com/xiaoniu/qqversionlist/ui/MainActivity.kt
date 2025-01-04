@@ -75,6 +75,12 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.Strictness
 import com.xiaoniu.qqversionlist.BuildConfig
+import com.xiaoniu.qqversionlist.QverbowApplication.Companion.ANDROID_QIDIAN_PACKAGE_NAME
+import com.xiaoniu.qqversionlist.QverbowApplication.Companion.ANDROID_QQ_PACKAGE_NAME
+import com.xiaoniu.qqversionlist.QverbowApplication.Companion.ANDROID_TIM_PACKAGE_NAME
+import com.xiaoniu.qqversionlist.QverbowApplication.Companion.ANDROID_WECHAT_PACKAGE_NAME
+import com.xiaoniu.qqversionlist.QverbowApplication.Companion.ANDROID_WECOM_PACKAGE_NAME
+import com.xiaoniu.qqversionlist.QverbowApplication.Companion.ANDROID_WETYPE_PACKAGE_NAME
 import com.xiaoniu.qqversionlist.QverbowApplication.Companion.SHIPLY_DEFAULT_APPID
 import com.xiaoniu.qqversionlist.QverbowApplication.Companion.SHIPLY_DEFAULT_SDK_VERSION
 import com.xiaoniu.qqversionlist.R
@@ -258,8 +264,7 @@ class MainActivity : AppCompatActivity() {
         ) else {
             getData()
             if (BuildConfig.VERSION_NAME.endsWith("Release") && DataStoreUtil.getBooleanKV(
-                    "autoCheckUpdates",
-                    false
+                    "autoCheckUpdates", false
                 )
             ) checkQverbowUpdates(
                 BuildConfig.VERSION_NAME.trimSubstringAtEnd("-Release"), false
@@ -447,9 +452,7 @@ class MainActivity : AppCompatActivity() {
                                     }
 
                                     versionTcloudThickness.setEnabled(
-                                        DataStoreUtil.getBooleanKV(
-                                            "versionTCloud", true
-                                        )
+                                        DataStoreUtil.getBooleanKV("versionTCloud", true)
                                     )
 
                                     versionTcloudThickness.value = when (DataStoreUtil.getStringKV(
@@ -489,14 +492,12 @@ class MainActivity : AppCompatActivity() {
                                     qqVersion = qqVersion.mapIndexed { index, qqVersionBean ->
                                         if (index == 0) qqVersionBean.copy(
                                             displayType = if (isChecked) 1 else 0
-                                        )
-                                        else qqVersionBean
+                                        ) else qqVersionBean
                                     }
                                     timVersion = timVersion.mapIndexed { index, timVersionBean ->
                                         if (index == 0) timVersionBean.copy(
                                             displayType = if (isChecked) 1 else 0
-                                        )
-                                        else timVersionBean
+                                        ) else timVersionBean
                                     }
                                     qqVersionAdapter.submitList(qqVersion)
                                     timVersionAdapter.submitList(timVersion)
@@ -1016,27 +1017,27 @@ class MainActivity : AppCompatActivity() {
                                 }
 
                                 getQq.setOnClickListener {
-                                    tencentAppStoreStart("com.tencent.mobileqq", getQq)
+                                    tencentAppStoreStart(ANDROID_QQ_PACKAGE_NAME, getQq)
                                 }
 
                                 getTim.setOnClickListener {
-                                    tencentAppStoreStart("com.tencent.tim", getTim)
+                                    tencentAppStoreStart(ANDROID_TIM_PACKAGE_NAME, getTim)
                                 }
 
                                 getWeixin.setOnClickListener {
-                                    tencentAppStoreStart("com.tencent.mm", getWeixin)
+                                    tencentAppStoreStart(ANDROID_WECHAT_PACKAGE_NAME, getWeixin)
                                 }
 
                                 getWecom.setOnClickListener {
-                                    tencentAppStoreStart("com.tencent.wework", getWecom)
+                                    tencentAppStoreStart(ANDROID_WECOM_PACKAGE_NAME, getWecom)
                                 }
 
                                 getWetype.setOnClickListener {
-                                    tencentAppStoreStart("com.tencent.wetype", getWetype)
+                                    tencentAppStoreStart(ANDROID_WETYPE_PACKAGE_NAME, getWetype)
                                 }
 
                                 getQidian.setOnClickListener {
-                                    tencentAppStoreStart("com.tencent.qidian", getQidian)
+                                    tencentAppStoreStart(ANDROID_QIDIAN_PACKAGE_NAME, getQidian)
                                 }
                             }
                         }
@@ -1282,11 +1283,13 @@ class MainActivity : AppCompatActivity() {
         dialogGuessBinding.apply {
             etVersionSmall.isEnabled = true
             etVersionSmall.isVisible = true
-            guessDialogWarning.isVisible = true
             etVersion16code.isVisible = false
             etVersionTrue.isVisible = false
-            if (mode == MODE_TIM) tvWarning.setText(R.string.enumTIMWarning)
-            else tvWarning.setText(R.string.enumQQPreviewWarning)
+            if (mode == MODE_TIM) guessDialogWarning.isVisible = false
+            else {
+                guessDialogWarning.isVisible = true
+                tvWarning.setText(R.string.enumQQPreviewWarning)
+            }
             etVersionBig.helperText = getString(R.string.enumQQMajorVersionHelpText)
         }
     }
@@ -2053,9 +2056,8 @@ class MainActivity : AppCompatActivity() {
 
         dialogExpBackBinding.apply {
             MaterialAlertDialogBuilder(this@MainActivity)
-                .setView(
-                    dialogExpBackBinding.root
-                ).setTitle(dialogTitle)
+                .setView(dialogExpBackBinding.root)
+                .setTitle(dialogTitle)
                 .setIcon(R.drawable.flask_line)
                 .show().apply {
                     expUrlRecyclerView.layoutManager =
@@ -2083,13 +2085,13 @@ class MainActivity : AppCompatActivity() {
 
     /**
      * @param btn `MaterialButton` 实例，此函数将控制传入按钮的加载态
-     * @param shiplyVersion QQ 版本号
+     * @param shiplyVersion Android QQ 版本号，如 9.1.30#8538
      * @param shiplyUin QQ 号
-     * @param shiplyAppid QQ 版本 ID，如 `537230561`
-     * @param shiplyOsVersion Android 版本（整数表示）
+     * @param shiplyAppid Android QQ 版本 Channel ID，如 `537230561`
+     * @param shiplyOsVersion 系统 Android 版本（整数表示）
      * @param shiplyModel 设备型号
      * @param shiplySdkVersion Shiply SDK 版本
-     * @param shiplyLanguage 语言
+     * @param shiplyLanguage 系统语言
      **/
     private fun tencentShiplyStart(
         btn: MaterialButton,
@@ -2187,8 +2189,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun tencentAppStoreStart(
-        getType: String,
-        btn: MaterialButton
+        getType: String, btn: MaterialButton
     ) {
         val spec = CircularProgressIndicatorSpec(
             this@MainActivity, null, 0,
@@ -2271,9 +2272,7 @@ class MainActivity : AppCompatActivity() {
                                     putExtra(
                                         Intent.EXTRA_TEXT,
                                         "Android $appName $appVersionName" + "（${getString(R.string.fileSize)}$appSize MB）" + "\n\n${
-                                            getString(
-                                                R.string.downloadLink
-                                            )
+                                            getString(R.string.downloadLink)
                                         }$appUrl\n\n来自腾讯应用宝"
                                     )
                                 }
@@ -2347,7 +2346,7 @@ class MainActivity : AppCompatActivity() {
 
                             val updateQvtMaterialDialog =
                                 MaterialAlertDialogBuilder(this@MainActivity)
-                                    .setTitle(R.string.updateQVTAvailable)
+                                    .setTitle(R.string.updateQverbowAvailable)
                                     .setIcon(R.drawable.check_circle)
                                     .setView(updateQvtButtonBinding.root)
                                     .setMessage(

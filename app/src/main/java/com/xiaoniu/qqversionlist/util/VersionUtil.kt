@@ -23,6 +23,8 @@ import android.content.pm.PackageManager
 import android.os.Build
 import com.google.gson.Gson
 import com.google.gson.JsonObject
+import com.xiaoniu.qqversionlist.QverbowApplication.Companion.ANDROID_QQ_PACKAGE_NAME
+import com.xiaoniu.qqversionlist.QverbowApplication.Companion.ANDROID_TIM_PACKAGE_NAME
 import com.xiaoniu.qqversionlist.QverbowApplication.Companion.EARLIEST_KUIKLY_FRAMEWORK_QQ_VERSION_STABLE
 import com.xiaoniu.qqversionlist.QverbowApplication.Companion.EARLIEST_KUIKLY_FRAMEWORK_TIM_VERSION_STABLE
 import com.xiaoniu.qqversionlist.QverbowApplication.Companion.EARLIEST_QQNT_FRAMEWORK_QQ_VERSION_STABLE
@@ -147,12 +149,12 @@ object VersionUtil {
 
     fun Context.resolveLocalQQ() {
         // 识别本机 Android QQ 版本并放进持久化存储
-        val QQPackageInfo = packageManager.getPackageInfo("com.tencent.mobileqq", 0)
+        val QQPackageInfo = packageManager.getPackageInfo(ANDROID_QQ_PACKAGE_NAME, 0)
         val QQVersionInstall = QQPackageInfo.versionName.toString()
         val QQVersionCodeInstall =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) QQPackageInfo.longVersionCode.toString() else ""
         val QQMetaDataInstall = packageManager.getPackageInfo(
-            "com.tencent.mobileqq", PackageManager.GET_META_DATA
+            ANDROID_QQ_PACKAGE_NAME, PackageManager.GET_META_DATA
         )
         val QQAppSettingParamsInstall =
             QQMetaDataInstall.applicationInfo?.metaData?.getString("AppSetting_params")
@@ -207,12 +209,12 @@ object VersionUtil {
 
     fun Context.resolveLocalTIM() {
         // 识别本机 Android TIM 版本并放进持久化存储
-        val TIMPackageInfo = packageManager.getPackageInfo("com.tencent.tim", 0)
+        val TIMPackageInfo = packageManager.getPackageInfo(ANDROID_TIM_PACKAGE_NAME, 0)
         val TIMVersionInstall = TIMPackageInfo.versionName.toString()
         val TIMVersionCodeInstall =
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) TIMPackageInfo.longVersionCode.toString() else ""
         val TIMMetaDataInstall = packageManager.getPackageInfo(
-            "com.tencent.tim", PackageManager.GET_META_DATA
+            ANDROID_TIM_PACKAGE_NAME, PackageManager.GET_META_DATA
         )
         val TIMAppSettingParamsInstall =
             TIMMetaDataInstall.applicationInfo?.metaData?.getString("AppSetting_params")

@@ -22,6 +22,12 @@ import android.util.Base64
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
 import com.google.gson.Strictness
+import com.xiaoniu.qqversionlist.QverbowApplication.Companion.ANDROID_QQ_PACKAGE_NAME
+import com.xiaoniu.qqversionlist.QverbowApplication.Companion.ANDROID_TIM_PACKAGE_NAME
+import com.xiaoniu.qqversionlist.QverbowApplication.Companion.SHIPLY_APPID_QQ
+import com.xiaoniu.qqversionlist.QverbowApplication.Companion.SHIPLY_APPID_TIM
+import com.xiaoniu.qqversionlist.QverbowApplication.Companion.SHIPLY_SIGN_ID_QQ
+import com.xiaoniu.qqversionlist.QverbowApplication.Companion.SHIPLY_SIGN_ID_TIM
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -45,13 +51,13 @@ import javax.crypto.spec.SecretKeySpec
 object ShiplyUtil {
 
     /**
-     * @param appVersion QQ 版本号
+     * @param appVersion Android QQ 版本号，如 9.1.30#8538
      * @param uin QQ 号
-     * @param appid QQ 版本 ID，如 `537230561`
-     * @param osVersion Android 版本（整数表示）
+     * @param appid Android QQ 版本 Channel ID，如 `537230561`
+     * @param osVersion 系统 Android 版本（整数表示）
      * @param model 设备型号
      * @param sdkVersion Shiply SDK 版本
-     * @param language 语言
+     * @param language 系统语言
      * @param targetApp 目标应用，默认为“QQ”，可选“TIM”
      * @return 生成的 JSON 字符串
      **/
@@ -66,10 +72,10 @@ object ShiplyUtil {
         targetApp: String = "QQ"
     ): String {
         val timestamp = System.currentTimeMillis() / 1000L
-        val appID = if (targetApp == "QQ") "4cd6974be1" else "ad6b501b0e"
+        val appID = if (targetApp == "QQ") SHIPLY_APPID_QQ else SHIPLY_APPID_TIM
         val signID =
-            if (targetApp == "QQ") "0ccc46ca-154c-4c6b-8b0b-4d8537ffcbcc" else "33641818-aee7-445a-82d4-b7d0bce3a85a"
-        val bundleId = if (targetApp == "QQ") "com.tencent.mobileqq" else "com.tencent.tim"
+            if (targetApp == "QQ") SHIPLY_SIGN_ID_QQ else SHIPLY_SIGN_ID_TIM
+        val bundleId = if (targetApp == "QQ") ANDROID_QQ_PACKAGE_NAME else ANDROID_TIM_PACKAGE_NAME
         val data = mapOf(
             "systemID" to "10016",
             "appID" to appID,

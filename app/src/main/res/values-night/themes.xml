@@ -20,11 +20,14 @@
 
     <style name="Base.Theme.QQVersionList" parent="Theme.Material3.DynamicColors.DayNight.NoActionBar">
         <item name="android:windowLightStatusBar">false</item>
-        <item name="android:windowSplashScreenBackground" tools:targetApi="31">?attr/colorPrimaryContainer</item>
+        <item name="android:windowSplashScreenBackground" tools:targetApi="31">
+            ?attr/colorPrimaryContainer
+        </item>
         <item name="android:windowSplashScreenAnimatedIcon" tools:targetApi="31">
             @drawable/ic_launcher_foreground_splash
         </item>
-        <item name="android:windowSplashScreenIconBackgroundColor" tools:targetApi="31">?attr/colorPrimaryContainer
+        <item name="android:windowSplashScreenIconBackgroundColor" tools:targetApi="31">
+            ?attr/colorPrimaryContainer
         </item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:windowLayoutInDisplayCutoutMode" tools:targetApi="27">shortEdges</item>
@@ -38,15 +41,22 @@
         </item>
     </style>
 
+    <!--
+    Oss-licenses-plugin is not edge-to-edge ready.
+    https://github.com/google/play-services-plugins/issues/296
+    -->
     <style name="Theme.OssLicensesMenuActivity" parent="Theme.Material3.DynamicColors.DayNight">
         <item name="android:windowLightStatusBar">false</item>
-        <item name="android:windowSplashScreenBackground" tools:targetApi="31">?attr/colorPrimaryContainer</item>
+        <item name="android:windowSplashScreenBackground" tools:targetApi="31">
+            ?attr/colorPrimaryContainer
+        </item>
         <item name="android:windowSplashScreenAnimatedIcon" tools:targetApi="31">
             @drawable/ic_launcher_foreground_splash
         </item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:windowLayoutInDisplayCutoutMode" tools:targetApi="27">shortEdges</item>
-        <item name="android:windowSplashScreenIconBackgroundColor" tools:targetApi="31">?attr/colorPrimaryContainer
+        <item name="android:windowSplashScreenIconBackgroundColor" tools:targetApi="31">
+            ?attr/colorPrimaryContainer
         </item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:statusBarColor">@android:color/transparent</item>

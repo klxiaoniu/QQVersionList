@@ -18,8 +18,8 @@
 <resources>
     <string name="app_name">QQ 版本列表实用工具</string>
     <string name="appTitle">QQ 版本列表实用工具</string>
-    <string name="shortcutLongLabel">扫版 Extended</string>
-    <string name="shortcutShortLabel">扫版 Extd.</string>
+    <string name="shortcutLongLabel">扫版（维护模式）</string>
+    <string name="shortcutShortLabel">扫版（维护）</string>
     <string name="start">开始</string>
     <string name="cancel">取消</string>
     <string name="done">确定</string>
@@ -32,8 +32,8 @@
     <string name="withdrawConsentUA">撤回同意用户协议</string>
     <string name="withdrawConsentAndExit">撤回同意并退出</string>
     <string name="userAgreement">用户协议</string>
-    <string name="enumerateVersionsFAB">扫版</string>
-    <string name="enumerateVersionsDialogTitle">扫版 Extended</string>
+    <string name="enumerateVersionsFAB">扫版（维护模式）</string>
+    <string name="enumerateVersionsDialogTitle">扫版（维护模式）</string>
     <string name="setting">设置</string>
     <string name="personalization">个性化</string>
     <string name="about">关于</string>
@@ -131,7 +131,7 @@
     <string name="noUpdatesDetected">未检测到更新</string>
     <string name="noAssetsDetected">未检测到资产文件</string>
     <string name="cannotGetGitHub">无法连接到 GitHub，请确保您所在网络环境可以访问 GitHub。</string>
-    <string name="updateQVTAvailable">更新可用</string>
+    <string name="updateQverbowAvailable">更新可用</string>
     <string name="copyLink">复制链接</string>
     <string name="unrealEngineTag">内置虚幻引擎</string>
     <string name="autoCheckForUpdates">启动时检查更新</string>
@@ -209,4 +209,5 @@
     <string name="showUnrealEngineTagDesc">虚幻引擎内置情况以 QQ 正式版为判断来源</string>
     <string name="general">通用</string>
     <string name="copyAll">复制全部</string>
+    <string name="enumVerMaintenanceModeWarning">扫版功能已进入维护模式。您仍可以继续使用现有扫版功能，但 QQ 版本列表实用工具不再对相关功能及其任何后果作出任何可靠性保证，不再对相关功能进行积极开发，也不再接受相关新功能请求。请明确并确保自身具备足够的风险识别和承受能力。</string>
 </resources>

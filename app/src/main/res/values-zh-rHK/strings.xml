@@ -19,8 +19,8 @@
 <resources>
     <string name="app_name">QQ 版本列表實用工具</string>
     <string name="appTitle">QQ 版本列表實用工具</string>
-    <string name="shortcutLongLabel">掃版 Extended</string>
-    <string name="shortcutShortLabel">掃版 Extd.</string>
+    <string name="shortcutLongLabel">掃版（維護模式）</string>
+    <string name="shortcutShortLabel">掃版（維護）</string>
     <string name="start">開始</string>
     <string name="cancel">取消</string>
     <string name="done">確定</string>
@@ -33,8 +33,8 @@
     <string name="withdrawConsentUA">撤回同意用戶協議</string>
     <string name="withdrawConsentAndExit">撤回同意並退出</string>
     <string name="userAgreement">用戶協議</string>
-    <string name="enumerateVersionsFAB">掃版</string>
-    <string name="enumerateVersionsDialogTitle">掃版 Extended</string>
+    <string name="enumerateVersionsFAB">掃版（維護模式）</string>
+    <string name="enumerateVersionsDialogTitle">掃版（維護模式）</string>
     <string name="setting">設定</string>
     <string name="personalization">個人化</string>
     <string name="about">關於</string>
@@ -132,7 +132,7 @@
     <string name="noUpdatesDetected">未檢測到更新</string>
     <string name="noAssetsDetected">未檢測到資產文件</string>
     <string name="cannotGetGitHub">無法連接到 GitHub，請確保您所在的網絡環境可以訪問 GitHub。</string>
-    <string name="updateQVTAvailable">更新可用</string>
+    <string name="updateQverbowAvailable">更新可用</string>
     <string name="copyLink">複製連結</string>
     <string name="unrealEngineTag">內建虛幻引擎</string>
     <string name="autoCheckForUpdates">啟動時檢查更新</string>
@@ -210,4 +210,5 @@
     <string name="showUnrealEngineTagDesc">虚幻引擎的內置情況以 QQ 正式版為判斷依據</string>
     <string name="general">通用</string>
     <string name="copyAll">複製全部</string>
+    <string name="enumVerMaintenanceModeWarning">掃版功能已進入維護模式。您仍可以繼續使用現有的掃版功能，但 QQ 版本列表實用工具將不再對相關功能及其任何後果作出任何可靠性保證，不再對相關功能進行積極開發，也不再接受相關新功能請求。請明確並確保自身具備足夠的風險識別和承受能力。</string>
 </resources>
