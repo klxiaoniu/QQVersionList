@@ -19,6 +19,7 @@
 package com.xiaoniu.qqversionlist.ui
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
@@ -50,8 +51,8 @@ class LocalQQAdapter : RecyclerView.Adapter<LocalQQAdapter.LocalQQViewHolder>() 
         val QQAppSettingParamsPadInstallKV =
             DataStoreUtil.getStringKV("QQAppSettingParamsPadInstall", "")
         val QQQuaKV = DataStoreUtil.getStringKV("QQQua", "")
-        val QQRdmUUIDInstallProcessed = if (QQRdmUUIDInstallKV != ""
-        ) ".${QQRdmUUIDInstallKV.split("_")[0]}" else ""
+        val QQRdmUUIDInstallProcessed =
+            if (QQRdmUUIDInstallKV != "") ".${QQRdmUUIDInstallKV.split("_")[0]}" else ""
         val QQChannelInstallProcessed =
             if (QQAppSettingParamsInstallKV != "") QQAppSettingParamsInstallKV.split("#")[3] else ""
         holder.apply {
@@ -83,8 +84,14 @@ class LocalQQAdapter : RecyclerView.Adapter<LocalQQAdapter.LocalQQViewHolder>() 
                     )*/
                 itemQqInstallCard.setOnLongClickListener {
                     if (DataStoreUtil.getBooleanKV("longPressCard", true)) {
-                        val localInfoAllText =
-                            (if (QQTargetInstallKV != "") "Target SDK${itemView.context.getString(R.string.colon)}${QQTargetInstallKV}" else "") + (if (QQMinInstallKV != "") "\nMin SDK${
+                        if (DataStoreUtil.getBooleanKV("useNewLocalPage", true)) {
+                            itemView.context.startActivity(Intent(
+                                itemView.context, LocalAppDetailsActivity::class.java
+                            ).apply { putExtra("localAppType", "QQ") })
+                        } else {
+                            val localInfoAllText = (if (QQTargetInstallKV != "") "Target SDK${
+                                itemView.context.getString(R.string.colon)
+                            }${QQTargetInstallKV}" else "") + (if (QQMinInstallKV != "") "\nMin SDK${
                                 itemView.context.getString(R.string.colon)
                             }${QQMinInstallKV}" else "") + (if (QQCompileInstallKV != "") "\nCompile SDK${
                                 itemView.context.getString(R.string.colon)
@@ -108,101 +115,110 @@ class LocalQQAdapter : RecyclerView.Adapter<LocalQQAdapter.LocalQQViewHolder>() 
                                 itemView.context.getString(R.string.colon)
                             }${
                                 QQAppSettingParamsPadInstallKV
-                            }" else "") + (if (QQQuaKV != "") "\nQUA${itemView.context.getString(R.string.colon)}${QQQuaKV}" else "")
+                            }" else "") + (if (QQQuaKV != "") "\nQUA${
+                                itemView.context.getString(R.string.colon)
+                            }${QQQuaKV}" else "")
 
-                        val dialogLocalQqTimInfoBinding = DialogLocalQqTimInfoBinding.inflate(
-                            LayoutInflater.from(itemView.context)
-                        )
+                            val dialogLocalQqTimInfoBinding = DialogLocalQqTimInfoBinding.inflate(
+                                LayoutInflater.from(itemView.context)
+                            )
 
-                        MaterialAlertDialogBuilder(itemView.context)
-                            .setView(dialogLocalQqTimInfoBinding.root)
-                            .setTitle(R.string.localQQVersionDetails)
-                            .setIcon(R.drawable.phone_find_line).apply {
-                                dialogLocalQqTimInfoBinding.apply {
-                                    val dialogLocalSdkDesc =
-                                        if (QQTargetInstallKV != "" && QQMinInstallKV != "" && QQChannelInstallProcessed != "") "Target $QQTargetInstallKV | Min $QQMinInstallKV | Compile $QQCompileInstallKV" else "Target $QQTargetInstallKV | Min $QQMinInstallKV"
+                            MaterialAlertDialogBuilder(itemView.context).setView(
+                                dialogLocalQqTimInfoBinding.root
+                            ).setTitle(R.string.localQQVersionDetails)
+                                .setIcon(R.drawable.phone_find_line).apply {
+                                    dialogLocalQqTimInfoBinding.apply {
+                                        val dialogLocalSdkDesc =
+                                            if (QQTargetInstallKV != "" && QQMinInstallKV != "" && QQChannelInstallProcessed != "") "Target $QQTargetInstallKV | Min $QQMinInstallKV | Compile $QQCompileInstallKV" else "Target $QQTargetInstallKV | Min $QQMinInstallKV"
 
-                                    dialogLocalSdk.apply {
-                                        setCellDescription(dialogLocalSdkDesc)
-                                        this.setOnClickListener {
-                                            context.copyText(
-                                                "Android SDK${
-                                                    itemView.context.getString(R.string.colon)
-                                                }$dialogLocalSdkDesc"
-                                            )
+                                        dialogLocalSdk.apply {
+                                            setCellDescription(dialogLocalSdkDesc)
+                                            this.setOnClickListener {
+                                                context.copyText(
+                                                    "Android SDK${
+                                                        itemView.context.getString(R.string.colon)
+                                                    }$dialogLocalSdkDesc"
+                                                )
+                                            }
+                                        }
+                                        dialogLocalVersionName.apply {
+                                            setCellDescription(QQVersionInstallKV)
+                                            this.setOnClickListener {
+                                                context.copyText(
+                                                    "Version Name${
+                                                        itemView.context.getString(R.string.colon)
+                                                    }$QQVersionInstallKV"
+                                                )
+                                            }
+                                        }
+                                        dialogLocalRdmUuid.apply {
+                                            if (QQRdmUUIDInstallKV != "") {
+                                                setCellDescription(QQRdmUUIDInstallKV)
+                                                this.setOnClickListener {
+                                                    context.copyText(
+                                                        "Rdm UUID${
+                                                            itemView.context.getString(R.string.colon)
+                                                        }$QQRdmUUIDInstallKV"
+                                                    )
+                                                }
+                                            } else dialogLocalRdmUuid.isVisible = false
+                                        }
+                                        dialogLocalVersionCode.apply {
+                                            if (QQVersionCodeInstallKV != "") {
+                                                setCellDescription(QQVersionCodeInstallKV)
+                                                this.setOnClickListener {
+                                                    context.copyText(
+                                                        "Version Code${
+                                                            itemView.context.getString(R.string.colon)
+                                                        }$QQVersionCodeInstallKV"
+                                                    )
+                                                }
+                                            } else dialogLocalVersionCode.isVisible = false
+                                        }
+                                        dialogLocalAppsettingParams.apply {
+                                            if (QQAppSettingParamsInstallKV != "") {
+                                                setCellDescription(QQAppSettingParamsInstallKV)
+                                                this.setOnClickListener {
+                                                    context.copyText(
+                                                        "AppSetting_params${
+                                                            itemView.context.getString(R.string.colon)
+                                                        }$QQAppSettingParamsInstallKV"
+                                                    )
+                                                }
+                                            } else dialogLocalAppsettingParams.isVisible = false
+                                        }
+                                        dialogLocalAppsettingParamsPad.apply {
+                                            if (QQAppSettingParamsPadInstallKV != "") {
+                                                setCellDescription(QQAppSettingParamsPadInstallKV)
+                                                this.setOnClickListener {
+                                                    context.copyText(
+                                                        "AppSetting_params_pad${
+                                                            itemView.context.getString(R.string.colon)
+                                                        }$QQAppSettingParamsPadInstallKV"
+                                                    )
+                                                }
+                                            } else dialogLocalAppsettingParamsPad.isVisible = false
+                                        }
+                                        dialogLocalQua.apply {
+                                            if (QQQuaKV != "") {
+                                                setCellDescription(QQQuaKV)
+                                                this.setOnClickListener {
+                                                    context.copyText(
+                                                        "QUA${
+                                                            itemView.context.getString(
+                                                                R.string.colon
+                                                            )
+                                                        }$QQQuaKV"
+                                                    )
+                                                }
+                                            } else dialogLocalQua.isVisible = false
+                                        }
+                                        dialogLocalCopyAll.setOnClickListener {
+                                            context.copyText(localInfoAllText)
                                         }
                                     }
-                                    dialogLocalVersionName.apply {
-                                        setCellDescription(QQVersionInstallKV)
-                                        this.setOnClickListener {
-                                            context.copyText(
-                                                "Version Name${
-                                                    itemView.context.getString(R.string.colon)
-                                                }$QQVersionInstallKV"
-                                            )
-                                        }
-                                    }
-                                    dialogLocalRdmUuid.apply {
-                                        if (QQRdmUUIDInstallKV != "") {
-                                            setCellDescription(QQRdmUUIDInstallKV)
-                                            this.setOnClickListener {
-                                                context.copyText(
-                                                    "Rdm UUID${
-                                                        itemView.context.getString(R.string.colon)
-                                                    }$QQRdmUUIDInstallKV"
-                                                )
-                                            }
-                                        } else dialogLocalRdmUuid.isVisible = false
-                                    }
-                                    dialogLocalVersionCode.apply {
-                                        if (QQVersionCodeInstallKV != "") {
-                                            setCellDescription(QQVersionCodeInstallKV)
-                                            this.setOnClickListener {
-                                                context.copyText(
-                                                    "Version Code${
-                                                        itemView.context.getString(R.string.colon)
-                                                    }$QQVersionCodeInstallKV"
-                                                )
-                                            }
-                                        } else dialogLocalVersionCode.isVisible = false
-                                    }
-                                    dialogLocalAppsettingParams.apply {
-                                        if (QQAppSettingParamsInstallKV != "") {
-                                            setCellDescription(QQAppSettingParamsInstallKV)
-                                            this.setOnClickListener {
-                                                context.copyText(
-                                                    "AppSetting_params${
-                                                        itemView.context.getString(R.string.colon)
-                                                    }$QQAppSettingParamsInstallKV"
-                                                )
-                                            }
-                                        } else dialogLocalAppsettingParams.isVisible = false
-                                    }
-                                    dialogLocalAppsettingParamsPad.apply {
-                                        if (QQAppSettingParamsPadInstallKV != "") {
-                                            setCellDescription(QQAppSettingParamsPadInstallKV)
-                                            this.setOnClickListener {
-                                                context.copyText(
-                                                    "AppSetting_params_pad${
-                                                        itemView.context.getString(R.string.colon)
-                                                    }$QQAppSettingParamsPadInstallKV"
-                                                )
-                                            }
-                                        } else dialogLocalAppsettingParamsPad.isVisible = false
-                                    }
-                                    dialogLocalQua.apply {
-                                        if (QQQuaKV != "") {
-                                            setCellDescription(QQQuaKV)
-                                            this.setOnClickListener {
-                                                context.copyText("QUA${itemView.context.getString(R.string.colon)}$QQQuaKV")
-                                            }
-                                        } else dialogLocalQua.isVisible = false
-                                    }
-                                    dialogLocalCopyAll.setOnClickListener {
-                                        context.copyText(localInfoAllText)
-                                    }
-                                }
-                            }.show()
+                                }.show()
+                        }
                     } else showToast(R.string.longPressToViewSourceDetailsIsDisabled)
                     true
                 }
