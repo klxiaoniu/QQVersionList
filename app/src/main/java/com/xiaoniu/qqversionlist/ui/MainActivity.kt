@@ -18,7 +18,6 @@
 
 package com.xiaoniu.qqversionlist.ui
 
-
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.DownloadManager
@@ -31,6 +30,7 @@ import android.content.res.Configuration
 import android.content.res.Resources
 import android.net.Uri
 import android.os.Build
+import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
 import android.os.Environment
 import android.text.Editable
@@ -53,6 +53,8 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.airbnb.paris.extensions.style
@@ -64,6 +66,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.progressindicator.CircularProgressIndicatorSpec
 import com.google.android.material.progressindicator.IndeterminateDrawable
 import com.google.android.material.progressindicator.LinearProgressIndicator
+import com.google.android.material.sidesheet.SideSheetDialog
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
 import com.google.firebase.analytics.ktx.analytics
@@ -120,9 +123,10 @@ import com.xiaoniu.qqversionlist.util.StringUtil.resolveWeixinAlphaConfig
 import com.xiaoniu.qqversionlist.util.StringUtil.toPrettyFormat
 import com.xiaoniu.qqversionlist.util.StringUtil.trimSubstringAtEnd
 import com.xiaoniu.qqversionlist.util.StringUtil.trimSubstringAtStart
-import com.xiaoniu.qqversionlist.util.VersionUtil
 import com.xiaoniu.qqversionlist.util.VersionUtil.resolveLocalQQ
 import com.xiaoniu.qqversionlist.util.VersionUtil.resolveLocalTIM
+import com.xiaoniu.qqversionlist.util.VersionUtil.resolveQQRainbow
+import com.xiaoniu.qqversionlist.util.VersionUtil.resolveTIMRainbow
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -153,6 +157,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var qqVersionListFragment: QQVersionListFragment
     private lateinit var timVersionListFragment: TIMVersionListFragment
     private lateinit var rvPagerAdapter: VersionListPagerAdapter
+    private lateinit var viewModel: VersionListViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
@@ -165,10 +170,10 @@ class MainActivity : AppCompatActivity() {
         setContext(this)
 
         // 不加这段代码的话 Google 可能会在系统栏加遮罩
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) window.isNavigationBarContrastEnforced =
+        if (SDK_INT >= Build.VERSION_CODES.Q) window.isNavigationBarContrastEnforced =
             false
 
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q) ViewCompat.setOnApplyWindowInsetsListener(
+        if (SDK_INT <= Build.VERSION_CODES.Q) ViewCompat.setOnApplyWindowInsetsListener(
             viewRoot
         ) { _, windowInsets ->
             val insets =
@@ -193,6 +198,11 @@ class MainActivity : AppCompatActivity() {
         if (!BuildConfig.VERSION_NAME.endsWith("Release")) binding.materialToolbar.setNavigationIcon(
             R.drawable.git_commit_line
         )
+
+        viewModel = ViewModelProvider(this)[VersionListViewModel::class.java]
+        viewModel.isVersionListLoading.observe(this, Observer { isLoading ->
+            if (isLoading) binding.progressLine.show() else binding.progressLine.hide()
+        })
 
         initButtons()
     }
@@ -412,6 +422,8 @@ class MainActivity : AppCompatActivity() {
                     dialogSettingBinding.apply {
                         longPressCard.switchChecked =
                             DataStoreUtil.getBooleanKV("longPressCard", true)
+                        useNewLocalPage.switchChecked =
+                            DataStoreUtil.getBooleanKV("useNewLocalPage", true)
                         guessNot5.switchChecked = DataStoreUtil.getBooleanKV("guessNot5", false)
                         switchGuessTestExtend.switchChecked =
                             DataStoreUtil.getBooleanKV("guessTestExtend", false) // 扩展测试版扫版格式
@@ -426,11 +438,12 @@ class MainActivity : AppCompatActivity() {
                             DataStoreUtil.getBooleanKV("rainbowFCMSubscribed", false)
                     }
 
-                    val dialogSetting = MaterialAlertDialogBuilder(this)
-                        .setTitle(R.string.setting)
-                        .setIcon(R.drawable.settings_line)
-                        .setView(dialogSettingBinding.root)
-                        .show()
+                    val dialogSetting = SideSheetDialog(this).apply {
+                        setContentView(dialogSettingBinding.root)
+                        if (SDK_INT >= Build.VERSION_CODES.Q) window?.isNavigationBarContrastEnforced =
+                            false
+                        show()
+                    }
 
                     dialogSettingBinding.apply {
                         btnSettingOk.setOnClickListener {
@@ -438,6 +451,9 @@ class MainActivity : AppCompatActivity() {
                         }
                         longPressCard.setOnCheckedChangeListener { isChecked ->
                             DataStoreUtil.putBooleanKVAsync("longPressCard", isChecked)
+                        }
+                        useNewLocalPage.setOnCheckedChangeListener { isChecked ->
+                            DataStoreUtil.putBooleanKVAsync("useNewLocalPage", isChecked)
                         }
                         guessNot5.setOnCheckedChangeListener { isChecked ->
                             DataStoreUtil.putBooleanKVAsync("guessNot5", isChecked)
@@ -465,11 +481,12 @@ class MainActivity : AppCompatActivity() {
                                     }
                                 }
 
-                            val dialogPer = MaterialAlertDialogBuilder(this@MainActivity)
-                                .setTitle(R.string.personalization)
-                                .setIcon(R.drawable.palette_line)
-                                .setView(dialogPersonalization.root)
-                                .show()
+                            val dialogPer = SideSheetDialog(this@MainActivity).apply {
+                                setContentView(dialogPersonalization.root)
+                                if (SDK_INT >= Build.VERSION_CODES.Q) window?.isNavigationBarContrastEnforced =
+                                    false
+                                show()
+                            }
 
                             dialogPersonalization.apply {
                                 switchDisplayFirst.switchChecked =
@@ -1182,7 +1199,7 @@ class MainActivity : AppCompatActivity() {
                                                 ).ifEmpty { SHIPLY_DEFAULT_APPID },
                                                 getStringKV(
                                                     "shiplyOsVersion", ""
-                                                ).ifEmpty { Build.VERSION.SDK_INT.toString() },
+                                                ).ifEmpty { SDK_INT.toString() },
                                                 getStringKV(
                                                     "shiplyModel", ""
                                                 ).ifEmpty { Build.MODEL.toString() },
@@ -1209,7 +1226,7 @@ class MainActivity : AppCompatActivity() {
                                     .isGooglePlayServicesAvailable(this@MainActivity) == ConnectionResult.SUCCESS
                             ) {
                                 if (!Firebase.messaging.isAutoInitEnabled) {
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                    if (SDK_INT >= Build.VERSION_CODES.O) {
                                         val channelTitle =
                                             getString(R.string.rainbow_notification_channel_title)
                                         val channelDescription =
@@ -1308,11 +1325,10 @@ class MainActivity : AppCompatActivity() {
     private fun modeWeChatView(dialogGuessBinding: DialogGuessBinding) {
         dialogGuessBinding.apply {
             etVersionSmall.isEnabled = false
-            guessDialogWarning.isVisible = true
+            guessDialogWarning.isVisible = false
             etVersionSmall.isVisible = false
             etVersionTrue.isVisible = true
             etVersion16code.isVisible = true
-            tvWarning.setText(R.string.enumWeixinWarning)
             etVersionBig.helperText = getString(R.string.enumWeixinMajorVersionHelpText)
         }
     }
@@ -1497,7 +1513,7 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n", "PrivateResource")
     private fun getData(menu: MenuItem? = null) {
-        binding.progressLine.show()
+        viewModel.setVersionListLoading(true)
         if (menu != null) menu.isEnabled = false
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -1546,7 +1562,7 @@ class MainActivity : AppCompatActivity() {
                     fun endProgress() {
                         if (progressFlag == 0) progressFlag = 1
                         else {
-                            binding.progressLine.hide()
+                            viewModel.setVersionListLoading(false)
                             if (menu != null) menu.isEnabled = true
                         }
                     }
@@ -1558,7 +1574,7 @@ class MainActivity : AppCompatActivity() {
                         val response = okHttpClient.newCall(request).execute()
                         val responseData = response.body?.string()
                         if (responseData != null) {
-                            VersionUtil.resolveQQRainbow(this@MainActivity, responseData)
+                            resolveQQRainbow(this@MainActivity, responseData)
                             withContext(Dispatchers.Main) {
                                 qqVersionAdapter.submitList(qqVersion)
                             }
@@ -1587,7 +1603,7 @@ class MainActivity : AppCompatActivity() {
                             val response = okHttpClient.newCall(request).execute()
                             val responseData = response.body?.string()
                             if (responseData != null) {
-                                VersionUtil.resolveTIMRainbow(this@MainActivity, responseData)
+                                resolveTIMRainbow(this@MainActivity, responseData)
                                 withContext(Dispatchers.Main) {
                                     timVersionAdapter.submitList(timVersion)
                                     if (!DataStoreUtil.getBooleanKV(
@@ -1614,7 +1630,7 @@ class MainActivity : AppCompatActivity() {
                                         ).setAction(R.string.ok, TipTIMSnackbarActionListener())
                                             .setAnchorView(binding.btnGuess)
                                             .apply {
-                                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) if (isDarkTheme) setBackgroundTint(
+                                                if (SDK_INT >= Build.VERSION_CODES.S) if (isDarkTheme) setBackgroundTint(
                                                     getColor(com.google.android.material.R.color.m3_sys_color_dynamic_dark_secondary)
                                                 ) else setBackgroundTint(getColor(com.google.android.material.R.color.m3_sys_color_dynamic_light_secondary))
                                             }.show()
@@ -1815,7 +1831,9 @@ class MainActivity : AppCompatActivity() {
                                 // https://dldir1.qq.com/weixin/android/weixin8049android2600_0x2800318a_arm64.apk
                                 // https://dldir1.qq.com/weixin/android/weixin8054android2740_0x28003630_arm64_1.apk
                                 link =
-                                    "https://dldir1.qq.com/weixin/android/weixin${versionBig}android${versionTrue}_0x${v16codeStr}_arm64${wxSoList[sIndex]}.apk"
+                                    "https://dldir1v6.qq.com/weixin/android/weixin${
+                                        versionBig.replace(".", "")
+                                    }android${versionTrue}_0x${v16codeStr}_arm64${wxSoList[sIndex]}.apk"
                                 sIndex += 1
                             }
                         }
@@ -2099,7 +2117,7 @@ class MainActivity : AppCompatActivity() {
         shiplyUin: String,
         targetApp: String = "QQ",
         shiplyAppid: String = SHIPLY_DEFAULT_APPID,
-        shiplyOsVersion: String = Build.VERSION.SDK_INT.toString(),
+        shiplyOsVersion: String = SDK_INT.toString(),
         shiplyModel: String = Build.MODEL.toString(),
         shiplySdkVersion: String = SHIPLY_DEFAULT_SDK_VERSION,
         shiplyLanguage: String = Locale.getDefault().language.toString()
@@ -2450,7 +2468,7 @@ class MainActivity : AppCompatActivity() {
     // 检查特定通知渠道是否被用户关闭
     private fun checkNotificationChannelEnabled(channelId: String): Boolean {
         val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (SDK_INT >= Build.VERSION_CODES.O) {
             val channel = notificationManager.getNotificationChannel(channelId)
             return channel?.importance != NotificationManager.IMPORTANCE_NONE
         } else {
@@ -2475,7 +2493,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun askNotificationPermission() {
         // This is only necessary for API level >= 33 (TIRAMISU)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        if (SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(
                     this, Manifest.permission.POST_NOTIFICATIONS
                 ) == PackageManager.PERMISSION_GRANTED
