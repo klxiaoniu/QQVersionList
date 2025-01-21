@@ -373,6 +373,7 @@ class LocalAppViewModel : ViewModel() {
         }
         val packageName = getAppPackageName(applicationInfo)
         if (packageName == ANDROID_QQ_PACKAGE_NAME || packageName == ANDROID_TIM_PACKAGE_NAME) {
+            if (packageName == ANDROID_TIM_PACKAGE_NAME) setIsTIM(true)
             val jobs = mutableListOf<Job>().apply {
                 add(CoroutineScope(Dispatchers.IO).launch {
                     val appName = getAppName(applicationInfo, activity)
@@ -525,7 +526,7 @@ class LocalAppViewModel : ViewModel() {
                     val parts = appSettingParams.split("#")
                     if (parts.size > 3) setChannelText(parts[3]) else setChannelText("")
                 } ?: setChannelText("")
-                if (type == "TIM") qua.value?.let { qua ->
+                if (isTIM.value == true) qua.value?.let { qua ->
                     setTIMBasedVer(activity, if (qua.length > 3) qua.split("_")[3] else "")
                 }
                 cleanCache(activity)
