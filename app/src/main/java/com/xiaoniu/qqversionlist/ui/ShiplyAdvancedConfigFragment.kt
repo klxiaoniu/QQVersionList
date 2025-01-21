@@ -46,6 +46,8 @@ class ShiplyAdvancedConfigFragment : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        if (SDK_INT >= Build.VERSION_CODES.Q) dialog?.window?.isNavigationBarContrastEnforced =
+            false
         dialog?.setCanceledOnTouchOutside(false)
         shiplyAdvancedConfigSheetBinding = BottomsheetShiplyAdvancedConfigBinding.bind(view)
         val shiplyAdvancedConfigSheetBehavior = (this.dialog as BottomSheetDialog).behavior
