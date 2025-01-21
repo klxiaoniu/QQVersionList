@@ -70,6 +70,12 @@ QQ 版本列表实用工具 for Android 是一个使用 Material 3 组件库构�
 
 默认情况下，长按卡片文字会弹出展示卡片原始 JSON 字符串的对话框，长按对话框文字可选择复制字符串内容。可在设置中关闭此功能。
 
+### 应用包分析
+
+在 QQ 版本列表实用工具首页，长按顶部“本机 QQ/TIM”卡片即可查看本机 QQ/TIM 的应用包分析。
+
+也可将 QQ/TIM APK 文件通过系统分享至 QQ 版本列表实用工具以查看该 QQ/TIM APK 的应用包分析。
+
 ### 实验性功能
 
 > [!IMPORTANT]
@@ -264,7 +270,7 @@ QQNT 技术架构是腾讯 QQ 客户端全新的跨平台技术架构体系。QQ
 
 ### 什么是 Kuikly？
 
-Kuikly（Kotlin UI Kit）跨端开发框架，是 TDS 腾讯端服务（Tencent Device-oriented Service）的一部分。Kuikly 通过自研 Kotlin MultiPlatform 逻辑与终端界面原生控件渲染映射协议层，并采用声明式与响应式设计，使采用 Kuikly 的 Kotlin 开发者能拥有原生高效的 Android 开发体验并构建具有原生性能的跨平台应用。Kuikly 更可依托于 [TDS 腾讯端服务 Shiply 容器与发布平台](https://shiply.tds.qq.com/)，实现按页颗粒度的完备客户端界面动态化能力。
+Kuikly（Kotlin UI Kit）跨端开发框架，是 TDS 腾讯端框架（Tencent Device-oriented Framework）的一部分。Kuikly 通过自研 Kotlin MultiPlatform 逻辑与终端界面原生控件渲染映射协议层，并采用声明式与响应式设计，使采用 Kuikly 的 Kotlin 开发者能拥有原生高效的 Android 开发体验并构建具有原生性能的跨平台应用。Kuikly 更可依托于 [TDS 腾讯端服务 Shiply 容器与发布平台](https://shiply.tds.qq.com/)，实现按页颗粒度的完备客户端界面动态化能力。
 
 ## 其它
 
@@ -318,6 +324,11 @@ QQ 版本列表实用工具的诞生离不开以下开源项目，感谢以下�
 - [Google Play services Plugins](https://github.com/google/play-services-plugins)，Licensed under [Apache License Version 2.0](https://github.com/google/play-services-plugins/blob/main/LICENSE)
 - [Apache Commons™](https://commons.apache.org/)，Licensed under [Apache License Version 2.0](https://www.apache.org/licenses/LICENSE-2.0)
 - [腾讯 Kona 国密套件](https://github.com/Tencent/TencentKonaSMSuite)，Licensed under [GNU General Public License, version 2 with the Classpath Exception](https://github.com/Tencent/TencentKonaSMSuite/blob/master/LICENSE.txt)
+- [斑朵 Boundo（Cliff Liu）](https://github.com/cliuff/boundo)，Licensed under [Apache License Version 2.0](https://github.com/cliuff/boundo/blob/master/LICENSE)
+- [Smali/Baksmali（Google fork of JesusFreke's）](https://github.com/google/smali)
+<!-- 未来再用
+- [Jsoup](https://jsoup.org/)，Licensed under [MIT License](https://jsoup.org/license)
+-->
 
 ## 商业服务鸣谢
 
