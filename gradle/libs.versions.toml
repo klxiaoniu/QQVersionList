@@ -1,19 +1,21 @@
 [versions]
 androidGradlePlugin = "8.7.3"
-activityKtxVersion = "1.9.3"
+activityKtxVersion = "1.10.0"
 appcompat = "1.7.0"
 browserVersion = "1.8.0"
 coilVersion = "3.0.4"
 commonsCompressVersion = "1.27.1"
+commonsIoVersion = "2.17.0"
 constraintlayout = "2.2.0"
 coreKtx = "1.15.0"
 coreSplashscreen = "1.1.0-rc01"
-datastorePreferences = "1.1.1"
+datastorePreferences = "1.1.2"
 espressoCore = "3.6.1"
-firebaseBom = "33.7.0"
+firebaseBom = "33.8.0"
 fragmentKtx = "1.8.5"
 googleServices = "4.4.2"
 gson = "2.11.0"
+# jsoupVersion = "1.18.3"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 konaCryptoVersion = "1.0.15"
@@ -28,10 +30,11 @@ okhttp = "4.12.0"
 ossLicensesPluginVersion = "0.10.6"
 paris = "2.0.2"
 playServicesOssLicensesVersion = "17.1.0"
-recyclerview = "1.3.2"
+recyclerview = "1.4.0"
 secretsGradlePlugin = "2.0.1"
+smaliDexlib2Version = "3.0.9"
 viewpager2 = "1.1.0"
-activityVersion = "1.9.3"
+activityVersion = "1.10.0"
 kotlinVersion = "2.1.0"
 
 [libraries]
@@ -45,6 +48,7 @@ androidx-datastore-preferences = { module = "androidx.datastore:datastore-prefer
 androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCore" }
 androidx-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "fragmentKtx" }
 androidx-junit = { module = "androidx.test.ext:junit", version.ref = "junitVersion" }
+androidx-lifecycle-livedata-ktx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "lifecycleRuntimeKtx" }
 androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleRuntimeKtx" }
 androidx-recyclerview = { module = "androidx.recyclerview:recyclerview", version.ref = "recyclerview" }
@@ -52,11 +56,13 @@ androidx-viewpager2 = { module = "androidx.viewpager2:viewpager2", version.ref =
 coil = { module = "io.coil-kt.coil3:coil", version.ref = "coilVersion" }
 coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilVersion" }
 commons-compress = { module = "org.apache.commons:commons-compress", version.ref = "commonsCompressVersion" }
+commons-io = { module = "commons-io:commons-io", version.ref = "commonsIoVersion" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 firebase-messaging = { module = "com.google.firebase:firebase-messaging" }
 google-services = { module = "com.google.gms:google-services", version.ref = "googleServices" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+# jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoupVersion" }
 junit = { module = "junit:junit", version.ref = "junit" }
 kona-crypto = { module = "com.tencent.kona:kona-crypto", version.ref = "konaCryptoVersion" }
 kona-provider = { module = "com.tencent.kona:kona-provider", version.ref = "konaProviderVersion" }
@@ -71,6 +77,7 @@ paris = { module = "com.airbnb.android:paris", version.ref = "paris" }
 play-services-oss-licenses = { module = "com.google.android.gms:play-services-oss-licenses", version.ref = "playServicesOssLicensesVersion" }
 secrets-gradle-plugin = { module = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin", version.ref = "secretsGradlePlugin" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activityVersion" }
+smali-dexlib2 = { module = "com.android.tools.smali:smali-dexlib2", version.ref = "smaliDexlib2Version" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
