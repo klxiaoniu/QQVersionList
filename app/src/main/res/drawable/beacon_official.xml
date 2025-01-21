@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+    ** 专有代码声明 **
+
+    此矢量图片文件来自腾讯灯塔官方标识矢量图，
+    腾讯灯塔标识商标（如有）和原创权利人为深圳市腾讯计算机系统有限公司和/或其关联公司。
+
+    QQ 版本列表实用工具承诺不将此文件用于或授权任何非权利人用于任何形式的商业用途。
+
+    此矢量图片文件及其代码不受本项目 GNU Affero General Public License Version 3 开源许可约束，
+    未经许可，不得用于任何形式的商业用途或其他未经授权的用途。
+
+    本项目对“QQ”、腾讯灯塔标识、“腾讯灯塔”的使用旨在注明和指向对应主体，
+    并非表示对“QQ”、腾讯灯塔标识、“腾讯灯塔”商标（如有）的注册和拥有。
+
+    此文本如有任何中英文版本之间的差异，以中文版本为准。
+
+    ** Proprietary Code Statement **
+
+    This vector image file was recreated by the Tencent Beacon official logo.
+    Any trademarks of Tencent Beacon logos contained in this file and their original rights belong to 深圳市腾讯计算机系统有限公司 and/or its affiliates.
+
+    The Qverbow Util commits to not using this file for or authorizing any non-right holders to use it for any commercial purposes.
+
+    This vector image file and its code are not subject to the open-source license of this project, the GNU Affero General Public License Version 3.
+    Without permission, it shall not be used for any commercial purposes or other unauthorized uses.
+
+    The use of "QQ", the Tencent Beacon logo, and "Tencent Beacon" by this project is intended only to refer to the corresponding entities,
+    and does not imply registration or ownership of the trademarks "QQ", the Tencent Beacon logo, and "Tencent Beacon" (if any).
+
+    In case of any discrepancies between the Chinese and English versions of this text, the Chinese version shall prevail.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="666dp"
+    android:height="634dp"
+    android:viewportWidth="666"
+    android:viewportHeight="634">
+    <path
+        android:fillColor="?attr/colorControlNormal"
+        android:pathData="M0,336.19C0,290.79 8.67,247.24 26.02,205.55C42.95,165.1 66.81,129.4 97.58,98.44C128.35,67.49 163.56,43.55 203.21,26.62C244.51,8.87 287.77,0 333,0C378.23,0 421.28,8.87 462.17,26.62C502.24,43.55 537.65,67.49 568.42,98.44C599.19,129.4 622.84,165.1 639.36,205.55C657.12,247.24 666,290.79 666,336.19L665.38,351.67L664.14,366.53L662.9,380.77L660.42,395.01L657.95,409.87L654.23,424.73L648.65,442.07C644.94,454.04 640.39,465.8 635.02,477.36L630.69,486.64L618.91,508.31L610.86,521.32L601.57,534.32L591.66,547.32L581.12,560.32L568.11,573.94L408.27,516.36L405.18,463.12L97.89,573.94L87.35,563.42L77.44,551.65L66.29,537.41L57.62,525.65L49.56,513.27L41.51,499.03L32.22,481.07L25.4,466.21L19.83,450.11L14.25,433.4C7.64,411.52 3.3,389.23 1.24,366.53L0,351.67L0,336.19ZM275.07,341.15L408.89,291L408.89,263.75L394.02,263.75L387.83,169.65L358.09,141.16L343.22,81.73L330.21,81.11L315.96,141.16L285.61,169.65L280.03,263.75L264.54,263.75L264.54,291L278.17,295.95L275.07,341.15ZM494.39,398.11C512.56,368.39 521.65,335.88 521.65,300.59C521.65,265.3 512.56,232.8 494.39,203.08L473.33,217.32C488.61,242.91 496.25,270.77 496.25,300.9C496.25,331.03 488.61,358.89 473.33,384.49L494.39,398.11ZM265.16,463.12L264.54,471.17L400.84,421.64L395.88,341.15L270.12,386.96L265.16,463.12ZM177.19,300.9C177.19,270.77 185.03,242.91 200.73,217.32L179.05,203.08C161.29,232.8 152.41,265.3 152.41,300.59C152.41,335.88 161.29,368.39 179.05,398.11L200.73,384.49C185.03,358.89 177.19,331.03 177.19,300.9L177.19,300.9ZM117.71,593.14C117.71,593.14 117.92,593.14 118.33,593.14L129.48,602.42L143.11,612.33L156.12,621.62L177.81,634L182.14,632.76C231.29,620.79 281.48,614.81 332.69,614.81C383.9,614.81 434.29,620.79 483.86,632.76L487.57,634L508.64,622.24L521.65,612.95L534.66,603.66L547.67,593.14C478.28,570.43 406.73,559.08 333,559.08C259.27,559.08 187.51,570.43 117.71,593.14L117.71,593.14ZM116.54,588.18L112.14,588.18L116.54,588.18Z"
+        android:strokeColor="#00000000" />
+</vector>

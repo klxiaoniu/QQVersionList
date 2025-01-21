@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+    ** 专有代码声明 **
+
+    此矢量图片文件由 QQ 版本列表实用工具（以下简称“本项目”）根据 QQNT 标识临摹绘制，
+    文件所包含的 QQNT 标识商标（如有）和原创权利人为深圳市腾讯计算机系统有限公司和/或其关联公司。
+
+    QQ 版本列表实用工具承诺不将此文件用于或授权任何非权利人用于任何形式的商业用途。
+
+    此矢量图片文件及其代码不受本项目 GNU Affero General Public License Version 3 开源许可约束，
+    未经许可，不得用于任何形式的商业用途或其他未经授权的用途。
+
+    本项目对“QQ”、QQNT 标识、“QQNT”的使用旨在注明和指向对应主体，
+    并非表示对“QQ”、QQNT 标识、“QQNT”商标（如有）的注册和拥有。
+
+    此文本如有任何中英文版本之间的差异，以中文版本为准。
+
+    ** Proprietary Code Statement **
+
+    This vector image file was recreated by the Qverbow Util (hereinafter referred to as "this project") based on the QQNT logo.
+    Any trademarks of QQNT logos contained in this file and their original rights belong to 深圳市腾讯计算机系统有限公司 and/or its affiliates.
+
+    The Qverbow Util commits to not using this file for or authorizing any non-right holders to use it for any commercial purposes.
+
+    This vector image file and its code are not subject to the open-source license of this project, the GNU Affero General Public License Version 3.
+    Without permission, it shall not be used for any commercial purposes or other unauthorized uses.
+
+    The use of "QQ", the QQNT logo, and "QQNT" by this project is intended only to refer to the corresponding entities,
+    and does not imply registration or ownership of the trademarks "QQ", the QQNT logo, and "QQNT" (if any).
+
+    In case of any discrepancies between the Chinese and English versions of this text, the Chinese version shall prevail.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="700"
+    android:viewportHeight="700">
+  <path
+      android:pathData="M0,0h700v700h-700z"
+      android:fillColor="?attr/colorControlNormal"
+      android:fillAlpha="0"
+      android:fillType="evenOdd"/>
+  <path
+      android:pathData="M640.93,470.48L350.92,698.39L350.72,698.23L350.13,698.69L50,462.88L50,238.18L60.13,230.22L350.13,2.3L350.34,2.46L350.92,2L651.06,237.81L651.06,462.52L640.93,470.48L640.93,470.48ZM350.21,432.61L313.7,405.93L322.09,344.39L233.56,412.69L262.48,433.98L262.4,434.09L290.06,454.3L292.66,456.2L305.56,465.69L305.57,465.63L324.36,479.36L324.36,610.15L119.88,449.61L350.85,268.08L387.36,294.76L378.97,356.31L467.5,288L438.58,266.71L438.65,266.6L411,246.39L408.4,244.49L395.5,235L395.49,235.06L376.7,221.33L376.7,90.54L581.18,251.08L350.21,432.61L350.21,432.61ZM323.7,222.01L103.5,395.07L103.5,263.58L323.7,90.74L323.7,222.01L323.7,222.01ZM597.56,437.11L597.56,305.62L377.36,478.68L377.36,609.95L597.56,437.11L597.56,437.11Z"
+      android:fillColor="?attr/colorControlNormal"
+      android:fillType="evenOdd"/>
+</vector>

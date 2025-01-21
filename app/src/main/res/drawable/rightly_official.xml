@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+    ** 专有代码声明 **
+
+    此矢量图片文件来自 Rightly 官方标识矢量图，
+    Rightly 标识商标（如有）和原创权利人为深圳市腾讯计算机系统有限公司和/或其关联公司。
+
+    QQ 版本列表实用工具承诺不将此文件用于或授权任何非权利人用于任何形式的商业用途。
+
+    此矢量图片文件及其代码不受本项目 GNU Affero General Public License Version 3 开源许可约束，
+    未经许可，不得用于任何形式的商业用途或其他未经授权的用途。
+
+    本项目对“QQ”、Rightly 标识、“Rightly”的使用旨在注明和指向对应主体，
+    并非表示对“QQ”、Rightly 标识、“Rightly”商标（如有）的注册和拥有。
+
+    此文本如有任何中英文版本之间的差异，以中文版本为准。
+
+    ** Proprietary Code Statement **
+
+    This vector image file was recreated by the Rightly official logo.
+    Any trademarks of Rightly logos contained in this file and their original rights belong to 深圳市腾讯计算机系统有限公司 and/or its affiliates.
+
+    The Qverbow Util commits to not using this file for or authorizing any non-right holders to use it for any commercial purposes.
+
+    This vector image file and its code are not subject to the open-source license of this project, the GNU Affero General Public License Version 3.
+    Without permission, it shall not be used for any commercial purposes or other unauthorized uses.
+
+    The use of "QQ", the Rightly logo, and "Rightly" by this project is intended only to refer to the corresponding entities,
+    and does not imply registration or ownership of the trademarks "QQ", the Rightly logo, and "Rightly" (if any).
+
+    In case of any discrepancies between the Chinese and English versions of this text, the Chinese version shall prevail.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="52dp"
+    android:height="59.565dp"
+    android:viewportWidth="52"
+    android:viewportHeight="59.565">
+    <group>
+        <path
+            android:fillColor="?attr/colorControlNormal"
+            android:fillType="evenOdd"
+            android:pathData="M19.242,24.453C19.138,24.023 18.878,23.704 18.232,23.422C14.178,21.651 5.758,30.579 2.149,36.662C2.993,39.863 4.153,42.756 5.74,45.2C13.314,56.858 25.18,59.411 25.982,59.411C26.754,59.411 41.65,55.434 47.674,42.548C35.639,46.315 27.534,41.424 24.363,38.173C23.77,37.829 23.264,37.353 22.887,36.78C22.887,36.78 15.924,26.278 15.924,26.278C15.424,25.524 15.583,24.513 16.29,23.948C16.97,23.415 17.927,23.416 18.606,23.951C18.606,23.951 19.242,24.453 19.242,24.453C19.242,24.453 19.242,24.453 19.242,24.453Z" />
+        <path
+            android:fillColor="?attr/colorControlNormal"
+            android:fillType="evenOdd"
+            android:pathData="M18.547,23.955C18.545,23.953 18.549,23.956 18.547,23.955C18.547,23.955 24.005,28.181 24.005,28.181C25.187,29.112 26.856,29.102 28.025,28.155C28.025,28.155 50.688,9.78 50.688,9.78C50.147,9.211 49.464,8.798 48.709,8.583C45.3,7.601 39.806,5.989 38.066,5.302C36.15,4.545 30.444,1.666 27.617,0.226C26.595,-0.294 25.387,-0.298 24.362,0.216C21.538,1.627 15.818,4.449 13.542,5.303C11.527,6.06 6.467,7.579 3.218,8.536C1.46,9.054 0.193,10.582 0.11,12.408C-0.119,17.448 -0.217,27.889 2.145,36.686C8.523,26.143 16.14,22.312 18.146,23.688C18.279,23.778 18.468,23.871 18.546,23.955C18.546,23.955 18.547,23.955 18.547,23.955Z" />
+        <path
+            android:fillColor="?attr/colorControlNormal"
+            android:fillType="evenOdd"
+            android:pathData="M29.908,37.321C29.908,37.321 51.874,13.156 51.874,13.156C52.221,19.021 52.277,30.825 48.344,40.984C48.12,41.562 47.876,42.131 47.611,42.691C35.074,46.516 26.114,41.221 23.619,37.644C25.389,39.236 28.215,39.184 29.908,37.321C29.908,37.321 29.908,37.321 29.908,37.321Z" />
+        <path
+            android:fillType="evenOdd"
+            android:pathData="M22.948,37.094C23.071,37.013 23.236,37.047 23.318,37.169C26.977,42.677 36.641,46.055 48.209,42.524C48.35,42.481 48.5,42.56 48.543,42.701C48.586,42.841 48.507,42.991 48.366,43.034C36.659,46.607 26.705,43.234 22.872,37.463C22.832,37.404 22.818,37.332 22.832,37.262C22.847,37.193 22.888,37.132 22.948,37.093C22.948,37.093 22.948,37.094 22.948,37.094Z">
+            <aapt:attr name="android:fillColor">
+                <gradient
+                    android:endX="31.985"
+                    android:endY="48.872"
+                    android:startX="45.746"
+                    android:startY="38.204"
+                    android:type="linear">
+                    <item
+                        android:color="#00FFFFFF"
+                        android:offset="0.111" />
+                    <item
+                        android:color="#FFFFFFFF"
+                        android:offset="0.457" />
+                    <item
+                        android:color="#00FFFFFF"
+                        android:offset="1" />
+                </gradient>
+            </aapt:attr>
+        </path>
+        <path
+            android:fillColor="#00000000"
+            android:pathData="M18.24,23.459C15.253,21.86 7.45,27.367 1.921,36.561"
+            android:strokeWidth="0.533"
+            android:strokeAlpha="0"
+            android:strokeLineCap="round">
+            <aapt:attr name="android:strokeColor">
+                <gradient
+                    android:endX="1.746"
+                    android:endY="23.145"
+                    android:startX="1.743"
+                    android:startY="37.893"
+                    android:type="linear">
+                    <item
+                        android:color="#00FFFFFF"
+                        android:offset="0" />
+                    <item
+                        android:color="#FFFFFFFF"
+                        android:offset="0.562" />
+                    <item
+                        android:color="#00FFFFFF"
+                        android:offset="1" />
+                </gradient>
+            </aapt:attr>
+        </path>
+    </group>
+</vector>

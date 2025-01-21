@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+   https://docs.flutter.dev/brand
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="148.9dp"
+    android:height="184.35dp"
+    android:viewportWidth="148.9"
+    android:viewportHeight="184.35">
+    <path
+        android:fillColor="#fff"
+        android:pathData="M148.9,85.08 L99.27,134.71l49.63,49.64H92.18L70.9,163.08h0L42.54,134.71 92.18,85.08ZM92.18,0 L0,92.18l28.37,28.36L148.9,0Z" />
+    <group>
+        <clip-path android:pathData="M148.9,85.08 L99.27,134.71l49.63,49.64H92.18L70.9,163.08h0L42.54,134.71 92.18,85.08ZM92.18,0 L0,92.18l28.37,28.36L148.9,0Z" />
+        <path
+            android:fillColor="#fff"
+            android:pathData="M148.9,85.08l0,0l0,0l-56.72,0l-49.63,49.64l28.35,28.36l78,-78z" />
+    </group>
+    <path
+        android:fillColor="#fff"
+        android:pathData="M148.9,85.08 L99.27,134.71l49.63,49.64H92.18L70.9,163.08h0L42.54,134.71 92.18,85.08ZM92.18,0 L0,92.18l28.37,28.36L148.9,0Z" />
+    <group>
+        <clip-path android:pathData="M148.9,85.08 L99.27,134.71l49.63,49.64H92.18L70.9,163.08h0L42.54,134.71 92.18,85.08ZM92.18,0 L0,92.18l28.37,28.36L148.9,0Z" />
+        <path
+            android:fillColor="#fff"
+            android:pathData="M28.36,120.54l-28.36,-28.36l92.18,-92.18l56.72,0l-120.54,120.54z" />
+    </group>
+    <path
+        android:fillColor="#fff"
+        android:pathData="M148.9,85.08 L99.27,134.71l49.63,49.64H92.18L70.9,163.08h0L42.54,134.71 92.18,85.08ZM92.18,0 L0,92.18l28.37,28.36L148.9,0Z" />
+    <group>
+        <clip-path android:pathData="M148.9,85.08 L99.27,134.71l49.63,49.64H92.18L70.9,163.08h0L42.54,134.71 92.18,85.08ZM92.18,0 L0,92.18l28.37,28.36L148.9,0Z" />
+        <path
+            android:fillColor="#fff"
+            android:pathData="M70.9,163.08l21.28,21.27l56.72,0l0,0l-49.63,-49.63l-28.37,28.36z" />
+    </group>
+    <path
+        android:fillColor="#fff"
+        android:pathData="M148.9,85.08 L99.27,134.71l49.63,49.64H92.18L70.9,163.08h0L42.54,134.71 92.18,85.08ZM92.18,0 L0,92.18l28.37,28.36L148.9,0Z" />
+    <group>
+        <clip-path android:pathData="M148.9,85.08 L99.27,134.71l49.63,49.64H92.18L70.9,163.08h0L42.54,134.71 92.18,85.08ZM92.18,0 L0,92.18l28.37,28.36L148.9,0Z" />
+        <path
+            android:fillColor="#fff"
+            android:pathData="M70.9,163.08l42.07,-14.56l-13.7,-13.8l-28.37,28.36z" />
+    </group>
+    <path
+        android:fillColor="#fff"
+        android:pathData="M148.9,85.08 L99.27,134.71l49.63,49.64H92.18L70.9,163.08h0L42.54,134.71 92.18,85.08ZM92.18,0 L0,92.18l28.37,28.36L148.9,0Z" />
+    <group>
+        <clip-path android:pathData="M148.9,85.08 L99.27,134.71l49.63,49.64H92.18L70.9,163.08h0L42.54,134.71 92.18,85.08ZM92.18,0 L0,92.18l28.37,28.36L148.9,0Z" />
+        <path
+            android:fillColor="#fff"
+            android:pathData="M42.54,134.71l28.36,-28.36l28.36,28.36l-28.36,28.36z" />
+    </group>
+    <path
+        android:fillColor="?attr/colorControlNormal"
+        android:pathData="M148.9,85.08 L99.27,134.71l49.63,49.64H92.18L70.9,163.08h0L42.54,134.71 92.18,85.08ZM92.18,0 L0,92.18l28.37,28.36L148.9,0Z" />
+</vector>
