@@ -192,8 +192,8 @@ QQ、TIM、微信、企业微信、微信输入法使用腾讯应用宝（[腾�
 > [!TIP]
 > QQ 版本列表实用工具实验性支持了 Android 微信的扫版。若选择微信扫版，对话框将变更为四个输入框，分别是“主版本号”、“扫版类型”、“真实版本号”和“十六进制代码”，对应的直链为：
 >
-> - `http://dldir1.qq.com/weixin/android/weixin<主版本号>android<真实版本号>_<十六进制代码>_arm64.apk`
-> - `http://dldir1.qq.com/weixin/android/weixin<主版本号>android<真实版本号>_<十六进制代码>_arm64_1.apk`
+> - `http://dldir1v6.qq.com/weixin/android/weixin<主版本号>android<真实版本号>_<十六进制代码>_arm64.apk`
+> - `http://dldir1v6.qq.com/weixin/android/weixin<主版本号>android<真实版本号>_<十六进制代码>_arm64_1.apk`
 >
 > 填入相应输入框内容后，软件将尝试访问上述链接。若当次访问未果，默认情况下将自动递增十六进制代码后再次尝试访问，直到访问成功为止。
 
@@ -270,7 +270,7 @@ QQNT 技术架构是腾讯 QQ 客户端全新的跨平台技术架构体系。QQ
 
 ### 什么是 Kuikly？
 
-Kuikly（Kotlin UI Kit）跨端开发框架，是 TDS 腾讯端框架（Tencent Device-oriented Framework）的一部分。Kuikly 通过自研 Kotlin MultiPlatform 逻辑与终端界面原生控件渲染映射协议层，并采用声明式与响应式设计，使采用 Kuikly 的 Kotlin 开发者能拥有原生高效的 Android 开发体验并构建具有原生性能的跨平台应用。Kuikly 更可依托于 [TDS 腾讯端服务 Shiply 容器与发布平台](https://shiply.tds.qq.com/)，实现按页颗粒度的完备客户端界面动态化能力。
+Kuikly（Kotlin UI Kit）跨端开发框架，是 TDF 腾讯端框架（Tencent Device-oriented Framework）的一部分。Kuikly 通过自研 Kotlin MultiPlatform 逻辑与终端界面原生控件渲染映射协议层，并采用声明式与响应式设计，使采用 Kuikly 的 Kotlin 开发者能拥有原生高效的 Android 开发体验并构建具有原生性能的跨平台应用。Kuikly 更可依托于 [TDS 腾讯端服务 Shiply 容器与发布平台](https://shiply.tds.qq.com/)，实现按页颗粒度的完备客户端界面动态化能力。
 
 ## 其它
 
