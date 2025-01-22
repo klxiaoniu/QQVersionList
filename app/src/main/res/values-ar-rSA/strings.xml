@@ -241,7 +241,7 @@
     <string name="localDetailsFlutter">Flutter</string>
     <string name="localDetailsFlutterDesc">Flutter 是 Google 的便携式 UI 工具包，帮助你在移动、web、桌面端创造高质量的绝妙原生体验的应用。 Flutter 可以和世界上的开发人员和开发组织广泛使用的那些现存代码一起使用，并且是开源的、免费的。</string>
     <string name="localDetailsJetpackCompose">Jetpack Compose</string>
-    <string name="localDetailsJetpackComposeDesc">" Jetpack Compose هي مجموعة أدوات حديثة لإنشاء واجهة مستخدم Android الأصلية. يساعد Jetpack Compose في تبسيط عملية تطوير واجهة المستخدم على Android وتسريعها باستخدام رموز برمجية أقل وأدوات فعّالة وواجهات برمجة تطبيقات سهلة الاستخدام في Kotlin."</string>
+    <string name="localDetailsJetpackComposeDesc"> Jetpack Compose هي مجموعة أدوات حديثة لإنشاء واجهة مستخدم Android الأصلية. يساعد Jetpack Compose في تبسيط عملية تطوير واجهة المستخدم على Android وتسريعها باستخدام رموز برمجية أقل وأدوات فعّالة وواجهات برمجة تطبيقات سهلة الاستخدام في Kotlin.</string>
     <string name="localDetailsComposeMultiplatform">Compose Multiplatform</string>
     <string name="localDetailsComposeMultiplatformDesc">Compose Multiplatform 是一个由 JetBrains 开发的现代化声明式和响应式 UI 框架，它提供了一种只需少量 Kotlin 代码即可构建用户界面的简单方法。它还允许您只需编写一次用户界面，即可在任何支持的平台——iOS、Android、桌面（Windows、macOS、Linux）和 Web——上运行。</string>
 </resources>
