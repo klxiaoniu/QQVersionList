@@ -132,7 +132,7 @@ object InfoUtil {
             "${getString(R.string.aboutAppName)}\n\n" +
                     "${getString(R.string.version)}${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})\n" +
                     "${getString(R.string.aboutAuthor)}快乐小牛、有鲫雪狐\n" +
-                    "${getString(R.string.aboutContributor)}Col_or、bggRGjQaUbCoE、MinaFluo、zwJimRaynor\n" +
+                    "${getString(R.string.aboutContributor)}Col_or、bggRGjQaUbCoE、MinaGe、zwJimRaynor\n" +
                     "${getString(R.string.aboutSpecialThanksTo)}owo233、钟路帆\n" +
                     "${getString(R.string.aboutOpenSourceRepo)}GitHub\n" +
                     "${getString(R.string.aboutGetUpdate)}GitHub Releases、Obtainium\n" +
@@ -144,7 +144,7 @@ object InfoUtil {
                 "https://github.com/ArcticFoxPro" to "有鲫雪狐",
                 "https://github.com/color597" to "Col_or",
                 "https://github.com/bggRGjQaUbCoE" to "bggRGjQaUbCoE",
-                "https://github.com/MinaFluo" to "MinaFluo",
+                "https://github.com/citmina" to "MinaGe",
                 "https://github.com/zwJimRaynor" to "zwJimRaynor",
                 "https://github.com/callng" to "owo233",
                 "https://github.com/Hill-98" to "钟路帆",

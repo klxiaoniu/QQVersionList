@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+    ** 专有代码声明 **
+
+    此矢量图片文件来自 Hippy 官方标识矢量图，
+    Hippy 标识商标（如有）和原创权利人为深圳市腾讯计算机系统有限公司和/或其关联公司。
+
+    QQ 版本列表实用工具承诺不将此文件用于或授权任何非权利人用于任何形式的商业用途。
+
+    此矢量图片文件及其代码不受本项目 GNU Affero General Public License Version 3 开源许可约束，
+    未经许可，不得用于任何形式的商业用途或其他未经授权的用途。
+
+    本项目对“QQ”、Hippy 标识、“Hippy”的使用旨在注明和指向对应主体，
+    并非表示对“QQ”、Hippy 标识、“Hippy”商标（如有）的注册和拥有。
+
+    此文本如有任何中英文版本之间的差异，以中文版本为准。
+
+    ** Proprietary Code Statement **
+
+    This vector image file was recreated by the Hippy official logo.
+    Any trademarks of Hippy logos contained in this file and their original rights belong to 深圳市腾讯计算机系统有限公司 and/or its affiliates.
+
+    The Qverbow Util commits to not using this file for or authorizing any non-right holders to use it for any commercial purposes.
+
+    This vector image file and its code are not subject to the open-source license of this project, the GNU Affero General Public License Version 3.
+    Without permission, it shall not be used for any commercial purposes or other unauthorized uses.
+
+    The use of "QQ", the Hippy logo, and "Hippy" by this project is intended only to refer to the corresponding entities,
+    and does not imply registration or ownership of the trademarks "QQ", the Hippy logo, and "Hippy" (if any).
+
+    In case of any discrepancies between the Chinese and English versions of this text, the Chinese version shall prevail.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="60.001"
+    android:viewportHeight="59.861">
+    <path
+        android:fillColor="?attr/colorControlNormal"
+        android:fillType="evenOdd"
+        android:pathData="M24.016,42.532C24.315,52.113 32.291,59.859 42.002,59.859C51.902,59.859 60.001,51.813 60.001,41.976L60.001,17.884C60.001,8.048 51.902,0 42.002,0C37.43,0 33.245,1.717 30.063,4.534C33.671,7.788 35.967,12.46 36.001,17.646C36.134,14.517 38.826,11.918 42.002,11.918C45.257,11.918 48.009,14.65 48.009,17.887L48.009,41.978C48.009,45.212 45.259,47.946 42.002,47.946C38.745,47.946 35.995,45.214 35.995,41.978L35.988,41.712C35.914,38.485 33.26,35.892 29.997,35.892C26.685,35.892 24,38.561 24,41.85C24,41.956 24.002,42.064 24.009,42.169C24.009,42.182 24.009,42.194 24.009,42.207L24,42.207C23.872,45.34 21.178,47.941 18,47.941C14.745,47.941 11.993,45.21 11.993,41.974L11.993,17.884C11.993,14.648 14.743,11.916 18,11.916C21.257,11.916 24.007,14.648 24.007,17.884L24.007,18.15C24.082,21.376 26.742,23.97 30.007,23.97C33.318,23.97 36.004,21.302 36.004,18.012C36.004,17.905 36.001,17.797 35.995,17.692C35.888,7.943 27.834,0 18,0C8.099,0 0,8.048 0,17.884L0,41.978C0,51.814 8.099,59.861 18,59.861C22.572,59.861 26.757,58.145 29.939,55.327C26.406,52.14 24.142,47.588 24.016,42.532Z" />
+</vector>

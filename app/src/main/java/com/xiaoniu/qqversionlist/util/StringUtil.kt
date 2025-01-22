@@ -31,7 +31,9 @@ import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
+import org.apache.commons.io.IOUtils
 import java.io.File
+import java.nio.charset.Charset
 
 object StringUtil {
     @OptIn(ExperimentalSerializationApi::class)
@@ -145,7 +147,7 @@ object StringUtil {
      *
      * @param packageInfo 包含应用信息的 `PackageInfo` 对象，用于访问应用的资源
      * @param Context 用于显示错误对话框的 `Context` 对象
-     * @return 返回 `qua.ini` 文件的内容作为字符串，如果发生任何错误或文件不存在则返回null
+     * @return 返回 `qua.ini` 文件的内容作为字符串，如果发生任何错误或文件不存在则返回 null
      */
     fun Context.getQua(packageInfo: PackageInfo): String? {
         val sourceDir = packageInfo.applicationInfo?.sourceDir ?: return null
@@ -155,7 +157,7 @@ object StringUtil {
             ZipFileCompat(file).use { zipFile ->
                 val entry = zipFile.getEntry("assets/qua.ini") ?: return null
                 zipFile.getInputStream(entry).use { inputStream ->
-                    return inputStream.reader().use { reader -> reader.readText() }
+                    return IOUtils.toString(inputStream, Charset.defaultCharset())
                 }
             }
         }.onFailure { dialogError(Exception(it)) }.getOrElse { null }

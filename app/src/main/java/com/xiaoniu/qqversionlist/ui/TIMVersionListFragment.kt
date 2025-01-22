@@ -51,7 +51,6 @@ class TIMVersionListFragment : Fragment() {
         fragmentBinding.rvTimContent.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                handleScroll(dy)
             }
         })
     }
@@ -109,15 +108,6 @@ class TIMVersionListFragment : Fragment() {
                 adapter = concatenated
                 layoutManager = LinearLayoutManager(thisActivity)
             }
-        }
-    }
-
-    private fun handleScroll(dy: Int) {
-        val thisActivity = requireActivity() as MainActivity
-        if (dy > 0) {
-            thisActivity.binding.btnGuess.shrink()
-        } else if (dy < 0) {
-            thisActivity.binding.btnGuess.extend()
         }
     }
 

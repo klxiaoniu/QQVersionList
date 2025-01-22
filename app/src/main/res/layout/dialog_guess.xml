@@ -35,8 +35,30 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingTop="12dp"
+            android:paddingTop="8dp"
             android:paddingBottom="20dp">
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/maintenance_mode_guess_dialog_warning"
+                style="?attr/materialCardViewOutlinedStyle"
+                android:layout_marginBottom="12dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="?android:colorBackground">
+
+                <TextView
+                    android:id="@+id/maintenance_mode_warning"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:drawablePadding="4dp"
+                    android:paddingStart="3dp"
+                    android:paddingEnd="0dp"
+                    android:text="@string/enumVerMaintenanceModeWarning"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="10sp"
+                    app:drawableStartCompat="@drawable/error_warning_fill" />
+            </com.google.android.material.card.MaterialCardView>
 
             <LinearLayout
                 android:layout_width="match_parent"

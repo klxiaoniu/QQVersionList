@@ -22,7 +22,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:paddingStart="20dp"
-    android:paddingTop="2dp"
+    android:paddingTop="6dp"
     android:paddingEnd="20dp">
 
     <ScrollView
@@ -37,7 +37,7 @@
             android:paddingBottom="20dp">
 
             <com.xiaoniu.qqversionlist.ui.components.cell.CellTopClick
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="8dp"
                 android:id="@+id/dialog_local_sdk"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

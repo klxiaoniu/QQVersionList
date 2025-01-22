@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+    ** 专有代码声明 **
+
+    此矢量图片文件来自 Shiply 官方标识矢量图，
+    Shiply 标识商标（如有）和原创权利人为深圳市腾讯计算机系统有限公司和/或其关联公司。
+
+    QQ 版本列表实用工具承诺不将此文件用于或授权任何非权利人用于任何形式的商业用途。
+
+    此矢量图片文件及其代码不受本项目 GNU Affero General Public License Version 3 开源许可约束，
+    未经许可，不得用于任何形式的商业用途或其他未经授权的用途。
+
+    本项目对“QQ”、Shiply 标识、“Shiply”的使用旨在注明和指向对应主体，
+    并非表示对“QQ”、Shiply 标识、“Shiply”商标（如有）的注册和拥有。
+
+    此文本如有任何中英文版本之间的差异，以中文版本为准。
+
+    ** Proprietary Code Statement **
+
+    This vector image file was recreated by the Shiply official logo.
+    Any trademarks of Shiply logos contained in this file and their original rights belong to 深圳市腾讯计算机系统有限公司 and/or its affiliates.
+
+    The Qverbow Util commits to not using this file for or authorizing any non-right holders to use it for any commercial purposes.
+
+    This vector image file and its code are not subject to the open-source license of this project, the GNU Affero General Public License Version 3.
+    Without permission, it shall not be used for any commercial purposes or other unauthorized uses.
+
+    The use of "QQ", the Shiply logo, and "Shiply" by this project is intended only to refer to the corresponding entities,
+    and does not imply registration or ownership of the trademarks "QQ", the Shiply logo, and "Shiply" (if any).
+
+    In case of any discrepancies between the Chinese and English versions of this text, the Chinese version shall prevail.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="166.25dp"
+    android:height="175dp"
+    android:viewportWidth="166.25"
+    android:viewportHeight="175">
+    <path
+        android:fillColor="?attr/colorControlNormal"
+        android:fillType="evenOdd"
+        android:pathData="M83.13,8.75C92.63,8.75 101.76,10.34 110.27,13.28C114.63,8.76 119.44,4.32 124.74,0C122.77,2.81 119.77,8.31 116.66,15.79C145.87,28.68 166.25,57.9 166.25,91.87C166.25,137.78 129.04,175 83.13,175C37.22,175 0,137.78 0,91.87C0,45.97 37.22,8.75 83.13,8.75ZM119,134C94.67,90.05 106.22,40.81 116.39,15.46C114.5,14.56 112.57,13.74 110.6,13C67.87,58.88 69.63,113.68 74.38,134C84.01,126.3 108.14,130.79 119,134ZM67.03,126.98C56.25,89.86 75.51,52.14 86.49,37.92C45.32,70.85 41.58,105.77 40.83,120.99C51.61,118.6 62.79,123.98 67.03,126.98ZM127.62,151.51L44.17,151.51C43.82,151.51 43.48,151.37 43.24,151.11L23.69,130.51C22.83,129.6 23.65,128.11 24.88,128.36L127.87,148.96C129.4,149.26 129.18,151.51 127.62,151.51Z" />
+</vector>

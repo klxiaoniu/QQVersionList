@@ -18,7 +18,7 @@
 
 plugins {
     alias(libs.plugins.android.application)
-    id("org.jetbrains.kotlin.android")
+    alias(libs.plugins.kotlin.android)
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
     id("com.google.gms.google-services")
     kotlin("plugin.serialization") version "2.1.0"
@@ -49,7 +49,7 @@ android {
         minSdk = 24
         targetSdk = 35
         versionCode = gitCommitCount
-        versionName = "1.4.7-$gitCommitHash"
+        versionName = "1.4.8-$gitCommitHash"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
             cmake {
@@ -97,35 +97,41 @@ android {
 }
 
 dependencies {
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.androidx.core.splashscreen)
-    implementation(libs.material)
-    implementation(libs.androidx.constraintlayout)
     implementation(libs.activity.ktx)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    implementation(libs.okhttp)
-    implementation(libs.kotlinx.serialization.json)
-    implementation(libs.coil)
-    implementation(libs.coil.network.okhttp)
+    implementation(libs.androidx.activity)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.browser)
+    implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.datastore.preferences)
-    implementation(libs.gson)
-    implementation(libs.paris)
-    implementation(libs.maven.artifact)
+    implementation(libs.androidx.fragment.ktx)
+    implementation(libs.androidx.lifecycle.livedata.ktx)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.viewpager2)
-    implementation(libs.androidx.fragment.ktx)
-    implementation(platform(libs.firebase.bom))
+    implementation(libs.coil)
+    implementation(libs.coil.network.okhttp)
+    implementation(libs.commons.compress)
+    implementation(libs.commons.io)
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.messaging)
-    implementation(libs.kotlinx.coroutines.android)
-    implementation(libs.library)
-    implementation(libs.androidx.browser)
-    implementation(libs.play.services.oss.licenses)
-    implementation(libs.commons.compress)
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.gson)
+    // implementation(libs.jsoup) 未来再用
     implementation(libs.kona.crypto)
     implementation(libs.kona.provider)
+    implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.library)
+    implementation(libs.material)
+    implementation(libs.maven.artifact)
+    implementation(libs.okhttp)
+    implementation(libs.paris)
+    implementation(libs.play.services.oss.licenses)
+    implementation(libs.smali.dexlib2)
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.androidx.junit)
 }

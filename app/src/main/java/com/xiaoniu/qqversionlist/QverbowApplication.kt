@@ -29,6 +29,17 @@ class QverbowApplication : Application() {
 
         const val SHIPLY_DEFAULT_APPID = "537230561"
         const val SHIPLY_DEFAULT_SDK_VERSION = "1.3.36-RC03"
+        const val SHIPLY_APPID_QQ = "4cd6974be1"
+        const val SHIPLY_APPID_TIM = "ad6b501b0e"
+        const val SHIPLY_SIGN_ID_QQ = "0ccc46ca-154c-4c6b-8b0b-4d8537ffcbcc"
+        const val SHIPLY_SIGN_ID_TIM = "33641818-aee7-445a-82d4-b7d0bce3a85a"
+
+        const val ANDROID_QQ_PACKAGE_NAME = "com.tencent.mobileqq"
+        const val ANDROID_TIM_PACKAGE_NAME = "com.tencent.tim"
+        const val ANDROID_WECHAT_PACKAGE_NAME = "com.tencent.mm"
+        const val ANDROID_WECOM_PACKAGE_NAME = "com.tencent.wework"
+        const val ANDROID_WETYPE_PACKAGE_NAME = "com.tencent.wetype"
+        const val ANDROID_QIDIAN_PACKAGE_NAME = "com.tencent.qidian"
 
         const val EARLIEST_ACCESSIBILITY_QQ_VERSION = false
         const val EARLIEST_ACCESSIBILITY_TIM_VERSION = false
