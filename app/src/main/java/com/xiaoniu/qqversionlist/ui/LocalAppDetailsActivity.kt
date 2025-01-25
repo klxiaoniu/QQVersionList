@@ -49,6 +49,7 @@ import com.xiaoniu.qqversionlist.util.InfoUtil.dialogError
 import com.xiaoniu.qqversionlist.util.InfoUtil.showToast
 import org.apache.commons.io.FileUtils
 import java.io.File
+import java.nio.file.FileSystems
 
 class LocalAppDetailsActivity : AppCompatActivity() {
     lateinit var viewModel: LocalAppViewModel
@@ -371,19 +372,30 @@ class LocalAppDetailsActivity : AppCompatActivity() {
                         else -> null
                     }
                     if (uri != null) {
-                        val cacheDir = File(cacheDir, "apkAnalysis")
-                        if (cacheDir.exists()) cacheDir.deleteRecursively()
-                        cacheDir.mkdirs()
-                        val requiredSpace = 500 * 1024 * 1024L // 500MB
-                        val freeSpace = cacheDir.freeSpace
-                        val fileSize = getFileSizeFromUri(uri)
-                        if (freeSpace >= requiredSpace + if (fileSize != -1L) fileSize else 0) {
-                            val destinationFile = File(cacheDir, "temp_apk.apk")
-                            contentResolver.openInputStream(uri)?.use { inputStream ->
-                                FileUtils.copyInputStreamToFile(inputStream, destinationFile)
-                            }
-                            viewModel.getInfo(this, "inter", destinationFile.path)
-                        } else viewModel.setAppName(getString(R.string.notEnoughSpaceOnTheDevice))
+                        val path = uri.path
+                        if (path != null) {
+                            val normalizedPath =
+                                if (SDK_INT >= Build.VERSION_CODES.O) FileSystems.getDefault()
+                                    .getPath(path).normalize()
+                                    .toString() else File(path).canonicalPath
+                            if (!normalizedPath.startsWith("/data")) {
+                                val cacheDir = File(cacheDir, "apkAnalysis")
+                                if (cacheDir.exists()) cacheDir.deleteRecursively()
+                                cacheDir.mkdirs()
+                                val requiredSpace = 500 * 1024 * 1024L // 500MB
+                                val freeSpace = cacheDir.freeSpace
+                                val fileSize = getFileSizeFromUri(uri)
+                                if (freeSpace >= requiredSpace + if (fileSize != -1L) fileSize else 0) {
+                                    val destinationFile = File(cacheDir, "temp_apk.apk")
+                                    contentResolver.openInputStream(uri)?.use { inputStream ->
+                                        FileUtils.copyInputStreamToFile(
+                                            inputStream, destinationFile
+                                        )
+                                    }
+                                    viewModel.getInfo(this, "inter", destinationFile.path)
+                                } else viewModel.setAppName(getString(R.string.notEnoughSpaceOnTheDevice))
+                            } else viewModel.setAppName(getString(R.string.unknownErr))
+                        } else viewModel.setAppName(getString(R.string.unknownErr))
                     } else viewModel.setAppName(getString(R.string.unknownErr))
                 }
 
