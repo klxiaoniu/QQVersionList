@@ -244,4 +244,24 @@
     <string name="localDetailsJetpackComposeDesc">Jetpack Compose is a modern toolkit for building native Android UI. Jetpack Compose simplifies and accelerates UI development on Android with less code, powerful tools, and intuitive Kotlin APIs. </string>
     <string name="localDetailsComposeMultiplatform">Compose Multiplatform</string>
     <string name="localDetailsComposeMultiplatformDesc">Compose Multiplatform is a modern declarative and reactive UI framework developed by JetBrains that provides a simple way to build user interfaces with a small amount of Kotlin code. It also allows you to write your UI once and run it on any of the supported platforms – iOS, Android, desktop (Windows, macOS, Linux), and web.</string>
+    <string name="security">Security</string>
+    <string name="privateTokenSettings">Private Token Settings</string>
+    <string name="privateTokenSettingsDesc">The Token entered here will be securely encrypted by the Android KeyStore System and stored.</string>
+    <string name="zhipuAIMaaSPlatformToken">Zhipu AI MaaS Platform Token</string>
+    <string name="updateLogPrompt">You are an expert in summarizing changelogs, skilled at capturing the key points of the changelog. Please summarize the changelog based on the text provided by the user in one paragraph and output it in %s language (Pangu formatting required). Do not involve the product itself, limit to 150 words.</string>
+    <string name="githubPersonalAccessToken">GitHub Personal Access Token</string>
+    <string name="TEESupported">The key is protected by the device\'s Trusted Execution Environment (TEE) hardware security module.</string>
+    <string name="StrongBoxSupported">The key is protected by the device\'s StrongBox SE.</string>
+    <string name="UnknownSecurityHardwareSupported">The key is protected by the device\'s hardware security module.</string>
+    <string name="SecuritySoftwareSupported">The key is protected by the Android Keystore.</string>
+    <string name="testGitHubToken">Save and Test GitHub PAT Validity</string>
+    <string name="testZhipuToken">Save and Test Zhipu AI MaaS Platform Token Validity</string>
+    <string name="testZhipuTokenPrompt">The user is testing connectivity with you. If you receive this message, please use %s language to greet the user warmly and introduce your model name in a brief paragraph.</string>
+    <string name="backFromZhipuPlatform">Zhipu AI MaaS Platform Response Content</string>
+    <string name="zhipuTokenSuccess">Zhipu Token Available</string>
+    <string name="zhipuTokenIsNull">Zhipu Token is empty.</string>
+    <string name="githubTokenIsNull">GitHub PAT is empty.</string>
+    <string name="githubTokenSuccess">GitHub PAT Available</string>
+    <string name="githubTokenUnavailable">GitHub Personal Access Token is unavailable. Please check the validity of your GitHub Personal Access Token.</string>
+    <string name="githubTokenUnavailableTitle">GitHub PAT Unavailable</string>
 </resources>

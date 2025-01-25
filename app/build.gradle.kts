@@ -49,7 +49,7 @@ android {
         minSdk = 24
         targetSdk = 35
         versionCode = gitCommitCount
-        versionName = "1.4.8-$gitCommitHash"
+        versionName = "1.4.9-$gitCommitHash"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
             cmake {
@@ -97,8 +97,8 @@ android {
 }
 
 dependencies {
-    implementation(libs.activity.ktx)
     implementation(libs.androidx.activity)
+    implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.browser)
     implementation(libs.androidx.constraintlayout)
@@ -118,6 +118,7 @@ dependencies {
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.messaging)
     implementation(platform(libs.firebase.bom))
+    implementation(libs.github.api)
     implementation(libs.gson)
     // implementation(libs.jsoup) 未来再用
     implementation(libs.kona.crypto)
@@ -127,6 +128,7 @@ dependencies {
     implementation(libs.library)
     implementation(libs.material)
     implementation(libs.maven.artifact)
+    implementation(libs.oapi.java.sdk)
     implementation(libs.okhttp)
     implementation(libs.paris)
     implementation(libs.play.services.oss.licenses)

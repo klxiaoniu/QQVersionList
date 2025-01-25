@@ -1,24 +1,238 @@
-# Add project specific ProGuard rules here.
-# You can control the set of applied configuration files using the
-# proguardFiles setting in build.gradle.
+#    Qverbow Util
+#    Copyright (C) 2023 klxiaoniu
 #
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+-keep class com.xiaoniu.qqversionlist.data.** { *; }
+-keep class com.tencent.kona.crypto.provider.* { *; }
+-keep class com.fasterxml.jackson.core.type.TypeReference { *; }
+-keep class com.zhipu.oapi.service.v4.api.* { *; }
+-keep class com.zhipu.oapi.service.v4.model.* { *; }
+-keep class io.reactivex.Single { *; }
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+-keep class org.kohsuke.github.* { *; }
 
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
-
--keep class com.xiaoniu.qqversionlist.data.* { *; }
--keep class com.tencent.kona.crypto.provider.** { *; }
+-dontwarn com.sun.tools.javac.processing.JavacFiler
+-dontwarn com.sun.tools.javac.processing.JavacProcessingEnvironment
+-dontwarn com.sun.tools.javac.util.Context
+-dontwarn com.sun.tools.javac.util.Options
+-dontwarn java.beans.ConstructorProperties
+-dontwarn java.beans.Transient
+-dontwarn javax.lang.model.SourceVersion
+-dontwarn javax.lang.model.element.AnnotationMirror
+-dontwarn javax.lang.model.element.Element
+-dontwarn javax.lang.model.element.ExecutableElement
+-dontwarn javax.tools.Diagnostic$Kind
+-dontwarn javax.tools.JavaFileManager$Location
+-dontwarn javax.tools.JavaFileManager
+-dontwarn javax.tools.StandardLocation
+-dontwarn lombok.bytecode.PoolConstantsApp
+-dontwarn lombok.bytecode.PostCompilerApp
+-dontwarn lombok.bytecode.PreventNullAnalysisRemover
+-dontwarn lombok.bytecode.SneakyThrowsRemover
+-dontwarn lombok.core.FieldAugment
+-dontwarn lombok.core.Main$LicenseApp
+-dontwarn lombok.core.Main$VersionApp
+-dontwarn lombok.core.PublicApiCreatorApp
+-dontwarn lombok.core.configuration.ConfigurationApp
+-dontwarn lombok.core.configuration.ConfigurationKey
+-dontwarn lombok.core.handlers.SneakyThrowsAndCleanupDependencyInfo
+-dontwarn lombok.core.runtimeDependencies.CreateLombokRuntimeApp
+-dontwarn lombok.delombok.DelombokApp
+-dontwarn lombok.eclipse.EcjAugments
+-dontwarn lombok.eclipse.agent.MavenEcjBootstrapApp
+-dontwarn lombok.eclipse.handlers.EclipseHandlerUtil
+-dontwarn lombok.eclipse.handlers.HandleAccessors
+-dontwarn lombok.eclipse.handlers.HandleBuilder
+-dontwarn lombok.eclipse.handlers.HandleBuilderDefault
+-dontwarn lombok.eclipse.handlers.HandleCleanup
+-dontwarn lombok.eclipse.handlers.HandleConstructor$HandleAllArgsConstructor
+-dontwarn lombok.eclipse.handlers.HandleConstructor$HandleNoArgsConstructor
+-dontwarn lombok.eclipse.handlers.HandleConstructor$HandleRequiredArgsConstructor
+-dontwarn lombok.eclipse.handlers.HandleData
+-dontwarn lombok.eclipse.handlers.HandleDelegate
+-dontwarn lombok.eclipse.handlers.HandleEqualsAndHashCode
+-dontwarn lombok.eclipse.handlers.HandleExtensionMethod
+-dontwarn lombok.eclipse.handlers.HandleFieldDefaults
+-dontwarn lombok.eclipse.handlers.HandleFieldNameConstants
+-dontwarn lombok.eclipse.handlers.HandleGetter
+-dontwarn lombok.eclipse.handlers.HandleHelper
+-dontwarn lombok.eclipse.handlers.HandleJacksonized
+-dontwarn lombok.eclipse.handlers.HandleLocked
+-dontwarn lombok.eclipse.handlers.HandleLockedRead
+-dontwarn lombok.eclipse.handlers.HandleLockedWrite
+-dontwarn lombok.eclipse.handlers.HandleLog$HandleCommonsLog
+-dontwarn lombok.eclipse.handlers.HandleLog$HandleCustomLog
+-dontwarn lombok.eclipse.handlers.HandleLog$HandleFloggerLog
+-dontwarn lombok.eclipse.handlers.HandleLog$HandleJBossLog
+-dontwarn lombok.eclipse.handlers.HandleLog$HandleJulLog
+-dontwarn lombok.eclipse.handlers.HandleLog$HandleLog4j2Log
+-dontwarn lombok.eclipse.handlers.HandleLog$HandleLog4jLog
+-dontwarn lombok.eclipse.handlers.HandleLog$HandleSlf4jLog
+-dontwarn lombok.eclipse.handlers.HandleLog$HandleXSlf4jLog
+-dontwarn lombok.eclipse.handlers.HandleNonNull
+-dontwarn lombok.eclipse.handlers.HandlePrintAST
+-dontwarn lombok.eclipse.handlers.HandleSetter
+-dontwarn lombok.eclipse.handlers.HandleSneakyThrows
+-dontwarn lombok.eclipse.handlers.HandleStandardException
+-dontwarn lombok.eclipse.handlers.HandleSuperBuilder
+-dontwarn lombok.eclipse.handlers.HandleSynchronized
+-dontwarn lombok.eclipse.handlers.HandleToString
+-dontwarn lombok.eclipse.handlers.HandleUtilityClass
+-dontwarn lombok.eclipse.handlers.HandleVal
+-dontwarn lombok.eclipse.handlers.HandleValue
+-dontwarn lombok.eclipse.handlers.HandleWith
+-dontwarn lombok.eclipse.handlers.HandleWithBy
+-dontwarn lombok.eclipse.handlers.singulars.EclipseGuavaMapSingularizer
+-dontwarn lombok.eclipse.handlers.singulars.EclipseGuavaSetListSingularizer
+-dontwarn lombok.eclipse.handlers.singulars.EclipseGuavaTableSingularizer
+-dontwarn lombok.eclipse.handlers.singulars.EclipseJavaUtilListSingularizer
+-dontwarn lombok.eclipse.handlers.singulars.EclipseJavaUtilMapSingularizer
+-dontwarn lombok.eclipse.handlers.singulars.EclipseJavaUtilSetSingularizer
+-dontwarn lombok.installer.Installer$CommandLineInstallerApp
+-dontwarn lombok.installer.Installer$CommandLineUninstallerApp
+-dontwarn lombok.installer.Installer$GraphicalInstallerApp
+-dontwarn lombok.installer.eclipse.AngularIDELocationProvider
+-dontwarn lombok.installer.eclipse.EclipseLocationProvider
+-dontwarn lombok.installer.eclipse.JbdsLocationProvider
+-dontwarn lombok.installer.eclipse.MyEclipseLocationProvider
+-dontwarn lombok.installer.eclipse.RhcrLocationProvider
+-dontwarn lombok.installer.eclipse.RhdsLocationProvider
+-dontwarn lombok.installer.eclipse.STS4LocationProvider
+-dontwarn lombok.installer.eclipse.STSLocationProvider
+-dontwarn lombok.javac.handlers.HandleAccessors
+-dontwarn lombok.javac.handlers.HandleBuilder
+-dontwarn lombok.javac.handlers.HandleBuilderDefault
+-dontwarn lombok.javac.handlers.HandleBuilderDefaultRemove
+-dontwarn lombok.javac.handlers.HandleBuilderRemove
+-dontwarn lombok.javac.handlers.HandleCleanup
+-dontwarn lombok.javac.handlers.HandleConstructor$HandleAllArgsConstructor
+-dontwarn lombok.javac.handlers.HandleConstructor$HandleNoArgsConstructor
+-dontwarn lombok.javac.handlers.HandleConstructor$HandleRequiredArgsConstructor
+-dontwarn lombok.javac.handlers.HandleData
+-dontwarn lombok.javac.handlers.HandleDelegate
+-dontwarn lombok.javac.handlers.HandleEqualsAndHashCode
+-dontwarn lombok.javac.handlers.HandleExtensionMethod
+-dontwarn lombok.javac.handlers.HandleFieldDefaults
+-dontwarn lombok.javac.handlers.HandleFieldNameConstants
+-dontwarn lombok.javac.handlers.HandleGetter
+-dontwarn lombok.javac.handlers.HandleHelper
+-dontwarn lombok.javac.handlers.HandleJacksonized
+-dontwarn lombok.javac.handlers.HandleLocked
+-dontwarn lombok.javac.handlers.HandleLockedRead
+-dontwarn lombok.javac.handlers.HandleLockedWrite
+-dontwarn lombok.javac.handlers.HandleLog$HandleCommonsLog
+-dontwarn lombok.javac.handlers.HandleLog$HandleCustomLog
+-dontwarn lombok.javac.handlers.HandleLog$HandleFloggerLog
+-dontwarn lombok.javac.handlers.HandleLog$HandleJBossLog
+-dontwarn lombok.javac.handlers.HandleLog$HandleJulLog
+-dontwarn lombok.javac.handlers.HandleLog$HandleLog4j2Log
+-dontwarn lombok.javac.handlers.HandleLog$HandleLog4jLog
+-dontwarn lombok.javac.handlers.HandleLog$HandleSlf4jLog
+-dontwarn lombok.javac.handlers.HandleLog$HandleXSlf4jLog
+-dontwarn lombok.javac.handlers.HandleNonNull
+-dontwarn lombok.javac.handlers.HandlePrintAST
+-dontwarn lombok.javac.handlers.HandleSetter
+-dontwarn lombok.javac.handlers.HandleSingularRemove
+-dontwarn lombok.javac.handlers.HandleSneakyThrows
+-dontwarn lombok.javac.handlers.HandleStandardException
+-dontwarn lombok.javac.handlers.HandleSuperBuilder
+-dontwarn lombok.javac.handlers.HandleSuperBuilderRemove
+-dontwarn lombok.javac.handlers.HandleSynchronized
+-dontwarn lombok.javac.handlers.HandleToString
+-dontwarn lombok.javac.handlers.HandleUtilityClass
+-dontwarn lombok.javac.handlers.HandleVal
+-dontwarn lombok.javac.handlers.HandleValue
+-dontwarn lombok.javac.handlers.HandleWith
+-dontwarn lombok.javac.handlers.HandleWithBy
+-dontwarn lombok.javac.handlers.singulars.JavacGuavaMapSingularizer
+-dontwarn lombok.javac.handlers.singulars.JavacGuavaSetListSingularizer
+-dontwarn lombok.javac.handlers.singulars.JavacGuavaTableSingularizer
+-dontwarn lombok.javac.handlers.singulars.JavacJavaUtilListSingularizer
+-dontwarn lombok.javac.handlers.singulars.JavacJavaUtilMapSingularizer
+-dontwarn lombok.javac.handlers.singulars.JavacJavaUtilSetSingularizer
+-dontwarn lombok.permit.Permit
+-dontwarn org.apache.tools.ant.BuildException
+-dontwarn org.apache.tools.ant.Location
+-dontwarn org.apache.tools.ant.Project
+-dontwarn org.apache.tools.ant.Task
+-dontwarn org.apache.tools.ant.types.FileSet
+-dontwarn org.apache.tools.ant.types.Path
+-dontwarn org.apache.tools.ant.types.Reference
+-dontwarn org.apache.tools.ant.types.ResourceCollection
+-dontwarn org.eclipse.core.resources.IResource
+-dontwarn org.eclipse.core.runtime.adaptor.EclipseStarter
+-dontwarn org.eclipse.jdt.core.IAnnotatable
+-dontwarn org.eclipse.jdt.core.IAnnotation
+-dontwarn org.eclipse.jdt.core.IJavaElement
+-dontwarn org.eclipse.jdt.core.IMember
+-dontwarn org.eclipse.jdt.core.IMethod
+-dontwarn org.eclipse.jdt.core.ISourceRange
+-dontwarn org.eclipse.jdt.core.IType
+-dontwarn org.eclipse.jdt.core.JavaModelException
+-dontwarn org.eclipse.jdt.core.Signature
+-dontwarn org.eclipse.jdt.core.dom.AST
+-dontwarn org.eclipse.jdt.core.dom.ASTNode
+-dontwarn org.eclipse.jdt.core.dom.ASTVisitor
+-dontwarn org.eclipse.jdt.core.dom.AbstractTypeDeclaration
+-dontwarn org.eclipse.jdt.core.dom.Annotation
+-dontwarn org.eclipse.jdt.core.dom.Block
+-dontwarn org.eclipse.jdt.core.dom.CompilationUnit
+-dontwarn org.eclipse.jdt.core.dom.Expression
+-dontwarn org.eclipse.jdt.core.dom.ITypeBinding
+-dontwarn org.eclipse.jdt.core.dom.MethodDeclaration
+-dontwarn org.eclipse.jdt.core.dom.Name
+-dontwarn org.eclipse.jdt.core.dom.NormalAnnotation
+-dontwarn org.eclipse.jdt.core.dom.QualifiedName
+-dontwarn org.eclipse.jdt.core.dom.ReturnStatement
+-dontwarn org.eclipse.jdt.core.dom.SimpleName
+-dontwarn org.eclipse.jdt.core.dom.SingleMemberAnnotation
+-dontwarn org.eclipse.jdt.core.dom.SingleVariableDeclaration
+-dontwarn org.eclipse.jdt.core.dom.StructuralPropertyDescriptor
+-dontwarn org.eclipse.jdt.core.dom.Type
+-dontwarn org.eclipse.jdt.core.dom.rewrite.ListRewrite
+-dontwarn org.eclipse.jdt.core.search.SearchMatch
+-dontwarn org.eclipse.jdt.internal.compiler.CompilationResult
+-dontwarn org.eclipse.jdt.internal.compiler.ISourceElementRequestor$FieldInfo
+-dontwarn org.eclipse.jdt.internal.compiler.ast.ASTNode
+-dontwarn org.eclipse.jdt.internal.compiler.ast.AbstractMethodDeclaration
+-dontwarn org.eclipse.jdt.internal.compiler.ast.AbstractVariableDeclaration
+-dontwarn org.eclipse.jdt.internal.compiler.ast.Annotation
+-dontwarn org.eclipse.jdt.internal.compiler.ast.Expression
+-dontwarn org.eclipse.jdt.internal.compiler.ast.FieldDeclaration
+-dontwarn org.eclipse.jdt.internal.compiler.ast.LocalDeclaration
+-dontwarn org.eclipse.jdt.internal.compiler.ast.TypeDeclaration
+-dontwarn org.eclipse.jdt.internal.compiler.ast.TypeReference
+-dontwarn org.eclipse.jdt.internal.compiler.env.ICompilationUnit
+-dontwarn org.eclipse.jdt.internal.compiler.lookup.BlockScope
+-dontwarn org.eclipse.jdt.internal.compiler.lookup.TypeBinding
+-dontwarn org.eclipse.jdt.internal.compiler.parser.Parser
+-dontwarn org.eclipse.jdt.internal.core.CompilationUnitStructureRequestor
+-dontwarn org.eclipse.jdt.internal.core.SourceField
+-dontwarn org.eclipse.jdt.internal.core.SourceFieldElementInfo
+-dontwarn org.eclipse.jdt.internal.core.dom.rewrite.NodeRewriteEvent
+-dontwarn org.eclipse.jdt.internal.core.dom.rewrite.RewriteEvent
+-dontwarn org.eclipse.jdt.internal.core.dom.rewrite.TokenScanner
+-dontwarn org.eclipse.jdt.internal.corext.refactoring.SearchResultGroup
+-dontwarn org.eclipse.jdt.internal.corext.refactoring.code.CallContext
+-dontwarn org.eclipse.jdt.internal.corext.refactoring.code.SourceProvider
+-dontwarn org.eclipse.jdt.internal.corext.refactoring.structure.MemberVisibilityAdjustor$IncomingMemberVisibilityAdjustment
+-dontwarn org.osgi.framework.Bundle
+-dontwarn org.osgi.framework.BundleContext
+-dontwarn com.infradna.tool.bridge_method_injector.BridgeMethodsAdded
+-dontwarn com.infradna.tool.bridge_method_injector.WithBridgeMethods
+-dontwarn edu.umd.cs.findbugs.annotations.NonNull
+-dontwarn edu.umd.cs.findbugs.annotations.SuppressFBWarnings
+-dontwarn okhttp3.internal.annotations.EverythingIsNonNull
+-dontwarn edu.umd.cs.findbugs.annotations.CheckForNull

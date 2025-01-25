@@ -244,4 +244,24 @@
     <string name="localDetailsJetpackComposeDesc"> Jetpack Compose هي مجموعة أدوات حديثة لإنشاء واجهة مستخدم Android الأصلية. يساعد Jetpack Compose في تبسيط عملية تطوير واجهة المستخدم على Android وتسريعها باستخدام رموز برمجية أقل وأدوات فعّالة وواجهات برمجة تطبيقات سهلة الاستخدام في Kotlin.</string>
     <string name="localDetailsComposeMultiplatform">Compose Multiplatform</string>
     <string name="localDetailsComposeMultiplatformDesc">Compose Multiplatform 是一个由 JetBrains 开发的现代化声明式和响应式 UI 框架，它提供了一种只需少量 Kotlin 代码即可构建用户界面的简单方法。它还允许您只需编写一次用户界面，即可在任何支持的平台——iOS、Android、桌面（Windows、macOS、Linux）和 Web——上运行。</string>
+    <string name="security">安全</string>
+    <string name="privateTokenSettings">私有 Token 管理</string>
+    <string name="privateTokenSettingsDesc">此处内填入的 Token 将由 Android 密钥库系统安全加密后存储</string>
+    <string name="zhipuAIMaaSPlatformToken">智谱 AI 开放平台 Token</string>
+    <string name="updateLogPrompt">你是一个更新日志总结专家，善于抓住更新日志的重点内容。请根据用户传入的文本用一段话总结文本中的更新日志并以 %s 语言输出（需要 Pangu 化）。不要涉及产品本身，限制在 150 字以内。</string>
+    <string name="githubPersonalAccessToken">GitHub 个人访问令牌</string>
+    <string name="TEESupported">密钥由设备可信执行环境（TEE）安全硬件提供保护</string>
+    <string name="StrongBoxSupported">密钥由设备 StrongBox 安全元件提供保护</string>
+    <string name="UnknownSecurityHardwareSupported">密钥由设备安全硬件提供保护</string>
+    <string name="SecuritySoftwareSupported">密钥由 Android 密钥库提供保护</string>
+    <string name="testGitHubToken">保存并测试 GitHub 个人访问令牌可用性</string>
+    <string name="testZhipuToken">保存并测试智谱 AI 开放平台 Token 可用性</string>
+    <string name="testZhipuTokenPrompt">用户正在测试与您的连通性。如果您收到了这句话，请使用 %s 语言热情地与用户打招呼并用一段话详细介绍自己的模型名称。</string>
+    <string name="backFromZhipuPlatform">智谱 AI 开放平台返回内容</string>
+    <string name="zhipuTokenSuccess">智谱 Token 可用</string>
+    <string name="zhipuTokenIsNull">智谱 Token 为空</string>
+    <string name="githubTokenIsNull">GitHub 个人访问令牌为空</string>
+    <string name="githubTokenSuccess">GitHub 个人访问令牌可用</string>
+    <string name="githubTokenUnavailable">GitHub 个人访问令牌不可用，请检查您的 GitHub 个人访问令牌有效性。</string>
+    <string name="githubTokenUnavailableTitle">GitHub 个人访问令牌不可用</string>
 </resources>

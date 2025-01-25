@@ -326,6 +326,9 @@ QQ 版本列表实用工具的诞生离不开以下开源项目，感谢以下�
 - [腾讯 Kona 国密套件](https://github.com/Tencent/TencentKonaSMSuite)，Licensed under [GNU General Public License, version 2 with the Classpath Exception](https://github.com/Tencent/TencentKonaSMSuite/blob/master/LICENSE.txt)
 - [斑朵 Boundo（Cliff Liu）](https://github.com/cliuff/boundo)，Licensed under [Apache License Version 2.0](https://github.com/cliuff/boundo/blob/master/LICENSE)
 - [Smali/Baksmali（Google fork of JesusFreke's）](https://github.com/google/smali)
+- [智谱开放平台大模型接口 Java SDK](https://github.com/MetaGLM/zhipuai-sdk-java-v4)，Licensed under [MIT License](https://github.com/MetaGLM/zhipuai-sdk-java-v4/blob/main/LICENSE)
+- [Jackson Core & Databind（FasterXML）](https://github.com/FasterXML/jackson)，Licensed under Apache License Version 2.0
+- [Java API for GitHub（Kohsuke Kawaguchi）](https://github.com/hub4j/github-api)，Licensed under [MIT License](https://github.com/hub4j/github-api/blob/main/LICENSE.txt)
 <!-- 未来再用
 - [Jsoup](https://jsoup.org/)，Licensed under [MIT License](https://jsoup.org/license)
 -->
