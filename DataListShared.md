@@ -8,7 +8,7 @@
 - **第三方主体名称**：Square
 - **使用场景描述**：网络请求
 - **共享的个人信息类型**：无
-- **使用的系统权限**：无
+- **使用的系统权限**：网络权限
 - **第三方隐私政策或用户协议或官网链接**：https://square.github.io/okhttp/
 
 ## Google Analytics
@@ -16,7 +16,7 @@
 - **第三方主体名称**：Google LLC
 - **使用场景描述**：统计分析，被 Firebase Cloud Messaging 所绑定
 - **共享的个人信息类型**：移动设备标识符、基于网络地址的地理位置信息、Firebase 安装 ID
-- **使用的系统权限**：无
+- **使用的系统权限**：网络权限
 - **第三方隐私政策或用户协议或官网链接**：https://www.google.com/analytics/terms/
 
 ## Firebase Cloud Messaging
@@ -24,5 +24,21 @@
 - **第三方主体名称**：Google LLC
 - **使用场景描述**：推送消息通知
 - **共享的个人信息类型**：Firebase 安装 ID
-- **使用的系统权限**：通知权限
+- **使用的系统权限**：通知权限、网络权限
 - **第三方隐私政策或用户协议或官网链接**：https://firebase.google.com/support/privacy
+
+## Java API for GitHub
+
+- **第三方主体名称**：Kohsuke Kawaguchi
+- **使用场景描述**：请求 GitHub REST API
+- **共享的个人信息类型**：GitHub 个人访问令牌
+- **使用的系统权限**：网络权限
+- **第三方隐私政策或用户协议或官网链接**：https://github.com/hub4j/github-api
+
+## 智谱 AI 开放平台大模型接口 Java SDK
+
+- **第三方主体名称**：北京智谱华章科技有限公司
+- **使用场景描述**：智谱 AI 开放平台大模型接口调用
+- **共享的个人信息类型**：智谱 AI 开放平台 Token
+- **使用的系统权限**：网络权限
+- **第三方隐私政策或用户协议或官网链接**：https://bigmodel.cn/dev/howuse/privacypolicy

@@ -118,6 +118,7 @@ import com.xiaoniu.qqversionlist.util.Extensions.dp
 import com.xiaoniu.qqversionlist.util.FileUtil.downloadFile
 import com.xiaoniu.qqversionlist.util.FileUtil.getFileSize
 import com.xiaoniu.qqversionlist.util.GitHubRestApiUtil.checkGitHubToken
+import com.xiaoniu.qqversionlist.util.GitHubRestApiUtil.getQverbowRelease
 import com.xiaoniu.qqversionlist.util.InfoUtil.dialogError
 import com.xiaoniu.qqversionlist.util.InfoUtil.getQverbowSM3
 import com.xiaoniu.qqversionlist.util.InfoUtil.qverbowAboutText
@@ -611,6 +612,7 @@ class MainActivity : AppCompatActivity() {
                                     .setTitle(R.string.privateTokenSettings)
                                     .setIcon(R.drawable.key_line)
                                     .setView(dialogPrivateTokenSettingBinding.root)
+                                    .setCancelable(false)
                                     .show()
 
 
@@ -780,21 +782,21 @@ class MainActivity : AppCompatActivity() {
                                                             GITHUB_TOKEN
                                                         )
                                                     if (!token.isNullOrEmpty()) {
-                                                            if(checkGitHubToken()){
-                                                                runOnUiThread { showToast(R.string.githubTokenSuccess) }
-                                                            } else {
-                                                                runOnUiThread {
-                                                                    MaterialAlertDialogBuilder(this@MainActivity)
-                                                                        .setIcon(R.drawable.alert_line)
-                                                                        .setTitle(R.string.githubTokenUnavailableTitle)
-                                                                        .setMessage(R.string.githubTokenUnavailable)
-                                                                        .setPositiveButton(R.string.done) { _, _ -> }
-                                                                        .show()
-                                                                }
+                                                        if (checkGitHubToken()) {
+                                                            runOnUiThread { showToast(R.string.githubTokenSuccess) }
+                                                        } else {
+                                                            runOnUiThread {
+                                                                MaterialAlertDialogBuilder(this@MainActivity)
+                                                                    .setIcon(R.drawable.alert_line)
+                                                                    .setTitle(R.string.githubTokenUnavailableTitle)
+                                                                    .setMessage(R.string.githubTokenUnavailable)
+                                                                    .setPositiveButton(R.string.done) { _, _ -> }
+                                                                    .show()
                                                             }
+                                                        }
 
                                                     } else runOnUiThread { showToast(R.string.githubTokenIsNull) }
-                                                } catch (e: Exception){
+                                                } catch (e: Exception) {
                                                     e.printStackTrace()
                                                     dialogError(e)
                                                 } finally {
@@ -2546,75 +2548,63 @@ class MainActivity : AppCompatActivity() {
     ) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val okHttpClient = OkHttpClient()
-                val request =
-                    Request.Builder()
-                        .url("https://api.github.com/repos/klxiaoniu/QQVersionList/releases/latest")
-                        .build()
-                val response = okHttpClient.newCall(request).execute()
-                val responseData = response.body?.string()
-                if (responseData != null) {
-                    val gson = Gson()
-                    val jsonData = gson.fromJson(responseData, JsonObject::class.java)
-                    val latestQverbowVersion =
-                        jsonData.get("tag_name").asString.trimSubstringAtStart("v")
-                    if (ComparableVersion(latestQverbowVersion) > ComparableVersion(selfVersion)) {
-                        val latestQverbowAssets = jsonData.get("assets").asJsonArray
-                        var latestQverbowDownloadUrl: String? = null
-                        var latestQverbowFileName: String? = null
-                        var latestQverbowFileSize: String? = null
+                val responseData = getQverbowRelease()
+                val latestQverbowVersion = responseData.tagName.toString().trimSubstringAtStart("v")
+                if (ComparableVersion(latestQverbowVersion) > ComparableVersion(selfVersion)) {
+                    val latestQverbowBody = responseData.body.toString()
+                    val latestQverbowAssets = responseData.assets
+                    var latestQverbowDownloadUrl: String? = null
+                    var latestQverbowFileName: String? = null
+                    var latestQverbowFileSize: String? = null
+                    if (latestQverbowAssets != null) {
                         for (asset in latestQverbowAssets) {
-                            val assetObject = asset.asJsonObject
-                            val contentType = assetObject.get("content_type").asString
-                            val browserDownloadUrl =
-                                assetObject.get("browser_download_url").asString
-                            if (contentType == "application/vnd.android.package-archive") {
-                                latestQverbowDownloadUrl = browserDownloadUrl
-                                latestQverbowFileName = assetObject.get("name").asString
+                            if (asset.contentType == "application/vnd.android.package-archive") {
+                                latestQverbowDownloadUrl = asset.browserDownloadUrl
+                                latestQverbowFileName = asset.name
                                 latestQverbowFileSize = "%.2f".format(
-                                    assetObject.get("size").asLong.toDouble().div(1024 * 1024)
+                                    asset.size.toDouble().div(1024 * 1024)
                                 )
                                 break
                             }
                         }
-                        if (latestQverbowDownloadUrl != null) withContext(Dispatchers.Main) {
-                            val updateQvtButtonBinding =
-                                UpdateQvtButtonBinding.inflate(layoutInflater)
+                    }
+                    if (latestQverbowDownloadUrl != null) withContext(Dispatchers.Main) {
+                        val updateQvtButtonBinding =
+                            UpdateQvtButtonBinding.inflate(layoutInflater)
 
-                            val updateQvtMaterialDialog =
-                                MaterialAlertDialogBuilder(this@MainActivity)
-                                    .setTitle(R.string.updateQverbowAvailable)
-                                    .setIcon(R.drawable.check_circle)
-                                    .setView(updateQvtButtonBinding.root)
-                                    .setMessage(
-                                        "${getString(R.string.version)}$latestQverbowVersion\n${
-                                            getString(
-                                                R.string.downloadLink
-                                            )
-                                        }$latestQverbowDownloadUrl\n${
-                                            getString(
-                                                R.string.fileSize
-                                            )
-                                        }$latestQverbowFileSize MB"
-                                    )
-                                    .show()
-
-                            updateQvtButtonBinding.updateQvtCopy.setOnClickListener {
-                                copyText(latestQverbowDownloadUrl)
-                                updateQvtMaterialDialog.dismiss()
-                            }
-
-                            updateQvtButtonBinding.updateQvtDownload.setOnClickListener {
-                                updateQvtMaterialDialog.dismiss()
-                                downloadFile(
-                                    this@MainActivity,
-                                    latestQverbowDownloadUrl,
-                                    latestQverbowFileName
+                        val updateQvtMaterialDialog =
+                            MaterialAlertDialogBuilder(this@MainActivity)
+                                .setTitle(R.string.updateQverbowAvailable)
+                                .setIcon(R.drawable.check_circle)
+                                .setView(updateQvtButtonBinding.root)
+                                .setMessage(
+                                    "${getString(R.string.version)}$latestQverbowVersion\n${
+                                        getString(
+                                            R.string.downloadLink
+                                        )
+                                    }$latestQverbowDownloadUrl\n${
+                                        getString(
+                                            R.string.fileSize
+                                        )
+                                    }$latestQverbowFileSize MB"
                                 )
-                            }
-                        } else showToast(getString(R.string.noAssetsDetected))
-                    } else showToast(getString(R.string.noUpdatesDetected))
-                }
+                                .show()
+
+                        updateQvtButtonBinding.updateQvtCopy.setOnClickListener {
+                            copyText(latestQverbowDownloadUrl)
+                            updateQvtMaterialDialog.dismiss()
+                        }
+
+                        updateQvtButtonBinding.updateQvtDownload.setOnClickListener {
+                            updateQvtMaterialDialog.dismiss()
+                            downloadFile(
+                                this@MainActivity,
+                                latestQverbowDownloadUrl,
+                                latestQverbowFileName
+                            )
+                        }
+                    } else showToast(getString(R.string.noAssetsDetected))
+                } else showToast(getString(R.string.noUpdatesDetected))
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     if (isManual) dialogError(
@@ -2641,24 +2631,13 @@ class MainActivity : AppCompatActivity() {
         class HashIsFalseException(message: String) : Exception(message)
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val okHttpClient = OkHttpClient()
-                val request =
-                    Request.Builder()
-                        .url("https://api.github.com/repos/klxiaoniu/QQVersionList/releases/tags/v$selfVersion")
-                        .build()
-                val response = okHttpClient.newCall(request).execute()
-                val responseData = response.body?.string()
-                if (responseData != null) {
-                    val gson = Gson()
-                    val jsonData = gson.fromJson(responseData, JsonObject::class.java)
-                    val githubBody =
-                        jsonData.get("body").asString
-                    withContext(Dispatchers.Main) {
-                        if (githubBody.contains(sm3))
-                            showToast(R.string.hashIsTrue) else throw HashIsFalseException(
-                            getString(R.string.hashIsFalse)
-                        )
-                    }
+                val responseData = getQverbowRelease("v$selfVersion")
+                val githubBody = responseData.body.toString()
+                withContext(Dispatchers.Main) {
+                    if (githubBody.contains(sm3))
+                        showToast(R.string.hashIsTrue) else throw HashIsFalseException(
+                        getString(R.string.hashIsFalse)
+                    )
                 }
             } catch (e: HashIsFalseException) {
                 withContext(Dispatchers.Main) {

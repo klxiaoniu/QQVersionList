@@ -264,4 +264,5 @@
     <string name="githubTokenSuccess">GitHub PAT Available</string>
     <string name="githubTokenUnavailable">GitHub Personal Access Token is unavailable. Please check the validity of your GitHub Personal Access Token.</string>
     <string name="githubTokenUnavailableTitle">GitHub PAT Unavailable</string>
+    <string name="testToken">Test Token Availability</string>
 </resources>

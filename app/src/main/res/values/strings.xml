@@ -253,8 +253,8 @@
     <string name="StrongBoxSupported">密钥由设备 StrongBox 安全元件提供保护</string>
     <string name="UnknownSecurityHardwareSupported">密钥由设备安全硬件提供保护</string>
     <string name="SecuritySoftwareSupported">密钥由 Android 密钥库提供保护</string>
-    <string name="testGitHubToken">保存并测试 GitHub 个人访问令牌可用性</string>
-    <string name="testZhipuToken">保存并测试智谱 AI 开放平台 Token 可用性</string>
+    <string name="testGitHubToken">保存并联网测试 GitHub 个人访问令牌可用性</string>
+    <string name="testZhipuToken">保存并联网测试智谱 AI 开放平台 Token 可用性</string>
     <string name="testZhipuTokenPrompt">用户正在测试与您的连通性。如果您收到了这句话，请使用 %s 语言热情地与用户打招呼并用一段话详细介绍自己的模型名称。</string>
     <string name="backFromZhipuPlatform">智谱 AI 开放平台返回内容</string>
     <string name="zhipuTokenSuccess">智谱 Token 可用</string>
@@ -263,4 +263,5 @@
     <string name="githubTokenSuccess">GitHub 个人访问令牌可用</string>
     <string name="githubTokenUnavailable">GitHub 个人访问令牌不可用，请检查您的 GitHub 个人访问令牌有效性。</string>
     <string name="githubTokenUnavailableTitle">GitHub 个人访问令牌不可用</string>
+    <string name="testToken">测试 Token 可用性</string>
 </resources>

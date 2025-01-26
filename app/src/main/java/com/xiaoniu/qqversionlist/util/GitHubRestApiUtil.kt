@@ -19,34 +19,38 @@
 package com.xiaoniu.qqversionlist.util
 
 import com.xiaoniu.qqversionlist.QverbowApplication.Companion.GITHUB_TOKEN
+import com.xiaoniu.qqversionlist.data.QverbowRelease
+import com.xiaoniu.qqversionlist.data.QverbowReleaseAssets
 import org.kohsuke.github.GitHub
 
 object GitHubRestApiUtil {
-    fun getQverbowLatestRelease(): MutableMap<String, Any?> {
+    fun getQverbowRelease(version: String? = null): QverbowRelease {
         val token = getGitHubToken()
         val github =
             if (checkGitHubToken()) GitHub.connectUsingOAuth(token) else GitHub.connectAnonymously()
         val repository = github.getRepository("klxiaoniu/QQVersionList")
-        val latestRelease = repository.latestRelease
+        val release =
+            if (version != null) repository.getReleaseByTagName(version) else repository.latestRelease
 
-        return mutableMapOf<String, Any?>().apply {
-            this["tagName"] = latestRelease.tagName
-            this["name"] = latestRelease.name
-            this["body"] = latestRelease.body
-            this["createdAt"] = latestRelease.createdAt
-            this["htmlUrl"] = latestRelease.htmlUrl.toString()
-            this["zipballUrl"] = latestRelease.zipballUrl.toString()
-            this["tarballUrl"] = latestRelease.tarballUrl.toString()
-            this["isDraft"] = latestRelease.isDraft
-            this["isPrerelease"] = latestRelease.isPrerelease
-            this["assets"] = latestRelease.listAssets().map { asset ->
-                mapOf(
-                    "name" to asset.name,
-                    "browserDownloadUrl" to asset.browserDownloadUrl.toString(),
+        return QverbowRelease(tagName = release.tagName,
+            name = release.name,
+            body = release.body,
+            createdAt = release.createdAt,
+            htmlUrl = release.htmlUrl.toString(),
+            zipballUrl = release.zipballUrl.toString(),
+            tarballUrl = release.tarballUrl.toString(),
+            isDraft = release.isDraft,
+            isPrerelease = release.isPrerelease,
+            assets = release.listAssets().map { asset ->
+                QverbowReleaseAssets(
+                    name = asset.name,
+                    browserDownloadUrl = asset.browserDownloadUrl.toString(),
+                    contentType = asset.contentType,
+                    size = asset.size
                 )
-            }
-        }
+            })
     }
+
 
     fun checkGitHubToken(): Boolean {
         val token = getGitHubToken()

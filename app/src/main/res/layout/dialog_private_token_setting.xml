@@ -47,69 +47,63 @@
                 android:id="@+id/github_personal_access_token"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="6dp"
                 android:hint="@string/githubPersonalAccessToken"
+                app:endIconMode="password_toggle"
                 app:helperTextEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:imeOptions="actionDone"
-                    android:inputType="textVisiblePassword"
+                    android:inputType="textPassword"
                     android:singleLine="true" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <TextView
+            <com.xiaoniu.qqversionlist.ui.components.cell.CellSingleClick
                 android:id="@+id/github_pat_test"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawablePadding="8dp"
-                android:gravity="center_vertical"
-                android:paddingStart="12dp"
-                android:paddingTop="8dp"
-                android:paddingEnd="12dp"
-                android:paddingBottom="16dp"
-                android:text="@string/testGitHubToken"
-                android:textColor="?attr/colorOnSurface"
-                app:drawableEndCompat="@drawable/arrow_right_s_line" />
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                app:cellDescription="@string/testGitHubToken"
+                app:cellIcon="@drawable/flashlight_line"
+                app:cellTitle="@string/testToken" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/zhipu_ai_token"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="6dp"
                 android:hint="@string/zhipuAIMaaSPlatformToken"
+                app:endIconMode="password_toggle"
                 app:helperTextEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:imeOptions="actionNext"
-                    android:inputType="textVisiblePassword"
+                    android:inputType="textPassword"
                     android:singleLine="true" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <TextView
+            <com.xiaoniu.qqversionlist.ui.components.cell.CellSingleClick
                 android:id="@+id/zhipu_token_test"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawablePadding="8dp"
-                android:gravity="center_vertical"
-                android:paddingStart="12dp"
-                android:paddingTop="8dp"
-                android:paddingEnd="12dp"
-                android:paddingBottom="16dp"
-                android:text="@string/testZhipuToken"
-                android:textColor="?attr/colorOnSurface"
-                app:drawableEndCompat="@drawable/arrow_right_s_line" />
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                app:cellDescription="@string/testZhipuToken"
+                app:cellIcon="@drawable/flashlight_line"
+                app:cellTitle="@string/testToken" />
 
             <LinearLayout
                 android:id="@+id/security_level_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginBottom="4dp"
                 android:orientation="horizontal"
                 tools:ignore="UseCompoundDrawables">

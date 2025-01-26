@@ -22,7 +22,6 @@
     android:paddingStart="20dp"
     android:paddingEnd="20dp"
     android:paddingBottom="20dp">
-
     <com.google.android.material.button.MaterialButton
         android:id="@+id/update_qvt_copy"
         style="@style/Widget.Material3.Button.TonalButton.Icon"
@@ -30,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_weight="1"
-        android:text="@string/copyLink"
+        android:text="@string/copy"
         app:icon="@drawable/file_copy_line" />
 
     <com.google.android.material.button.MaterialButton
