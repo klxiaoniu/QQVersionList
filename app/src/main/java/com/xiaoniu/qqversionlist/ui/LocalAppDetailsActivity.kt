@@ -52,7 +52,7 @@ import java.io.File
 import java.nio.file.FileSystems
 
 class LocalAppDetailsActivity : AppCompatActivity() {
-    lateinit var viewModel: LocalAppViewModel
+    lateinit var viewModel: LocalAppDetailsActivityViewModel
     lateinit var binding: ActivityLocalAppDetailsBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,7 +75,7 @@ class LocalAppDetailsActivity : AppCompatActivity() {
         binding = ActivityLocalAppDetailsBinding.inflate(layoutInflater)
         val viewRoot = binding.root
         setContentView(viewRoot)
-        viewModel = ViewModelProvider(this)[LocalAppViewModel::class.java]
+        viewModel = ViewModelProvider(this)[LocalAppDetailsActivityViewModel::class.java]
         binding.apply {
             topAppBar.setNavigationOnClickListener {
                 finish()

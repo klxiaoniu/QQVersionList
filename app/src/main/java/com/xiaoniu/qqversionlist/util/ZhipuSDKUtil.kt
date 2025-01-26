@@ -32,6 +32,14 @@ object ZhipuSDKUtil {
     const val TEMPERATURE = "temperature"
     const val MAX_TOKENS = "max_tokens"
 
+    /**
+     * 使用指定的系统提示和问题，通过 Zhipu API 获取回答
+     *
+     * @param systemPrompt 系统提示文本，用于设置对话的背景或规则
+     * @param question 用户提出的问题文本
+     * @param token 访问 Zhipu API 所需的认证令牌
+     * @return Zhipu API 返回的回答内容的字符串表示，如果请求失败则可能返回 null
+     */
     fun getZhipuWrite(systemPrompt: String, question: String, token: String): String? {
         val client = ClientV4.Builder(token).networkConfig(30, 10, 10, 10, TimeUnit.SECONDS)
             .connectionPool(ConnectionPool(8, 1, TimeUnit.SECONDS)).build()

@@ -45,7 +45,7 @@ import java.io.File
 import java.nio.charset.Charset
 import kotlin.use
 
-class LocalAppViewModel : ViewModel() {
+class LocalAppDetailsActivityViewModel : ViewModel() {
     companion object {
         val DEX_QQNT = arrayOf("com.tencent.qqnt")
         val DEX_BUGLY = arrayOf("com.tencent.bugly")

@@ -20,7 +20,6 @@
 -keep class com.zhipu.oapi.service.v4.api.* { *; }
 -keep class com.zhipu.oapi.service.v4.model.* { *; }
 -keep class io.reactivex.Single { *; }
-
 -keep class org.kohsuke.github.* { *; }
 
 -dontwarn com.sun.tools.javac.processing.JavacFiler

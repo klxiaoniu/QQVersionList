@@ -124,7 +124,6 @@ import com.xiaoniu.qqversionlist.util.InfoUtil.getQverbowSM3
 import com.xiaoniu.qqversionlist.util.InfoUtil.qverbowAboutText
 import com.xiaoniu.qqversionlist.util.InfoUtil.showToast
 import com.xiaoniu.qqversionlist.util.KeyStoreUtil
-import com.xiaoniu.qqversionlist.util.KeyStoreUtil.getStringKVwithKeyStore
 import com.xiaoniu.qqversionlist.util.ShiplyUtil
 import com.xiaoniu.qqversionlist.util.StringUtil.getAllAPKUrl
 import com.xiaoniu.qqversionlist.util.StringUtil.resolveWeixinAlphaConfig
@@ -166,7 +165,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var qqVersionListFragment: QQVersionListFragment
     private lateinit var timVersionListFragment: TIMVersionListFragment
     private lateinit var rvPagerAdapter: VersionListPagerAdapter
-    private lateinit var viewModel: VersionListViewModel
+    private lateinit var viewModel: MainActivityViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
@@ -208,7 +207,7 @@ class MainActivity : AppCompatActivity() {
             R.drawable.git_commit_line
         )
 
-        viewModel = ViewModelProvider(this)[VersionListViewModel::class.java]
+        viewModel = ViewModelProvider(this)[MainActivityViewModel::class.java]
         viewModel.isVersionListLoading.observe(this, Observer { isLoading ->
             if (isLoading) binding.progressLine.show() else binding.progressLine.hide()
         })
@@ -434,6 +433,8 @@ class MainActivity : AppCompatActivity() {
                         useNewLocalPage.switchChecked =
                             DataStoreUtil.getBooleanKV("useNewLocalPage", true)
                         guessNot5.switchChecked = DataStoreUtil.getBooleanKV("guessNot5", false)
+                        switchUpdateLogLlmGen.switchChecked =
+                            DataStoreUtil.getBooleanKV("updateLogLlmGen", false)
                         switchGuessTestExtend.switchChecked =
                             DataStoreUtil.getBooleanKV("guessTestExtend", false) // 扩展测试版扫版格式
                         downloadOnSystemManager.switchChecked =
@@ -466,6 +467,9 @@ class MainActivity : AppCompatActivity() {
                         }
                         guessNot5.setOnCheckedChangeListener { isChecked ->
                             DataStoreUtil.putBooleanKVAsync("guessNot5", isChecked)
+                        }
+                        switchUpdateLogLlmGen.setOnCheckedChangeListener { isChecked ->
+                            DataStoreUtil.putBooleanKVAsync("updateLogLlmGen", isChecked)
                         }
                         dialogPersonalization.setOnClickListener {
                             val dialogPersonalization =
@@ -616,8 +620,8 @@ class MainActivity : AppCompatActivity() {
                                     .show()
 
 
-                            val zhipuToken = getStringKVwithKeyStore(ZHIPU_TOKEN)
-                            val githubToken = getStringKVwithKeyStore(GITHUB_TOKEN)
+                            val zhipuToken = KeyStoreUtil.getStringKVwithKeyStore(ZHIPU_TOKEN)
+                            val githubToken = KeyStoreUtil.getStringKVwithKeyStore(GITHUB_TOKEN)
                             val securityLevel = KeyStoreUtil.checkHardwareSecurity()
 
                             dialogPrivateTokenSettingBinding.apply {
@@ -692,7 +696,9 @@ class MainActivity : AppCompatActivity() {
                                             CoroutineScope(Dispatchers.IO).launch {
                                                 try {
                                                     val token =
-                                                        getStringKVwithKeyStore(ZHIPU_TOKEN)
+                                                        KeyStoreUtil.getStringKVwithKeyStore(
+                                                            ZHIPU_TOKEN
+                                                        )
                                                     if (!token.isNullOrEmpty()) {
                                                         val responseData = getZhipuWrite(
                                                             getString(
@@ -778,7 +784,7 @@ class MainActivity : AppCompatActivity() {
                                             CoroutineScope(Dispatchers.IO).launch {
                                                 try {
                                                     val token =
-                                                        getStringKVwithKeyStore(
+                                                        KeyStoreUtil.getStringKVwithKeyStore(
                                                             GITHUB_TOKEN
                                                         )
                                                     if (!token.isNullOrEmpty()) {
@@ -1296,7 +1302,7 @@ class MainActivity : AppCompatActivity() {
                                     shiplyVersion.editText?.setText(
                                         getStringKV("shiplyVersion", "")
                                     )
-                                    switchShiplyAdvancedConfigurations.isChecked =
+                                    switchShiplyAdvancedConfigurations.switchChecked =
                                         getBooleanKV("shiplyAdvancedConfigurations", false)
 
                                     val shiplyTargetSelect = getStringKV("shiplyTargetSelect", "")
@@ -1310,7 +1316,7 @@ class MainActivity : AppCompatActivity() {
                                     )
                                 }
 
-                                switchShiplyAdvancedConfigurations.setOnCheckedChangeListener { _, isChecked ->
+                                switchShiplyAdvancedConfigurations.setOnCheckedChangeListener { isChecked ->
                                     DataStoreUtil.putBooleanKVAsync(
                                         "shiplyAdvancedConfigurations",
                                         isChecked
@@ -2526,9 +2532,7 @@ class MainActivity : AppCompatActivity() {
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                runOnUiThread {
-                    dialogError(e)
-                }
+                runOnUiThread { dialogError(e) }
             } finally {
                 runOnUiThread {
                     btn.apply {
@@ -2556,52 +2560,121 @@ class MainActivity : AppCompatActivity() {
                     var latestQverbowDownloadUrl: String? = null
                     var latestQverbowFileName: String? = null
                     var latestQverbowFileSize: String? = null
-                    if (latestQverbowAssets != null) {
-                        for (asset in latestQverbowAssets) {
-                            if (asset.contentType == "application/vnd.android.package-archive") {
-                                latestQverbowDownloadUrl = asset.browserDownloadUrl
-                                latestQverbowFileName = asset.name
-                                latestQverbowFileSize = "%.2f".format(
-                                    asset.size.toDouble().div(1024 * 1024)
+                    if (latestQverbowAssets != null) for (asset in latestQverbowAssets) if (asset.contentType == "application/vnd.android.package-archive") {
+                        latestQverbowDownloadUrl = asset.browserDownloadUrl
+                        latestQverbowFileName = asset.name
+                        latestQverbowFileSize = "%.2f".format(
+                            asset.size.toDouble().div(1024 * 1024)
+                        )
+                        break
+                    }
+                    if (latestQverbowDownloadUrl != null) {
+                        if (DataStoreUtil.getBooleanKV("updateLogLlmGen", false)) CoroutineScope(
+                            Dispatchers.IO
+                        ).launch {
+                            val token = KeyStoreUtil.getStringKVwithKeyStore(ZHIPU_TOKEN)
+                            val tokenIsNullOrEmpty = token.isNullOrEmpty()
+                            if (!tokenIsNullOrEmpty) {
+                                runOnUiThread { viewModel.setUpdateBackLLMWorking(true) }
+                                val qverbowResponse = getZhipuWrite(
+                                    getString(R.string.updateLogPrompt),
+                                    latestQverbowBody,
+                                    token
                                 )
-                                break
+                                val gson =
+                                    GsonBuilder().setPrettyPrinting()
+                                        .create()
+                                val responseObject = gson.fromJson(
+                                    qverbowResponse, JsonObject::class.java
+                                )
+
+                                runOnUiThread {
+                                    if (responseObject.getAsJsonPrimitive("code").asInt == 200) {
+                                        val zhipuContent =
+                                            responseObject.getAsJsonObject("data").asJsonObject.getAsJsonArray(
+                                                "choices"
+                                            ).asJsonArray.first().asJsonObject.getAsJsonObject(
+                                                "message"
+                                            ).asJsonObject.getAsJsonPrimitive(
+                                                "content"
+                                            ).asString
+                                        viewModel.setUpdateBackLLMGenText(zhipuContent)
+                                    } else {
+                                        val zhipuContent =
+                                            responseObject.getAsJsonPrimitive("msg").asString + getString(
+                                                R.string.colon
+                                            ) + responseObject.getAsJsonObject("error").asJsonObject.getAsJsonPrimitive(
+                                                "message"
+                                            ).asString
+                                        viewModel.setUpdateBackLLMGenText(zhipuContent)
+                                    }
+                                    viewModel.setUpdateBackLLMWorking(false)
+                                }
+                            } else runOnUiThread {
+                                viewModel.setUpdateBackLLMWorking(false)
+                                viewModel.setUpdateBackLLMGenText(getString(R.string.zhipuTokenIsNull))
                             }
                         }
-                    }
-                    if (latestQverbowDownloadUrl != null) withContext(Dispatchers.Main) {
-                        val updateQvtButtonBinding =
-                            UpdateQvtButtonBinding.inflate(layoutInflater)
 
-                        val updateQvtMaterialDialog =
-                            MaterialAlertDialogBuilder(this@MainActivity)
-                                .setTitle(R.string.updateQverbowAvailable)
-                                .setIcon(R.drawable.check_circle)
-                                .setView(updateQvtButtonBinding.root)
-                                .setMessage(
-                                    "${getString(R.string.version)}$latestQverbowVersion\n${
-                                        getString(
-                                            R.string.downloadLink
-                                        )
-                                    }$latestQverbowDownloadUrl\n${
-                                        getString(
-                                            R.string.fileSize
-                                        )
-                                    }$latestQverbowFileSize MB"
-                                )
-                                .show()
+                        withContext(Dispatchers.Main) {
+                            val updateQvtButtonBinding =
+                                UpdateQvtButtonBinding.inflate(layoutInflater)
 
-                        updateQvtButtonBinding.updateQvtCopy.setOnClickListener {
-                            copyText(latestQverbowDownloadUrl)
-                            updateQvtMaterialDialog.dismiss()
-                        }
+                            val updateQvtMaterialDialog =
+                                MaterialAlertDialogBuilder(this@MainActivity)
+                                    .setTitle(R.string.updateQverbowAvailable)
+                                    .setIcon(R.drawable.check_circle)
+                                    .setView(updateQvtButtonBinding.root)
+                                    .setMessage(
+                                        "${getString(R.string.version)}$latestQverbowVersion\n${
+                                            getString(
+                                                R.string.downloadLink
+                                            )
+                                        }$latestQverbowDownloadUrl\n${
+                                            getString(
+                                                R.string.fileSize
+                                            )
+                                        }$latestQverbowFileSize MB"
+                                    ).show()
 
-                        updateQvtButtonBinding.updateQvtDownload.setOnClickListener {
-                            updateQvtMaterialDialog.dismiss()
-                            downloadFile(
+                            updateQvtButtonBinding.progressIndicator.apply {
+                                hide()
+                                showAnimationBehavior = LinearProgressIndicator.SHOW_NONE
+                                hideAnimationBehavior = LinearProgressIndicator.HIDE_ESCAPE
+                            }
+
+                            viewModel.isUpdateBackLLMWorking.observe(
+                                this@MainActivity, Observer { isWorking ->
+                                    if (DataStoreUtil.getBooleanKV("updateLogLlmGen", false)) {
+                                        updateQvtButtonBinding.llmGenCard.isVisible =
+                                            !isWorking && viewModel.updateBackLLMGenText.value.toString()
+                                                .isNotEmpty()
+                                        updateQvtButtonBinding.progressIndicator.isVisible =
+                                            isWorking
+                                    } else {
+                                        updateQvtButtonBinding.llmGenCard.isVisible = false
+                                        updateQvtButtonBinding.progressIndicator.isVisible = false
+                                    }
+                                })
+                            viewModel.updateBackLLMGenText.observe(
                                 this@MainActivity,
-                                latestQverbowDownloadUrl,
-                                latestQverbowFileName
-                            )
+                                Observer { text ->
+                                    updateQvtButtonBinding.llmGenText.text = text
+                                })
+
+                            updateQvtButtonBinding.updateQvtCopy.setOnClickListener {
+                                copyText(latestQverbowDownloadUrl)
+                                updateQvtMaterialDialog.dismiss()
+                            }
+
+                            updateQvtButtonBinding.updateQvtDownload.setOnClickListener {
+                                updateQvtMaterialDialog.dismiss()
+                                downloadFile(
+                                    this@MainActivity,
+                                    latestQverbowDownloadUrl,
+                                    latestQverbowFileName
+                                )
+                            }
                         }
                     } else showToast(getString(R.string.noAssetsDetected))
                 } else showToast(getString(R.string.noUpdatesDetected))

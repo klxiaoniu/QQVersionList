@@ -50,6 +50,7 @@
                 android:layout_marginBottom="6dp"
                 android:hint="@string/githubPersonalAccessToken"
                 app:endIconMode="password_toggle"
+                app:helperText="@string/githubTokenHelperText"
                 app:helperTextEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -65,8 +66,8 @@
                 android:id="@+id/github_pat_test"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="10dp"
                 app:cellDescription="@string/testGitHubToken"
                 app:cellIcon="@drawable/flashlight_line"
                 app:cellTitle="@string/testToken" />
@@ -78,6 +79,7 @@
                 android:layout_marginBottom="6dp"
                 android:hint="@string/zhipuAIMaaSPlatformToken"
                 app:endIconMode="password_toggle"
+                app:helperText="@string/zhipuTokenHelperText"
                 app:helperTextEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -93,8 +95,8 @@
                 android:id="@+id/zhipu_token_test"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="10dp"
                 app:cellDescription="@string/testZhipuToken"
                 app:cellIcon="@drawable/flashlight_line"
                 app:cellTitle="@string/testToken" />

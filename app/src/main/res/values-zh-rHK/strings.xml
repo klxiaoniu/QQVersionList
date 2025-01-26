@@ -265,4 +265,10 @@
     <string name="githubTokenUnavailable">GitHub 個人訪問令牌不可用，請檢查您的 GitHub 個人訪問令牌有效性。</string>
     <string name="githubTokenUnavailableTitle">GitHub 個人訪問令牌不可用</string>
     <string name="testToken">測試 Token 可用性</string>
+    <string name="llmIntelligent">LLM 智能摘要</string>
+    <string name="aiLLMInference">LLM 推理</string>
+    <string name="qverbowUpdateLogLLMIntelligentDesc">檢測到更新時將使用 LLM 智能摘要更新日誌，需要在“私有 Token 管理”填入智譜 Token</string>
+    <string name="qverbowUpdateLogLLMIntelligent">更新日誌智能摘要</string>
+    <string name="githubTokenHelperText">GitHub 個人存取權杖將用於解除 GitHub REST API 的存取速率限制，填入並儲存即生效</string>
+    <string name="zhipuTokenHelperText">預設僅請求智譜免費模型 GLM-4-Flash</string>
 </resources>

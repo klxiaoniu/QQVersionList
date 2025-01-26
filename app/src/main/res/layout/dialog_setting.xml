@@ -99,6 +99,25 @@
                 android:paddingTop="12dp"
                 android:paddingEnd="12dp"
                 android:paddingBottom="6dp"
+                android:text="@string/aiLLMInference"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+
+            <com.xiaoniu.qqversionlist.ui.components.cell.CellSingleSwitch
+                android:id="@+id/switch_update_log_llm_gen"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cellDescription="@string/qverbowUpdateLogLLMIntelligentDesc"
+                app:cellTitle="@string/qverbowUpdateLogLLMIntelligent" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="12dp"
+                android:paddingTop="12dp"
+                android:paddingEnd="12dp"
+                android:paddingBottom="6dp"
                 android:text="@string/security"
                 android:textColor="?attr/colorPrimary"
                 android:textSize="11sp"

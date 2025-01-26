@@ -265,4 +265,10 @@
     <string name="githubTokenUnavailable">GitHub Personal Access Token is unavailable. Please check the validity of your GitHub Personal Access Token.</string>
     <string name="githubTokenUnavailableTitle">GitHub PAT Unavailable</string>
     <string name="testToken">Test Token Availability</string>
+    <string name="llmIntelligent">LLM Intelligence</string>
+    <string name="aiLLMInference">LLM Inference</string>
+    <string name="qverbowUpdateLogLLMIntelligentDesc">When an update is detected, the update log will be summarized using LLM Intelligent Summary. You need to enter the Zhipu Token in the Private Token Settings section.</string>
+    <string name="qverbowUpdateLogLLMIntelligent">Update Log Intelligent Summary</string>
+    <string name="githubTokenHelperText">The GitHub Personal Access Token will be used to bypass GitHub REST API rate limits. Enter and save to activate.</string>
+    <string name="zhipuTokenHelperText">By default, only the free model GLM-4-Flash from Zhipu is requested.</string>
 </resources>
