@@ -248,7 +248,7 @@
     <string name="privateTokenSettings">Private Token Settings</string>
     <string name="privateTokenSettingsDesc">The Token entered here will be securely encrypted by the Android KeyStore System and stored.</string>
     <string name="zhipuAIMaaSPlatformToken">Zhipu AI MaaS Platform Token</string>
-    <string name="updateLogPrompt">You are an expert in summarizing changelogs, skilled at capturing the key points of the changelog. Please summarize the changelog based on the text provided by the user in one paragraph and output it in %s language (Pangu formatting required). Do not involve the product itself, limit to 150 words.</string>
+    <string name="updateLogPrompt">Based on the user-provided changelog text, create a professional summary in clear and concise %s language. Requirements: 1) Extract core feature optimizations and critical issue fixes, omitting technical details 2) Apply Pangu formatting to automatically space between Chinese/English characters and numbers 3) Completely avoid product names and subjective evaluations 4) Present in coherent paragraphs, strictly within 150 words. Emphasize user-perceivable improvements using standardized expressions, prohibit list formats, and avoid Markdown.</string>
     <string name="githubPersonalAccessToken">GitHub Personal Access Token</string>
     <string name="TEESupported">The key is protected by the device\'s Trusted Execution Environment (TEE) hardware security module.</string>
     <string name="StrongBoxSupported">The key is protected by the device\'s StrongBox SE.</string>
@@ -271,4 +271,7 @@
     <string name="qverbowUpdateLogLLMIntelligent">Update Log Intelligent Summary</string>
     <string name="githubTokenHelperText">The GitHub Personal Access Token will be used to bypass GitHub REST API rate limits. Enter and save to activate.</string>
     <string name="zhipuTokenHelperText">By default, only the free model GLM-4-Flash from Zhipu is requested.</string>
+    <string name="zhipuTokenIsInvalid">The provided Token was deemed invalid by the Zhipu AI MaaS Platform Java SDK.</string>
+    <string name="clickHereToViewTheChangelog">View Changelog</string>
+    <string name="localWeixinVersion">Local Weixin/WeChat:&#160;</string>
 </resources>

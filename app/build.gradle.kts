@@ -120,7 +120,7 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.github.api)
     implementation(libs.gson)
-    // implementation(libs.jsoup) 未来再用
+    implementation(libs.jsoup)
     implementation(libs.kona.crypto)
     implementation(libs.kona.provider)
     implementation(libs.kotlinx.coroutines.android)

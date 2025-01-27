@@ -24,6 +24,14 @@ import com.xiaoniu.qqversionlist.data.QverbowReleaseAssets
 import org.kohsuke.github.GitHub
 
 object GitHubRestApiUtil {
+    /**
+     * 获取 Qverbow 的发布版本信息
+     * 如果提供了特定的版本号，则获取该版本的发布信息；否则获取最新发布版本的信息
+     * 使用 GitHub 的 OAuth 令牌连接到 GitHub，如果令牌无效，则匿名连接
+     *
+     * @param version 可选参数，指定需要查询的版本号如果未提供，则获取最新版本信息
+     * @return 返回一个包含发布信息的 QverbowRelease 对象
+     */
     fun getQverbowRelease(version: String? = null): QverbowRelease {
         val token = getGitHubToken()
         val github =

@@ -92,6 +92,7 @@ import com.xiaoniu.qqversionlist.QverbowApplication.Companion.ZHIPU_TOKEN
 import com.xiaoniu.qqversionlist.R
 import com.xiaoniu.qqversionlist.data.QQVersionBean
 import com.xiaoniu.qqversionlist.data.TIMVersionBean
+import com.xiaoniu.qqversionlist.data.WeixinVersionBean
 import com.xiaoniu.qqversionlist.databinding.ActivityMainBinding
 import com.xiaoniu.qqversionlist.databinding.ApplicationsConfigBackButtonBinding
 import com.xiaoniu.qqversionlist.databinding.DialogAboutBinding
@@ -132,12 +133,15 @@ import com.xiaoniu.qqversionlist.util.StringUtil.trimSubstringAtEnd
 import com.xiaoniu.qqversionlist.util.StringUtil.trimSubstringAtStart
 import com.xiaoniu.qqversionlist.util.VersionUtil.resolveLocalQQ
 import com.xiaoniu.qqversionlist.util.VersionUtil.resolveLocalTIM
+import com.xiaoniu.qqversionlist.util.VersionUtil.resolveLocalWeixin
 import com.xiaoniu.qqversionlist.util.VersionUtil.resolveQQRainbow
 import com.xiaoniu.qqversionlist.util.VersionUtil.resolveTIMRainbow
+import com.xiaoniu.qqversionlist.util.VersionUtil.resolveWeixinHTML
 import com.xiaoniu.qqversionlist.util.ZhipuSDKUtil.getZhipuWrite
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import me.zhanghai.android.fastscroll.FastScrollerBuilder
@@ -158,10 +162,13 @@ class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     lateinit var qqVersionAdapter: QQVersionAdapter
     lateinit var timVersionAdapter: TIMVersionAdapter
+    lateinit var weixinVersionAdapter: WeixinVersionAdapter
     lateinit var localQQAdapter: LocalQQAdapter
     lateinit var localTIMAdapter: LocalTIMAdapter
+    lateinit var localWeixinAdapter: LocalWeixinAdapter
     lateinit var qqVersion: List<QQVersionBean>
     lateinit var timVersion: List<TIMVersionBean>
+    lateinit var weixinVersion: List<WeixinVersionBean>
     private lateinit var qqVersionListFragment: QQVersionListFragment
     private lateinit var timVersionListFragment: TIMVersionListFragment
     private lateinit var rvPagerAdapter: VersionListPagerAdapter
@@ -197,8 +204,10 @@ class MainActivity : AppCompatActivity() {
 
         qqVersionAdapter = QQVersionAdapter()
         timVersionAdapter = TIMVersionAdapter()
+        weixinVersionAdapter = WeixinVersionAdapter()
         localQQAdapter = LocalQQAdapter()
         localTIMAdapter = LocalTIMAdapter()
+        localWeixinAdapter = LocalWeixinAdapter()
         binding.rvPager.adapter = VersionListPagerAdapter(this)
         rvPagerAdapter = binding.rvPager.adapter as VersionListPagerAdapter
         qqVersionListFragment = QQVersionListFragment()
@@ -529,8 +538,15 @@ class MainActivity : AppCompatActivity() {
                                             displayType = if (isChecked) 1 else 0
                                         ) else timVersionBean
                                     }
+                                    weixinVersion =
+                                        weixinVersion.mapIndexed { index, weixinVersionBean ->
+                                            if (index == 0) weixinVersionBean.copy(
+                                                displayType = if (isChecked) 1 else 0
+                                            ) else weixinVersionBean
+                                        }
                                     qqVersionAdapter.submitList(qqVersion)
                                     timVersionAdapter.submitList(timVersion)
+                                    weixinVersionAdapter.submitList(weixinVersion)
                                 }
 
                                 switchOldLoading.setOnCheckedChangeListener { isChecked ->
@@ -562,6 +578,7 @@ class MainActivity : AppCompatActivity() {
                                     )
                                     qqVersionAdapter.updateItemProperty("isTCloud")
                                     timVersionAdapter.updateItemProperty("isTCloud")
+                                    weixinVersionAdapter.updateItemProperty("isTCloud")
                                 }
 
                                 btnPersonalizationOk.setOnClickListener {
@@ -597,6 +614,7 @@ class MainActivity : AppCompatActivity() {
                                     }
                                     qqVersionAdapter.updateItemProperty("isTCloud")
                                     timVersionAdapter.updateItemProperty("isTCloud")
+                                    weixinVersionAdapter.updateItemProperty("isTCloud")
                                 }
                             }
                         }
@@ -759,9 +777,19 @@ class MainActivity : AppCompatActivity() {
                                                             }
                                                         }
                                                     } else runOnUiThread { showToast(R.string.zhipuTokenIsNull) }
+                                                } catch (e: RuntimeException) {
+                                                    if (e.message?.contains("invalid apiSecretKey") == true) runOnUiThread {
+                                                        dialogError(
+                                                            Exception(getString(R.string.zhipuTokenIsInvalid)),
+                                                            true
+                                                        )
+                                                    } else {
+                                                        e.printStackTrace()
+                                                        runOnUiThread { dialogError(e) }
+                                                    }
                                                 } catch (e: Exception) {
                                                     e.printStackTrace()
-                                                    dialogError(e)
+                                                    runOnUiThread { dialogError(e) }
                                                 } finally {
                                                     runOnUiThread { viewModel.setTokenTesting(false) }
                                                 }
@@ -1563,12 +1591,12 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     private fun showGuessVersionDialog() {
         val dialogGuessBinding = DialogGuessBinding.inflate(layoutInflater)
-        val verBig = if (DataStoreUtil.getStringKV(
-                "versionSelect", MODE_OFFICIAL
-            ) == MODE_TIM
-        ) DataStoreUtil.getStringKV(
+        val versionSelect = DataStoreUtil.getStringKV("versionSelect", MODE_OFFICIAL)
+        val verBig = if (versionSelect == MODE_TIM) DataStoreUtil.getStringKV(
             "TIMVersionBig", ""
-        ) else DataStoreUtil.getStringKV("versionBig", "")
+        ) else if (versionSelect == MODE_WECHAT) DataStoreUtil.getStringKV(
+            "WeixinVersionBig", ""
+        ).replace(".", "") else DataStoreUtil.getStringKV("versionBig", "")
         dialogGuessBinding.etVersionBig.editText?.setText(verBig)
         when (val memVersion = DataStoreUtil.getStringKV("versionSelect", MODE_OFFICIAL)) {
             MODE_TEST, MODE_OFFICIAL, MODE_WECHAT, MODE_TIM -> dialogGuessBinding.spinnerVersion.setText(
@@ -1743,22 +1771,29 @@ class MainActivity : AppCompatActivity() {
         viewModel.setVersionListLoading(true)
         if (menu != null) menu.isEnabled = false
         CoroutineScope(Dispatchers.IO).launch {
-            try {
-                resolveLocalQQ()
-            } catch (_: Exception) {
-                val localQQEmptyList = listOf(
-                    mapOf("key" to "QQVersionInstall", "value" to "", "type" to "String"),
-                    mapOf("key" to "QQVersionCodeInstall", "value" to "", "type" to "String"),
-                    mapOf("key" to "QQAppSettingParamsInstall", "value" to "", "type" to "String"),
-                    mapOf(
-                        "key" to "QQAppSettingParamsPadInstall",
-                        "value" to "", "type" to "String"
-                    ),
-                    mapOf("key" to "QQRdmUUIDInstall", "value" to "", "type" to "String"),
-                    mapOf("key" to "QQQua", "value" to "", "type" to "String"),
-                )
-                DataStoreUtil.batchPutKVAsync(localQQEmptyList)
-            } finally {
+            val resolveLocalQQJob = CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    resolveLocalQQ()
+                } catch (_: Exception) {
+                    val localQQEmptyList = listOf(
+                        mapOf("key" to "QQVersionInstall", "value" to "", "type" to "String"),
+                        mapOf("key" to "QQVersionCodeInstall", "value" to "", "type" to "String"),
+                        mapOf(
+                            "key" to "QQAppSettingParamsInstall",
+                            "value" to "",
+                            "type" to "String"
+                        ),
+                        mapOf(
+                            "key" to "QQAppSettingParamsPadInstall",
+                            "value" to "", "type" to "String"
+                        ),
+                        mapOf("key" to "QQRdmUUIDInstall", "value" to "", "type" to "String"),
+                        mapOf("key" to "QQQua", "value" to "", "type" to "String"),
+                    )
+                    DataStoreUtil.batchPutKVAsync(localQQEmptyList)
+                }
+            }
+            val resolveLocalTIMJob = CoroutineScope(Dispatchers.IO).launch {
                 try {
                     resolveLocalTIM()
                 } catch (_: Exception) {
@@ -1780,98 +1815,132 @@ class MainActivity : AppCompatActivity() {
                         )
                     )
                     DataStoreUtil.batchPutKVAsync(localTIMEmptyList)
-                } finally {
-                    var progressFlag = 0
-                    withContext(Dispatchers.Main) {
-                        localQQAdapter.refreshData()
-                        localTIMAdapter.refreshData()
-                    }
-                    fun endProgress() {
-                        if (progressFlag == 0) progressFlag = 1
-                        else {
-                            viewModel.setVersionListLoading(false)
-                            if (menu != null) menu.isEnabled = true
+                }
+            }
+            val resolveLocalWeixinJob = CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    resolveLocalWeixin()
+                } catch (_: Exception) {
+                    val localWeixinEmptyList = listOf(
+                        mapOf(
+                            "key" to "WeixinVersionInstall",
+                            "value" to "", "type" to "String"
+                        ), mapOf(
+                            "key" to "WeixinVersionCodeInstall",
+                            "value" to "", "type" to "String"
+                        )
+                    )
+                    DataStoreUtil.batchPutKVAsync(localWeixinEmptyList)
+                }
+            }
+            joinAll(resolveLocalQQJob, resolveLocalTIMJob, resolveLocalWeixinJob)
+            withContext(Dispatchers.Main) {
+                localQQAdapter.refreshData()
+                localTIMAdapter.refreshData()
+                localWeixinAdapter.refreshData()
+            }
+            val fetchQQVersionJob = CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    val okHttpClient = OkHttpClient()
+                    val request = Request.Builder()
+                        .url("https://im.qq.com/rainbow/androidQQVersionList")
+                        .build()
+                    val response = okHttpClient.newCall(request).execute()
+                    val responseData = response.body?.string()
+                    if (responseData != null) {
+                        resolveQQRainbow(this@MainActivity, responseData)
+                        withContext(Dispatchers.Main) {
+                            qqVersionAdapter.submitList(qqVersion)
                         }
                     }
-                    try {
-                        val okHttpClient = OkHttpClient()
-                        val request =
-                            Request.Builder().url("https://im.qq.com/rainbow/androidQQVersionList")
-                                .build()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    dialogError(e)
+                }
+            }
+            val fetchTIMVersionJob = CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    // https://im.qq.com/rainbow/TIMDownload/ 已弃用
+                    val okHttpClient = OkHttpClient()
+                    val preRequest = Request.Builder()
+                        .url("https://tim.qq.com/support.html")
+                        .build()
+                    val preResponse = okHttpClient.newCall(preRequest).execute()
+                    val htmlData = preResponse.body?.string()
+                    val regex =
+                        """jQuery\.ajax\(\{\s*url:\s*'([^']+)'\s*\}\)\.done\(function \(versionData\)""".toRegex()
+                    val matchResult = regex.find(htmlData!!)
+                    val match = matchResult?.groupValues?.getOrNull(1)
+                    if (match != null && (match.startsWith("https://") || match.startsWith("http://"))) {
+                        val request = Request.Builder()
+                            .url(match.replace("http://", "https://"))
+                            .build()
                         val response = okHttpClient.newCall(request).execute()
                         val responseData = response.body?.string()
                         if (responseData != null) {
-                            resolveQQRainbow(this@MainActivity, responseData)
+                            resolveTIMRainbow(this@MainActivity, responseData)
                             withContext(Dispatchers.Main) {
-                                qqVersionAdapter.submitList(qqVersion)
-                            }
-                        }
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                        dialogError(e)
-                    } finally {
-                        withContext(Dispatchers.Main) { endProgress() }
-                    }
-                    try {
-                        // https://im.qq.com/rainbow/TIMDownload/ 已弃用
-                        val okHttpClient = OkHttpClient()
-                        val preRequest =
-                            Request.Builder().url("https://tim.qq.com/support.html").build()
-                        val preResponse = okHttpClient.newCall(preRequest).execute()
-                        val htmlData = preResponse.body?.string()
-                        val regex =
-                            """jQuery\.ajax\(\{\s*url:\s*'([^']+)'\s*\}\)\.done\(function \(versionData\)""".toRegex()
-                        val matchResult = regex.find(htmlData!!)
-                        val match = matchResult?.groupValues?.getOrNull(1)
-                        if (match != null && (match.startsWith("https://") || match.startsWith("http://"))) {
-                            val request = Request.Builder()
-                                .url(match.replace("http://", "https://"))
-                                .build()
-                            val response = okHttpClient.newCall(request).execute()
-                            val responseData = response.body?.string()
-                            if (responseData != null) {
-                                resolveTIMRainbow(this@MainActivity, responseData)
-                                withContext(Dispatchers.Main) {
-                                    timVersionAdapter.submitList(timVersion)
-                                    if (!DataStoreUtil.getBooleanKV(
-                                            "closeSwipeLeftForTIM", false
-                                        )
-                                    ) {
-                                        class TipTIMSnackbarActionListener : View.OnClickListener {
-                                            override fun onClick(v: View?) {
-                                                DataStoreUtil.putBooleanKV(
-                                                    "closeSwipeLeftForTIM", true
-                                                )
-                                            }
+                                timVersionAdapter.submitList(timVersion)
+                                if (!DataStoreUtil.getBooleanKV(
+                                        "closeSwipeLeftForTIM", false
+                                    )
+                                ) {
+                                    class TipTIMSnackbarActionListener : View.OnClickListener {
+                                        override fun onClick(v: View?) {
+                                            DataStoreUtil.putBooleanKV(
+                                                "closeSwipeLeftForTIM", true
+                                            )
+                                        }
+                                    }
+
+                                    val isDarkTheme: Boolean =
+                                        when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
+                                            Configuration.UI_MODE_NIGHT_YES -> true
+                                            else -> false
                                         }
 
-                                        val isDarkTheme: Boolean =
-                                            when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
-                                                Configuration.UI_MODE_NIGHT_YES -> true
-                                                else -> false
-                                            }
-
-                                        Snackbar.make(
-                                            binding.root, R.string.swipeLeftForTIMVersions,
-                                            Snackbar.LENGTH_INDEFINITE
-                                        ).setAction(R.string.ok, TipTIMSnackbarActionListener())
-                                            .setAnchorView(binding.btnGuess)
-                                            .apply {
-                                                if (SDK_INT >= Build.VERSION_CODES.S) if (isDarkTheme) setBackgroundTint(
-                                                    getColor(com.google.android.material.R.color.m3_sys_color_dynamic_dark_secondary)
-                                                ) else setBackgroundTint(getColor(com.google.android.material.R.color.m3_sys_color_dynamic_light_secondary))
-                                            }.show()
-                                    }
+                                    Snackbar.make(
+                                        binding.root, R.string.swipeLeftForTIMVersions,
+                                        Snackbar.LENGTH_INDEFINITE
+                                    ).setAction(R.string.ok, TipTIMSnackbarActionListener())
+                                        .setAnchorView(binding.btnGuess)
+                                        .apply {
+                                            if (SDK_INT >= Build.VERSION_CODES.S) if (isDarkTheme) setBackgroundTint(
+                                                getColor(com.google.android.material.R.color.m3_sys_color_dynamic_dark_secondary)
+                                            ) else setBackgroundTint(getColor(com.google.android.material.R.color.m3_sys_color_dynamic_light_secondary))
+                                        }.show()
                                 }
                             }
-                        } else throw Exception("Can not get TIM version data.")
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                        dialogError(e)
-                    } finally {
-                        withContext(Dispatchers.Main) { endProgress() }
-                    }
+                        }
+                    } else throw Exception("Can not get TIM version data.")
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    dialogError(e)
                 }
+            }
+            val fetchWeixinVersionJob = CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    val okHttpClient = OkHttpClient()
+                    val request = Request.Builder()
+                        .url("https://weixin.qq.com/updates")
+                        .build()
+                    val response = okHttpClient.newCall(request).execute()
+                    val responseData = response.body?.string()
+                    if (responseData != null) {
+                        resolveWeixinHTML(this@MainActivity, responseData)
+                        withContext(Dispatchers.Main) {
+                            weixinVersionAdapter.submitList(weixinVersion)
+                        }
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    dialogError(e)
+                }
+            }
+            joinAll(fetchQQVersionJob, fetchTIMVersionJob, fetchWeixinVersionJob)
+            withContext(Dispatchers.Main) {
+                viewModel.setVersionListLoading(false)
+                if (menu != null) menu.isEnabled = true
             }
         }
     }

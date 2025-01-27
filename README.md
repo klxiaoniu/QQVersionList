@@ -329,9 +329,7 @@ QQ 版本列表实用工具的诞生离不开以下开源项目，感谢以下�
 - [智谱 AI 开放平台大模型接口 Java SDK](https://github.com/MetaGLM/zhipuai-sdk-java-v4)，Licensed under [MIT License](https://github.com/MetaGLM/zhipuai-sdk-java-v4/blob/main/LICENSE)
 - [Jackson Core & Databind（FasterXML）](https://github.com/FasterXML/jackson)，Licensed under Apache License Version 2.0
 - [Java API for GitHub（Kohsuke Kawaguchi）](https://github.com/hub4j/github-api)，Licensed under [MIT License](https://github.com/hub4j/github-api/blob/main/LICENSE.txt)
-<!-- 未来再用
-- [Jsoup](https://jsoup.org/)，Licensed under [MIT License](https://jsoup.org/license)
--->
+- [jsoup: Java HTML Parser](https://jsoup.org/)，Licensed under [MIT License](https://jsoup.org/license)
 
 ## 商业服务鸣谢
 

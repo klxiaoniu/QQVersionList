@@ -17,7 +17,7 @@ fragmentKtx = "1.8.5"
 githubApiVersion = "1.326"
 googleServices = "4.4.2"
 gson = "2.11.0"
-# jsoupVersion = "1.18.3"
+jsoupVersion = "1.18.3"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 konaCryptoVersion = "1.0.15"
@@ -65,7 +65,7 @@ firebase-messaging = { module = "com.google.firebase:firebase-messaging" }
 github-api = { module = "org.kohsuke:github-api", version.ref = "githubApiVersion" }
 google-services = { module = "com.google.gms:google-services", version.ref = "googleServices" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
-# jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoupVersion" }
+jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoupVersion" }
 junit = { module = "junit:junit", version.ref = "junit" }
 kona-crypto = { module = "com.tencent.kona:kona-crypto", version.ref = "konaCryptoVersion" }
 kona-provider = { module = "com.tencent.kona:kona-provider", version.ref = "konaProviderVersion" }

@@ -42,6 +42,13 @@ object KeyStoreUtil {
     private const val GCM_TAG_LENGTH = 128
     private const val ANDROID_KEY_STORE_PROVIDER = "AndroidKeyStore"
 
+    /**
+     * 使用密钥存储加密数据到键值存储中
+     * 当数据为空字符串时，会删除之前存储的加密信息
+     *
+     * @param key 用于存储的键名前缀
+     * @param data 要存储的字符串数据
+     */
     fun putStringKVwithKeyStore(key: String, data: String) {
         if (data == "") {
             DataStoreUtil.apply {
@@ -59,6 +66,13 @@ object KeyStoreUtil {
         putByteArrayKV("${key}_cipher", cipherText)
     }
 
+    /**
+     * 异步使用密钥存储加密数据到键值存储中
+     * 当数据为空字符串时，会删除之前存储的加密信息
+     *
+     * @param key 用于存储的键名前缀
+     * @param data 要存储的字符串数据
+     */
     fun putStringKVwithKeyStoreAsync(key: String, data: String) {
         if (data == "") {
             DataStoreUtil.apply {
@@ -76,6 +90,13 @@ object KeyStoreUtil {
         putByteArrayKVAsync("${key}_cipher", cipherText)
     }
 
+    /**
+     * 从键值存储中获取使用密钥存储加密的字符串数据
+     * 如果找不到对应的加密信息，则返回 null
+     *
+     * @param key 用于存储的键名前缀
+     * @return 解密后的字符串数据，或者 null
+     */
     fun getStringKVwithKeyStore(key: String): String? {
         val iv = getByteArrayKV("${key}_iv", ByteArray(0))
         val cipherText = getByteArrayKV("${key}_cipher", ByteArray(0))
@@ -83,6 +104,13 @@ object KeyStoreUtil {
         return if (iv.isEmpty() || cipherText.isEmpty()) null else decryptData(iv, cipherText)
     }
 
+    /**
+     * 异步从键值存储中获取使用密钥存储加密的字符串数据
+     * 如果找不到对应的加密信息，则返回 null
+     *
+     * @param key 用于存储的键名前缀
+     * @return 解密后的字符串数据的 Deferred 对象，或者 null
+     */
     fun getStringKVwithKeyStoreAsync(key: String): Deferred<String?> {
         val iv = getByteArrayKVAsync("${key}_iv", ByteArray(0))
         val cipherText = getByteArrayKVAsync("${key}_cipher", ByteArray(0))
@@ -168,6 +196,17 @@ object KeyStoreUtil {
         }
     }
 
+    /**
+     * 检查硬件安全级别。
+     * 此函数通过与 Android Keystore 系统的交互，评估当前设备上的密钥是否存储在安全的硬件环境中。
+     *
+     * @return Int 返回一个整数，表示硬件的安全级别：
+     *          2：表示密钥存储在 StrongBox 安全元件中
+     *          1：表示密钥存储在可信执行环境（TEE）中
+     *          -1：表示密钥存储在未知的安全硬件中
+     *          0：表示密钥存储仅通过软件实现
+     *          其他值：表示未知或不支持的环境
+     */
     fun checkHardwareSecurity(): Int {
         val keyStore = KeyStore.getInstance(ANDROID_KEY_STORE_PROVIDER)
         keyStore.load(null)
