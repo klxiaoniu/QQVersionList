@@ -173,6 +173,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var timVersionListFragment: TIMVersionListFragment
     private lateinit var rvPagerAdapter: VersionListPagerAdapter
     private lateinit var viewModel: MainActivityViewModel
+    private val isPreviewRelease: Boolean by lazy { BuildConfig.VERSION_NAME.endsWith("Preview-Release") }
+    private val isRelease: Boolean by lazy { BuildConfig.VERSION_NAME.endsWith("Release") }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
@@ -212,7 +214,7 @@ class MainActivity : AppCompatActivity() {
         rvPagerAdapter = binding.rvPager.adapter as VersionListPagerAdapter
         qqVersionListFragment = QQVersionListFragment()
         timVersionListFragment = TIMVersionListFragment()
-        if (!BuildConfig.VERSION_NAME.endsWith("Release")) binding.materialToolbar.setNavigationIcon(
+        if (!isRelease || isPreviewRelease) binding.materialToolbar.setNavigationIcon(
             R.drawable.git_commit_line
         )
 
@@ -290,11 +292,12 @@ class MainActivity : AppCompatActivity() {
             false, judgeUATarget
         ) else {
             getData()
-            if (BuildConfig.VERSION_NAME.endsWith("Release") && DataStoreUtil.getBooleanKV(
+            if (this.isRelease && DataStoreUtil.getBooleanKV(
                     "autoCheckUpdates", false
                 )
             ) checkQverbowUpdates(
-                BuildConfig.VERSION_NAME.trimSubstringAtEnd("-Release"), false
+                BuildConfig.VERSION_NAME.trimSubstringAtEnd("-Preview-Release")
+                    .trimSubstringAtEnd("-Release"), false
             )
         }
 
@@ -320,7 +323,7 @@ class MainActivity : AppCompatActivity() {
                             .setIcon(R.drawable.information_line)
                             .setView(root)
                             .show().apply {
-                                if (BuildConfig.VERSION_NAME.endsWith("Release")) btnAboutUpdate.apply {
+                                if (isRelease) btnAboutUpdate.apply {
                                     isEnabled = true
                                     setText(R.string.checkUpdateViaGitHubAPI)
                                 } else btnAboutUpdate.apply {
@@ -363,7 +366,8 @@ class MainActivity : AppCompatActivity() {
                             }
 
                             checkQverbowUpdates(
-                                BuildConfig.VERSION_NAME.trimSubstringAtEnd("-Release"),
+                                BuildConfig.VERSION_NAME.trimSubstringAtEnd("-Preview-Release")
+                                    .trimSubstringAtEnd("-Release"),
                                 true, btnAboutUpdate
                             )
                         }
@@ -393,7 +397,7 @@ class MainActivity : AppCompatActivity() {
                                     dialogHashBinding.aboutHashText.text =
                                         "SM3${getString(R.string.colon)}${qverbowSM3}"
                                     dialogHashBinding.btnAboutGithubHashVerifiy.isVisible =
-                                        BuildConfig.VERSION_NAME.endsWith("Release")
+                                        isRelease && !isPreviewRelease
                                 }
 
                             dialogHashBinding.apply {
@@ -422,7 +426,8 @@ class MainActivity : AppCompatActivity() {
                                     }
 
                                     checkQverbowHash(
-                                        BuildConfig.VERSION_NAME.trimSubstringAtEnd("-Release"),
+                                        BuildConfig.VERSION_NAME.trimSubstringAtEnd("-Preview-Release")
+                                            .trimSubstringAtEnd("-Release"),
                                         getQverbowSM3(),
                                         btnAboutGithubHashVerifiy
                                     )
@@ -2623,7 +2628,12 @@ class MainActivity : AppCompatActivity() {
             try {
                 val responseData = getQverbowRelease()
                 val latestQverbowVersion = responseData.tagName.toString().trimSubstringAtStart("v")
-                if (ComparableVersion(latestQverbowVersion) > ComparableVersion(selfVersion)) {
+                if ((!isPreviewRelease && ComparableVersion(latestQverbowVersion) > ComparableVersion(
+                        selfVersion
+                    )) || (isPreviewRelease && ComparableVersion(latestQverbowVersion) >= ComparableVersion(
+                        selfVersion
+                    ))
+                ) {
                     val latestQverbowBody = responseData.body.toString()
                     val latestQverbowAssets = responseData.assets
                     var latestQverbowDownloadUrl: String? = null
