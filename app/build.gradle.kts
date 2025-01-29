@@ -130,6 +130,7 @@ dependencies {
     implementation(libs.maven.artifact)
     implementation(libs.oapi.java.sdk)
     implementation(libs.okhttp)
+    implementation(libs.pangu)
     implementation(libs.paris)
     implementation(libs.play.services.oss.licenses)
     implementation(libs.smali.dexlib2)

@@ -32,6 +32,7 @@ mavenArtifact = "3.9.9"
 oapiJavaSdkVersion = "release-V4-2.3.3"
 okhttp = "4.12.0"
 ossLicensesPluginVersion = "0.10.6"
+panguVersion = "1.1.0"
 paris = "2.0.2"
 playServicesOssLicensesVersion = "17.1.0"
 recyclerview = "1.4.0"
@@ -77,6 +78,7 @@ maven-artifact = { module = "org.apache.maven:maven-artifact", version.ref = "ma
 oapi-java-sdk = { module = "cn.bigmodel.openapi:oapi-java-sdk", version.ref = "oapiJavaSdkVersion" }
 okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 oss-licenses-plugin = { module = "com.google.android.gms:oss-licenses-plugin", version.ref = "ossLicensesPluginVersion" }
+pangu = { module = "ws.vinta:pangu", version.ref = "panguVersion" }
 paris = { module = "com.airbnb.android:paris", version.ref = "paris" }
 play-services-oss-licenses = { module = "com.google.android.gms:play-services-oss-licenses", version.ref = "playServicesOssLicensesVersion" }
 secrets-gradle-plugin = { module = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin", version.ref = "secretsGradlePlugin" }

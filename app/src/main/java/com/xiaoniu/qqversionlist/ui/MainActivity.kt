@@ -127,6 +127,7 @@ import com.xiaoniu.qqversionlist.util.InfoUtil.showToast
 import com.xiaoniu.qqversionlist.util.KeyStoreUtil
 import com.xiaoniu.qqversionlist.util.ShiplyUtil
 import com.xiaoniu.qqversionlist.util.StringUtil.getAllAPKUrl
+import com.xiaoniu.qqversionlist.util.StringUtil.pangu
 import com.xiaoniu.qqversionlist.util.StringUtil.resolveWeixinAlphaConfig
 import com.xiaoniu.qqversionlist.util.StringUtil.toPrettyFormat
 import com.xiaoniu.qqversionlist.util.StringUtil.trimSubstringAtEnd
@@ -754,7 +755,7 @@ class MainActivity : AppCompatActivity() {
                                                                 MaterialAlertDialogBuilder(this@MainActivity)
                                                                     .setIcon(R.drawable.ai_generate_2)
                                                                     .setTitle(R.string.zhipuTokenSuccess)
-                                                                    .setMessage(zhipuContent)
+                                                                    .setMessage(zhipuContent.pangu())
                                                                     .setPositiveButton(R.string.ok) { _, _ -> }
                                                                     .show()
                                                             } else {
@@ -2677,7 +2678,7 @@ class MainActivity : AppCompatActivity() {
                                             ).asJsonObject.getAsJsonPrimitive(
                                                 "content"
                                             ).asString
-                                        viewModel.setUpdateBackLLMGenText(zhipuContent)
+                                        viewModel.setUpdateBackLLMGenText(zhipuContent.pangu())
                                     } else {
                                         val zhipuContent =
                                             responseObject.getAsJsonPrimitive("msg").asString + getString(
