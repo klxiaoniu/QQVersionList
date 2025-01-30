@@ -1124,7 +1124,7 @@ class MainActivity : AppCompatActivity() {
                                     val okHttpClient = OkHttpClient()
                                     val request =
                                         Request.Builder()
-                                            .url("https://dldir1.qq.com/weixin/android/weixin_android_alpha_config.json")
+                                            .url("https://dldir1v6.qq.com/weixin/android/weixin_android_alpha_config.json")
                                             .build()
                                     val response = okHttpClient.newCall(request).execute()
                                     if (!response.isSuccessful) throw CustomException(getString(R.string.getWeixinAlphaConfig404))

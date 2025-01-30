@@ -62,9 +62,15 @@ QQ 版本列表实用工具 for Android 是一个使用 Material 3 组件库构�
 
 ### 版本列表
 
-在进入 QQ 版本列表实用工具时，您首先会看到一系列显示“x.y.z”“xxx MB”的卡片，这些卡片组成的列表即为 Android QQ 的版本列表，卡片列表展示了已经或即将发布的 Android QQ 版本。版本信息来源：https://im.qq.com/rainbow/androidQQVersionList
+在进入 QQ 版本列表实用工具时，您首先会看到一系列显示“x.y.z”“xxx MB”的卡片，这些卡片组成的列表即为 Android QQ 的版本列表[^1]，卡片列表展示了已经或即将发布的 Android QQ 版本。
 
-从右向左滑动版本列表，可切换到 TIM 版本列表。TIM 版本信息来源：https://im.qq.com/rainbow/TIMDownload
+[^1]: Android QQ 版本信息来源：https://im.qq.com/rainbow/androidQQVersionList
+
+从右向左滑动版本列表，可切换到 TIM 版本列表[^2]和微信版本列表[^3]。
+
+[^2]: Android TIM 版本信息来源：https://im.qq.com/rainbow/TIMDownload
+
+[^3]: Android 微信版本信息来源：https://weixin.qq.com/updates
 
 通过点击卡片右侧箭头按钮，可展开卡片以查阅到更为详尽的信息。
 
@@ -85,7 +91,7 @@ QQ 版本列表实用工具 for Android 是一个使用 Material 3 组件库构�
 
 #### 从腾讯服务器配置拉取微信最新测试版下载直链
 
-Android 微信测试版相关信息配置在[腾讯服务器配置文件](https://dldir1.qq.com/weixin/android/weixin_android_alpha_config.json)内。可使用 QQ 版本列表实用工具提供的“从腾讯服务器配置拉取微信最新测试版下载直链”功能尝试获取微信最新测试版下载直链。
+Android 微信测试版相关信息配置在[腾讯服务器配置文件](https://dldir1v6.qq.com/weixin/android/weixin_android_alpha_config.json)内。可使用 QQ 版本列表实用工具提供的“从腾讯服务器配置拉取微信最新测试版下载直链”功能尝试获取微信最新测试版下载直链。
 
 > [!WARNING]
 > 此功能并非每次请求都能成功获取到 Android 微信测试版下载直链，当无法获取下载直链时可能存在的情况是微信还未发布测试版或测试版已撤包。QQ 版本列表实用工具不对此功能及其任何后果作出任何可靠性保证。请明确并确保自身具备足够的风险识别和承受能力。
@@ -213,7 +219,9 @@ QQ、TIM、微信、企业微信、微信输入法使用腾讯应用宝（[腾�
 初始化 Firebase 服务后，点击设置即可看到“版本列表更新时推送系统通知（通过 Firebase 云消息传递）”开关。打开后，QQ 版本列表实用工具首先将申请系统通知权限，之后将与 Google 服务器进行通信，上述步骤完成后即可订阅版本列表更新通知。
 
 > [!IMPORTANT]
-> Firebase 服务依赖于设备 Google Play 服务，设备缺失 Google Play 服务时将无法使用 Firebase 服务。
+> Firebase 服务依赖于设备 Google Play 服务，设备缺失 Google Play 服务时将无法使用 Firebase 服务。[^4]
+
+[^4]: Firebase Android SDK 对 Google Play 服务的依赖：https://firebase.google.cn/docs/android/android-play-services
 
 > [!IMPORTANT]
 > 订阅版本列表更新通知需和 Google 服务器进行通信，请确保您的设备可以正常连接到 Google 服务器。
@@ -260,17 +268,9 @@ QQ 版本列表实用工具不能实现“检测到新测试版本下载直链�
 
 即使版本列表已出现了新的版本号，也并不意味着 QQ 团队已经完成了新版本（含测试版）安装包在腾讯公网服务器的部署和发布。一种可能的情况是，QQ 团队正在进行新版本的内部测试阶段或小范围灰度推送阶段，因而尚未对外提供广泛公网下载渠道。
 
-### 为什么不提供 Android 微信的版本列表？
+### 为什么不提供 Android 微信的版本列表更新日志？
 
-目前还没有找到来自官方的可靠且请求次数少而信息密度大的 Android 微信版本列表数据源，因此 QQ 版本列表实用工具无法提供 Android 微信的版本列表。如果您发现了可靠的 Android 微信版本列表数据源，欢迎提出 Issue(s) 或提交 PR。
-
-### 什么是 QQNT 技术架构？
-
-QQNT 技术架构是腾讯 QQ 客户端全新的跨平台技术架构体系。QQNT 技术架构将 QQ 客户端核心功能——如核心登录、消息系统、关系链、富媒体、长连接、数据库等——下沉至 QQNT 内核层，使用 C++ 抽象逻辑封装为原生库并提供多平台多语言一致性接口，以实现 QQ 客户端核心逻辑代码跨平台与程序高性能运作。
-
-### 什么是 Kuikly？
-
-Kuikly（Kotlin UI Kit）跨端开发框架，是 TDF 腾讯端框架（Tencent Device-oriented Framework）的一部分。Kuikly 通过自研 Kotlin MultiPlatform 逻辑与终端界面原生控件渲染映射协议层，并采用声明式与响应式设计，使采用 Kuikly 的 Kotlin 开发者能拥有原生高效的 Android 开发体验并构建具有原生性能的跨平台应用。Kuikly 更可依托于 [TDS 腾讯端服务 Shiply 容器与发布平台](https://shiply.tds.qq.com/)，实现按页颗粒度的完备客户端界面动态化能力。
+目前还没有找到来自官方的可靠且请求次数少而信息密度大的 Android 微信版本列表更新日志数据源，因此 QQ 版本列表实用工具无法提供 Android 微信的版本列表更新日志，烦请前往浏览器查看微信官网提供的更新日志。如果您发现了可靠的 Android 微信版本列表更新日志数据源，欢迎提出 Issue(s) 或提交 PR。
 
 ## 其它
 
