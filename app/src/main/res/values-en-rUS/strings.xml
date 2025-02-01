@@ -271,7 +271,7 @@
     <string name="qverbowUpdateLogLLMIntelligent">Update Log Intelligent Summary</string>
     <string name="githubTokenHelperText">The GitHub Personal Access Token will be used to bypass GitHub REST API rate limits. Enter and save to activate.</string>
     <string name="zhipuTokenHelperText">By default, only the free model GLM-4-Flash from Zhipu is requested.</string>
-    <string name="zhipuTokenIsInvalid">The provided Token was deemed invalid by the Zhipu AI MaaS Platform Java SDK.</string>
+    <string name="zhipuTokenIsInvalid">The provided Token was deemed invalid by the Zhipu AI MaaS Platform Big Model API Java SDK.</string>
     <string name="clickHereToViewTheChangelog">View Changelog</string>
     <string name="localWeixinVersion">Local Weixin/WeChat:&#160;</string>
 </resources>

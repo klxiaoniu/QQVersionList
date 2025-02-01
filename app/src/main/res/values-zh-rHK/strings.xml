@@ -271,7 +271,7 @@
     <string name="qverbowUpdateLogLLMIntelligent">更新日誌智能摘要</string>
     <string name="githubTokenHelperText">GitHub 個人存取權杖將用於解除 GitHub REST API 的存取速率限制，填入並儲存即生效</string>
     <string name="zhipuTokenHelperText">預設僅請求智譜免費模型 GLM-4-Flash</string>
-    <string name="zhipuTokenIsInvalid">填入的 Token 被智譜 AI 開放平台 Java SDK 判定無效。</string>
+    <string name="zhipuTokenIsInvalid">填入的 Token 被智譜 AI 開放平台大模型接口 Java SDK 判定無效。</string>
     <string name="clickHereToViewTheChangelog">點擊此處查看更新日誌</string>
     <string name="localWeixinVersion">本機微信/WeChat</string>
 </resources>
