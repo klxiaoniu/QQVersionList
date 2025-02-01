@@ -16,24 +16,8 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-package com.xiaoniu.qqversionlist.ui
+package com.xiaoniu.qqversionlist.data
 
-import android.content.Context
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
-import androidx.viewpager2.adapter.FragmentStateAdapter
-
-class VersionListPagerAdapter(context: Context) :
-    FragmentStateAdapter(context as FragmentActivity) {
-
-    override fun getItemCount(): Int = 3
-
-    override fun createFragment(position: Int): Fragment {
-        return when (position) {
-            0 -> QQVersionListFragment()
-            1 -> TIMVersionListFragment()
-            2 -> WeixinVersionListFragment()
-            else -> throw IllegalArgumentException(position.toString())
-        }
-    }
-}
+class QverbowReleaseAssets(
+    val name: String, val browserDownloadUrl: String, val contentType: String, val size: Long
+)

@@ -27,92 +27,48 @@
     android:focusable="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/item_tim_all_detail"
+        android:id="@+id/item_weixin_all_detail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="10dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/tv_tim_content_detail"
+            android:id="@+id/tv_weixin_content_detail"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="@id/ib_tim_collapse"
-            app:layout_constraintEnd_toStartOf="@id/ib_tim_old_link"
+            app:layout_constraintBottom_toBottomOf="@id/ib_weixin_collapse"
+            app:layout_constraintEnd_toStartOf="@id/ib_weixin_collapse"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/ib_tim_collapse">
+            app:layout_constraintTop_toTopOf="@id/ib_weixin_collapse">
 
             <TextView
-                android:id="@+id/tv_tim_old_version"
+                android:id="@+id/tv_weixin_old_version"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="6dp"
                 android:layout_marginEnd="6dp"
-                android:text="9.0.25"
+                android:text="8.0.56"
                 android:textColor="?attr/colorPrimary"
                 android:textSize="28sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageView
-                android:id="@+id/kuikly_tim_old_tag"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="1dp"
-                android:layout_marginEnd="0dp"
-                android:contentDescription="@string/kuiklyTag"
-                android:paddingStart="3dp"
-                android:paddingTop="2.5dp"
-                android:paddingEnd="2dp"
-                android:paddingBottom="2.5dp"
-                android:src="@drawable/kuikly_official"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/tv_tim_old_version"
-                app:layout_constraintTop_toTopOf="parent"
-                app:tint="?attr/colorPrimary" />
-
-            <ImageView
-                android:id="@+id/qqnt_tim_old_tag"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="1dp"
-                android:layout_marginEnd="0dp"
-                android:contentDescription="@string/qqntTag"
-                android:src="@drawable/qqnt_logo_unofficial"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/kuikly_tim_old_tag"
-                app:layout_constraintTop_toTopOf="parent"
-                app:tint="?attr/colorPrimary" />
-
-            <ImageView
-                android:id="@+id/accessibility_tim_old_tag"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="3dp"
-                android:layout_marginEnd="0dp"
-                android:contentDescription="@string/accessibilityTag"
-                android:focusable="true"
-                android:src="@drawable/accessibility_new_20px"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/qqnt_tim_old_tag"
-                app:layout_constraintTop_toTopOf="parent"
-                app:tint="?attr/colorPrimary" />
-
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/tv_tim_old_install_card"
+                android:id="@+id/tv_weixin_old_install_card"
                 style="?attr/materialCardViewFilledStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="6dp"
                 android:backgroundTint="?attr/colorSecondaryContainer"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/accessibility_tim_old_tag"
+                app:layout_constraintStart_toEndOf="@id/tv_weixin_old_version"
                 app:layout_constraintTop_toTopOf="parent"
                 app:shapeAppearance="?attr/shapeAppearanceCornerExtraSmall">
 
                 <TextView
-                    android:id="@+id/tv_tim_old_install"
+                    android:id="@+id/tv_weixin_old_install"
                     style="?attr/textAppearanceLabelSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -123,53 +79,43 @@
                     android:text="@string/installed"
                     android:textColor="?attr/colorOnSecondaryContainer"
                     android:textSize="10sp"
-                    app:layout_constraintBottom_toBottomOf="@id/tv_tim_old_version"
+                    app:layout_constraintBottom_toBottomOf="@id/tv_weixin_old_version"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/tv_tim_old_version" />
+                    app:layout_constraintTop_toTopOf="@id/tv_weixin_old_version" />
 
             </com.google.android.material.card.MaterialCardView>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
-            android:id="@+id/tv_tim_detail_version"
+            android:id="@+id/tv_weixin_detail_version"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="版本：9.0.25"
+            android:text="版本：8.0.56"
             android:textColor="?attr/colorSecondary"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ib_tim_collapse" />
+            app:layout_constraintTop_toBottomOf="@id/ib_weixin_collapse" />
 
         <TextView
-            android:id="@+id/tv_tim_detail_date"
+            android:id="@+id/tv_weixin_detail_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="发布日期：1919-08-10"
             android:textColor="?attr/colorSecondary"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_tim_detail_version" />
+            app:layout_constraintTop_toBottomOf="@id/tv_weixin_detail_version" />
 
         <TextView
-            android:id="@+id/tv_tim_desc"
+            android:id="@+id/tv_weixin_catalog_link"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="- 优化性能和体验问题，给你更好的使用体验。"
-            android:textColor="?attr/colorSecondary"
+            android:text="@string/clickHereToViewTheChangelog"
+            android:textColor="?attr/colorPrimary"
+            android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_tim_detail_date" />
+            app:layout_constraintTop_toBottomOf="@id/tv_weixin_detail_date" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/ib_tim_old_link"
-            style="?attr/materialIconButtonFilledTonalStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/download"
-            app:icon="@drawable/link"
-            app:layout_constraintBottom_toBottomOf="@id/ib_tim_collapse"
-            app:layout_constraintEnd_toStartOf="@id/ib_tim_collapse"
-            app:layout_constraintTop_toTopOf="@id/ib_tim_collapse" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/ib_tim_collapse"
+            android:id="@+id/ib_weixin_collapse"
             style="?attr/materialIconButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

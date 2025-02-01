@@ -32,6 +32,7 @@ import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import org.apache.commons.io.IOUtils
+import ws.vinta.pangu.Pangu
 import java.io.File
 import java.nio.charset.Charset
 
@@ -203,5 +204,15 @@ object StringUtil {
         val gson = Gson()
         val listType = object : TypeToken<List<String>>() {}.type
         return gson.fromJson(jsonArray.toString(), listType)
+    }
+
+    /**
+     * 使用 Pangu 库对字符串进行格式化，以在中文和英文字符之间添加空格
+     * 这是通过扩展 String 类来实现的，使得任何字符串都可以轻松地应用 Pangu 格式化
+     *
+     * @return 格式化后的字符串，其中中文和英文字符之间添加了空格
+     */
+    fun String.pangu(): String {
+        return Pangu().spacingText(this)
     }
 }

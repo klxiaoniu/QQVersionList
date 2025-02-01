@@ -179,6 +179,13 @@ object InfoUtil {
         return null
     }
 
+    /**
+     * 获取 Qverbow 的 SM3 哈希值
+     * SM3 是中国国家密码管理局发布的密码杂凑算法，用于生成消息的杂凑值
+     * 此函数读取应用程序的源目录，并计算该目录下 APK 文件的 SM3 杂凑值
+     *
+     * @return 应用程序 APK 文件的 SM3 杂凑值的十六进制字符串表示
+     */
     fun Context.getQverbowSM3(): String {
         val appSourceDir = packageManager.getApplicationInfo(packageName, 0).sourceDir
         val messageDigest = MessageDigest.getInstance("SM3")
@@ -188,7 +195,6 @@ object InfoUtil {
         while (fileInputStream.read(buffer).also { bytesRead = it } != -1) messageDigest.update(
             buffer, 0, bytesRead
         )
-        val hash = messageDigest.digest().joinToString("") { "%02X".format(it) }
-        return hash
+        return messageDigest.digest().joinToString("") { "%02X".format(it) }
     }
 }

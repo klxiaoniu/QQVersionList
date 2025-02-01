@@ -69,6 +69,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
+                android:justificationMode="inter_character"
                 android:paddingStart="1dp"
                 android:paddingEnd="1dp"
                 android:text="AI LLM 生成内容占位符"

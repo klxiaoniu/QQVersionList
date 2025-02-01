@@ -25,6 +25,7 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.xiaoniu.qqversionlist.QverbowApplication.Companion.ANDROID_QQ_PACKAGE_NAME
 import com.xiaoniu.qqversionlist.QverbowApplication.Companion.ANDROID_TIM_PACKAGE_NAME
+import com.xiaoniu.qqversionlist.QverbowApplication.Companion.ANDROID_WECHAT_PACKAGE_NAME
 import com.xiaoniu.qqversionlist.QverbowApplication.Companion.EARLIEST_KUIKLY_FRAMEWORK_QQ_VERSION_STABLE
 import com.xiaoniu.qqversionlist.QverbowApplication.Companion.EARLIEST_KUIKLY_FRAMEWORK_TIM_VERSION_STABLE
 import com.xiaoniu.qqversionlist.QverbowApplication.Companion.EARLIEST_QQNT_FRAMEWORK_QQ_VERSION_STABLE
@@ -32,11 +33,13 @@ import com.xiaoniu.qqversionlist.QverbowApplication.Companion.EARLIEST_QQNT_FRAM
 import com.xiaoniu.qqversionlist.QverbowApplication.Companion.EARLIEST_UNREAL_ENGINE_QQ_VERSION_STABLE
 import com.xiaoniu.qqversionlist.data.QQVersionBean
 import com.xiaoniu.qqversionlist.data.TIMVersionBean
+import com.xiaoniu.qqversionlist.data.WeixinVersionBean
 import com.xiaoniu.qqversionlist.ui.MainActivity
 import com.xiaoniu.qqversionlist.util.StringUtil.getQua
 import com.xiaoniu.qqversionlist.util.StringUtil.jsonArrayToList
 import kotlinx.serialization.json.Json
 import org.apache.maven.artifact.versioning.ComparableVersion
+import org.jsoup.Jsoup
 
 object VersionUtil {
     fun resolveQQRainbow(thisActivity: MainActivity, responseData: String) {
@@ -47,12 +50,13 @@ object VersionUtil {
             val pstart = it.indexOf("{\"versions")
             val pend = it.indexOf(",\"length")
             val json = it.substring(pstart, pend)
+            val qqVersionInstall = DataStoreUtil.getStringKV("QQVersionInstall", "")
             Json.decodeFromString<QQVersionBean>(json).apply {
                 jsonString = json
                 // 标记本机 Android QQ 版本
                 this.apply {
                     displayInstall =
-                        (DataStoreUtil.getStringKV("QQVersionInstall", "") == versionNumber)
+                        ComparableVersion(qqVersionInstall) == ComparableVersion(versionNumber)
                     isAccessibility = false
                     // 无障碍标记
                     /*ComparableVersion(versionNumber) >= ComparableVersion(
@@ -95,6 +99,7 @@ object VersionUtil {
         history.forEach { versionItem ->
             val version = versionItem.asJsonObject.get("version_code").asString
             val logs = versionItem.asJsonObject.getAsJsonArray("logs")
+            val timVersionInstall = DataStoreUtil.getStringKV("TIMVersionInstall", "")
             logs.forEach { logItem ->
                 val platform = logItem.asJsonObject.get("platform").asString
                 if (platform == "android") {
@@ -114,9 +119,9 @@ object VersionUtil {
                                 addProperty("fix", fix.toString())
                                 addProperty("feature", feature.toString())
                             }).toString(),
-                            displayInstall = (DataStoreUtil.getStringKV(
-                                "TIMVersionInstall", ""
-                            ) == version),
+                            displayInstall = ComparableVersion(timVersionInstall) == ComparableVersion(
+                                version
+                            ),
                             isQQNTFramework = ComparableVersion(version) >= ComparableVersion(
                                 EARLIEST_QQNT_FRAMEWORK_TIM_VERSION_STABLE
                             ),
@@ -144,6 +149,43 @@ object VersionUtil {
         ) thisActivity.timVersion[0].displayType = 1
         DataStoreUtil.putStringKVAsync(
             "TIMVersionBig", thisActivity.timVersion.first().version
+        )
+    }
+
+    fun resolveWeixinHTML(thisActivity: MainActivity, responseData: String) {
+        val document = Jsoup.parse(responseData)
+        val androidSection = document.selectFirst("section#android")
+        val versions = mutableListOf<WeixinVersionBean>()
+        val weixinVersionInstall = DataStoreUtil.getStringKV("WeixinVersionInstall", "")
+        if (androidSection != null) {
+            val versionItems = androidSection.select("li.faq_section_sublist_item")
+
+            for (item in versionItems) {
+                val versionElement = item.selectFirst("span.version")
+                val dateElement = item.selectFirst("span:not(.version)")
+
+                if (versionElement != null && dateElement != null) {
+                    val version = versionElement.text().trim()
+                    val publishDate = dateElement.text().trim().replace("(", "").replace(")", "")
+                    versions.add(
+                        WeixinVersionBean(
+                            version,
+                            publishDate,
+                            false,
+                            ComparableVersion(weixinVersionInstall) == ComparableVersion(version)
+                        )
+                    )
+                }
+            }
+        }
+        thisActivity.weixinVersion = versions
+
+        if (DataStoreUtil.getBooleanKV(
+                "displayFirst", true
+            )
+        ) thisActivity.weixinVersion.first().displayType = 1
+        DataStoreUtil.putStringKVAsync(
+            "WeixinVersionBig", thisActivity.weixinVersion.first().version
         )
     }
 
@@ -267,5 +309,21 @@ object VersionUtil {
                 "TIMQua", ""
             )
         ) DataStoreUtil.putStringKV("TIMQua", TIMQua.replace("\n", ""))
+    }
+
+    fun Context.resolveLocalWeixin() {
+        // 识别本机 Android 微信版本并放进持久化存储
+        val weixinPackageInfo = packageManager.getPackageInfo(ANDROID_WECHAT_PACKAGE_NAME, 0)
+        val weixinVersionInstall = weixinPackageInfo.versionName.toString()
+        val weixinVersionCodeInstall =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) weixinPackageInfo.longVersionCode.toString() else ""
+        if (weixinVersionInstall != DataStoreUtil.getStringKV(
+                "WeixinVersionInstall", ""
+            )
+        ) DataStoreUtil.putStringKV("WeixinVersionInstall", weixinVersionInstall)
+        if (weixinVersionCodeInstall != DataStoreUtil.getStringKV(
+                "WeixinVersionCodeInstall", ""
+            )
+        ) DataStoreUtil.putStringKV("WeixinVersionCodeInstall", weixinVersionCodeInstall)
     }
 }
