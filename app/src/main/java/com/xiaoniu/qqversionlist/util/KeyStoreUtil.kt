@@ -141,6 +141,18 @@ object KeyStoreUtil {
         }
     }
 
+    /**
+     * 使用 Android Keystore 的 AES 加密对提供的字符串数据进行加密。
+     *
+     * @param data 要加密的字符串
+     * @return 包含加密数据和初始化向量（IV）的 Pair，如果加密失败则返回 null
+     *
+     * 在以下情况下，此方法可能返回 null：
+     * - KeyStore 初始化失败（KeyStoreException）
+     * - 密钥生成失败（KeyPermanentlyInvalidatedException，InvalidAlgorithmParameterException）
+     * - Cipher 初始化失败（InvalidKeyException，NoSuchAlgorithmException）
+     * - 加密操作失败（BadPaddingException，IllegalBlockSizeException）
+     */
     private fun encryptData(data: String): Pair<ByteArray, ByteArray>? {
         val keyStore = KeyStore.getInstance(ANDROID_KEY_STORE_PROVIDER)
         keyStore.load(null)
