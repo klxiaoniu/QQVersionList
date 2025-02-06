@@ -103,28 +103,19 @@
 
             </LinearLayout>
 
-            <com.google.android.material.materialswitch.MaterialSwitch
+            <com.xiaoniu.qqversionlist.ui.components.cell.CellTopSwitch
                 android:id="@+id/switch_shiply_advanced_configurations"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp"
-                android:paddingBottom="4dp"
-                android:text="@string/shiplyUseAdvancedConfigurations" />
+                android:layout_marginTop="8dp"
+                app:cellTitle="@string/shiplyUseAdvancedConfigurations" />
 
-            <TextView
+            <com.xiaoniu.qqversionlist.ui.components.cell.CellBottomClick
                 android:id="@+id/shiply_advanced_configurations_click"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawablePadding="8dp"
-                android:gravity="center_vertical"
-                android:paddingStart="12dp"
-                android:paddingTop="8dp"
-                android:paddingEnd="12dp"
-                android:paddingBottom="16dp"
-                android:text="@string/shiplyAdvancedConfigurations"
-                android:textColor="?attr/colorOnSurface"
-                app:drawableEndCompat="@drawable/arrow_right_s_line" />
+                android:layout_marginBottom="8dp"
+                app:cellTitle="@string/shiplyAdvancedConfigurations" />
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/shiply_warning_card"

@@ -17,7 +17,6 @@
 -->
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card_all_detail"
     style="?attr/materialCardViewElevatedStyle"
     android:layout_width="match_parent"
@@ -50,11 +49,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="6dp"
                 android:layout_marginEnd="6dp"
+                android:text="9.0.25"
                 android:textColor="?attr/colorPrimary"
                 android:textSize="28sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="9.0.25" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
                 android:id="@+id/ue_old_tag"
@@ -133,12 +132,12 @@
                     android:layout_marginEnd="2dp"
                     android:letterSpacing="0"
                     android:padding="4dp"
+                    android:text="@string/installed"
                     android:textColor="?attr/colorOnSecondaryContainer"
                     android:textSize="10sp"
                     app:layout_constraintBottom_toBottomOf="@id/tv_old_version"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/tv_old_version"
-                    tools:text="@string/installed" />
+                    app:layout_constraintTop_toTopOf="@id/tv_old_version" />
 
             </com.google.android.material.card.MaterialCardView>
 
@@ -162,12 +161,12 @@
                     android:layout_marginEnd="2dp"
                     android:letterSpacing="0"
                     android:padding="4dp"
+                    android:text="75.47%"
                     android:textColor="?attr/colorOnSecondaryContainer"
                     android:textSize="10sp"
                     app:layout_constraintBottom_toBottomOf="@id/tv_old_version"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/tv_old_version"
-                    tools:text="75.47%" />
+                    app:layout_constraintTop_toTopOf="@id/tv_old_version" />
 
             </com.google.android.material.card.MaterialCardView>
 
@@ -192,12 +191,12 @@
                     android:layout_marginEnd="2dp"
                     android:letterSpacing="0"
                     android:padding="4dp"
+                    android:text="307 MB"
                     android:textColor="?attr/colorOnSecondaryContainer"
                     android:textSize="10sp"
                     app:layout_constraintBottom_toBottomOf="@id/tv_old_version"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/tv_old_version"
-                    tools:text="307 MB" />
+                    app:layout_constraintTop_toTopOf="@id/tv_old_version" />
 
             </com.google.android.material.card.MaterialCardView>
 
@@ -208,28 +207,28 @@
             android:id="@+id/tv_detail_version"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="版本：9.0.25"
             android:textColor="?attr/colorSecondary"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ib_collapse"
-            tools:text="版本：9.0.25" />
+            app:layout_constraintTop_toBottomOf="@id/ib_collapse" />
 
         <TextView
             android:id="@+id/tv_detail_size"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="额定大小：307 MB"
             android:textColor="?attr/colorSecondary"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_detail_version"
-            tools:text="额定大小：307 MB" />
+            app:layout_constraintTop_toBottomOf="@id/tv_detail_version" />
 
         <TextView
             android:id="@+id/tv_per_size"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:text="占比历史额定最大包（）："
             android:textColor="?attr/colorSecondary"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_detail_size"
-            tools:text="占比历史额定最大包（）：" />
+            app:layout_constraintTop_toBottomOf="@id/tv_detail_size" />
 
         <com.google.android.material.progressindicator.LinearProgressIndicator
             android:id="@+id/list_detail_progress_line"
@@ -247,20 +246,20 @@
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:text="版本特性："
             android:textColor="?attr/colorSecondary"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/list_detail_progress_line"
-            tools:text="版本特性：" />
+            app:layout_constraintTop_toBottomOf="@id/list_detail_progress_line" />
 
         <TextView
             android:id="@+id/tv_desc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingBottom="6dp"
+            android:text="- 新年新“状态”\n- 文本文本文本"
             android:textColor="?attr/colorSecondary"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_title"
-            tools:text="- 新年新“状态”\n- 文本文本文本" />
+            app:layout_constraintTop_toBottomOf="@id/tv_title" />
 
         <HorizontalScrollView
             android:id="@+id/scroll"

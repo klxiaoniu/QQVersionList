@@ -48,6 +48,9 @@ class QverbowApplication : Application() {
         const val EARLIEST_UNREAL_ENGINE_QQ_VERSION_STABLE = "8.8.55"
         const val EARLIEST_KUIKLY_FRAMEWORK_QQ_VERSION_STABLE = "8.9.50"
         const val EARLIEST_KUIKLY_FRAMEWORK_TIM_VERSION_STABLE = "4.0.0"
+
+        const val ZHIPU_TOKEN = "ZhipuAIMaaSPlatformToken"
+        const val GITHUB_TOKEN = "GitHubPersonalAccessToken"
     }
 
     override fun onCreate() {
