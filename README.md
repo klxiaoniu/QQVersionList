@@ -4,6 +4,8 @@
 
 <div align="center">
 
+[![Sourcery](https://img.shields.io/badge/Sourcery-enabled-brightgreen)](https://sourcery.ai)
+
 [注意事项](#注意事项) | [简介](#简介) | [如何使用](#如何使用) | [获取更新](#获取更新) | [常见问题](#常见问题) | [其它](#其它)
 
 [贡献成员](#贡献成员) | [开源相关](#开源相关) | [商业服务鸣谢](#商业服务鸣谢) | [星标趋势](#星标趋势) | [孪生项目](#孪生项目)
