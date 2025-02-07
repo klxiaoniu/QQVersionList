@@ -39,7 +39,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="@id/ib_weixin_collapse"
-            app:layout_constraintEnd_toStartOf="@id/ib_weixin_collapse"
+            app:layout_constraintEnd_toStartOf="@id/ib_weixin_old_link"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/ib_weixin_collapse">
 
@@ -113,6 +113,17 @@
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_weixin_detail_date" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/ib_weixin_old_link"
+            style="?attr/materialIconButtonFilledTonalStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/download"
+            app:icon="@drawable/link"
+            app:layout_constraintBottom_toBottomOf="@id/ib_weixin_collapse"
+            app:layout_constraintEnd_toStartOf="@id/ib_weixin_collapse"
+            app:layout_constraintTop_toTopOf="@id/ib_weixin_collapse" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/ib_weixin_collapse"

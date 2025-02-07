@@ -37,9 +37,12 @@ import com.xiaoniu.qqversionlist.data.WeixinVersionBean
 import com.xiaoniu.qqversionlist.ui.MainActivity
 import com.xiaoniu.qqversionlist.util.StringUtil.getQua
 import com.xiaoniu.qqversionlist.util.StringUtil.jsonArrayToList
-import kotlinx.serialization.json.Json
 import org.apache.maven.artifact.versioning.ComparableVersion
 import org.jsoup.Jsoup
+import kotlinx.serialization.json.Json as KotlinJson
+import kotlinx.serialization.json.JsonElement as KotlinJsonElement
+import kotlinx.serialization.json.JsonObject as KotlinJsonObject
+import kotlinx.serialization.json.JsonPrimitive as KotlinJsonPrimitive
 
 object VersionUtil {
     fun resolveQQRainbow(thisActivity: MainActivity, responseData: String) {
@@ -51,7 +54,7 @@ object VersionUtil {
             val pend = it.indexOf(",\"length")
             val json = it.substring(pstart, pend)
             val qqVersionInstall = DataStoreUtil.getStringKV("QQVersionInstall", "")
-            Json.decodeFromString<QQVersionBean>(json).apply {
+            KotlinJson.decodeFromString<QQVersionBean>(json).apply {
                 jsonString = json
                 // 标记本机 Android QQ 版本
                 this.apply {
@@ -187,6 +190,23 @@ object VersionUtil {
         DataStoreUtil.putStringKVAsync(
             "WeixinVersionBig", thisActivity.weixinVersion.first().version
         )
+    }
+
+    fun resolveLatestWeixin(thisActivity: MainActivity, responseData: String) {
+        val startString = "var cgiData= {\"errCode\":0,\"errMsg\":\"ok\",\"data\":"
+        val start = (responseData.indexOf(startString)) + startString.length
+        val end = (responseData.indexOf(",\"isMobile\":"))
+        val json = KotlinJson { ignoreUnknownKeys = true }
+        val jsonData: Map<String, KotlinJsonElement> =
+            json.decodeFromString(responseData.substring(start, end))
+
+        thisActivity.weixinVersion.forEach({
+            if (ComparableVersion(it.version) == ComparableVersion(((jsonData["prodItems"] as Map<*, *>)["andrVersion"] as KotlinJsonPrimitive).content)) {
+                val prodItems = jsonData["prodItems"] as KotlinJsonObject
+                it.link =
+                    ((prodItems["taskUrl"] as Map<*, *>)["bit64"] as KotlinJsonPrimitive).content
+            }
+        })
     }
 
     fun Context.resolveLocalQQ() {

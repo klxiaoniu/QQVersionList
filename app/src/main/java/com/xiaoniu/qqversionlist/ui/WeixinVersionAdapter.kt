@@ -20,6 +20,7 @@ package com.xiaoniu.qqversionlist.ui
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.graphics.Typeface
 import android.net.Uri
 import android.view.LayoutInflater
@@ -32,15 +33,24 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.xiaoniu.qqversionlist.R
 import com.xiaoniu.qqversionlist.data.WeixinVersionBean
+import com.xiaoniu.qqversionlist.databinding.ExpLinkNextButtonBinding
 import com.xiaoniu.qqversionlist.databinding.ItemWeixinVersionBinding
 import com.xiaoniu.qqversionlist.databinding.ItemWeixinVersionDetailBinding
+import com.xiaoniu.qqversionlist.util.ClipboardUtil.copyText
 import com.xiaoniu.qqversionlist.util.DataStoreUtil
 import com.xiaoniu.qqversionlist.util.Extensions.dp
+import com.xiaoniu.qqversionlist.util.FileUtil.downloadFile
+import com.xiaoniu.qqversionlist.util.FileUtil.getFileSize
 import com.xiaoniu.qqversionlist.util.InfoUtil.showToast
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class WeixinVersionAdapter :
     ListAdapter<WeixinVersionBean, RecyclerView.ViewHolder>(WeixinVersionDiffCallback()) {
@@ -105,6 +115,7 @@ class WeixinVersionAdapter :
                     tvWeixinVersion.text = bean.version
                     bindDisplayInstall(tvWeixinInstall, tvWeixinInstallCard, bean)
                     bindVersionTCloud(tvWeixinVersion, holder.context)
+                    bindNewestDownloadLink(ibWeixinLink, bean)
                 }
             }
 
@@ -117,6 +128,7 @@ class WeixinVersionAdapter :
                         holder.itemView.context.getString(R.string.releaseDateTIM) + bean.datetime
                     bindDisplayInstall(tvWeixinOldInstall, tvWeixinOldInstallCard, bean)
                     bindVersionTCloud(tvWeixinOldVersion, holder.context)
+                    bindNewestDownloadLink(ibWeixinOldLink, bean)
                     tvWeixinCatalogLink.setOnClickListener {
                         val uri =
                             Uri.parse("https://weixin.qq.com/updates?platform=android&version=${bean.version}")
@@ -161,14 +173,75 @@ class WeixinVersionAdapter :
         } else tvVersion.setTypeface(null, Typeface.NORMAL)
     }
 
-    private fun showDialog(context: Context, s: String) {
-        val tv = TextView(context).apply {
-            text = s
-            setTextIsSelectable(true)
-            setPadding(96, 48, 96, 96)
-        }
-        MaterialAlertDialogBuilder(context).setView(tv).setTitle(R.string.jsonDetails)
-            .setIcon(R.drawable.braces_line).show()
+    private fun bindNewestDownloadLink(button: MaterialButton, bean: WeixinVersionBean) {
+        if (bean.link !== "") {
+            button.isVisible = true
+            button.setOnClickListener {
+                button.isEnabled = false
+                CoroutineScope(Dispatchers.IO).launch {
+                    var appSize: String? = null
+                    try {
+                        appSize = getFileSize(bean.link)
+                    } catch (_: Exception) {
+                    } finally {
+                        withContext(Dispatchers.Main) {
+                            button.isEnabled = true
+                            val expLinkNextButtonBinding = ExpLinkNextButtonBinding.inflate(
+                                LayoutInflater.from(button.context), null, false
+                            )
+                            val weixinLinkDialog =
+                                MaterialAlertDialogBuilder(button.context).setTitle(
+                                    "${
+                                        button.context.getString(R.string.weixin)
+                                    } ${bean.version}"
+                                ).setIcon(R.drawable.link).setMessage(
+                                    "${button.context.getString(R.string.downloadLink)}${bean.link}" + (if (appSize != null) "\n\n${
+                                        button.context.getString(R.string.fileSize)
+                                    }$appSize MB" else "")
+                                ).setView(expLinkNextButtonBinding.root).show()
+
+                            expLinkNextButtonBinding.apply {
+                                expNextBtnCopy.setOnClickListener {
+                                    button.context.copyText(bean.link)
+                                    weixinLinkDialog.dismiss()
+                                }
+
+                                expNextBtnDownload.setOnClickListener {
+                                    weixinLinkDialog.dismiss()
+                                    downloadFile(button.context, bean.link)
+                                }
+
+                                expNextBtnShare.setOnClickListener {
+                                    weixinLinkDialog.dismiss()
+                                    val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                                        type = "text/plain"
+                                        putExtra(
+                                            Intent.EXTRA_TEXT,
+                                            "Android ${button.context.getString(R.string.weixin)} ${bean.version} ${
+                                                button.context.getString(
+                                                    R.string.stableVersion
+                                                )
+                                            }" + (if (appSize != null) "（${
+                                                button.context.getString(R.string.fileSize)
+                                            }$appSize MB）" else "") + "\n\n${
+                                                button.context.getString(
+                                                    R.string.downloadLink
+                                                )
+                                            }${bean.link}"
+                                        )
+                                    }
+                                    button.context.startActivity(
+                                        Intent.createChooser(
+                                            shareIntent, button.context.getString(R.string.shareTo)
+                                        )
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } else button.isVisible = false
     }
 
     override fun onBindViewHolder(
@@ -184,6 +257,12 @@ class WeixinVersionAdapter :
                     holder.binding.tvWeixinInstall, holder.binding.tvWeixinInstallCard, bean
                 ) else if (holder is ViewHolderDetail) bindDisplayInstall(
                     holder.binding.tvWeixinOldInstall, holder.binding.tvWeixinOldInstallCard, bean
+                )
+
+                "downloadUrl" -> if (holder is ViewHolder) bindNewestDownloadLink(
+                    holder.binding.ibWeixinLink, bean
+                ) else if (holder is ViewHolderDetail) bindNewestDownloadLink(
+                    holder.binding.ibWeixinOldLink, bean
                 )
 
                 "isTCloud" -> if (holder is ViewHolder) bindVersionTCloud(
@@ -216,15 +295,13 @@ class WeixinVersionAdapter :
         override fun areContentsTheSame(
             oldItem: WeixinVersionBean, newItem: WeixinVersionBean
         ): Boolean {
-            return oldItem.displayType == newItem.displayType && oldItem.displayInstall == newItem.displayInstall
+            return oldItem.displayType == newItem.displayType && oldItem.displayInstall == newItem.displayInstall && oldItem.link == newItem.link
         }
 
         override fun getChangePayload(
             oldItem: WeixinVersionBean, newItem: WeixinVersionBean
         ): Any? {
-            return if (oldItem.displayType != newItem.displayType) "displayType"
-            else if (oldItem.displayInstall != newItem.displayInstall) "displayInstall"
-            else null
+            return if (oldItem.displayType != newItem.displayType) "displayType" else if (oldItem.displayInstall != newItem.displayInstall) "displayInstall" else if (oldItem.link != newItem.link) "downloadUrl" else null
         }
     }
 }

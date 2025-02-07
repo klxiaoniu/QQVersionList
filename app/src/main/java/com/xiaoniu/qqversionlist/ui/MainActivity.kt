@@ -132,6 +132,7 @@ import com.xiaoniu.qqversionlist.util.StringUtil.resolveWeixinAlphaConfig
 import com.xiaoniu.qqversionlist.util.StringUtil.toPrettyFormat
 import com.xiaoniu.qqversionlist.util.StringUtil.trimSubstringAtEnd
 import com.xiaoniu.qqversionlist.util.StringUtil.trimSubstringAtStart
+import com.xiaoniu.qqversionlist.util.VersionUtil.resolveLatestWeixin
 import com.xiaoniu.qqversionlist.util.VersionUtil.resolveLocalQQ
 import com.xiaoniu.qqversionlist.util.VersionUtil.resolveLocalTIM
 import com.xiaoniu.qqversionlist.util.VersionUtil.resolveLocalWeixin
@@ -1906,7 +1907,7 @@ class MainActivity : AppCompatActivity() {
                                         }
 
                                     Snackbar.make(
-                                        binding.root, R.string.swipeLeftForTIMVersions,
+                                        binding.root, R.string.swipeLeftToSeeMore,
                                         Snackbar.LENGTH_INDEFINITE
                                     ).setAction(R.string.ok, TipTIMSnackbarActionListener())
                                         .setAnchorView(binding.btnGuess)
@@ -1944,6 +1945,25 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             joinAll(fetchQQVersionJob, fetchTIMVersionJob, fetchWeixinVersionJob)
+            val fetchWeixinLatestDownloadUrl = CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    val okHttpClient = OkHttpClient()
+                    val request = Request.Builder()
+                        .url("https://support.weixin.qq.com/update/")
+                        .build()
+                    val response = okHttpClient.newCall(request).execute()
+                    val responseData = response.body?.string()
+                    if (responseData != null) {
+                        resolveLatestWeixin(this@MainActivity, responseData)
+                        withContext(Dispatchers.Main) {
+                            weixinVersionAdapter.submitList(weixinVersion)
+                        }
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    dialogError(e)
+                }
+            }
             withContext(Dispatchers.Main) {
                 viewModel.setVersionListLoading(false)
                 if (menu != null) menu.isEnabled = true

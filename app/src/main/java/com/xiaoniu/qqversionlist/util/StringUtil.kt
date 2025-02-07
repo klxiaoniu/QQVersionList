@@ -25,7 +25,6 @@ import com.google.gson.reflect.TypeToken
 import com.xiaoniu.qqversionlist.util.FileUtil.ZipFileCompat
 import com.xiaoniu.qqversionlist.util.InfoUtil.dialogError
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement

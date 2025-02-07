@@ -1,12 +1,14 @@
 [versions]
 activityKtxVersion = "1.10.0"
 activityVersion = "1.10.0"
+adaptiveVersion = "1.0.0"
 androidGradlePlugin = "8.7.3"
 appcompat = "1.7.0"
 browserVersion = "1.8.0"
 coilVersion = "3.0.4"
 commonsCompressVersion = "1.27.1"
 commonsIoVersion = "2.18.0"
+composeBomVersion = "2025.01.01"
 constraintlayout = "2.2.0"
 coreKtx = "1.15.0"
 coreSplashscreen = "1.1.0-rc01"
@@ -28,6 +30,7 @@ kotlinxSerializationJson = "1.8.0"
 library = "1.3.0"
 lifecycleRuntimeKtx = "2.8.7"
 material = "1.13.0-alpha10"
+material3Version = "1.3.1"
 mavenArtifact = "3.9.9"
 oapiJavaSdkVersion = "release-V4-2.3.3"
 okhttp = "4.12.0"
@@ -36,14 +39,19 @@ panguVersion = "1.1.0"
 paris = "2.0.2"
 playServicesOssLicensesVersion = "17.1.0"
 recyclerview = "1.4.0"
+runtimeLivedataVersion = "1.7.7"
 secretsGradlePlugin = "2.0.1"
 smaliDexlib2Version = "3.0.9"
+uiVersion = "1.7.7"
 viewpager2 = "1.1.0"
 
 [libraries]
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityKtxVersion" }
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activityKtxVersion" }
+androidx-adaptive = { module = "androidx.compose.material3.adaptive:adaptive", version.ref = "adaptiveVersion" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 androidx-browser = { module = "androidx.browser:browser", version.ref = "browserVersion" }
+androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBomVersion" }
 androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraintlayout" }
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
@@ -53,8 +61,14 @@ androidx-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref
 androidx-junit = { module = "androidx.test.ext:junit", version.ref = "junitVersion" }
 androidx-lifecycle-livedata-ktx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "lifecycleRuntimeKtx" }
 androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
+androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleRuntimeKtx" }
 androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleRuntimeKtx" }
+androidx-material3 = { module = "androidx.compose.material3:material3", version.ref = "material3Version" }
 androidx-recyclerview = { module = "androidx.recyclerview:recyclerview", version.ref = "recyclerview" }
+androidx-runtime-livedata = { module = "androidx.compose.runtime:runtime-livedata", version.ref = "runtimeLivedataVersion" }
+androidx-ui = { module = "androidx.compose.ui:ui", version.ref = "uiVersion" }
+androidx-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "uiVersion" }
+androidx-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "uiVersion" }
 androidx-viewpager2 = { module = "androidx.viewpager2:viewpager2", version.ref = "viewpager2" }
 coil = { module = "io.coil-kt.coil3:coil", version.ref = "coilVersion" }
 coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilVersion" }
@@ -88,3 +102,4 @@ smali-dexlib2 = { module = "com.android.tools.smali:smali-dexlib2", version.ref 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlinVersion" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlinVersion" }

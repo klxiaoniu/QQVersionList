@@ -23,6 +23,7 @@ plugins {
     id("com.google.gms.google-services")
     kotlin("plugin.serialization") version "2.1.10"
     id("com.google.android.gms.oss-licenses-plugin")
+    alias(libs.plugins.compose.compiler)
 }
 
 private fun gitCommitHash(project: Project): String {
@@ -93,14 +94,18 @@ android {
     buildFeatures {
         viewBinding = true
         buildConfig = true
+        compose = true
     }
 }
 
 dependencies {
     implementation(libs.androidx.activity)
+    implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.activity.ktx)
+    implementation(libs.androidx.adaptive)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.browser)
+    implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.core.splashscreen)
@@ -108,8 +113,13 @@ dependencies {
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.material3)
     implementation(libs.androidx.recyclerview)
+    implementation(libs.androidx.runtime.livedata)
+    implementation(libs.androidx.ui)
+    implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.viewpager2)
     implementation(libs.coil)
     implementation(libs.coil.network.okhttp)
@@ -135,6 +145,8 @@ dependencies {
     implementation(libs.play.services.oss.licenses)
     implementation(libs.smali.dexlib2)
     testImplementation(libs.junit)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
+    debugImplementation(libs.androidx.ui.tooling)
 }

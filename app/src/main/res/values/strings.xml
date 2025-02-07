@@ -141,7 +141,7 @@
     <string name="suffixSetting">后缀设置</string>
     <string name="others">其它</string>
     <string name="ok">好</string>
-    <string name="swipeLeftForTIMVersions">左滑查看 TIM 版本列表</string>
+    <string name="swipeLeftToSeeMore">向左滑动查看更多</string>
     <string name="getUpdateFromTencentAppStore">腾讯应用宝更新获取（实验性）</string>
     <string name="experimentalFeatures">实验性功能</string>
     <string name="getQQLinkFromTencentAppStore">获取 QQ 下载直链</string>
@@ -273,4 +273,5 @@
     <string name="zhipuTokenIsInvalid">填入的 Token 被智谱 AI 开放平台大模型接口 Java SDK 判定无效。</string>
     <string name="clickHereToViewTheChangelog">点击此处查看更新日志</string>
     <string name="localWeixinVersion">本机微信：</string>
+    <string name="weixin">微信</string>
 </resources>
