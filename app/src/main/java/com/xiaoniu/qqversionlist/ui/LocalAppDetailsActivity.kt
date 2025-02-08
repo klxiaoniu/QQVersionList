@@ -393,6 +393,7 @@ class LocalAppDetailsActivity : AppCompatActivity() {
     private fun LocalAppDetailsStackWindow(
         result: MutableList<LocalAppStackResult>
     ) {
+
         val dynamicColor = SDK_INT >= Build.VERSION_CODES.S
         val isSystemInDarkTheme = isSystemInDarkTheme()
         val colorScheme = when {
@@ -407,7 +408,8 @@ class LocalAppDetailsActivity : AppCompatActivity() {
                     .fillMaxWidth()
                     .padding(5.dp),
                     colors = CardDefaults.cardColors(
-                        containerColor = colorScheme.surfaceContainerLow
+                        containerColor = colorScheme.surfaceContainerLow,
+                        contentColor = colorScheme.onSurfaceVariant
                     ),
                     onClick = {
                         when (item.id) {
