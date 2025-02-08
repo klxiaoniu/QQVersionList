@@ -1964,6 +1964,7 @@ class MainActivity : AppCompatActivity() {
                     dialogError(e)
                 }
             }
+            joinAll(fetchWeixinLatestDownloadUrl)
             withContext(Dispatchers.Main) {
                 viewModel.setVersionListLoading(false)
                 if (menu != null) menu.isEnabled = true

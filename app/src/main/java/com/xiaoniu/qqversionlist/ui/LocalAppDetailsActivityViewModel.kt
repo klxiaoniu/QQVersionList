@@ -26,12 +26,15 @@ import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Build.VERSION.SDK_INT
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.xiaoniu.qqversionlist.QverbowApplication.Companion.ANDROID_QQ_PACKAGE_NAME
 import com.xiaoniu.qqversionlist.QverbowApplication.Companion.ANDROID_TIM_PACKAGE_NAME
 import com.xiaoniu.qqversionlist.R
+import com.xiaoniu.qqversionlist.data.LocalAppStackResult
+import com.xiaoniu.qqversionlist.data.LocalAppStackRule
 import com.xiaoniu.qqversionlist.util.DexResolver
 import com.xiaoniu.qqversionlist.util.FileUtil.ZipFileCompat
 import kotlinx.coroutines.CoroutineScope
@@ -47,6 +50,18 @@ import kotlin.use
 
 class LocalAppDetailsActivityViewModel : ViewModel() {
     companion object {
+        const val RULE_ID_QQNT = "QQNT"
+        const val RULE_ID_BUGLY = "Bugly"
+        const val RULE_ID_SHIPLY = "Shiply"
+        const val RULE_ID_KUIKLY = "Kuikly"
+        const val RULE_ID_HIPPY = "Hippy"
+        const val RULE_ID_RIGHTLY = "Rightly"
+        const val RULE_ID_UE_LIBRARY = "UELibrary"
+        const val RULE_ID_TENCENT_BEACON = "腾讯灯塔"
+        const val RULE_ID_JETPACK_COMPOSE = "Jetpack Compose"
+        const val RULE_ID_COMPOSE_MULTIPLATFORM = "Compose Multiplatform"
+        const val RULE_ID_FLUTTER = "Flutter"
+
         val DEX_QQNT = arrayOf("com.tencent.qqnt")
         val DEX_BUGLY = arrayOf("com.tencent.bugly")
         val DEX_SHIPLY = arrayOf("com.tencent.rdelivery")
@@ -58,6 +73,34 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
         val DEX_JETPACK_COMPOSE = arrayOf("androidx.compose")
         val DEX_COMPOSE_MULTIPLATFORM = arrayOf("org.jetbrains.compose")
         val DEX_FLUTTER = arrayOf("io.flutter")
+
+        val DEX_PRE_RULES = listOf<LocalAppStackRule>(
+            LocalAppStackRule(RULE_ID_QQNT, DEX_QQNT),
+            LocalAppStackRule(RULE_ID_BUGLY, DEX_BUGLY),
+            LocalAppStackRule(RULE_ID_SHIPLY, DEX_SHIPLY),
+            LocalAppStackRule(RULE_ID_KUIKLY, DEX_KUIKLY),
+            LocalAppStackRule(RULE_ID_HIPPY, DEX_HIPPY),
+            LocalAppStackRule(RULE_ID_RIGHTLY, DEX_RIGHTLY),
+            LocalAppStackRule(RULE_ID_UE_LIBRARY, DEX_UE_LIBRARY),
+            LocalAppStackRule(RULE_ID_TENCENT_BEACON, DEX_TENCENT_BEACON),
+            LocalAppStackRule(RULE_ID_JETPACK_COMPOSE, DEX_JETPACK_COMPOSE),
+            LocalAppStackRule(RULE_ID_COMPOSE_MULTIPLATFORM, DEX_COMPOSE_MULTIPLATFORM),
+            LocalAppStackRule(RULE_ID_FLUTTER, DEX_FLUTTER)
+        )
+
+        val RULES_ID_ORDER = listOf(
+            RULE_ID_QQNT,
+            RULE_ID_COMPOSE_MULTIPLATFORM,
+            RULE_ID_JETPACK_COMPOSE,
+            RULE_ID_FLUTTER,
+            RULE_ID_UE_LIBRARY,
+            RULE_ID_BUGLY,
+            RULE_ID_SHIPLY,
+            RULE_ID_KUIKLY,
+            RULE_ID_HIPPY,
+            RULE_ID_RIGHTLY,
+            RULE_ID_TENCENT_BEACON
+        )
     }
 
     private val _isLoading = MutableLiveData<Boolean>().apply { value = false }
@@ -74,72 +117,6 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
 
     private val _localSDKText = MutableLiveData<String>().apply { value = "" }
     val localSDKText: LiveData<String> = _localSDKText
-
-    private val _hasQQNT = MutableLiveData<Boolean>().apply { value = false }
-    val hasQQNT: LiveData<Boolean> = _hasQQNT
-
-    private val _hasQQNTDesc = MutableLiveData<String>().apply { value = "" }
-    val hasQQNTDesc: LiveData<String> = _hasQQNTDesc
-
-    private val _hasUELibrary = MutableLiveData<Boolean>().apply { value = false }
-    val hasUELibrary: LiveData<Boolean> = _hasUELibrary
-
-    private val _hasUELibraryDesc = MutableLiveData<String>().apply { value = "" }
-    val hasUELibraryDesc: LiveData<String> = _hasUELibraryDesc
-
-    private val _hasBugly = MutableLiveData<Boolean>().apply { value = false }
-    val hasBugly: LiveData<Boolean> = _hasBugly
-
-    private val _hasBuglyDesc = MutableLiveData<String>().apply { value = "" }
-    val hasBuglyDesc: LiveData<String> = _hasBuglyDesc
-
-    private val _hasShiply = MutableLiveData<Boolean>().apply { value = false }
-    val hasShiply: LiveData<Boolean> = _hasShiply
-
-    private val _hasShiplyDesc = MutableLiveData<String>().apply { value = "" }
-    val hasShiplyDesc: LiveData<String> = _hasShiplyDesc
-
-    private val _hasKuikly = MutableLiveData<Boolean>().apply { value = false }
-    val hasKuikly: LiveData<Boolean> = _hasKuikly
-
-    private val _hasKuiklyDesc = MutableLiveData<String>().apply { value = "" }
-    val hasKuiklyDesc: LiveData<String> = _hasKuiklyDesc
-
-    private val _hasHippy = MutableLiveData<Boolean>().apply { value = false }
-    val hasHippy: LiveData<Boolean> = _hasHippy
-
-    private val _hasHippyDesc = MutableLiveData<String>().apply { value = "" }
-    val hasHippyDesc: LiveData<String> = _hasHippyDesc
-
-    private val _hasRightly = MutableLiveData<Boolean>().apply { value = false }
-    val hasRightly: LiveData<Boolean> = _hasRightly
-
-    private val _hasRightlyDesc = MutableLiveData<String>().apply { value = "" }
-    val hasRightlyDesc: LiveData<String> = _hasRightlyDesc
-
-    private val _hasTencentBeacon = MutableLiveData<Boolean>().apply { value = false }
-    val hasTencentBeacon: LiveData<Boolean> = _hasTencentBeacon
-
-    private val _hasTencentBeaconDesc = MutableLiveData<String>().apply { value = "" }
-    val hasTencentBeaconDesc: LiveData<String> = _hasTencentBeaconDesc
-
-    private val _hasJetpackCompose = MutableLiveData<Boolean>().apply { value = false }
-    val hasJetpackCompose: LiveData<Boolean> = _hasJetpackCompose
-
-    private val _hasJetpackComposeDesc = MutableLiveData<String>().apply { value = "" }
-    val hasJetpackComposeDesc: LiveData<String> = _hasJetpackComposeDesc
-
-    private val _hasComposeMultiplatform = MutableLiveData<Boolean>().apply { value = false }
-    val hasComposeMultiplatform: LiveData<Boolean> = _hasComposeMultiplatform
-
-    private val _hasComposeMultiplatformDesc = MutableLiveData<String>().apply { value = "" }
-    val hasComposeMultiplatformDesc: LiveData<String> = _hasComposeMultiplatformDesc
-
-    private val _hasFlutter = MutableLiveData<Boolean>().apply { value = false }
-    val hasFlutter: LiveData<Boolean> = _hasFlutter
-
-    private val _hasFlutterDesc = MutableLiveData<String>().apply { value = "" }
-    val hasFlutterDesc: LiveData<String> = _hasFlutterDesc
 
     private val _isTIM = MutableLiveData<Boolean>().apply { value = false }
     val isTIM: LiveData<Boolean> = _isTIM
@@ -181,6 +158,11 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
     private val _qua = MutableLiveData<String>().apply { value = "" }
     val qua: LiveData<String> = _qua
 
+    // 栈信息检查结果
+    private val _localAppStackResults =
+        MutableLiveData<MutableList<LocalAppStackResult>>().apply { value = mutableListOf() }
+    val localAppStackResults: LiveData<MutableList<LocalAppStackResult>> = _localAppStackResults
+
     fun setLoading(isLoading: Boolean) {
         _isLoading.value = isLoading
     }
@@ -199,94 +181,6 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
 
     fun setLocalSDKText(text: String) {
         _localSDKText.value = text
-    }
-
-    fun setHasQQNT(hasQQNT: Boolean) {
-        _hasQQNT.value = hasQQNT
-    }
-
-    fun setHasQQNTDesc(context: Context, dex: String) {
-        _hasQQNTDesc.value = context.getString(R.string.thisVerContains, dex)
-    }
-
-    fun setHasUELibrary(hasUELibrary: Boolean) {
-        _hasUELibrary.value = hasUELibrary
-    }
-
-    fun setHasUELibraryDesc(context: Context, dex: String) {
-        _hasUELibraryDesc.value = context.getString(R.string.thisVerContains, dex)
-    }
-
-    fun setHasBugly(hasBugly: Boolean) {
-        _hasBugly.value = hasBugly
-    }
-
-    fun setHasBuglyDesc(context: Context, dex: String) {
-        _hasBuglyDesc.value = context.getString(R.string.thisVerContains, dex)
-    }
-
-    fun setHasShiply(hasShiply: Boolean) {
-        _hasShiply.value = hasShiply
-    }
-
-    fun setHasShiplyDesc(context: Context, dex: String) {
-        _hasShiplyDesc.value = context.getString(R.string.thisVerContains, dex)
-    }
-
-    fun setHasKuikly(hasKuikly: Boolean) {
-        _hasKuikly.value = hasKuikly
-    }
-
-    fun setHasKuiklyDesc(context: Context, dex: String) {
-        _hasKuiklyDesc.value = context.getString(R.string.thisVerContains, dex)
-    }
-
-    fun setHasHippy(hasHippy: Boolean) {
-        _hasHippy.value = hasHippy
-    }
-
-    fun setHasHippyDesc(context: Context, dex: String) {
-        _hasHippyDesc.value = context.getString(R.string.thisVerContains, dex)
-    }
-
-    fun setHasRightly(hasRightly: Boolean) {
-        _hasRightly.value = hasRightly
-    }
-
-    fun setHasRightlyDesc(context: Context, dex: String) {
-        _hasRightlyDesc.value = context.getString(R.string.thisVerContains, dex)
-    }
-
-    fun setHasTencentBeacon(hasTencentBeacon: Boolean) {
-        _hasTencentBeacon.value = hasTencentBeacon
-    }
-
-    fun setHasTencentBeaconDesc(context: Context, dex: String) {
-        _hasTencentBeaconDesc.value = context.getString(R.string.thisVerContains, dex)
-    }
-
-    fun setHasJetpackCompose(hasCompose: Boolean) {
-        _hasJetpackCompose.value = hasCompose
-    }
-
-    fun setHasJetpackComposeDesc(context: Context, dex: String) {
-        _hasJetpackComposeDesc.value = context.getString(R.string.thisVerContains, dex)
-    }
-
-    fun setHasComposeMultiplatform(hasComposeMultiplatform: Boolean) {
-        _hasComposeMultiplatform.value = hasComposeMultiplatform
-    }
-
-    fun setHasComposeMultiplatformDesc(context: Context, dex: String) {
-        _hasComposeMultiplatformDesc.value = context.getString(R.string.thisVerContains, dex)
-    }
-
-    fun setHasFlutter(hasFlutter: Boolean) {
-        _hasFlutter.value = hasFlutter
-    }
-
-    fun setHasFlutterDesc(context: Context, dex: String) {
-        _hasFlutterDesc.value = context.getString(R.string.thisVerContains, dex)
     }
 
     fun setIsTIM(isTIM: Boolean) {
@@ -339,6 +233,11 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
 
     fun setQua(qua: String) {
         _qua.value = qua
+    }
+
+    fun setLocalAppStackResults(result: MutableList<LocalAppStackResult>) {
+        _localAppStackResults.value = result
+        Log.d("aaaaaaaa", "setLocalAppStackResults: ${result.joinToString()}")
     }
 
     fun getInfo(activity: Activity, type: String, appPath: String? = null) {
@@ -420,94 +319,23 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
                         setQua(if (qua.isNullOrEmpty()) "" else qua.replace("\n", ""))
                     }
                 })
-                checkAndSetLibrary(
-                    this,
-                    ::checkQQNT,
-                    ::setHasQQNT,
-                    ::setHasQQNTDesc,
-                    activity,
-                    applicationInfo.sourceDir
-                )
-                checkAndSetLibrary(
-                    this,
-                    ::checkUELibrary,
-                    ::setHasUELibrary,
-                    ::setHasUELibraryDesc,
-                    activity,
-                    applicationInfo.sourceDir
-                )
-                checkAndSetLibrary(
-                    this,
-                    ::checkBugly,
-                    ::setHasBugly,
-                    ::setHasBuglyDesc,
-                    activity,
-                    applicationInfo.sourceDir
-                )
-                checkAndSetLibrary(
-                    this,
-                    ::checkShiply,
-                    ::setHasShiply,
-                    ::setHasShiplyDesc,
-                    activity,
-                    applicationInfo.sourceDir
-                )
-                checkAndSetLibrary(
-                    this,
-                    ::checkKuikly,
-                    ::setHasKuikly,
-                    ::setHasKuiklyDesc,
-                    activity,
-                    applicationInfo.sourceDir
-                )
-                checkAndSetLibrary(
-                    this,
-                    ::checkHippy,
-                    ::setHasHippy,
-                    ::setHasHippyDesc,
-                    activity,
-                    applicationInfo.sourceDir
-                )
-                checkAndSetLibrary(
-                    this,
-                    ::checkRightly,
-                    ::setHasRightly,
-                    ::setHasRightlyDesc,
-                    activity,
-                    applicationInfo.sourceDir
-                )
-                checkAndSetLibrary(
-                    this,
-                    ::checkTencentBeacon,
-                    ::setHasTencentBeacon,
-                    ::setHasTencentBeaconDesc,
-                    activity,
-                    applicationInfo.sourceDir
-                )
-                checkAndSetLibrary(
-                    this,
-                    ::checkJetpackCompose,
-                    ::setHasJetpackCompose,
-                    ::setHasJetpackComposeDesc,
-                    activity,
-                    applicationInfo.sourceDir
-                )
-                checkAndSetLibrary(
-                    this,
-                    ::checkComposeMultiplatform,
-                    ::setHasComposeMultiplatform,
-                    ::setHasComposeMultiplatformDesc,
-                    activity,
-                    applicationInfo.sourceDir
-                )
-                checkAndSetLibrary(
-                    this,
-                    ::checkFlutter,
-                    ::setHasFlutter,
-                    ::setHasFlutterDesc,
-                    activity,
-                    applicationInfo.sourceDir
-                )
+            }
+            DEX_PRE_RULES.forEach { rule ->
+                jobs.add(CoroutineScope(Dispatchers.IO).launch {
+                    val findDex = checkLibrary(applicationInfo.sourceDir, rule.dex)
+                    if (findDex != null) {
+                        withContext(Dispatchers.Main) {
+                            val oldList = localAppStackResults.value
+                            val newList =
+                                (if (oldList.isNullOrEmpty()) mutableListOf() else oldList).apply {
+                                    if (!this.any { it.id == rule.id }) {
+                                        this.add(LocalAppStackResult(rule.id, findDex))
+                                    }
+                                }
+                            setLocalAppStackResults(newList.toMutableList())
+                        }
+                    }
+                })
             }
             CoroutineScope(Dispatchers.Main).launch {
                 jobs.joinAll()
@@ -598,32 +426,6 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
         }.getOrElse { exception -> throw Exception(exception) }
     }
 
-    private fun checkQQNT(appPath: String): String? = checkLibrary(appPath, DEX_QQNT)
-    private fun checkUELibrary(appPath: String): String? = checkLibrary(appPath, DEX_UE_LIBRARY)
-    private fun checkBugly(appPath: String): String? = checkLibrary(appPath, DEX_BUGLY)
-    private fun checkShiply(appPath: String): String? = checkLibrary(appPath, DEX_SHIPLY)
-    private fun checkKuikly(appPath: String): String? = checkLibrary(appPath, DEX_KUIKLY)
-    private fun checkHippy(appPath: String): String? = checkLibrary(appPath, DEX_HIPPY)
-    private fun checkRightly(appPath: String): String? = checkLibrary(appPath, DEX_RIGHTLY)
-    private fun checkTencentBeacon(appPath: String): String? =
-        checkLibrary(appPath, DEX_TENCENT_BEACON)
-
-    private fun checkJetpackCompose(appPath: String): String? =
-        checkLibrary(appPath, DEX_JETPACK_COMPOSE)
-
-    private fun checkComposeMultiplatform(appPath: String): String? =
-        checkLibrary(appPath, DEX_COMPOSE_MULTIPLATFORM)
-
-    private fun checkFlutter(appPath: String): String? = checkLibrary(appPath, DEX_FLUTTER)
-
-    private fun checkLibrary(appPath: String, dexList: Array<String>): String? {
-        dexList.forEach { dex ->
-            val findResult = DexResolver.findPackage(appPath, dex)
-            if (findResult.getOrDefault(false) == true) return dex
-        }
-        return null
-    }
-
     private fun <T> checkAndSetProperty(
         jobs: MutableList<Job>,
         checkFunction: (T) -> String?,
@@ -636,23 +438,12 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
         })
     }
 
-    private fun checkAndSetLibrary(
-        jobs: MutableList<Job>,
-        checkFunction: (String) -> String?,
-        setHasLibrary: (Boolean) -> Unit,
-        setHasLibraryDesc: (Activity, String) -> Unit,
-        activity: Activity,
-        sourceDir: String
-    ) {
-        jobs.add(CoroutineScope(Dispatchers.IO).launch {
-            val result = checkFunction(sourceDir)
-            withContext(Dispatchers.Main) {
-                if (result != null) {
-                    setHasLibrary(true)
-                    setHasLibraryDesc(activity, result)
-                } else setHasLibrary(false)
-            }
-        })
+    private fun checkLibrary(appPath: String, dexList: Array<String>): String? {
+        dexList.forEach { dex ->
+            val findResult = DexResolver.findPackage(appPath, dex)
+            if (findResult.getOrDefault(false) == true) return dex
+        }
+        return null
     }
 
     private fun cleanCache(activity: Activity) {

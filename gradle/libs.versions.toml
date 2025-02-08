@@ -1,7 +1,6 @@
 [versions]
 activityKtxVersion = "1.10.0"
 activityVersion = "1.10.0"
-adaptiveVersion = "1.0.0"
 androidGradlePlugin = "8.7.3"
 appcompat = "1.7.0"
 browserVersion = "1.8.0"
@@ -30,7 +29,7 @@ kotlinxSerializationJson = "1.8.0"
 library = "1.3.0"
 lifecycleRuntimeKtx = "2.8.7"
 material = "1.13.0-alpha10"
-material3Version = "1.3.1"
+material3Version = "1.4.0-alpha07"
 mavenArtifact = "3.9.9"
 oapiJavaSdkVersion = "release-V4-2.3.3"
 okhttp = "4.12.0"
@@ -42,13 +41,13 @@ recyclerview = "1.4.0"
 runtimeLivedataVersion = "1.7.7"
 secretsGradlePlugin = "2.0.1"
 smaliDexlib2Version = "3.0.9"
+uiGraphicsVersion = "1.7.7"
 uiVersion = "1.7.7"
 viewpager2 = "1.1.0"
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityKtxVersion" }
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activityKtxVersion" }
-androidx-adaptive = { module = "androidx.compose.material3.adaptive:adaptive", version.ref = "adaptiveVersion" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 androidx-browser = { module = "androidx.browser:browser", version.ref = "browserVersion" }
 androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBomVersion" }
@@ -64,9 +63,11 @@ androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtim
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleRuntimeKtx" }
 androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleRuntimeKtx" }
 androidx-material3 = { module = "androidx.compose.material3:material3", version.ref = "material3Version" }
+androidx-material3-window-sizeclass = { module = "androidx.compose.material3:material3-window-size-class", version.ref = "material3Version" }
 androidx-recyclerview = { module = "androidx.recyclerview:recyclerview", version.ref = "recyclerview" }
 androidx-runtime-livedata = { module = "androidx.compose.runtime:runtime-livedata", version.ref = "runtimeLivedataVersion" }
 androidx-ui = { module = "androidx.compose.ui:ui", version.ref = "uiVersion" }
+androidx-ui-graphics = { module = "androidx.compose.ui:ui-graphics", version.ref = "uiGraphicsVersion" }
 androidx-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "uiVersion" }
 androidx-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "uiVersion" }
 androidx-viewpager2 = { module = "androidx.viewpager2:viewpager2", version.ref = "viewpager2" }
