@@ -275,4 +275,14 @@
     <string name="clickHereToViewTheChangelog">點擊此處查看更新日誌</string>
     <string name="localWeixinVersion">本機微信/WeChat</string>
     <string name="weixin">微信</string>
+    <string name="localDetailsMMKV">MMKV</string>
+    <string name="localDetailsMMKVDesc">MMKV 是微信中的一個高效、小巧、易用的移動鍵值對存儲框架，可在 Android、iOS/macOS、Windows、POSIX 和 HarmonyOS NEXT 上使用。</string>
+    <string name="localDetailsWCDB">WCDB</string>
+    <string name="localDetailsWCDBDesc">WCDB 是一個易用、高效、完整的移動數據庫框架，它基於 SQLite 和 SQLCipher 開發，在微信中應用廣泛，且支持在 C++、Java、Kotlin、Swift、Objc 五種語言環境中使用。</string>
+    <string name="localDetailsTinker">Tinker</string>
+    <string name="localDetailsTinkerDesc">Tinker 是微信官方的 Android 熱補丁解決方案，它支持動態下发代碼、So 庫以及資源，讓應用能夠在不需要重新安裝的情況下實現更新。</string>
+    <string name="localDetailsMars">Mars</string>
+    <string name="localDetailsMarsDesc">Mars 是微信官方的跨平台跨業務的終端基礎組件。</string>
+    <string name="localDetailsMatrix">Matrix</string>
+    <string name="localDetailsMatrixDesc">Matrix 是一款微信研發並日常使用的應用性能接入框架，支持 iOS、macOS 和 Android。Matrix 通過接入各種性能監控方案，對性能監控項的異常數據進行采集和分析，輸出相應的問題分析、定位與優化建議，從而幫助開發者開發出更高質量的應用。</string>
 </resources>

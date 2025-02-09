@@ -275,4 +275,14 @@
     <string name="clickHereToViewTheChangelog">View Changelog</string>
     <string name="localWeixinVersion">Local Weixin/WeChat:&#160;</string>
     <string name="weixin">Weixin</string>
+    <string name="localDetailsMMKV">MMKV</string>
+    <string name="localDetailsMMKVDesc">MMKV is an efficient, small, easy-to-use mobile key-value storage framework used in the WeChat application. It\'s currently available on Android, iOS/macOS, Windows, POSIX and HarmonyOS NEXT.</string>
+    <string name="localDetailsWCDB">WCDB</string>
+    <string name="localDetailsWCDBDesc">WCDB is an efficient, complete, easy-to-use mobile database framework used in the WeChat application. It\'s based on SQLite and SQLCipher, and supports five languages: C++, Java, Kotlin, Swift and Objective-C.</string>
+    <string name="localDetailsTinker">Tinker</string>
+    <string name="localDetailsTinkerDesc">Tinker is a hot-fix solution library for Android, it supports dex, library and resources update without reinstalling apk.</string>
+    <string name="localDetailsMars">Mars</string>
+    <string name="localDetailsMarsDesc">Mars is a cross-platform infrastructure component developed by WeChat Mobile Team.</string>
+    <string name="localDetailsMatrix">Matrix</string>
+    <string name="localDetailsMatrixDesc">Matrix is an APM (Application Performance Manage) used in WeChat to monitor, locate and analyse performance problems. It is a plugin style, non-invasive solution and is currently available on iOS, macOS and Android.</string>
 </resources>

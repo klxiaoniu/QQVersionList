@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+    https://www.iconfont.cn/
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="1024"
+    android:viewportHeight="1024">
+    <path
+        android:fillColor="?attr/colorControlNormal"
+        android:pathData="M234.1,1024l153.6,-672.9H117L58.5,197.5h358.4L468.1,0l497.4,351.1H570.5L416.9,1024z" />
+</vector>

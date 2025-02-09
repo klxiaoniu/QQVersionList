@@ -52,7 +52,6 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.IntentCompat
 import androidx.core.view.ViewCompat
@@ -67,7 +66,11 @@ import com.xiaoniu.qqversionlist.R
 import com.xiaoniu.qqversionlist.data.LocalAppStackResult
 import com.xiaoniu.qqversionlist.databinding.ActivityLocalAppDetailsBinding
 import com.xiaoniu.qqversionlist.databinding.DialogLocalQqTimInfoBinding
+import com.xiaoniu.qqversionlist.ui.LocalAppDetailsActivityViewModel.Companion.DEX_PRE_RULES
 import com.xiaoniu.qqversionlist.ui.LocalAppDetailsActivityViewModel.Companion.RULES_ID_ORDER
+import com.xiaoniu.qqversionlist.ui.LocalAppDetailsActivityViewModel.Companion.RULE_TYPE_OPEN_SOURCE_3RD_PARTY
+import com.xiaoniu.qqversionlist.ui.LocalAppDetailsActivityViewModel.Companion.RULE_TYPE_OTEAM_TENCENT
+import com.xiaoniu.qqversionlist.ui.LocalAppDetailsActivityViewModel.Companion.RULE_TYPE_PRITIVE_TENCENT
 import com.xiaoniu.qqversionlist.ui.MainActivity.Companion.JUDGE_UA_TARGET
 import com.xiaoniu.qqversionlist.util.ClipboardUtil.copyText
 import com.xiaoniu.qqversionlist.util.DataStoreUtil
@@ -393,7 +396,6 @@ class LocalAppDetailsActivity : AppCompatActivity() {
     private fun LocalAppDetailsStackWindow(
         result: MutableList<LocalAppStackResult>
     ) {
-
         val dynamicColor = SDK_INT >= Build.VERSION_CODES.S
         val isSystemInDarkTheme = isSystemInDarkTheme()
         val colorScheme = when {
@@ -403,7 +405,10 @@ class LocalAppDetailsActivity : AppCompatActivity() {
             else -> lightColorScheme()
         }
         return Column {
-            (if (result.isEmpty()) mutableListOf() else result).sortedWith(compareBy { RULES_ID_ORDER.indexOf(it.id) }).forEach { item ->
+            (if (result.isEmpty()) mutableListOf() else result).sortedWith(compareBy<LocalAppStackResult> {
+                if (RULES_ID_ORDER.indexOf(it.id) == -1) Int.MAX_VALUE
+                else RULES_ID_ORDER.indexOf(it.id)
+            }.thenComparing(compareBy<LocalAppStackResult> { it.id.lowercase() })).forEach { item ->
                 Card(modifier = Modifier
                     .fillMaxWidth()
                     .padding(5.dp),
@@ -416,78 +421,113 @@ class LocalAppDetailsActivity : AppCompatActivity() {
                             LocalAppDetailsActivityViewModel.RULE_ID_QQNT -> showStackDescDialog(
                                 R.string.localDetailsQQNT,
                                 R.string.localDetailsQQNTDesc,
-                                null,
+                                DEX_PRE_RULES.find { it.id == item.id }?.url,
                                 R.drawable.qqnt_logo_unofficial_fix
                             )
 
                             LocalAppDetailsActivityViewModel.RULE_ID_BUGLY -> showStackDescDialog(
                                 R.string.localDetailsBugly,
                                 R.string.localDetailsBuglyDesc,
-                                "https://bugly.tds.qq.com/v2/index/tds-main",
+                                DEX_PRE_RULES.find { it.id == item.id }?.url,
                                 R.drawable.bugly_official
                             )
 
                             LocalAppDetailsActivityViewModel.RULE_ID_UE_LIBRARY -> showStackDescDialog(
                                 R.string.localDetailsUELibrary,
                                 R.string.localDetailsUELibraryDesc,
-                                "https://dev.epicgames.com/documentation/unreal-engine/building-unreal-engine-as-a-library",
+                                DEX_PRE_RULES.find { it.id == item.id }?.url,
                                 R.drawable.ue_icon_2023_black
                             )
 
                             LocalAppDetailsActivityViewModel.RULE_ID_HIPPY -> showStackDescDialog(
                                 R.string.localDetailsHippy,
                                 R.string.localDetailsHippyDesc,
-                                "https://openhippy.com/",
+                                DEX_PRE_RULES.find { it.id == item.id }?.url,
                                 R.drawable.hippy_official
                             )
 
                             LocalAppDetailsActivityViewModel.RULE_ID_KUIKLY -> showStackDescDialog(
                                 R.string.localDetailsKuikly,
                                 R.string.localDetailsKuiklyDesc,
-                                null,
+                                DEX_PRE_RULES.find { it.id == item.id }?.url,
                                 R.drawable.kuikly_official
                             )
 
                             LocalAppDetailsActivityViewModel.RULE_ID_SHIPLY -> showStackDescDialog(
                                 R.string.localDetailsShiply,
                                 R.string.localDetailsShiplyDesc,
-                                "https://shiply.tds.qq.com/",
+                                DEX_PRE_RULES.find { it.id == item.id }?.url,
                                 R.drawable.shiply_official
                             )
 
                             LocalAppDetailsActivityViewModel.RULE_ID_RIGHTLY -> showStackDescDialog(
                                 R.string.localDetailsRightly,
                                 R.string.localDetailsRightlyDesc,
-                                "https://rightly.tds.qq.com/",
+                                DEX_PRE_RULES.find { it.id == item.id }?.url,
                                 R.drawable.rightly_official
                             )
 
                             LocalAppDetailsActivityViewModel.RULE_ID_TENCENT_BEACON -> showStackDescDialog(
                                 R.string.localDetailsTencentBeacon,
                                 R.string.localDetailsTencentBeaconDesc,
-                                "https://beacon.qq.com/",
+                                DEX_PRE_RULES.find { it.id == item.id }?.url,
                                 R.drawable.beacon_official
                             )
 
                             LocalAppDetailsActivityViewModel.RULE_ID_JETPACK_COMPOSE -> showStackDescDialog(
                                 R.string.localDetailsComposeMultiplatform,
                                 R.string.localDetailsComposeMultiplatformDesc,
-                                "https://www.jetbrains.com/compose-multiplatform/",
+                                DEX_PRE_RULES.find { it.id == item.id }?.url,
                                 R.drawable.compose
                             )
 
                             LocalAppDetailsActivityViewModel.RULE_ID_COMPOSE_MULTIPLATFORM -> showStackDescDialog(
                                 R.string.localDetailsJetpackCompose,
                                 R.string.localDetailsJetpackComposeDesc,
-                                "https://developer.android.com/compose",
+                                DEX_PRE_RULES.find { it.id == item.id }?.url,
                                 R.drawable.compose
                             )
 
                             LocalAppDetailsActivityViewModel.RULE_ID_FLUTTER -> showStackDescDialog(
                                 R.string.localDetailsFlutter,
                                 R.string.localDetailsFlutterDesc,
-                                "https://flutter.dev/",
+                                DEX_PRE_RULES.find { it.id == item.id }?.url,
                                 R.drawable.icon_flutter_dk_blue
+                            )
+
+                            LocalAppDetailsActivityViewModel.RULE_ID_MMKV -> showStackDescDialog(
+                                R.string.localDetailsMMKV,
+                                R.string.localDetailsMMKVDesc,
+                                DEX_PRE_RULES.find { it.id == item.id }?.url,
+                                R.drawable.oteam_official
+                            )
+
+                            LocalAppDetailsActivityViewModel.RULE_ID_WCDB -> showStackDescDialog(
+                                R.string.localDetailsWCDB,
+                                R.string.localDetailsWCDBDesc,
+                                DEX_PRE_RULES.find { it.id == item.id }?.url,
+                                R.drawable.oteam_official
+                            )
+
+                            LocalAppDetailsActivityViewModel.RULE_ID_MARS -> showStackDescDialog(
+                                R.string.localDetailsMars,
+                                R.string.localDetailsMarsDesc,
+                                DEX_PRE_RULES.find { it.id == item.id }?.url,
+                                R.drawable.oteam_official
+                            )
+
+                            LocalAppDetailsActivityViewModel.RULE_ID_MATRIX -> showStackDescDialog(
+                                R.string.localDetailsMatrix,
+                                R.string.localDetailsMatrixDesc,
+                                DEX_PRE_RULES.find { it.id == item.id }?.url,
+                                R.drawable.oteam_official
+                            )
+
+                            LocalAppDetailsActivityViewModel.RULE_ID_TINKER -> showStackDescDialog(
+                                R.string.localDetailsTinker,
+                                R.string.localDetailsTinkerDesc,
+                                DEX_PRE_RULES.find { it.id == item.id }?.url,
+                                R.drawable.oteam_official
                             )
 
                             else -> null
@@ -513,7 +553,12 @@ class LocalAppDetailsActivity : AppCompatActivity() {
                                     LocalAppDetailsActivityViewModel.RULE_ID_JETPACK_COMPOSE -> R.drawable.compose
                                     LocalAppDetailsActivityViewModel.RULE_ID_COMPOSE_MULTIPLATFORM -> R.drawable.compose
                                     LocalAppDetailsActivityViewModel.RULE_ID_FLUTTER -> R.drawable.icon_flutter_dk_blue
-                                    else -> R.drawable.stack_line
+                                    else -> when (DEX_PRE_RULES.find { it.id == item.id }?.type) {
+                                        RULE_TYPE_PRITIVE_TENCENT -> R.drawable.tencent_logo
+                                        RULE_TYPE_OPEN_SOURCE_3RD_PARTY -> R.drawable.open_source_line
+                                        RULE_TYPE_OTEAM_TENCENT -> R.drawable.oteam_official
+                                        else -> R.drawable.tools_line
+                                    }
                                 }
                             ),
                             contentDescription = null,

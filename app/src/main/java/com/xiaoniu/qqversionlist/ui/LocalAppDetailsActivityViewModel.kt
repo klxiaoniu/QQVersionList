@@ -50,6 +50,11 @@ import kotlin.use
 
 class LocalAppDetailsActivityViewModel : ViewModel() {
     companion object {
+        const val RULE_TYPE_PRITIVE_TENCENT = "Tencent Pritive" // 腾讯私有库
+        const val RULE_TYPE_PRITIVE_3RD_PARTY = "3rd Party Pritive" // 第三方私有库
+        const val RULE_TYPE_OTEAM_TENCENT = "Tencent Oteam" // 腾讯开源协同
+        const val RULE_TYPE_OPEN_SOURCE_3RD_PARTY = "3rd Party Open Source" // 第三方开源库
+
         const val RULE_ID_QQNT = "QQNT"
         const val RULE_ID_BUGLY = "Bugly"
         const val RULE_ID_SHIPLY = "Shiply"
@@ -61,6 +66,11 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
         const val RULE_ID_JETPACK_COMPOSE = "Jetpack Compose"
         const val RULE_ID_COMPOSE_MULTIPLATFORM = "Compose Multiplatform"
         const val RULE_ID_FLUTTER = "Flutter"
+        const val RULE_ID_MMKV = "MMKV"
+        const val RULE_ID_WCDB = "WCDB"
+        const val RULE_ID_MARS = "Mars"
+        const val RULE_ID_MATRIX = "Matrix"
+        const val RULE_ID_TINKER = "Tinker"
 
         val DEX_QQNT = arrayOf("com.tencent.qqnt")
         val DEX_BUGLY = arrayOf("com.tencent.bugly")
@@ -73,19 +83,64 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
         val DEX_JETPACK_COMPOSE = arrayOf("androidx.compose")
         val DEX_COMPOSE_MULTIPLATFORM = arrayOf("org.jetbrains.compose")
         val DEX_FLUTTER = arrayOf("io.flutter")
+        val DEX_MMKV = arrayOf("com.tencent.mmkv")
+        val DEX_WCDB = arrayOf("com.tencent.wcdb")
+        val DEX_MARS = arrayOf("com.tencent.mars")
+        val DEX_MATRIX = arrayOf("com.tencent.matrix")
+        val DEX_TINKER = arrayOf("com.tencent.tinker")
+
+        const val URL_BUGLY = "https://bugly.tds.qq.com/v2/index/tds-main"
+        const val URL_UE_LIBRARY =
+            "https://dev.epicgames.com/documentation/unreal-engine/building-unreal-engine-as-a-library"
+        const val URL_HIPPY = "https://openhippy.com/"
+        const val URL_SHIPLY = "https://shiply.tds.qq.com/"
+        const val URL_RIGHTLY = "https://rightly.tds.qq.com/"
+        const val URL_TENCENT_BEACON = "https://beacon.qq.com/"
+        const val URL_JETPACK_COMPOSE = "https://developer.android.com/compose"
+        const val URL_COMPOSE_MULTIPLATFORM = "https://www.jetbrains.com/compose-multiplatform/"
+        const val URL_FLUTTER = "https://flutter.dev/"
+        const val URL_MMKV = "https://github.com/Tencent/MMKV"
+        const val URL_WCDB = "https://github.com/Tencent/wcdb"
+        const val URL_MARS = "https://github.com/Tencent/Mars"
+        const val URL_MATRIX = "https://github.com/Tencent/matrix"
+        const val URL_TINKER = "https://github.com/Tencent/tinker"
 
         val DEX_PRE_RULES = listOf<LocalAppStackRule>(
-            LocalAppStackRule(RULE_ID_QQNT, DEX_QQNT),
-            LocalAppStackRule(RULE_ID_BUGLY, DEX_BUGLY),
-            LocalAppStackRule(RULE_ID_SHIPLY, DEX_SHIPLY),
-            LocalAppStackRule(RULE_ID_KUIKLY, DEX_KUIKLY),
-            LocalAppStackRule(RULE_ID_HIPPY, DEX_HIPPY),
-            LocalAppStackRule(RULE_ID_RIGHTLY, DEX_RIGHTLY),
-            LocalAppStackRule(RULE_ID_UE_LIBRARY, DEX_UE_LIBRARY),
-            LocalAppStackRule(RULE_ID_TENCENT_BEACON, DEX_TENCENT_BEACON),
-            LocalAppStackRule(RULE_ID_JETPACK_COMPOSE, DEX_JETPACK_COMPOSE),
-            LocalAppStackRule(RULE_ID_COMPOSE_MULTIPLATFORM, DEX_COMPOSE_MULTIPLATFORM),
-            LocalAppStackRule(RULE_ID_FLUTTER, DEX_FLUTTER)
+            LocalAppStackRule(RULE_ID_QQNT, DEX_QQNT, RULE_TYPE_PRITIVE_TENCENT),
+            LocalAppStackRule(RULE_ID_BUGLY, DEX_BUGLY, RULE_TYPE_PRITIVE_TENCENT, URL_BUGLY),
+            LocalAppStackRule(RULE_ID_SHIPLY, DEX_SHIPLY, RULE_TYPE_PRITIVE_TENCENT, URL_SHIPLY),
+            LocalAppStackRule(RULE_ID_KUIKLY, DEX_KUIKLY, RULE_TYPE_PRITIVE_TENCENT),
+            LocalAppStackRule(RULE_ID_HIPPY, DEX_HIPPY, RULE_TYPE_PRITIVE_TENCENT, URL_HIPPY),
+            LocalAppStackRule(RULE_ID_RIGHTLY, DEX_RIGHTLY, RULE_TYPE_PRITIVE_TENCENT, URL_RIGHTLY),
+            LocalAppStackRule(
+                RULE_ID_UE_LIBRARY, DEX_UE_LIBRARY, RULE_TYPE_PRITIVE_3RD_PARTY, URL_UE_LIBRARY
+            ),
+            LocalAppStackRule(
+                RULE_ID_TENCENT_BEACON,
+                DEX_TENCENT_BEACON,
+                RULE_TYPE_PRITIVE_TENCENT,
+                URL_TENCENT_BEACON
+            ),
+            LocalAppStackRule(
+                RULE_ID_JETPACK_COMPOSE,
+                DEX_JETPACK_COMPOSE,
+                RULE_TYPE_OPEN_SOURCE_3RD_PARTY,
+                URL_JETPACK_COMPOSE
+            ),
+            LocalAppStackRule(
+                RULE_ID_COMPOSE_MULTIPLATFORM,
+                DEX_COMPOSE_MULTIPLATFORM,
+                RULE_TYPE_OPEN_SOURCE_3RD_PARTY,
+                URL_COMPOSE_MULTIPLATFORM
+            ),
+            LocalAppStackRule(
+                RULE_ID_FLUTTER, DEX_FLUTTER, RULE_TYPE_OPEN_SOURCE_3RD_PARTY, URL_FLUTTER
+            ),
+            LocalAppStackRule(RULE_ID_MMKV, DEX_MMKV, RULE_TYPE_OTEAM_TENCENT, URL_MMKV),
+            LocalAppStackRule(RULE_ID_WCDB, DEX_WCDB, RULE_TYPE_OTEAM_TENCENT, URL_WCDB),
+            LocalAppStackRule(RULE_ID_MARS, DEX_MARS, RULE_TYPE_OTEAM_TENCENT, URL_MARS),
+            LocalAppStackRule(RULE_ID_MATRIX, DEX_MATRIX, RULE_TYPE_OTEAM_TENCENT, URL_MATRIX),
+            LocalAppStackRule(RULE_ID_TINKER, DEX_TINKER, RULE_TYPE_OTEAM_TENCENT, URL_TINKER)
         )
 
         val RULES_ID_ORDER = listOf(
