@@ -129,149 +129,158 @@ class LocalAppDetailsActivity : AppCompatActivity() {
                 isLoading.observe(this@LocalAppDetailsActivity) { isLoading ->
                     if (isLoading) {
                         progressLine.show()
+                        detailInfo.isVisible = false
                         detailInfo.setOnClickListener(null)
                     } else {
                         progressLine.hide()
-                        detailInfo.setOnClickListener {
-                            val localInfoAllText = (if (targetSDK.value != 0) "Target SDK${
-                                getString(R.string.colon)
-                            }${targetSDK.value}" else "") + (if (minSDK.value != 0) "\nMin SDK${
-                                getString(R.string.colon)
-                            }${minSDK.value}" else "") + (if (compileSDK.value != 0) "\nCompile SDK${
-                                getString(R.string.colon)
-                            }${
-                                compileSDK.value
-                            }" else "") + "\nVersion Name${getString(R.string.colon)}${
-                                versionName.value
-                            }" + (if (rdmUUID.value != "") "\nRdm UUID${
-                                getString(R.string.colon)
-                            }${
-                                rdmUUID.value
-                            }" else "") + (if (versionCode.value != "") "\nVersion Code${
-                                getString(R.string.colon)
-                            }${
-                                versionCode.value
-                            }" else "") + (if (appSettingParams.value != "") "\nAppSetting_params${
-                                getString(R.string.colon)
-                            }${
-                                appSettingParams.value
-                            }" else "") + (if (appSettingParamsPad.value != "") "\nAppSetting_params_pad${
-                                getString(R.string.colon)
-                            }${
-                                appSettingParamsPad.value
-                            }" else "") + (if (qua.value != "") "\nQUA${
-                                getString(R.string.colon)
-                            }${qua.value}" else "")
+                        if (isWeixin.value == false && isErr.value == false) {
+                            detailInfo.isVisible = true
+                            detailInfo.setOnClickListener {
+                                val localInfoAllText = (if (targetSDK.value != 0) "Target SDK${
+                                    getString(R.string.colon)
+                                }${targetSDK.value}" else "") + (if (minSDK.value != 0) "\nMin SDK${
+                                    getString(R.string.colon)
+                                }${minSDK.value}" else "") + (if (compileSDK.value != 0) "\nCompile SDK${
+                                    getString(R.string.colon)
+                                }${
+                                    compileSDK.value
+                                }" else "") + "\nVersion Name${getString(R.string.colon)}${
+                                    versionName.value
+                                }" + (if (rdmUUID.value != "") "\nRdm UUID${
+                                    getString(R.string.colon)
+                                }${
+                                    rdmUUID.value
+                                }" else "") + (if (versionCode.value != "") "\nVersion Code${
+                                    getString(R.string.colon)
+                                }${
+                                    versionCode.value
+                                }" else "") + (if (appSettingParams.value != "") "\nAppSetting_params${
+                                    getString(R.string.colon)
+                                }${
+                                    appSettingParams.value
+                                }" else "") + (if (appSettingParamsPad.value != "") "\nAppSetting_params_pad${
+                                    getString(R.string.colon)
+                                }${
+                                    appSettingParamsPad.value
+                                }" else "") + (if (qua.value != "") "\nQUA${
+                                    getString(R.string.colon)
+                                }${qua.value}" else "")
 
-                            val dialogLocalQqTimInfoBinding = DialogLocalQqTimInfoBinding.inflate(
-                                LayoutInflater.from(this@LocalAppDetailsActivity)
-                            )
+                                val dialogLocalQqTimInfoBinding =
+                                    DialogLocalQqTimInfoBinding.inflate(
+                                        LayoutInflater.from(this@LocalAppDetailsActivity)
+                                    )
 
-                            MaterialAlertDialogBuilder(this@LocalAppDetailsActivity).setView(
-                                dialogLocalQqTimInfoBinding.root
-                            ).setTitle(R.string.localDetailsMsg).setIcon(R.drawable.phone_find_line)
-                                .apply {
-                                    dialogLocalQqTimInfoBinding.apply {
-                                        val dialogLocalSdkDesc = localSDKText.value
+                                MaterialAlertDialogBuilder(this@LocalAppDetailsActivity).setView(
+                                    dialogLocalQqTimInfoBinding.root
+                                ).setTitle(R.string.localDetailsMsg)
+                                    .setIcon(R.drawable.phone_find_line).apply {
+                                        dialogLocalQqTimInfoBinding.apply {
+                                            val dialogLocalSdkDesc = localSDKText.value
 
-                                        dialogLocalSdk.apply {
-                                            setCellDescription(dialogLocalSdkDesc)
-                                            this.setOnClickListener {
-                                                context.copyText(
-                                                    "Android SDK${
-                                                        getString(R.string.colon)
-                                                    }$dialogLocalSdkDesc"
-                                                )
+                                            dialogLocalSdk.apply {
+                                                setCellDescription(dialogLocalSdkDesc)
+                                                this.setOnClickListener {
+                                                    context.copyText(
+                                                        "Android SDK${
+                                                            getString(R.string.colon)
+                                                        }$dialogLocalSdkDesc"
+                                                    )
+                                                }
+                                            }
+                                            dialogLocalVersionName.apply {
+                                                setCellDescription(versionName.value)
+                                                this.setOnClickListener {
+                                                    context.copyText(
+                                                        "Version Name${
+                                                            getString(R.string.colon)
+                                                        }${versionName.value}"
+                                                    )
+                                                }
+                                            }
+                                            dialogLocalRdmUuid.apply {
+                                                if (rdmUUID.value != "") {
+                                                    setCellDescription(rdmUUID.value)
+                                                    this.setOnClickListener {
+                                                        context.copyText(
+                                                            "Rdm UUID${
+                                                                getString(R.string.colon)
+                                                            }${rdmUUID.value}"
+                                                        )
+                                                    }
+                                                } else dialogLocalRdmUuid.isVisible = false
+                                            }
+                                            dialogLocalVersionCode.apply {
+                                                if (versionCode.value != "") {
+                                                    setCellDescription(versionCode.value)
+                                                    this.setOnClickListener {
+                                                        context.copyText(
+                                                            "Version Code${
+                                                                getString(R.string.colon)
+                                                            }${versionCode.value}"
+                                                        )
+                                                    }
+                                                } else dialogLocalVersionCode.isVisible = false
+                                            }
+                                            dialogLocalAppsettingParams.apply {
+                                                if (appSettingParams.value != "") {
+                                                    setCellDescription(appSettingParams.value)
+                                                    this.setOnClickListener {
+                                                        context.copyText(
+                                                            "AppSetting_params${
+                                                                getString(R.string.colon)
+                                                            }${appSettingParams.value}"
+                                                        )
+                                                    }
+                                                } else dialogLocalAppsettingParams.isVisible = false
+                                            }
+                                            dialogLocalAppsettingParamsPad.apply {
+                                                if (appSettingParamsPad.value != "") {
+                                                    setCellDescription(appSettingParamsPad.value)
+                                                    this.setOnClickListener {
+                                                        context.copyText(
+                                                            "AppSetting_params_pad${
+                                                                getString(R.string.colon)
+                                                            }${appSettingParamsPad.value}"
+                                                        )
+                                                    }
+                                                } else dialogLocalAppsettingParamsPad.isVisible =
+                                                    false
+                                            }
+                                            dialogLocalQua.apply {
+                                                if (qua.value != "") {
+                                                    setCellDescription(qua.value)
+                                                    this.setOnClickListener {
+                                                        context.copyText(
+                                                            "QUA${
+                                                                getString(
+                                                                    R.string.colon
+                                                                )
+                                                            }${qua.value}"
+                                                        )
+                                                    }
+                                                } else dialogLocalQua.isVisible = false
+                                            }
+                                            dialogLocalCopyAll.setOnClickListener {
+                                                context.copyText(localInfoAllText)
                                             }
                                         }
-                                        dialogLocalVersionName.apply {
-                                            setCellDescription(versionName.value)
-                                            this.setOnClickListener {
-                                                context.copyText(
-                                                    "Version Name${
-                                                        getString(R.string.colon)
-                                                    }${versionName.value}"
-                                                )
-                                            }
-                                        }
-                                        dialogLocalRdmUuid.apply {
-                                            if (rdmUUID.value != "") {
-                                                setCellDescription(rdmUUID.value)
-                                                this.setOnClickListener {
-                                                    context.copyText(
-                                                        "Rdm UUID${
-                                                            getString(R.string.colon)
-                                                        }${rdmUUID.value}"
-                                                    )
-                                                }
-                                            } else dialogLocalRdmUuid.isVisible = false
-                                        }
-                                        dialogLocalVersionCode.apply {
-                                            if (versionCode.value != "") {
-                                                setCellDescription(versionCode.value)
-                                                this.setOnClickListener {
-                                                    context.copyText(
-                                                        "Version Code${
-                                                            getString(R.string.colon)
-                                                        }${versionCode.value}"
-                                                    )
-                                                }
-                                            } else dialogLocalVersionCode.isVisible = false
-                                        }
-                                        dialogLocalAppsettingParams.apply {
-                                            if (appSettingParams.value != "") {
-                                                setCellDescription(appSettingParams.value)
-                                                this.setOnClickListener {
-                                                    context.copyText(
-                                                        "AppSetting_params${
-                                                            getString(R.string.colon)
-                                                        }${appSettingParams.value}"
-                                                    )
-                                                }
-                                            } else dialogLocalAppsettingParams.isVisible = false
-                                        }
-                                        dialogLocalAppsettingParamsPad.apply {
-                                            if (appSettingParamsPad.value != "") {
-                                                setCellDescription(appSettingParamsPad.value)
-                                                this.setOnClickListener {
-                                                    context.copyText(
-                                                        "AppSetting_params_pad${
-                                                            getString(R.string.colon)
-                                                        }${appSettingParamsPad.value}"
-                                                    )
-                                                }
-                                            } else dialogLocalAppsettingParamsPad.isVisible = false
-                                        }
-                                        dialogLocalQua.apply {
-                                            if (qua.value != "") {
-                                                setCellDescription(qua.value)
-                                                this.setOnClickListener {
-                                                    context.copyText(
-                                                        "QUA${
-                                                            getString(
-                                                                R.string.colon
-                                                            )
-                                                        }${qua.value}"
-                                                    )
-                                                }
-                                            } else dialogLocalQua.isVisible = false
-                                        }
-                                        dialogLocalCopyAll.setOnClickListener {
-                                            context.copyText(localInfoAllText)
-                                        }
-                                    }
-                                }.show()
+                                    }.show()
+                            }
+                        } else {
+                            detailInfo.isVisible = false
+                            detailInfo.setOnClickListener(null)
                         }
                     }
                 }
                 channelText.observe(this@LocalAppDetailsActivity) { text ->
-                    if (text == "") binding.localChannelCard.isVisible = false else {
+                    if (text == "" || isWeixin.value == true) binding.localChannelCard.isVisible =
+                        false else {
                         localChannelCard.isVisible = true
                         localChannelText.text = text
                     }
                 }
                 isErr.observe(this@LocalAppDetailsActivity) { isErr ->
-                    detailInfo.isVisible = !isErr
                     stackInfo.isVisible = !isErr
                 }
                 observeString(appName, binding.localName)
@@ -286,13 +295,15 @@ class LocalAppDetailsActivity : AppCompatActivity() {
             when {
                 intent.hasExtra("localAppType") -> {
                     val localAppType = intent.getStringExtra("localAppType")
-                    if (localAppType == "QQ" || localAppType == "TIM") viewModel.getInfo(
+                    if (localAppType == "QQ" || localAppType == "TIM" || localAppType == "Weixin") viewModel.getInfo(
                         this, localAppType
                     )
                     if (localAppType == "QQ") binding.topAppBar.title =
                         getString(R.string.localQQVersionDetails)
                     else if (localAppType == "TIM") binding.topAppBar.title =
                         getString(R.string.localTIMVersionDetails)
+                    else if (localAppType == "Weixin") binding.topAppBar.title =
+                        getString(R.string.localWeixinVersionDetails)
                 }
 
                 intent.action == Intent.ACTION_SEND || intent.action == Intent.ACTION_VIEW -> {
@@ -346,6 +357,11 @@ class LocalAppDetailsActivity : AppCompatActivity() {
             e.printStackTrace()
             dialogError(e)
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.cleanCache(this)
     }
 
     private fun observeString(liveData: LiveData<String>, textView: TextView) {
@@ -492,7 +508,7 @@ class LocalAppDetailsActivity : AppCompatActivity() {
                                 R.string.localDetailsFlutter,
                                 R.string.localDetailsFlutterDesc,
                                 DEX_PRE_RULES.find { it.id == item.id }?.url,
-                                R.drawable.icon_flutter_dk_blue
+                                R.drawable.flutter_line
                             )
 
                             LocalAppDetailsActivityViewModel.RULE_ID_MMKV -> showStackDescDialog(
@@ -530,6 +546,13 @@ class LocalAppDetailsActivity : AppCompatActivity() {
                                 R.drawable.oteam_official
                             )
 
+                            LocalAppDetailsActivityViewModel.RULE_ID_REACT_NATIVE -> showStackDescDialog(
+                                R.string.localDetailsReactNative,
+                                R.string.localDetailsReactNativeDesc,
+                                DEX_PRE_RULES.find { it.id == item.id }?.url,
+                                R.drawable.reactjs_line
+                            )
+
                             else -> null
                         }
                     }) {
@@ -552,7 +575,8 @@ class LocalAppDetailsActivity : AppCompatActivity() {
                                     LocalAppDetailsActivityViewModel.RULE_ID_TENCENT_BEACON -> R.drawable.beacon_official
                                     LocalAppDetailsActivityViewModel.RULE_ID_JETPACK_COMPOSE -> R.drawable.compose
                                     LocalAppDetailsActivityViewModel.RULE_ID_COMPOSE_MULTIPLATFORM -> R.drawable.compose
-                                    LocalAppDetailsActivityViewModel.RULE_ID_FLUTTER -> R.drawable.icon_flutter_dk_blue
+                                    LocalAppDetailsActivityViewModel.RULE_ID_FLUTTER -> R.drawable.flutter_line
+                                    LocalAppDetailsActivityViewModel.RULE_ID_REACT_NATIVE -> R.drawable.reactjs_line
                                     else -> when (DEX_PRE_RULES.find { it.id == item.id }?.type) {
                                         RULE_TYPE_PRITIVE_TENCENT -> R.drawable.tencent_logo
                                         RULE_TYPE_OPEN_SOURCE_3RD_PARTY -> R.drawable.open_source_line

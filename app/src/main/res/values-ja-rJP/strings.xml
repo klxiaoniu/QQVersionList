@@ -285,4 +285,7 @@
     <string name="localDetailsMarsDesc">Mars 是微信官方的跨平台跨业务的终端基础组件。</string>
     <string name="localDetailsMatrix">Matrix</string>
     <string name="localDetailsMatrixDesc">Matrix 是一款微信研发并日常使用的应用性能接入框架，支持 iOS, macOS 和 Android。 Matrix 通过接入各种性能监控方案，对性能监控项的异常数据进行采集和分析，输出相应的问题分析、定位与优化建议，从而帮助开发者开发出更高质量的应用。</string>
+    <string name="localWeixinVersionDetails">本机微信版本详情</string>
+    <string name="localDetailsReactNativeDesc">React Native 将 React 的声明式 UI 框架引入 iOS 和 Android。使用 React Native，您可以直接使用原生 UI 控件，并拥有对原生平台的完整访问权限。</string>
+    <string name="localDetailsReactNative">React Native</string>
 </resources>

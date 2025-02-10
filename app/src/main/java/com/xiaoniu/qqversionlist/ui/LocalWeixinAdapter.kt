@@ -19,6 +19,7 @@
 package com.xiaoniu.qqversionlist.ui
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
@@ -26,6 +27,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.xiaoniu.qqversionlist.R
 import com.xiaoniu.qqversionlist.databinding.LocalWeixinBinding
 import com.xiaoniu.qqversionlist.util.DataStoreUtil
+import com.xiaoniu.qqversionlist.util.InfoUtil.showToast
 
 class LocalWeixinAdapter : RecyclerView.Adapter<LocalWeixinAdapter.LocalWeixinViewHolder>() {
 
@@ -43,6 +45,14 @@ class LocalWeixinAdapter : RecyclerView.Adapter<LocalWeixinAdapter.LocalWeixinVi
                 itemWeixinInstallText.text =
                     itemView.context.getString(R.string.localWeixinVersion) + WeixinVersionInstallKV + (if (WeixinVersionCodeInstallKV != "") " (${WeixinVersionCodeInstallKV})" else "")
                 itemWeixinInstallCard.isVisible = true
+                itemWeixinInstallCard.setOnLongClickListener {
+                    if (DataStoreUtil.getBooleanKV("longPressCard", true)) {
+                        itemView.context.startActivity(Intent(
+                            itemView.context, LocalAppDetailsActivity::class.java
+                        ).apply { putExtra("localAppType", "Weixin") })
+                    } else showToast(R.string.longPressToViewSourceDetailsIsDisabled)
+                    true
+                }
             } else itemWeixinInstallCard.isVisible = false
         }
     }

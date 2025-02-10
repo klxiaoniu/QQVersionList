@@ -31,6 +31,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.xiaoniu.qqversionlist.QverbowApplication.Companion.ANDROID_QQ_PACKAGE_NAME
 import com.xiaoniu.qqversionlist.QverbowApplication.Companion.ANDROID_TIM_PACKAGE_NAME
+import com.xiaoniu.qqversionlist.QverbowApplication.Companion.ANDROID_WECHAT_PACKAGE_NAME
 import com.xiaoniu.qqversionlist.R
 import com.xiaoniu.qqversionlist.data.LocalAppStackResult
 import com.xiaoniu.qqversionlist.data.LocalAppStackRule
@@ -52,9 +53,8 @@ import kotlin.use
 
 class LocalAppDetailsActivityViewModel : ViewModel() {
     private val getDataJob = Job()
-    private val uiScope = CoroutineScope(Dispatchers.Main + getDataJob)
-    private val ioScope = CoroutineScope(Dispatchers.IO + getDataJob)
-    private val semaphore = Semaphore(5)
+    val uiScope = CoroutineScope(Dispatchers.Main + getDataJob)
+    val ioScope = CoroutineScope(Dispatchers.IO + getDataJob)
 
     companion object {
         const val RULE_TYPE_PRITIVE_TENCENT = "Tencent Pritive" // 腾讯私有库
@@ -78,6 +78,7 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
         const val RULE_ID_MARS = "Mars"
         const val RULE_ID_MATRIX = "Matrix"
         const val RULE_ID_TINKER = "Tinker"
+        const val RULE_ID_REACT_NATIVE = "React Native"
 
         val DEX_QQNT = arrayOf("com.tencent.qqnt")
         val DEX_BUGLY = arrayOf("com.tencent.bugly")
@@ -95,6 +96,7 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
         val DEX_MARS = arrayOf("com.tencent.mars")
         val DEX_MATRIX = arrayOf("com.tencent.matrix")
         val DEX_TINKER = arrayOf("com.tencent.tinker")
+        val DEX_REACT_NATIVE = arrayOf("com.facebook.react")
 
         const val URL_BUGLY = "https://bugly.tds.qq.com/v2/index/tds-main"
         const val URL_UE_LIBRARY =
@@ -111,6 +113,7 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
         const val URL_MARS = "https://github.com/Tencent/Mars"
         const val URL_MATRIX = "https://github.com/Tencent/matrix"
         const val URL_TINKER = "https://github.com/Tencent/tinker"
+        const val URL_REACT_NATIVE = "https://reactnative.dev/"
 
         val DEX_PRE_RULES = listOf<LocalAppStackRule>(
             LocalAppStackRule(RULE_ID_QQNT, DEX_QQNT, RULE_TYPE_PRITIVE_TENCENT),
@@ -147,7 +150,13 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
             LocalAppStackRule(RULE_ID_WCDB, DEX_WCDB, RULE_TYPE_OTEAM_TENCENT, URL_WCDB),
             LocalAppStackRule(RULE_ID_MARS, DEX_MARS, RULE_TYPE_OTEAM_TENCENT, URL_MARS),
             LocalAppStackRule(RULE_ID_MATRIX, DEX_MATRIX, RULE_TYPE_OTEAM_TENCENT, URL_MATRIX),
-            LocalAppStackRule(RULE_ID_TINKER, DEX_TINKER, RULE_TYPE_OTEAM_TENCENT, URL_TINKER)
+            LocalAppStackRule(RULE_ID_TINKER, DEX_TINKER, RULE_TYPE_OTEAM_TENCENT, URL_TINKER),
+            LocalAppStackRule(
+                RULE_ID_REACT_NATIVE,
+                DEX_REACT_NATIVE,
+                RULE_TYPE_OPEN_SOURCE_3RD_PARTY,
+                URL_REACT_NATIVE
+            )
         )
 
         val RULES_ID_ORDER = listOf(
@@ -155,6 +164,7 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
             RULE_ID_COMPOSE_MULTIPLATFORM,
             RULE_ID_JETPACK_COMPOSE,
             RULE_ID_FLUTTER,
+            RULE_ID_REACT_NATIVE,
             RULE_ID_UE_LIBRARY,
             RULE_ID_BUGLY,
             RULE_ID_SHIPLY,
@@ -185,6 +195,9 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
 
     private val _timBasedVer = MutableLiveData<String>().apply { value = "" }
     val timBasedVer: LiveData<String> = _timBasedVer
+
+    private val _isWeixin = MutableLiveData<Boolean>().apply { value = false }
+    val isWeixin: LiveData<Boolean> = _isWeixin
 
     // 基础信息
     private val _appName = MutableLiveData<String>().apply { value = "" }
@@ -253,6 +266,10 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
         _timBasedVer.value = context.getString(R.string.basedOnQQVer, ver)
     }
 
+    fun setIsWeixin(isWeixin: Boolean) {
+        _isWeixin.value = isWeixin
+    }
+
     fun setAppName(appName: String) {
         _appName.value = appName
     }
@@ -316,24 +333,36 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
             }
         } else {
             setIsTIM(type == "TIM")
+            setIsWeixin(type == "Weixin")
             packageInfo = activity.packageManager.getPackageInfo(
-                if (type == "TIM") ANDROID_TIM_PACKAGE_NAME else ANDROID_QQ_PACKAGE_NAME, 0
+                when (type) {
+                    "TIM" -> ANDROID_TIM_PACKAGE_NAME
+                    "Weixin" -> ANDROID_WECHAT_PACKAGE_NAME
+                    else -> ANDROID_QQ_PACKAGE_NAME
+                }, 0
             )
             applicationInfo = activity.packageManager.getApplicationInfo(
-                if (type == "TIM") ANDROID_TIM_PACKAGE_NAME else ANDROID_QQ_PACKAGE_NAME,
-                PackageManager.GET_META_DATA
+                when (type) {
+                    "TIM" -> ANDROID_TIM_PACKAGE_NAME
+                    "Weixin" -> ANDROID_WECHAT_PACKAGE_NAME
+                    else -> ANDROID_QQ_PACKAGE_NAME
+                }, PackageManager.GET_META_DATA
             )
         }
         if (packageInfo == null || applicationInfo == null) {
-            setLoading(false)
+            setErr(true)
             setAppName(activity.getString(R.string.unknownErr))
             cleanCache(activity)
-            setErr(true)
+            setLoading(false)
             return
         }
         val packageName = getAppPackageName(applicationInfo)
-        if (packageName == ANDROID_QQ_PACKAGE_NAME || packageName == ANDROID_TIM_PACKAGE_NAME) {
-            if (packageName == ANDROID_TIM_PACKAGE_NAME) setIsTIM(true)
+        if (packageName == ANDROID_QQ_PACKAGE_NAME || packageName == ANDROID_TIM_PACKAGE_NAME || packageName == ANDROID_WECHAT_PACKAGE_NAME) {
+            when (packageName) {
+                ANDROID_TIM_PACKAGE_NAME -> setIsTIM(true)
+                ANDROID_WECHAT_PACKAGE_NAME -> setIsWeixin(true)
+            }
+
             val allJobs = mutableListOf<Job>().apply {
                 add(ioScope.launch {
                     val baseJobs = mutableListOf<Job>().apply {
@@ -370,23 +399,25 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
                             }
                         })
                         checkAndSetProperty(this, ::getVersionName, ::setVersionName, packageInfo)
-                        checkAndSetProperty(this, ::getRdmUUID, ::setRdmUUID, applicationInfo)
                         checkAndSetProperty(this, ::getVersionCode, ::setVersionCode, packageInfo)
-                        checkAndSetProperty(
-                            this, ::getAppSettingParams, ::setAppSettingParams, applicationInfo
-                        )
-                        checkAndSetProperty(
-                            this,
-                            ::getAppSettingParamsPad,
-                            ::setAppSettingParamsPad,
-                            applicationInfo
-                        )
-                        add(ioScope.launch {
-                            val qua = getQua(packageInfo)
-                            withContext(Dispatchers.Main) {
-                                setQua(if (qua.isNullOrEmpty()) "" else qua.replace("\n", ""))
-                            }
-                        })
+                        if (isWeixin.value == false) {
+                            checkAndSetProperty(this, ::getRdmUUID, ::setRdmUUID, applicationInfo)
+                            checkAndSetProperty(
+                                this, ::getAppSettingParams, ::setAppSettingParams, applicationInfo
+                            )
+                            checkAndSetProperty(
+                                this,
+                                ::getAppSettingParamsPad,
+                                ::setAppSettingParamsPad,
+                                applicationInfo
+                            )
+                            add(ioScope.launch {
+                                val qua = getQua(packageInfo)
+                                withContext(Dispatchers.Main) {
+                                    setQua(if (qua.isNullOrEmpty()) "" else qua.replace("\n", ""))
+                                }
+                            })
+                        }
                     }
                     baseJobs.joinAll()
                     withContext(Dispatchers.Main) {
@@ -395,23 +426,31 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
                                 "Target ${targetSDK.value} | Min ${minSDK.value}"
                             )
                         }
-                        versionCode.value?.let { versionCode ->
-                            rdmUUID.value?.let { rdmUUID ->
-                                setLocalVersion("${versionName.value}.${rdmUUID.split("_")[0]} ($versionCode)")
+                        if (isWeixin.value == true) {
+                            setLocalVersion("${versionName.value} (${versionCode.value})")
+                        } else {
+                            versionCode.value?.let { versionCode ->
+                                rdmUUID.value?.let { rdmUUID ->
+                                    setLocalVersion("${versionName.value}.${rdmUUID.split("_")[0]} ($versionCode)")
+                                } ?: setLocalVersion(
+                                    "${versionName.value}.${rdmUUID.value!!.split("_")[0]}"
+                                )
                             }
                                 ?: setLocalVersion("${versionName.value}.${rdmUUID.value!!.split("_")[0]}")
-                        }
-                            ?: setLocalVersion("${versionName.value}.${rdmUUID.value!!.split("_")[0]}")
-                        appSettingParams.value?.let { appSettingParams ->
-                            val parts = appSettingParams.split("#")
-                            if (parts.size > 3) setChannelText(parts[3]) else setChannelText("")
-                        } ?: setChannelText("")
-                        if (isTIM.value == true) qua.value?.let { qua ->
-                            setTIMBasedVer(activity, if (qua.length > 3) qua.split("_")[3] else "")
+                            appSettingParams.value?.let { appSettingParams ->
+                                val parts = appSettingParams.split("#")
+                                if (parts.size > 3) setChannelText(parts[3]) else setChannelText("")
+                            } ?: setChannelText("")
+                            if (isTIM.value == true) qua.value?.let { qua ->
+                                setTIMBasedVer(
+                                    activity, if (qua.length > 3) qua.split("_")[3] else ""
+                                )
+                            }
                         }
                     }
                 })
                 add(ioScope.launch {
+                    val semaphore = Semaphore(3)
                     val dexJobs = mutableListOf<Job>()
                     DEX_PRE_RULES.forEach { rule ->
                         dexJobs.add(ioScope.launch {
@@ -441,9 +480,9 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
                 cleanCache(activity)
             }
         } else {
+            setErr(true)
             setAppName(activity.getString(R.string.packageNameIsErr))
             setLoading(false)
-            setErr(true)
             cleanCache(activity)
             return
         }
@@ -527,7 +566,7 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
         return null
     }
 
-    private fun cleanCache(activity: Activity) {
+    fun cleanCache(activity: Activity) {
         val cacheDir = File(activity.cacheDir, "apkAnalysis")
         if (cacheDir.exists()) cacheDir.deleteRecursively()
     }

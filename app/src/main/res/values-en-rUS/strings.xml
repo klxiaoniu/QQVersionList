@@ -285,4 +285,7 @@
     <string name="localDetailsMarsDesc">Mars is a cross-platform infrastructure component developed by WeChat Mobile Team.</string>
     <string name="localDetailsMatrix">Matrix</string>
     <string name="localDetailsMatrixDesc">Matrix is an APM (Application Performance Manage) used in WeChat to monitor, locate and analyse performance problems. It is a plugin style, non-invasive solution and is currently available on iOS, macOS and Android.</string>
+    <string name="localWeixinVersionDetails">Local Weixin/WeChat Version Details</string>
+    <string name="localDetailsReactNativeDesc">React Native brings React\'s declarative UI framework to iOS and Android. With React Native, you use native UI controls and have full access to the native platform.</string>
+    <string name="localDetailsReactNative">React Native</string>
 </resources>
