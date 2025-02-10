@@ -159,7 +159,6 @@ import java.lang.Thread.sleep
 import java.util.Locale
 import java.util.zip.GZIPInputStream
 
-
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     lateinit var qqVersionAdapter: QQVersionAdapter

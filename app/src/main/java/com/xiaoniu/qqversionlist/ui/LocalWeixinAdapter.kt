@@ -19,17 +19,13 @@
 package com.xiaoniu.qqversionlist.ui
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.xiaoniu.qqversionlist.R
 import com.xiaoniu.qqversionlist.databinding.LocalWeixinBinding
-import com.xiaoniu.qqversionlist.util.ClipboardUtil.copyText
 import com.xiaoniu.qqversionlist.util.DataStoreUtil
-import com.xiaoniu.qqversionlist.util.InfoUtil.showToast
 
 class LocalWeixinAdapter : RecyclerView.Adapter<LocalWeixinAdapter.LocalWeixinViewHolder>() {
 

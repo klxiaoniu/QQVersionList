@@ -26,7 +26,6 @@ import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Build.VERSION.SDK_INT
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -40,8 +39,11 @@ import com.xiaoniu.qqversionlist.util.FileUtil.ZipFileCompat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
 import org.apache.commons.io.IOUtils
 import java.io.File
@@ -49,6 +51,11 @@ import java.nio.charset.Charset
 import kotlin.use
 
 class LocalAppDetailsActivityViewModel : ViewModel() {
+    private val getDataJob = Job()
+    private val uiScope = CoroutineScope(Dispatchers.Main + getDataJob)
+    private val ioScope = CoroutineScope(Dispatchers.IO + getDataJob)
+    private val semaphore = Semaphore(5)
+
     companion object {
         const val RULE_TYPE_PRITIVE_TENCENT = "Tencent Pritive" // 腾讯私有库
         const val RULE_TYPE_PRITIVE_3RD_PARTY = "3rd Party Pritive" // 第三方私有库
@@ -292,7 +299,6 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
 
     fun setLocalAppStackResults(result: MutableList<LocalAppStackResult>) {
         _localAppStackResults.value = result
-        Log.d("aaaaaaaa", "setLocalAppStackResults: ${result.joinToString()}")
     }
 
     fun getInfo(activity: Activity, type: String, appPath: String? = null) {
@@ -328,90 +334,110 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
         val packageName = getAppPackageName(applicationInfo)
         if (packageName == ANDROID_QQ_PACKAGE_NAME || packageName == ANDROID_TIM_PACKAGE_NAME) {
             if (packageName == ANDROID_TIM_PACKAGE_NAME) setIsTIM(true)
-            val jobs = mutableListOf<Job>().apply {
-                add(CoroutineScope(Dispatchers.IO).launch {
-                    val appName = getAppName(applicationInfo, activity)
+            val allJobs = mutableListOf<Job>().apply {
+                add(ioScope.launch {
+                    val baseJobs = mutableListOf<Job>().apply {
+                        add(ioScope.launch {
+                            val appName = getAppName(applicationInfo, activity)
+                            withContext(Dispatchers.Main) {
+                                setAppName(appName)
+                            }
+                        })
+                        add(ioScope.launch {
+                            val appIconImage = getAppIconImage(applicationInfo, activity)
+                            if (appIconImage != null) withContext(Dispatchers.Main) {
+                                setAppIconImage(appIconImage)
+                            }
+                        })
+                        add(ioScope.launch {
+                            val targetSDK = getTargetSDK(applicationInfo)
+                            withContext(Dispatchers.Main) {
+                                setTargetSDK(targetSDK)
+                            }
+                        })
+                        add(ioScope.launch {
+                            val minSDK = getMinSDK(applicationInfo)
+                            withContext(Dispatchers.Main) {
+                                setMinSDK(minSDK)
+                            }
+                        })
+                        add(ioScope.launch {
+                            val compileSDK = getCompileSDK(applicationInfo)
+                            withContext(Dispatchers.Main) {
+                                if (compileSDK != null) setCompileSDK(compileSDK) else setCompileSDK(
+                                    0
+                                )
+                            }
+                        })
+                        checkAndSetProperty(this, ::getVersionName, ::setVersionName, packageInfo)
+                        checkAndSetProperty(this, ::getRdmUUID, ::setRdmUUID, applicationInfo)
+                        checkAndSetProperty(this, ::getVersionCode, ::setVersionCode, packageInfo)
+                        checkAndSetProperty(
+                            this, ::getAppSettingParams, ::setAppSettingParams, applicationInfo
+                        )
+                        checkAndSetProperty(
+                            this,
+                            ::getAppSettingParamsPad,
+                            ::setAppSettingParamsPad,
+                            applicationInfo
+                        )
+                        add(ioScope.launch {
+                            val qua = getQua(packageInfo)
+                            withContext(Dispatchers.Main) {
+                                setQua(if (qua.isNullOrEmpty()) "" else qua.replace("\n", ""))
+                            }
+                        })
+                    }
+                    baseJobs.joinAll()
                     withContext(Dispatchers.Main) {
-                        setAppName(appName)
-                    }
-                })
-                add(CoroutineScope(Dispatchers.IO).launch {
-                    val appIconImage = getAppIconImage(applicationInfo, activity)
-                    if (appIconImage != null) withContext(Dispatchers.Main) {
-                        setAppIconImage(appIconImage)
-                    }
-                })
-                add(CoroutineScope(Dispatchers.IO).launch {
-                    val targetSDK = getTargetSDK(applicationInfo)
-                    withContext(Dispatchers.Main) {
-                        setTargetSDK(targetSDK)
-                    }
-                })
-                add(CoroutineScope(Dispatchers.IO).launch {
-                    val minSDK = getMinSDK(applicationInfo)
-                    withContext(Dispatchers.Main) {
-                        setMinSDK(minSDK)
-                    }
-                })
-                add(CoroutineScope(Dispatchers.IO).launch {
-                    val compileSDK = getCompileSDK(applicationInfo)
-                    withContext(Dispatchers.Main) {
-                        if (compileSDK != null) setCompileSDK(compileSDK) else setCompileSDK(0)
-                    }
-                })
-                checkAndSetProperty(this, ::getVersionName, ::setVersionName, packageInfo)
-                checkAndSetProperty(this, ::getRdmUUID, ::setRdmUUID, applicationInfo)
-                checkAndSetProperty(this, ::getVersionCode, ::setVersionCode, packageInfo)
-                checkAndSetProperty(
-                    this, ::getAppSettingParams, ::setAppSettingParams, applicationInfo
-                )
-                checkAndSetProperty(
-                    this, ::getAppSettingParamsPad, ::setAppSettingParamsPad, applicationInfo
-                )
-                add(CoroutineScope(Dispatchers.IO).launch {
-                    val qua = getQua(packageInfo)
-                    withContext(Dispatchers.Main) {
-                        setQua(if (qua.isNullOrEmpty()) "" else qua.replace("\n", ""))
-                    }
-                })
-            }
-            DEX_PRE_RULES.forEach { rule ->
-                jobs.add(CoroutineScope(Dispatchers.IO).launch {
-                    val findDex = checkLibrary(applicationInfo.sourceDir, rule.dex)
-                    if (findDex != null) {
-                        withContext(Dispatchers.Main) {
-                            val oldList = localAppStackResults.value
-                            val newList =
-                                (if (oldList.isNullOrEmpty()) mutableListOf() else oldList).apply {
-                                    if (!this.any { it.id == rule.id }) {
-                                        this.add(LocalAppStackResult(rule.id, findDex))
-                                    }
-                                }
-                            setLocalAppStackResults(newList.toMutableList())
+                        compileSDK.value?.let { sdkVersion ->
+                            if (sdkVersion != 0) setLocalSDKText("Target ${targetSDK.value} | Min ${minSDK.value} | Compile $sdkVersion") else setLocalSDKText(
+                                "Target ${targetSDK.value} | Min ${minSDK.value}"
+                            )
+                        }
+                        versionCode.value?.let { versionCode ->
+                            rdmUUID.value?.let { rdmUUID ->
+                                setLocalVersion("${versionName.value}.${rdmUUID.split("_")[0]} ($versionCode)")
+                            }
+                                ?: setLocalVersion("${versionName.value}.${rdmUUID.value!!.split("_")[0]}")
+                        }
+                            ?: setLocalVersion("${versionName.value}.${rdmUUID.value!!.split("_")[0]}")
+                        appSettingParams.value?.let { appSettingParams ->
+                            val parts = appSettingParams.split("#")
+                            if (parts.size > 3) setChannelText(parts[3]) else setChannelText("")
+                        } ?: setChannelText("")
+                        if (isTIM.value == true) qua.value?.let { qua ->
+                            setTIMBasedVer(activity, if (qua.length > 3) qua.split("_")[3] else "")
                         }
                     }
                 })
+                add(ioScope.launch {
+                    val dexJobs = mutableListOf<Job>()
+                    DEX_PRE_RULES.forEach { rule ->
+                        dexJobs.add(ioScope.launch {
+                            semaphore.withPermit {
+                                val findDex = checkLibrary(applicationInfo.sourceDir, rule.dex)
+                                if (findDex != null) {
+                                    withContext(Dispatchers.Main) {
+                                        val oldList = localAppStackResults.value
+                                        val newList =
+                                            (if (oldList.isNullOrEmpty()) mutableListOf() else oldList).apply {
+                                                if (!this.any { it.id == rule.id }) {
+                                                    this.add(LocalAppStackResult(rule.id, findDex))
+                                                }
+                                            }
+                                        setLocalAppStackResults(newList.toMutableList())
+                                    }
+                                }
+                            }
+                        })
+                    }
+                    dexJobs.joinAll()
+                })
             }
-            CoroutineScope(Dispatchers.Main).launch {
-                jobs.joinAll()
+            uiScope.launch {
+                allJobs.joinAll()
                 setLoading(false)
-                compileSDK.value?.let { sdkVersion ->
-                    if (sdkVersion != 0) setLocalSDKText("Target ${targetSDK.value} | Min ${minSDK.value} | Compile $sdkVersion") else setLocalSDKText(
-                        "Target ${targetSDK.value} | Min ${minSDK.value}"
-                    )
-                }
-                versionCode.value?.let { versionCode ->
-                    rdmUUID.value?.let { rdmUUID ->
-                        setLocalVersion("${versionName.value}.${rdmUUID.split("_")[0]} ($versionCode)")
-                    } ?: setLocalVersion("${versionName.value}.${rdmUUID.value!!.split("_")[0]}")
-                } ?: setLocalVersion("${versionName.value}.${rdmUUID.value!!.split("_")[0]}")
-                appSettingParams.value?.let { appSettingParams ->
-                    val parts = appSettingParams.split("#")
-                    if (parts.size > 3) setChannelText(parts[3]) else setChannelText("")
-                } ?: setChannelText("")
-                if (isTIM.value == true) qua.value?.let { qua ->
-                    setTIMBasedVer(activity, if (qua.length > 3) qua.split("_")[3] else "")
-                }
                 cleanCache(activity)
             }
         } else {
@@ -487,7 +513,7 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
         setProperty: (String) -> Unit,
         param: T
     ) {
-        jobs.add(CoroutineScope(Dispatchers.IO).launch {
+        jobs.add(ioScope.launch {
             val result = checkFunction(param)
             withContext(Dispatchers.Main) { setProperty(if (result.isNullOrEmpty()) "" else result) }
         })
@@ -504,5 +530,11 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
     private fun cleanCache(activity: Activity) {
         val cacheDir = File(activity.cacheDir, "apkAnalysis")
         if (cacheDir.exists()) cacheDir.deleteRecursively()
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        uiScope.cancel()
+        ioScope.cancel()
     }
 }
