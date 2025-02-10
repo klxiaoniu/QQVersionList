@@ -37,12 +37,12 @@ import com.xiaoniu.qqversionlist.data.WeixinVersionBean
 import com.xiaoniu.qqversionlist.ui.MainActivity
 import com.xiaoniu.qqversionlist.util.StringUtil.getQua
 import com.xiaoniu.qqversionlist.util.StringUtil.jsonArrayToList
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
 import org.apache.maven.artifact.versioning.ComparableVersion
 import org.jsoup.Jsoup
 import kotlinx.serialization.json.Json as KotlinJson
 import kotlinx.serialization.json.JsonElement as KotlinJsonElement
-import kotlinx.serialization.json.JsonObject as KotlinJsonObject
-import kotlinx.serialization.json.JsonPrimitive as KotlinJsonPrimitive
 
 object VersionUtil {
     fun resolveQQRainbow(thisActivity: MainActivity, responseData: String) {
@@ -200,11 +200,12 @@ object VersionUtil {
         val jsonData: Map<String, KotlinJsonElement> =
             json.decodeFromString(responseData.substring(start, end))
 
-        thisActivity.weixinVersion.forEach({
-            if (ComparableVersion(it.version) == ComparableVersion(((jsonData["prodItems"] as Map<*, *>)["andrVersion"] as KotlinJsonPrimitive).content)) {
-                val prodItems = jsonData["prodItems"] as KotlinJsonObject
-                it.link =
-                    ((prodItems["taskUrl"] as Map<*, *>)["bit64"] as KotlinJsonPrimitive).content
+        thisActivity.weixinVersion.forEach({ versionItem ->
+            val prodItems = jsonData["prodItems"]?.jsonObject
+            val andrVersion = prodItems?.get("andrVersion")?.jsonPrimitive?.content
+            if (andrVersion != null && ComparableVersion(versionItem.version) == ComparableVersion(andrVersion)) {
+                val bit64 = prodItems["taskUrl"]?.jsonObject?.get("bit64")?.jsonPrimitive?.content
+                if (bit64 != null) versionItem.link = bit64
             }
         })
     }

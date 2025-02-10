@@ -29,6 +29,7 @@ import android.os.Build.VERSION.SDK_INT
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.xiaoniu.qqversionlist.QverbowApplication.Companion.ANDROID_QQ_PACKAGE_NAME
 import com.xiaoniu.qqversionlist.QverbowApplication.Companion.ANDROID_TIM_PACKAGE_NAME
 import com.xiaoniu.qqversionlist.QverbowApplication.Companion.ANDROID_WECHAT_PACKAGE_NAME
@@ -52,9 +53,7 @@ import java.nio.charset.Charset
 import kotlin.use
 
 class LocalAppDetailsActivityViewModel : ViewModel() {
-    private val getDataJob = Job()
-    val uiScope = CoroutineScope(Dispatchers.Main + getDataJob)
-    val ioScope = CoroutineScope(Dispatchers.IO + getDataJob)
+    val ioScope = CoroutineScope(Dispatchers.IO)
 
     companion object {
         const val RULE_TYPE_PRITIVE_TENCENT = "Tencent Pritive" // 腾讯私有库
@@ -483,7 +482,7 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
                     dexJobs.joinAll()
                 })
             }
-            uiScope.launch {
+            viewModelScope.launch {
                 allJobs.joinAll()
                 setLoading(false)
                 cleanCache(activity)
@@ -582,7 +581,6 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
 
     override fun onCleared() {
         super.onCleared()
-        uiScope.cancel()
         ioScope.cancel()
     }
 }
