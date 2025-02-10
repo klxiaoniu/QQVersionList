@@ -553,6 +553,13 @@ class LocalAppDetailsActivity : AppCompatActivity() {
                                 R.drawable.reactjs_line
                             )
 
+                            LocalAppDetailsActivityViewModel.RULE_ID_TENCENT_BROWSING_SERVICE -> showStackDescDialog(
+                                R.string.localDetailsTBS,
+                                R.string.localDetailsTBSDesc,
+                                DEX_PRE_RULES.find { it.id == item.id }?.url,
+                                R.drawable.tencent_logo
+                            )
+
                             else -> null
                         }
                     }) {
@@ -642,6 +649,14 @@ class LocalAppDetailsActivity : AppCompatActivity() {
                                         R.string.localDetailsFlutter
                                     )
 
+                                    LocalAppDetailsActivityViewModel.RULE_ID_REACT_NATIVE -> stringResource(
+                                        R.string.localDetailsReactNative
+                                    )
+
+                                    LocalAppDetailsActivityViewModel.RULE_ID_TENCENT_BROWSING_SERVICE -> stringResource(
+                                        R.string.localDetailsTBS
+                                    )
+
                                     else -> item.id
                                 },
                                 style = MaterialTheme.typography.titleSmall,
@@ -655,7 +670,6 @@ class LocalAppDetailsActivity : AppCompatActivity() {
                                 modifier = Modifier.padding(top = 4.dp)
                             )
                         }
-
                         Image(
                             painter = painterResource(id = R.drawable.arrow_right_s_line),
                             contentDescription = null,

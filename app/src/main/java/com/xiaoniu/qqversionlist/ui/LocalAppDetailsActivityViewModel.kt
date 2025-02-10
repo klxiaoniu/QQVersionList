@@ -79,6 +79,7 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
         const val RULE_ID_MATRIX = "Matrix"
         const val RULE_ID_TINKER = "Tinker"
         const val RULE_ID_REACT_NATIVE = "React Native"
+        const val RULE_ID_TENCENT_BROWSING_SERVICE = "腾讯浏览服务"
 
         val DEX_QQNT = arrayOf("com.tencent.qqnt")
         val DEX_BUGLY = arrayOf("com.tencent.bugly")
@@ -97,6 +98,7 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
         val DEX_MATRIX = arrayOf("com.tencent.matrix")
         val DEX_TINKER = arrayOf("com.tencent.tinker")
         val DEX_REACT_NATIVE = arrayOf("com.facebook.react")
+        val DEX_TENCENT_BROWSING_SERVICE = arrayOf("com.tencent.tbs")
 
         const val URL_BUGLY = "https://bugly.tds.qq.com/v2/index/tds-main"
         const val URL_UE_LIBRARY =
@@ -114,6 +116,7 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
         const val URL_MATRIX = "https://github.com/Tencent/matrix"
         const val URL_TINKER = "https://github.com/Tencent/tinker"
         const val URL_REACT_NATIVE = "https://reactnative.dev/"
+        const val URL_TENCENT_BROWSING_SERVICE = "https://x5.tencent.com/"
 
         val DEX_PRE_RULES = listOf<LocalAppStackRule>(
             LocalAppStackRule(RULE_ID_QQNT, DEX_QQNT, RULE_TYPE_PRITIVE_TENCENT),
@@ -156,6 +159,12 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
                 DEX_REACT_NATIVE,
                 RULE_TYPE_OPEN_SOURCE_3RD_PARTY,
                 URL_REACT_NATIVE
+            ),
+            LocalAppStackRule(
+                RULE_ID_TENCENT_BROWSING_SERVICE,
+                DEX_TENCENT_BROWSING_SERVICE,
+                RULE_TYPE_PRITIVE_TENCENT,
+                URL_TENCENT_BROWSING_SERVICE
             )
         )
 
