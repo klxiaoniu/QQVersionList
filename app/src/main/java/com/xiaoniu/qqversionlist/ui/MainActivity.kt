@@ -37,7 +37,6 @@ import android.os.Environment
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Base64
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
@@ -49,11 +48,7 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.core.text.method.LinkMovementMethodCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
-import androidx.core.view.updateLayoutParams
-import androidx.core.view.updatePadding
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -190,20 +185,6 @@ class MainActivity : AppCompatActivity() {
         if (SDK_INT >= Build.VERSION_CODES.Q) window.isNavigationBarContrastEnforced =
             false
 
-        if (SDK_INT <= Build.VERSION_CODES.Q) ViewCompat.setOnApplyWindowInsetsListener(
-            viewRoot
-        ) { _, windowInsets ->
-            val insets =
-                windowInsets.getInsets(WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
-            binding.bottomAppBar.post {
-                binding.bottomAppBar.updatePadding(0, 0, 0, insets.bottom)
-            }
-            binding.btnGuess.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-                bottomMargin = insets.bottom / 2
-            }
-            windowInsets
-        }
-
         qqVersionAdapter = QQVersionAdapter()
         timVersionAdapter = TIMVersionAdapter()
         weixinVersionAdapter = WeixinVersionAdapter()
@@ -220,7 +201,13 @@ class MainActivity : AppCompatActivity() {
 
         viewModel = ViewModelProvider(this)[MainActivityViewModel::class.java]
         viewModel.isVersionListLoading.observe(this, Observer { isLoading ->
-            if (isLoading) binding.progressLine.show() else binding.progressLine.hide()
+            if (isLoading) binding.apply {
+                progressLine.show()
+                btnGet.isEnabled = false
+            } else binding.apply {
+                progressLine.hide()
+                btnGet.isEnabled = true
+            }
         })
 
         initButtons()
@@ -306,108 +293,1099 @@ class MainActivity : AppCompatActivity() {
             hideAnimationBehavior = LinearProgressIndicator.HIDE_ESCAPE
         }
 
-        binding.bottomAppBar.setOnMenuItemClickListener { menuItem ->
-            //底部左下角按钮动作
-            when (menuItem.itemId) {
-                R.id.btn_get -> {
-                    getData(menuItem)
-                    true
+        binding.apply {
+
+            btnGet.setOnClickListener {
+                getData()
+                true
+            }
+
+            btnAbout.setOnClickListener {
+                val dialogAboutBinding = DialogAboutBinding.inflate(layoutInflater)
+
+                dialogAboutBinding.apply {
+                    val aboutDialog = MaterialAlertDialogBuilder(this@MainActivity)
+                        .setTitle(R.string.about)
+                        .setIcon(R.drawable.information_line)
+                        .setView(root)
+                        .show().apply {
+                            if (isRelease) btnAboutUpdate.apply {
+                                isEnabled = true
+                                setText(R.string.checkUpdateViaGitHubAPI)
+                            } else btnAboutUpdate.apply {
+                                isEnabled = false
+                                setText(R.string.ciVersionNoSupportUpdates)
+                            }
+
+                            aboutText.movementMethod =
+                                LinkMovementMethodCompat.getInstance()
+
+                            aboutText.text = this@MainActivity.qverbowAboutText()
+                        }
+
+                    btnAboutWithdrawConsentUA.setOnClickListener {
+                        showUADialog(true, judgeUATarget)
+                        aboutDialog.dismiss()
+                    }
+
+                    btnAboutSharedList.setOnClickListener {
+                        val url =
+                            "https://raw.githubusercontent.com/klxiaoniu/QQVersionList/refs/heads/master/DataListShared.md"
+                        val intent = CustomTabsIntent.Builder().build()
+                        intent.launchUrl(this@MainActivity, Uri.parse(url))
+                    }
+
+                    btnAboutUpdate.setOnClickListener {
+                        val spec = CircularProgressIndicatorSpec(
+                            this@MainActivity, null, 0,
+                            com.google.android.material.R.style.Widget_Material3_CircularProgressIndicator_ExtraSmall
+                        )
+                        val progressIndicatorDrawable =
+                            IndeterminateDrawable.createCircularDrawable(
+                                this@MainActivity, spec
+                            )
+
+                        btnAboutUpdate.apply {
+                            isEnabled = false
+                            style(com.google.android.material.R.style.Widget_Material3_Button_TonalButton_Icon)
+                            icon = progressIndicatorDrawable
+                        }
+
+                        checkQverbowUpdates(
+                            BuildConfig.VERSION_NAME.trimSubstringAtEnd("-Preview-Release")
+                                .trimSubstringAtEnd("-Release"),
+                            true, btnAboutUpdate
+                        )
+                    }
+
+                    btnAboutOk.setOnClickListener {
+                        aboutDialog.dismiss()
+                    }
+
+                    btnAboutOpenSource.setOnClickListener {
+                        startActivity(
+                            Intent(
+                                this@MainActivity, OSSLicensesMenuActivity::class.java
+                            )
+                        )
+                    }
+
+                    btnAboutHash.setOnClickListener {
+                        val dialogHashBinding = DialogHashBinding.inflate(layoutInflater)
+                        val qverbowSM3 = getQverbowSM3()
+
+                        val hashDialog = MaterialAlertDialogBuilder(this@MainActivity)
+                            .setTitle(R.string.qverbowHash)
+                            .setIcon(R.drawable.shield_keyhole_line)
+                            .setView(dialogHashBinding.root)
+                            .show().apply {
+                                dialogHashBinding.aboutHashText.text =
+                                    "SM3${getString(R.string.colon)}${qverbowSM3}"
+                                dialogHashBinding.btnAboutGithubHashVerifiy.isVisible =
+                                    isRelease && !isPreviewRelease
+                            }
+
+                        dialogHashBinding.apply {
+                            btnAboutHashOk.setOnClickListener {
+                                hashDialog.dismiss()
+                            }
+
+                            btnAboutHashCopy.setOnClickListener {
+                                copyText(qverbowSM3)
+                            }
+
+                            btnAboutGithubHashVerifiy.setOnClickListener {
+                                val spec = CircularProgressIndicatorSpec(
+                                    this@MainActivity, null, 0,
+                                    com.google.android.material.R.style.Widget_Material3_CircularProgressIndicator_ExtraSmall
+                                )
+                                val progressIndicatorDrawable =
+                                    IndeterminateDrawable.createCircularDrawable(
+                                        this@MainActivity, spec
+                                    )
+
+                                btnAboutGithubHashVerifiy.apply {
+                                    isEnabled = false
+                                    style(com.google.android.material.R.style.Widget_Material3_Button_TonalButton_Icon)
+                                    icon = progressIndicatorDrawable
+                                }
+
+                                checkQverbowHash(
+                                    BuildConfig.VERSION_NAME.trimSubstringAtEnd("-Preview-Release")
+                                        .trimSubstringAtEnd("-Release"),
+                                    getQverbowSM3(),
+                                    btnAboutGithubHashVerifiy
+                                )
+                            }
+                        }
+                    }
+                }
+                true
+            }
+
+            btnSetting.setOnClickListener {
+                val dialogSettingBinding = DialogSettingBinding.inflate(layoutInflater)
+
+                dialogSettingBinding.apply {
+                    longPressCard.switchChecked =
+                        DataStoreUtil.getBooleanKV("longPressCard", true)
+                    useNewLocalPage.switchChecked =
+                        DataStoreUtil.getBooleanKV("useNewLocalPage", true)
+                    guessNot5.switchChecked = DataStoreUtil.getBooleanKV("guessNot5", false)
+                    switchUpdateLogLlmGen.switchChecked =
+                        DataStoreUtil.getBooleanKV("updateLogLlmGen", false)
+                    switchGuessTestExtend.switchChecked =
+                        DataStoreUtil.getBooleanKV("guessTestExtend", false) // 扩展测试版扫版格式
+                    downloadOnSystemManager.switchChecked =
+                        DataStoreUtil.getBooleanKV("downloadOnSystemManager", false)
+                    switchAutoCheckUpdates.switchChecked =
+                        DataStoreUtil.getBooleanKV("autoCheckUpdates", false)
+                    switchPushNotifViaFcm.isVisible =
+                        Firebase.messaging.isAutoInitEnabled && GoogleApiAvailability.getInstance()
+                            .isGooglePlayServicesAvailable(this@MainActivity) == ConnectionResult.SUCCESS
+                    switchPushNotifViaFcm.switchChecked =
+                        DataStoreUtil.getBooleanKV("rainbowFCMSubscribed", false)
                 }
 
-                R.id.btn_about -> {
-                    val dialogAboutBinding = DialogAboutBinding.inflate(layoutInflater)
+                val dialogSetting = SideSheetDialog(this@MainActivity).apply {
+                    setContentView(dialogSettingBinding.root)
+                    if (SDK_INT >= Build.VERSION_CODES.Q) window?.isNavigationBarContrastEnforced =
+                        false
+                    show()
+                }
 
-                    dialogAboutBinding.apply {
-                        val aboutDialog = MaterialAlertDialogBuilder(this@MainActivity)
-                            .setTitle(R.string.about)
-                            .setIcon(R.drawable.information_line)
-                            .setView(root)
-                            .show().apply {
-                                if (isRelease) btnAboutUpdate.apply {
-                                    isEnabled = true
-                                    setText(R.string.checkUpdateViaGitHubAPI)
-                                } else btnAboutUpdate.apply {
-                                    isEnabled = false
-                                    setText(R.string.ciVersionNoSupportUpdates)
+                dialogSettingBinding.apply {
+                    btnSettingOk.setOnClickListener {
+                        dialogSetting.dismiss()
+                    }
+                    longPressCard.setOnCheckedChangeListener { isChecked ->
+                        DataStoreUtil.putBooleanKVAsync("longPressCard", isChecked)
+                    }
+                    useNewLocalPage.setOnCheckedChangeListener { isChecked ->
+                        DataStoreUtil.putBooleanKVAsync("useNewLocalPage", isChecked)
+                    }
+                    guessNot5.setOnCheckedChangeListener { isChecked ->
+                        DataStoreUtil.putBooleanKVAsync("guessNot5", isChecked)
+                    }
+                    switchUpdateLogLlmGen.setOnCheckedChangeListener { isChecked ->
+                        DataStoreUtil.putBooleanKVAsync("updateLogLlmGen", isChecked)
+                    }
+                    dialogPersonalization.setOnClickListener {
+                        val dialogPersonalization =
+                            DialogPersonalizationBinding.inflate(layoutInflater).apply {
+                                root.parent?.let { parent ->
+                                    if (parent is ViewGroup) {
+                                        parent.removeView(root)
+                                    }
                                 }
 
-                                aboutText.movementMethod =
-                                    LinkMovementMethodCompat.getInstance()
-
-                                aboutText.text = this@MainActivity.qverbowAboutText()
-                            }
-
-                        btnAboutWithdrawConsentUA.setOnClickListener {
-                            showUADialog(true, judgeUATarget)
-                            aboutDialog.dismiss()
-                        }
-
-                        btnAboutSharedList.setOnClickListener {
-                            val url =
-                                "https://raw.githubusercontent.com/klxiaoniu/QQVersionList/refs/heads/master/DataListShared.md"
-                            val intent = CustomTabsIntent.Builder().build()
-                            intent.launchUrl(this@MainActivity, Uri.parse(url))
-                        }
-
-                        btnAboutUpdate.setOnClickListener {
-                            val spec = CircularProgressIndicatorSpec(
-                                this@MainActivity, null, 0,
-                                com.google.android.material.R.style.Widget_Material3_CircularProgressIndicator_ExtraSmall
-                            )
-                            val progressIndicatorDrawable =
-                                IndeterminateDrawable.createCircularDrawable(
-                                    this@MainActivity, spec
+                                versionTcloudThickness.setEnabled(
+                                    DataStoreUtil.getBooleanKV("versionTCloud", true)
                                 )
 
-                            btnAboutUpdate.apply {
-                                isEnabled = false
-                                style(com.google.android.material.R.style.Widget_Material3_Button_TonalButton_Icon)
-                                icon = progressIndicatorDrawable
+                                versionTcloudThickness.value = when (DataStoreUtil.getStringKV(
+                                    "versionTCloudThickness", "System"
+                                )) {
+                                    "Light" -> 1.0f
+                                    "Regular" -> 2.0f
+                                    "Bold" -> 3.0f
+                                    else -> 4.0f
+                                }
                             }
 
-                            checkQverbowUpdates(
-                                BuildConfig.VERSION_NAME.trimSubstringAtEnd("-Preview-Release")
-                                    .trimSubstringAtEnd("-Release"),
-                                true, btnAboutUpdate
+                        val dialogPer = SideSheetDialog(this@MainActivity).apply {
+                            setContentView(dialogPersonalization.root)
+                            if (SDK_INT >= Build.VERSION_CODES.Q) window?.isNavigationBarContrastEnforced =
+                                false
+                            show()
+                        }
+
+                        dialogPersonalization.apply {
+                            switchDisplayFirst.switchChecked =
+                                DataStoreUtil.getBooleanKV("displayFirst", true)
+                            switchKuiklyTag.switchChecked =
+                                DataStoreUtil.getBooleanKV("kuiklyTag", true)
+                            switchUnrealEngineTag.switchChecked =
+                                DataStoreUtil.getBooleanKV("unrealEngineTag", false)
+                            switchProgressSize.switchChecked =
+                                DataStoreUtil.getBooleanKV("progressSize", false)
+                            switchProgressSizeText.switchChecked =
+                                DataStoreUtil.getBooleanKV("progressSizeText", false)
+                            switchVersionTcloud.switchChecked =
+                                DataStoreUtil.getBooleanKV("versionTCloud", true)
+                            switchOldLoading.switchChecked =
+                                DataStoreUtil.getBooleanKV("showOldLoading", false)
+
+                            switchDisplayFirst.setOnCheckedChangeListener { isChecked ->
+                                DataStoreUtil.putBooleanKVAsync("displayFirst", isChecked)
+                                qqVersion = qqVersion.mapIndexed { index, qqVersionBean ->
+                                    if (index == 0) qqVersionBean.copy(
+                                        displayType = if (isChecked) 1 else 0
+                                    ) else qqVersionBean
+                                }
+                                timVersion = timVersion.mapIndexed { index, timVersionBean ->
+                                    if (index == 0) timVersionBean.copy(
+                                        displayType = if (isChecked) 1 else 0
+                                    ) else timVersionBean
+                                }
+                                weixinVersion =
+                                    weixinVersion.mapIndexed { index, weixinVersionBean ->
+                                        if (index == 0) weixinVersionBean.copy(
+                                            displayType = if (isChecked) 1 else 0
+                                        ) else weixinVersionBean
+                                    }
+                                qqVersionAdapter.submitList(qqVersion)
+                                timVersionAdapter.submitList(timVersion)
+                                weixinVersionAdapter.submitList(weixinVersion)
+                            }
+
+                            switchOldLoading.setOnCheckedChangeListener { isChecked ->
+                                DataStoreUtil.putBooleanKVAsync("showOldLoading", isChecked)
+                            }
+
+                            // 下五个设置不能异步持久化存储，否则视图更新读不到更新值
+                            switchKuiklyTag.setOnCheckedChangeListener { isChecked ->
+                                DataStoreUtil.putBooleanKV("kuiklyTag", isChecked)
+                                qqVersionAdapter.updateItemProperty("isShowKuiklyTag")
+                                timVersionAdapter.updateItemProperty("isShowKuiklyTag")
+                            }
+                            switchUnrealEngineTag.setOnCheckedChangeListener { isChecked ->
+                                DataStoreUtil.putBooleanKV("unrealEngineTag", isChecked)
+                                qqVersionAdapter.updateItemProperty("isShowUnrealEngineTag")
+                            }
+                            switchProgressSize.setOnCheckedChangeListener { isChecked ->
+                                DataStoreUtil.putBooleanKV("progressSize", isChecked)
+                                qqVersionAdapter.updateItemProperty("isShowProgressSize")
+                            }
+                            switchProgressSizeText.setOnCheckedChangeListener { isChecked ->
+                                DataStoreUtil.putBooleanKV("progressSizeText", isChecked)
+                                qqVersionAdapter.updateItemProperty("isShowProgressSizeText")
+                            }
+                            switchVersionTcloud.setOnCheckedChangeListener { isChecked ->
+                                DataStoreUtil.putBooleanKV("versionTCloud", isChecked)
+                                dialogPersonalization.versionTcloudThickness.setEnabled(
+                                    isChecked
+                                )
+                                qqVersionAdapter.updateItemProperty("isTCloud")
+                                timVersionAdapter.updateItemProperty("isTCloud")
+                                weixinVersionAdapter.updateItemProperty("isTCloud")
+                            }
+
+                            btnPersonalizationOk.setOnClickListener {
+                                dialogPer.dismiss()
+                            }
+
+                            versionTcloudThickness.setLabelFormatter {
+                                return@setLabelFormatter when (it) {
+                                    1.0f -> "Light"
+                                    2.0f -> "Regular"
+                                    3.0f -> "Bold"
+                                    else -> getString(R.string.thicknessFollowSystem)
+                                }
+                            }
+
+                            versionTcloudThickness.addOnChangeListener { _, value, _ ->
+                                when (value) {
+                                    1.0f -> DataStoreUtil.putStringKV(
+                                        "versionTCloudThickness", "Light"
+                                    )
+
+                                    2.0f -> DataStoreUtil.putStringKV(
+                                        "versionTCloudThickness", "Regular"
+                                    )
+
+                                    3.0f -> DataStoreUtil.putStringKV(
+                                        "versionTCloudThickness", "Bold"
+                                    )
+
+                                    else -> DataStoreUtil.putStringKV(
+                                        "versionTCloudThickness", "System"
+                                    )
+                                }
+                                qqVersionAdapter.updateItemProperty("isTCloud")
+                                timVersionAdapter.updateItemProperty("isTCloud")
+                                weixinVersionAdapter.updateItemProperty("isTCloud")
+                            }
+                        }
+                    }
+
+                    dialogPrivateTokenSetting.setOnClickListener {
+                        val dialogPrivateTokenSettingBinding =
+                            DialogPrivateTokenSettingBinding.inflate(layoutInflater)
+
+                        dialogPrivateTokenSettingBinding.root.parent?.let { parent ->
+                            if (parent is ViewGroup) {
+                                parent.removeView(dialogPrivateTokenSettingBinding.root)
+                            }
+                        }
+
+                        val dialogPrivateTokenSetting =
+                            MaterialAlertDialogBuilder(this@MainActivity)
+                                .setTitle(R.string.privateTokenSettings)
+                                .setIcon(R.drawable.key_line)
+                                .setView(dialogPrivateTokenSettingBinding.root)
+                                .setCancelable(false)
+                                .show()
+
+
+                        val zhipuToken = KeyStoreUtil.getStringKVwithKeyStore(ZHIPU_TOKEN)
+                        val githubToken = KeyStoreUtil.getStringKVwithKeyStore(GITHUB_TOKEN)
+                        val securityLevel = KeyStoreUtil.checkHardwareSecurity()
+
+                        dialogPrivateTokenSettingBinding.apply {
+                            viewModel.isTokenTesting.observe(this@MainActivity) {
+                                if (it) progressIndicatorTokenSetting.show() else progressIndicatorTokenSetting.hide()
+                            }
+
+                            progressIndicatorTokenSetting.apply {
+                                showAnimationBehavior = LinearProgressIndicator.SHOW_NONE
+                                hideAnimationBehavior = LinearProgressIndicator.HIDE_ESCAPE
+                            }
+
+                            when (securityLevel) {
+                                0 -> {
+                                    securityLevelLayout.isVisible = true
+                                    securityLevelText.text =
+                                        getString(R.string.SecuritySoftwareSupported)
+                                }
+
+                                1 -> {
+                                    securityLevelLayout.isVisible = true
+                                    securityLevelText.text = getString(R.string.TEESupported)
+                                }
+
+                                2 -> {
+                                    securityLevelLayout.isVisible = true
+                                    securityLevelText.text =
+                                        getString(R.string.StrongBoxSupported)
+                                }
+
+                                -1 -> {
+                                    securityLevelLayout.isVisible = true
+                                    securityLevelText.text =
+                                        getString(R.string.UnknownSecurityHardwareSupported)
+                                }
+
+                                else -> securityLevelLayout.isVisible = false
+                            }
+
+                            zhipuAiToken.editText?.setText(if (zhipuToken == null) "" else zhipuToken.toString())
+                            githubPersonalAccessToken.editText?.setText(if (githubToken == null) "" else githubToken.toString())
+
+                            btnTokenCancel.setOnClickListener {
+                                dialogPrivateTokenSetting.dismiss()
+                            }
+
+                            btnTokenSave.setOnClickListener {
+                                try {
+                                    KeyStoreUtil.apply {
+                                        putStringKVwithKeyStoreAsync(
+                                            ZHIPU_TOKEN, zhipuAiToken.editText?.text.toString()
+                                        )
+                                        putStringKVwithKeyStoreAsync(
+                                            GITHUB_TOKEN,
+                                            githubPersonalAccessToken.editText?.text.toString()
+                                        )
+                                    }
+                                    dialogPrivateTokenSetting.dismiss()
+                                } catch (e: Exception) {
+                                    e.printStackTrace()
+                                    dialogError(e)
+                                }
+                            }
+
+                            zhipuTokenTest.setOnClickListener {
+                                try {
+                                    KeyStoreUtil.putStringKVwithKeyStore(
+                                        ZHIPU_TOKEN, zhipuAiToken.editText?.text.toString()
+                                    )
+                                    if (viewModel.isTokenTesting.value == false) {
+                                        viewModel.setTokenTesting(true)
+                                        CoroutineScope(Dispatchers.IO).launch {
+                                            try {
+                                                val token =
+                                                    KeyStoreUtil.getStringKVwithKeyStore(
+                                                        ZHIPU_TOKEN
+                                                    )
+                                                if (!token.isNullOrEmpty()) {
+                                                    val responseData = getZhipuWrite(
+                                                        getString(
+                                                            R.string.testZhipuTokenPrompt,
+                                                            Locale.getDefault().toString()
+                                                        ),
+                                                        getString(
+                                                            R.string.testZhipuTokenPrompt,
+                                                            Locale.getDefault().toString()
+                                                        ),
+                                                        token
+                                                    )
+                                                    val gson =
+                                                        GsonBuilder().setPrettyPrinting()
+                                                            .create()
+                                                    val responseObject = gson.fromJson(
+                                                        responseData, JsonObject::class.java
+                                                    )
+
+                                                    runOnUiThread {
+                                                        if (responseObject.getAsJsonPrimitive("code").asInt == 200) {
+                                                            val zhipuContent =
+                                                                responseObject.getAsJsonObject("data").asJsonObject.getAsJsonArray(
+                                                                    "choices"
+                                                                ).asJsonArray.first().asJsonObject.getAsJsonObject(
+                                                                    "message"
+                                                                ).asJsonObject.getAsJsonPrimitive(
+                                                                    "content"
+                                                                ).asString
+                                                            MaterialAlertDialogBuilder(this@MainActivity)
+                                                                .setIcon(R.drawable.ai_generate_2)
+                                                                .setTitle(R.string.zhipuTokenSuccess)
+                                                                .setMessage(zhipuContent.pangu())
+                                                                .setPositiveButton(R.string.ok) { _, _ -> }
+                                                                .show()
+                                                        } else {
+                                                            MaterialAlertDialogBuilder(this@MainActivity)
+                                                                .setIcon(R.drawable.alert_line)
+                                                                .setTitle(R.string.backFromZhipuPlatform)
+                                                                .setMessage(
+                                                                    responseData?.toPrettyFormat()
+                                                                )
+                                                                .setPositiveButton(R.string.done) { _, _ -> }
+                                                                .setNeutralButton(
+                                                                    R.string.copy,
+                                                                    null
+                                                                ).create().apply {
+                                                                    setOnShowListener {
+                                                                        getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener {
+                                                                            responseData?.toPrettyFormat()
+                                                                                ?.let { it ->
+                                                                                    copyText(it)
+                                                                                }
+                                                                        }
+                                                                    }
+                                                                    show()
+                                                                }
+                                                        }
+                                                    }
+                                                } else runOnUiThread { showToast(R.string.zhipuTokenIsNull) }
+                                            } catch (e: RuntimeException) {
+                                                if (e.message?.contains("invalid apiSecretKey") == true) runOnUiThread {
+                                                    dialogError(
+                                                        Exception(getString(R.string.zhipuTokenIsInvalid)),
+                                                        true
+                                                    )
+                                                } else {
+                                                    e.printStackTrace()
+                                                    runOnUiThread { dialogError(e) }
+                                                }
+                                            } catch (e: Exception) {
+                                                e.printStackTrace()
+                                                runOnUiThread { dialogError(e) }
+                                            } finally {
+                                                runOnUiThread { viewModel.setTokenTesting(false) }
+                                            }
+                                        }
+                                    }
+                                } catch (e: Exception) {
+                                    e.printStackTrace()
+                                    dialogError(e)
+                                }
+                            }
+
+                            githubPatTest.setOnClickListener {
+                                try {
+                                    KeyStoreUtil.putStringKVwithKeyStore(
+                                        GITHUB_TOKEN,
+                                        githubPersonalAccessToken.editText?.text.toString()
+                                    )
+                                    if (viewModel.isTokenTesting.value == false) {
+                                        viewModel.setTokenTesting(true)
+                                        CoroutineScope(Dispatchers.IO).launch {
+                                            try {
+                                                val token =
+                                                    KeyStoreUtil.getStringKVwithKeyStore(
+                                                        GITHUB_TOKEN
+                                                    )
+                                                if (!token.isNullOrEmpty()) {
+                                                    if (checkGitHubToken()) {
+                                                        runOnUiThread { showToast(R.string.githubTokenSuccess) }
+                                                    } else {
+                                                        runOnUiThread {
+                                                            MaterialAlertDialogBuilder(this@MainActivity)
+                                                                .setIcon(R.drawable.alert_line)
+                                                                .setTitle(R.string.githubTokenUnavailableTitle)
+                                                                .setMessage(R.string.githubTokenUnavailable)
+                                                                .setPositiveButton(R.string.done) { _, _ -> }
+                                                                .show()
+                                                        }
+                                                    }
+
+                                                } else runOnUiThread { showToast(R.string.githubTokenIsNull) }
+                                            } catch (e: Exception) {
+                                                e.printStackTrace()
+                                                dialogError(e)
+                                            } finally {
+                                                runOnUiThread { viewModel.setTokenTesting(false) }
+                                            }
+                                        }
+                                    }
+
+                                } catch (e: Exception) {
+                                    e.printStackTrace()
+                                    dialogError(e)
+                                }
+                            }
+                        }
+                    }
+
+                    switchGuessTestExtend.setOnCheckedChangeListener { isChecked ->
+                        DataStoreUtil.putBooleanKVAsync("guessTestExtend", isChecked)
+                    }
+                    switchAutoCheckUpdates.setOnCheckedChangeListener { isChecked ->
+                        DataStoreUtil.putBooleanKVAsync("autoCheckUpdates", isChecked)
+                    }
+                    downloadOnSystemManager.setOnCheckedChangeListener { isChecked ->
+                        DataStoreUtil.putBooleanKVAsync("downloadOnSystemManager", isChecked)
+                    }
+
+                    dialogSuffixDefineClick.setOnClickListener {
+                        val dialogSuffixDefine =
+                            DialogFormatDefineBinding.inflate(layoutInflater)
+
+                        dialogSuffixDefine.root.parent?.let { parent ->
+                            if (parent is ViewGroup) {
+                                parent.removeView(dialogSuffixDefine.root)
+                            }
+                        }
+
+                        val dialogSuffix = MaterialAlertDialogBuilder(this@MainActivity)
+                            .setTitle(R.string.enumerateVersionsFormatSetting)
+                            .setIcon(R.drawable.settings_line)
+                            .setView(dialogSuffixDefine.root)
+                            .setCancelable(false)
+                            .create()
+
+                        dialogSuffixDefine.apply {
+                            DataStoreUtil.apply {
+                                suffixDefineCheckbox64hb.isChecked =
+                                    getBooleanKV("suffix64HB", true)
+                                suffixDefineCheckboxHb64.isChecked =
+                                    getBooleanKV("suffixHB64", true)
+                                suffixDefineCheckbox64hb1.isChecked =
+                                    getBooleanKV("suffix64HB1", true)
+                                suffixDefineCheckboxHb164.isChecked =
+                                    getBooleanKV("suffixHB164", true)
+                                suffixDefineCheckbox64hb2.isChecked =
+                                    getBooleanKV("suffix64HB2", true)
+                                suffixDefineCheckboxHb264.isChecked =
+                                    getBooleanKV("suffixHB264", true)
+                                suffixDefineCheckbox64hb3.isChecked =
+                                    getBooleanKV("suffix64HB3", true)
+                                suffixDefineCheckboxHb364.isChecked =
+                                    getBooleanKV("suffixHB364", true)
+                                suffixDefineCheckbox64hd.isChecked =
+                                    getBooleanKV("suffix64HD", true)
+                                suffixDefineCheckboxHd64.isChecked =
+                                    getBooleanKV("suffixHD64", true)
+                                suffixDefineCheckbox64hd1.isChecked =
+                                    getBooleanKV("suffix64HD1", true)
+                                suffixDefineCheckboxHd164.isChecked =
+                                    getBooleanKV("suffixHD164", true)
+                                suffixDefineCheckbox64hd2.isChecked =
+                                    getBooleanKV("suffix64HD2", true)
+                                suffixDefineCheckboxHd264.isChecked =
+                                    getBooleanKV("suffixHD264", true)
+                                suffixDefineCheckbox64hd3.isChecked =
+                                    getBooleanKV("suffix64HD3", true)
+                                suffixDefineCheckboxHd364.isChecked =
+                                    getBooleanKV("suffixHD364", true)
+                                suffixDefineCheckbox64hd1hb.isChecked =
+                                    getBooleanKV("suffix64HD1HB", true)
+                                suffixDefineCheckboxHd1hb64.isChecked =
+                                    getBooleanKV("suffixHD1HB64", true)
+                                suffixDefineCheckboxTest.isChecked =
+                                    getBooleanKV("suffixTest", true)
+                                formatDefineCheckboxQq8958.isChecked =
+                                    getBooleanKV("useQQ8958TestFormat", false)
+                                formatDefineCheckboxQq900814600.isChecked =
+                                    getBooleanKV("useQQ900814600TestFormat", false)
+                            }
+
+                            dialogSuffix.show()
+
+                            // 异步读取字符串，防止超长字符串造成阻塞
+                            settingSuffixDefine.apply {
+                                isEnabled = false
+                                btnSuffixSave.isEnabled = false
+                                lifecycleScope.launch {
+                                    val suffixDefine = withContext(Dispatchers.IO) {
+                                        DataStoreUtil.getStringKVAsync("suffixDefine", "")
+                                            .await()
+                                    }
+                                    editText?.setText(
+                                        suffixDefine
+                                    )
+                                    isEnabled = true
+                                    btnSuffixSave.isEnabled = true
+                                }
+                            }
+
+                            btnSuffixSave.setOnClickListener {
+                                val suffixDefine = settingSuffixDefine.editText?.text.toString()
+
+                                val suffixDataStoreList = listOf(
+                                    mapOf(
+                                        "key" to "suffixDefine",
+                                        "value" to suffixDefine,
+                                        "type" to "String"
+                                    ), mapOf(
+                                        "key" to "suffix64HB",
+                                        "value" to suffixDefineCheckbox64hb.isChecked,
+                                        "type" to "Boolean"
+                                    ), mapOf(
+                                        "key" to "suffixHB64",
+                                        "value" to suffixDefineCheckboxHb64.isChecked,
+                                        "type" to "Boolean"
+                                    ), mapOf(
+                                        "key" to "suffix64HB1",
+                                        "value" to suffixDefineCheckbox64hb1.isChecked,
+                                        "type" to "Boolean"
+                                    ), mapOf(
+                                        "key" to "suffixHB164",
+                                        "value" to suffixDefineCheckboxHb164.isChecked,
+                                        "type" to "Boolean"
+                                    ), mapOf(
+                                        "key" to "suffix64HB2",
+                                        "value" to suffixDefineCheckbox64hb2.isChecked,
+                                        "type" to "Boolean"
+                                    ), mapOf(
+                                        "key" to "suffixHB264",
+                                        "value" to suffixDefineCheckboxHb264.isChecked,
+                                        "type" to "Boolean"
+                                    ), mapOf(
+                                        "key" to "suffix64HB3",
+                                        "value" to suffixDefineCheckbox64hb3.isChecked,
+                                        "type" to "Boolean"
+                                    ), mapOf(
+                                        "key" to "suffixHB364",
+                                        "value" to suffixDefineCheckboxHb364.isChecked,
+                                        "type" to "Boolean"
+                                    ), mapOf(
+                                        "key" to "suffix64HD",
+                                        "value" to suffixDefineCheckbox64hd.isChecked,
+                                        "type" to "Boolean"
+                                    ), mapOf(
+                                        "key" to "suffixHD64",
+                                        "value" to suffixDefineCheckboxHd64.isChecked,
+                                        "type" to "Boolean"
+                                    ), mapOf(
+                                        "key" to "suffix64HD1",
+                                        "value" to suffixDefineCheckbox64hd1.isChecked,
+                                        "type" to "Boolean"
+                                    ), mapOf(
+                                        "key" to "suffixHD164",
+                                        "value" to suffixDefineCheckboxHd164.isChecked,
+                                        "type" to "Boolean"
+                                    ), mapOf(
+                                        "key" to "suffix64HD2",
+                                        "value" to suffixDefineCheckbox64hd2.isChecked,
+                                        "type" to "Boolean"
+                                    ), mapOf(
+                                        "key" to "suffixHD264",
+                                        "value" to suffixDefineCheckboxHd264.isChecked,
+                                        "type" to "Boolean"
+                                    ), mapOf(
+                                        "key" to "suffix64HD3",
+                                        "value" to suffixDefineCheckbox64hd3.isChecked,
+                                        "type" to "Boolean"
+                                    ), mapOf(
+                                        "key" to "suffixHD364",
+                                        "value" to suffixDefineCheckboxHd364.isChecked,
+                                        "type" to "Boolean"
+                                    ), mapOf(
+                                        "key" to "suffixHD1HB64",
+                                        "value" to suffixDefineCheckboxHd1hb64.isChecked,
+                                        "type" to "Boolean"
+                                    ), mapOf(
+                                        "key" to "suffix64HD1HB",
+                                        "value" to suffixDefineCheckbox64hd1hb.isChecked,
+                                        "type" to "Boolean"
+                                    ), mapOf(
+                                        "key" to "suffixTest",
+                                        "value" to suffixDefineCheckboxTest.isChecked,
+                                        "type" to "Boolean"
+                                    ), mapOf(
+                                        "key" to "useQQ8958TestFormat",
+                                        "value" to formatDefineCheckboxQq8958.isChecked,
+                                        "type" to "Boolean"
+                                    ), mapOf(
+                                        "key" to "useQQ900814600TestFormat",
+                                        "value" to formatDefineCheckboxQq900814600.isChecked,
+                                        "type" to "Boolean"
+                                    )
+                                )
+
+                                DataStoreUtil.batchPutKVAsync(suffixDataStoreList)
+                                showToast(getString(R.string.saved))
+                                dialogSuffix.dismiss()
+                            }
+
+                            btnSuffixCancel.setOnClickListener {
+                                dialogSuffix.dismiss()
+                            }
+                        }
+                    }
+                    switchPushNotifViaFcm.setOnCheckedChangeListener { isChecked ->
+                        if (isChecked != DataStoreUtil.getBooleanKV(
+                                "rainbowFCMSubscribed",
+                                false
                             )
+                        ) {
+                            if (isChecked) {
+                                if (!NotificationManagerCompat.from(this@MainActivity)
+                                        .areNotificationsEnabled()
+                                ) askNotificationPermission()
+                                if (!NotificationManagerCompat.from(this@MainActivity)
+                                        .areNotificationsEnabled()
+                                ) switchPushNotifViaFcm.switchChecked = false
+                                else if (!checkNotificationChannelEnabled(
+                                        getString(R.string.rainbow_notification_channel_id)
+                                    )
+                                ) {
+                                    switchPushNotifViaFcm.switchChecked = false
+                                    dialogError(
+                                        Exception(getString(R.string.cannotEnableFirebaseCloudMessaging)),
+                                        true, true
+                                    )
+                                } else {
+                                    switchPushNotifViaFcm.switchEnabled = false
+                                    Firebase.analytics.setAnalyticsCollectionEnabled(true)
+                                    subscribeWithTimeout(10000L, switchPushNotifViaFcm)
+                                }
+                            } else {
+                                switchPushNotifViaFcm.switchEnabled = false
+                                Firebase.analytics.setAnalyticsCollectionEnabled(true)
+                                unsubscribeWithTimeout(10000L, switchPushNotifViaFcm)
+                            }
                         }
+                    }
+                }
+                true
+            }
 
-                        btnAboutOk.setOnClickListener {
-                            aboutDialog.dismiss()
+            btnExpFeatures.setOnClickListener {
+                val dialogExperimentalFeaturesBinding =
+                    DialogExperimentalFeaturesBinding.inflate(layoutInflater)
+
+                dialogExperimentalFeaturesBinding.dialogFirebase.setCellDescription(
+                    if (GoogleApiAvailability.getInstance()
+                            .isGooglePlayServicesAvailable(this@MainActivity) == ConnectionResult.SUCCESS && Firebase.messaging.isAutoInitEnabled
+                    ) getString(R.string.initializedFirebaseServiceItem) else null
+                )
+
+                val dialogExperimentalFeatures = MaterialAlertDialogBuilder(this@MainActivity)
+                    .setTitle(R.string.experimentalFeatures)
+                    .setIcon(R.drawable.flask_line)
+                    .setView(dialogExperimentalFeaturesBinding.root)
+                    .show()
+
+                dialogExperimentalFeaturesBinding.apply {
+                    progressIndicator.apply {
+                        hide()
+                        showAnimationBehavior = LinearProgressIndicator.SHOW_NONE
+                        hideAnimationBehavior = LinearProgressIndicator.HIDE_ESCAPE
+                    }
+
+                    btnExpOk.setOnClickListener {
+                        dialogExperimentalFeatures.dismiss()
+                    }
+
+                    dialogGetWeixinAlphaNewest.setOnClickListener {
+                        progressIndicator.show()
+                        CoroutineScope(Dispatchers.IO).launch {
+                            class CustomException(message: String) :
+                                Exception(message)
+                            try {
+                                val okHttpClient = OkHttpClient()
+                                val request =
+                                    Request.Builder()
+                                        .url("https://dldir1v6.qq.com/weixin/android/weixin_android_alpha_config.json")
+                                        .build()
+                                val response = okHttpClient.newCall(request).execute()
+                                if (!response.isSuccessful) throw CustomException(getString(R.string.getWeixinAlphaConfig404))
+                                val responseData = response.body?.string()
+                                if (responseData == null) throw CustomException("Response data is null.")
+                                val start = (responseData.indexOf("cb(")) + 3
+                                val end = responseData.indexOf(")")
+                                val jsonString = responseData.substring(start, end)
+                                val map = resolveWeixinAlphaConfig(jsonString)
+                                val appSize = getFileSize(map["url"].toString())
+                                runOnUiThread {
+                                    val applicationsConfigBackButtonBinding =
+                                        ApplicationsConfigBackButtonBinding.inflate(
+                                            layoutInflater
+                                        )
+                                    val weixinAlphaConfigBackDialog =
+                                        MaterialAlertDialogBuilder(this@MainActivity).setTitle(
+                                            if (appSize != null) R.string.successInGetting else R.string.suspectedPackageWithdrawal
+                                        ).setIcon(R.drawable.flask_line).setMessage(
+                                            "${getString(R.string.version)}${map["versionName"].toString()}\n${
+                                                getString(
+                                                    R.string.downloadLink
+                                                )
+                                            }${map["url"].toString()}" + (if (appSize != null) "\n\n${
+                                                getString(
+                                                    R.string.fileSize
+                                                )
+                                            }$appSize MB" else ("\n\n" + getString(R.string.getWeixinAlphaConfigLink404)))
+                                        ).setView(applicationsConfigBackButtonBinding.root)
+                                            .show()
+
+                                    applicationsConfigBackButtonBinding.apply {
+                                        applicationsConfigBackBtnCopy.setOnClickListener {
+                                            weixinAlphaConfigBackDialog.dismiss()
+                                            copyText(map["url"].toString())
+                                        }
+
+                                        applicationsConfigBackBtnDownload.setOnClickListener {
+                                            weixinAlphaConfigBackDialog.dismiss()
+                                            downloadFile(
+                                                this@MainActivity, map["url"].toString()
+                                            )
+                                        }
+
+                                        applicationsConfigBackBtnJsonDetails.setOnClickListener {
+                                            showExpBackDialog(
+                                                Gson().toJson(map),
+                                                getString(R.string.jsonDetails)
+                                            )
+                                        }
+
+                                        applicationsConfigBackBtnShare.setOnClickListener {
+                                            weixinAlphaConfigBackDialog.dismiss()
+                                            val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                                                type = "text/plain"
+                                                putExtra(
+                                                    Intent.EXTRA_TEXT,
+                                                    "Android 微信测试版 ${map["versionName"].toString()}" + (if (appSize != null) "（${
+                                                        getString(R.string.fileSize)
+                                                    }$appSize MB）" else "") + "\n\n${
+                                                        getString(R.string.downloadLink)
+                                                    }${map["url"].toString()}\n\n鉴于微信测试版可能存在不可预知的稳定性问题，您在下载及使用该测试版本之前，必须明确并确保自身具备足够的风险识别和承受能力。"
+                                                )
+                                            }
+                                            startActivity(
+                                                Intent.createChooser(
+                                                    shareIntent, getString(R.string.shareTo)
+                                                )
+                                            )
+                                        }
+                                    }
+                                }
+                            } catch (e: CustomException) {
+                                dialogError(e, true)
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                                dialogError(e)
+                            } finally {
+                                runOnUiThread { progressIndicator.hide() }
+                            }
                         }
+                    }
 
-                        btnAboutOpenSource.setOnClickListener {
-                            startActivity(
-                                Intent(
-                                    this@MainActivity, OSSLicensesMenuActivity::class.java
-                                ))
+                    dialogGetWetypeLatest.setOnClickListener {
+                        progressIndicator.show()
+                        CoroutineScope(Dispatchers.IO).launch {
+                            class CustomException(message: String) :
+                                Exception(message)
+                            try {
+                                val okHttpClient =
+                                    OkHttpClient.Builder().followRedirects(false).build()
+                                val request =
+                                    Request.Builder()
+                                        .url("https://z.weixin.qq.com/android/download?channel=latest")
+                                        .build()
+                                val response = okHttpClient.newCall(request).execute()
+                                if (!response.isSuccessful && !response.isRedirect) throw CustomException(
+                                    getString(R.string.getWeTypeLatestChannel404)
+                                )
+                                val url = response.header("Location")
+                                if (url == null) throw CustomException("Response data is null.")
+                                val appSize = getFileSize(url.toString())
+                                runOnUiThread {
+                                    val expLinkNextButtonBinding =
+                                        ExpLinkNextButtonBinding.inflate(layoutInflater)
+                                    val weTypeLatestChannelBackDialog =
+                                        MaterialAlertDialogBuilder(this@MainActivity).setTitle(
+                                            if (appSize != null) R.string.successInGetting else R.string.suspectedPackageWithdrawal
+                                        ).setIcon(R.drawable.flask_line).setMessage(
+                                            "${
+                                                getString(R.string.downloadLink)
+                                            }$url" + (if (appSize != null) "\n\n${
+                                                getString(R.string.fileSize)
+                                            }$appSize MB" else "")
+                                        ).setView(expLinkNextButtonBinding.root)
+                                            .show()
+
+                                    expLinkNextButtonBinding.apply {
+                                        expNextBtnCopy.setOnClickListener {
+                                            weTypeLatestChannelBackDialog.dismiss()
+                                            copyText(url.toString())
+                                        }
+
+                                        expNextBtnDownload.setOnClickListener {
+                                            weTypeLatestChannelBackDialog.dismiss()
+                                            downloadFile(this@MainActivity, url.toString())
+                                        }
+
+                                        expNextBtnShare.setOnClickListener {
+                                            weTypeLatestChannelBackDialog.dismiss()
+                                            val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                                                type = "text/plain"
+                                                putExtra(Intent.EXTRA_TEXT, url)
+                                            }
+                                            startActivity(
+                                                Intent.createChooser(
+                                                    shareIntent, getString(R.string.shareTo)
+                                                )
+                                            )
+                                        }
+                                    }
+                                }
+                            } catch (e: CustomException) {
+                                dialogError(e, true)
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                                dialogError(e)
+                            } finally {
+                                runOnUiThread { progressIndicator.hide() }
+                            }
                         }
+                    }
 
-                        btnAboutHash.setOnClickListener {
-                            val dialogHashBinding = DialogHashBinding.inflate(layoutInflater)
-                            val qverbowSM3 = getQverbowSM3()
+                    dialogTencentAppStore.setOnClickListener {
+                        val dialogTencentAppStoreBinding =
+                            DialogTencentAppStoreBinding.inflate(layoutInflater)
 
-                            val hashDialog = MaterialAlertDialogBuilder(this@MainActivity)
-                                .setTitle(R.string.qverbowHash)
-                                .setIcon(R.drawable.shield_keyhole_line)
-                                .setView(dialogHashBinding.root)
-                                .show().apply {
-                                    dialogHashBinding.aboutHashText.text =
-                                        "SM3${getString(R.string.colon)}${qverbowSM3}"
-                                    dialogHashBinding.btnAboutGithubHashVerifiy.isVisible =
-                                        isRelease && !isPreviewRelease
+                        val tencentAppStoreDialog =
+                            MaterialAlertDialogBuilder(this@MainActivity)
+                                .setTitle(R.string.getUpdateFromTencentAppStore)
+                                .setIcon(R.drawable.flask_line)
+                                .setView(dialogTencentAppStoreBinding.root)
+                                .show()
+
+                        dialogTencentAppStoreBinding.apply {
+                            tencentAppStoreBack.setOnClickListener {
+                                tencentAppStoreDialog.dismiss()
+                            }
+
+                            getQq.setOnClickListener {
+                                tencentAppStoreStart(ANDROID_QQ_PACKAGE_NAME, getQq)
+                            }
+
+                            getTim.setOnClickListener {
+                                tencentAppStoreStart(ANDROID_TIM_PACKAGE_NAME, getTim)
+                            }
+
+                            getWeixin.setOnClickListener {
+                                tencentAppStoreStart(ANDROID_WECHAT_PACKAGE_NAME, getWeixin)
+                            }
+
+                            getWecom.setOnClickListener {
+                                tencentAppStoreStart(ANDROID_WECOM_PACKAGE_NAME, getWecom)
+                            }
+
+                            getWetype.setOnClickListener {
+                                tencentAppStoreStart(ANDROID_WETYPE_PACKAGE_NAME, getWetype)
+                            }
+
+                            getQidian.setOnClickListener {
+                                tencentAppStoreStart(ANDROID_QIDIAN_PACKAGE_NAME, getQidian)
+                            }
+                        }
+                    }
+
+                    dialogShiply.setOnClickListener {
+                        val dialogShiplyBinding = DialogShiplyBinding.inflate(layoutInflater)
+
+                        val shiplyDialog = MaterialAlertDialogBuilder(this@MainActivity)
+                            .setTitle(R.string.getUpdateFromShiplyPlatform)
+                            .setIcon(R.drawable.flask_line)
+                            .setView(dialogShiplyBinding.root)
+                            .setCancelable(false)
+                            .show()
+
+                        dialogShiplyBinding.apply {
+                            DataStoreUtil.apply {
+                                shiplyUin.editText?.setText(getStringKV("shiplyUin", ""))
+                                shiplyVersion.editText?.setText(
+                                    getStringKV("shiplyVersion", "")
+                                )
+                                switchShiplyAdvancedConfigurations.switchChecked =
+                                    getBooleanKV("shiplyAdvancedConfigurations", false)
+
+                                val shiplyTargetSelect = getStringKV("shiplyTargetSelect", "")
+                                if (shiplyTargetSelect == getString(R.string.shiplyTargetAppQQ) || shiplyTargetSelect == getString(
+                                        R.string.shiplyTargetAppTIM
+                                    )
+                                ) shiplyTarget.setText(
+                                    shiplyTargetSelect, false
+                                ) else shiplyTarget.setText(
+                                    getString(R.string.shiplyTargetAppQQ), false
+                                )
+                            }
+
+                            switchShiplyAdvancedConfigurations.setOnCheckedChangeListener { isChecked ->
+                                DataStoreUtil.putBooleanKVAsync(
+                                    "shiplyAdvancedConfigurations",
+                                    isChecked
+                                )
+                            }
+
+                            shiplyAdvancedConfigurationsClick.setOnClickListener {
+                                ShiplyAdvancedConfigFragment().apply {
+                                    isCancelable = false
+                                    show(
+                                        supportFragmentManager,
+                                        ShiplyAdvancedConfigFragment.TAG
+                                    )
+                                }
+                            }
+
+                            btnShiplyCancel.setOnClickListener {
+                                shiplyDialog.dismiss()
+                            }
+
+                            shiplyTarget.addTextChangedListener(object : TextWatcher {
+                                override fun afterTextChanged(p0: Editable?) {
+                                    val shiplyTargetSelect = shiplyTarget.text.toString()
+                                    DataStoreUtil.putStringKVAsync(
+                                        "shiplyTargetSelect", shiplyTargetSelect
+                                    )
                                 }
 
-                            dialogHashBinding.apply {
-                                btnAboutHashOk.setOnClickListener {
-                                    hashDialog.dismiss()
+                                override fun beforeTextChanged(
+                                    p0: CharSequence?, p1: Int, p2: Int, p3: Int
+                                ) {
                                 }
 
-                                btnAboutHashCopy.setOnClickListener {
-                                    copyText(qverbowSM3)
+                                override fun onTextChanged(
+                                    p0: CharSequence?, p1: Int, p2: Int, p3: Int
+                                ) {
                                 }
+                            })
 
-                                btnAboutGithubHashVerifiy.setOnClickListener {
+                            btnShiplyStart.setOnClickListener {
+                                shiplyUin.clearFocus()
+                                shiplyVersion.clearFocus()
+
+                                val imm =
+                                    getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                                imm.hideSoftInputFromWindow(shiplyVersion.windowToken, 0)
+
+                                class MissingParameterException(message: String) :
+                                    Exception(message)
+
+                                try {
                                     val spec = CircularProgressIndicatorSpec(
                                         this@MainActivity, null, 0,
                                         com.google.android.material.R.style.Widget_Material3_CircularProgressIndicator_ExtraSmall
@@ -417,1030 +1395,24 @@ class MainActivity : AppCompatActivity() {
                                             this@MainActivity, spec
                                         )
 
-                                    btnAboutGithubHashVerifiy.apply {
+                                    btnShiplyStart.apply {
                                         isEnabled = false
-                                        style(com.google.android.material.R.style.Widget_Material3_Button_TonalButton_Icon)
+                                        style(com.google.android.material.R.style.Widget_Material3_Button_Icon)
                                         icon = progressIndicatorDrawable
                                     }
 
-                                    checkQverbowHash(
-                                        BuildConfig.VERSION_NAME.trimSubstringAtEnd("-Preview-Release")
-                                            .trimSubstringAtEnd("-Release"),
-                                        getQverbowSM3(),
-                                        btnAboutGithubHashVerifiy
-                                    )
-                                }
-                            }
-                        }
-                    }
-                    true
-                }
+                                    if (shiplyUin.editText?.text.toString()
+                                            .isEmpty()
+                                    ) throw MissingParameterException("uin 信息是用于请求 TDS 腾讯端服务 Shiply 发布平台的对象 QQ 号，缺失 uin 参数将无法获取 Shiply 平台返回数据。")
+                                    if (shiplyVersion.editText?.text.toString()
+                                            .isEmpty()
+                                    ) throw MissingParameterException("请求 TDS 腾讯端服务 Shiply 发布平台需要 QQ 版本号参数，缺失版本号参数将无法获取 Shiply 平台返回数据。")
 
-                R.id.btn_setting -> {
-                    val dialogSettingBinding = DialogSettingBinding.inflate(layoutInflater)
-
-                    dialogSettingBinding.apply {
-                        longPressCard.switchChecked =
-                            DataStoreUtil.getBooleanKV("longPressCard", true)
-                        useNewLocalPage.switchChecked =
-                            DataStoreUtil.getBooleanKV("useNewLocalPage", true)
-                        guessNot5.switchChecked = DataStoreUtil.getBooleanKV("guessNot5", false)
-                        switchUpdateLogLlmGen.switchChecked =
-                            DataStoreUtil.getBooleanKV("updateLogLlmGen", false)
-                        switchGuessTestExtend.switchChecked =
-                            DataStoreUtil.getBooleanKV("guessTestExtend", false) // 扩展测试版扫版格式
-                        downloadOnSystemManager.switchChecked =
-                            DataStoreUtil.getBooleanKV("downloadOnSystemManager", false)
-                        switchAutoCheckUpdates.switchChecked =
-                            DataStoreUtil.getBooleanKV("autoCheckUpdates", false)
-                        switchPushNotifViaFcm.isVisible =
-                            Firebase.messaging.isAutoInitEnabled && GoogleApiAvailability.getInstance()
-                                .isGooglePlayServicesAvailable(this@MainActivity) == ConnectionResult.SUCCESS
-                        switchPushNotifViaFcm.switchChecked =
-                            DataStoreUtil.getBooleanKV("rainbowFCMSubscribed", false)
-                    }
-
-                    val dialogSetting = SideSheetDialog(this).apply {
-                        setContentView(dialogSettingBinding.root)
-                        if (SDK_INT >= Build.VERSION_CODES.Q) window?.isNavigationBarContrastEnforced =
-                            false
-                        show()
-                    }
-
-                    dialogSettingBinding.apply {
-                        btnSettingOk.setOnClickListener {
-                            dialogSetting.dismiss()
-                        }
-                        longPressCard.setOnCheckedChangeListener { isChecked ->
-                            DataStoreUtil.putBooleanKVAsync("longPressCard", isChecked)
-                        }
-                        useNewLocalPage.setOnCheckedChangeListener { isChecked ->
-                            DataStoreUtil.putBooleanKVAsync("useNewLocalPage", isChecked)
-                        }
-                        guessNot5.setOnCheckedChangeListener { isChecked ->
-                            DataStoreUtil.putBooleanKVAsync("guessNot5", isChecked)
-                        }
-                        switchUpdateLogLlmGen.setOnCheckedChangeListener { isChecked ->
-                            DataStoreUtil.putBooleanKVAsync("updateLogLlmGen", isChecked)
-                        }
-                        dialogPersonalization.setOnClickListener {
-                            val dialogPersonalization =
-                                DialogPersonalizationBinding.inflate(layoutInflater).apply {
-                                    root.parent?.let { parent ->
-                                        if (parent is ViewGroup) {
-                                            parent.removeView(root)
-                                        }
-                                    }
-
-                                    versionTcloudThickness.setEnabled(
-                                        DataStoreUtil.getBooleanKV("versionTCloud", true)
-                                    )
-
-                                    versionTcloudThickness.value = when (DataStoreUtil.getStringKV(
-                                        "versionTCloudThickness", "System"
-                                    )) {
-                                        "Light" -> 1.0f
-                                        "Regular" -> 2.0f
-                                        "Bold" -> 3.0f
-                                        else -> 4.0f
-                                    }
-                                }
-
-                            val dialogPer = SideSheetDialog(this@MainActivity).apply {
-                                setContentView(dialogPersonalization.root)
-                                if (SDK_INT >= Build.VERSION_CODES.Q) window?.isNavigationBarContrastEnforced =
-                                    false
-                                show()
-                            }
-
-                            dialogPersonalization.apply {
-                                switchDisplayFirst.switchChecked =
-                                    DataStoreUtil.getBooleanKV("displayFirst", true)
-                                switchKuiklyTag.switchChecked =
-                                    DataStoreUtil.getBooleanKV("kuiklyTag", true)
-                                switchUnrealEngineTag.switchChecked =
-                                    DataStoreUtil.getBooleanKV("unrealEngineTag", false)
-                                switchProgressSize.switchChecked =
-                                    DataStoreUtil.getBooleanKV("progressSize", false)
-                                switchProgressSizeText.switchChecked =
-                                    DataStoreUtil.getBooleanKV("progressSizeText", false)
-                                switchVersionTcloud.switchChecked =
-                                    DataStoreUtil.getBooleanKV("versionTCloud", true)
-                                switchOldLoading.switchChecked =
-                                    DataStoreUtil.getBooleanKV("showOldLoading", false)
-
-                                switchDisplayFirst.setOnCheckedChangeListener { isChecked ->
-                                    DataStoreUtil.putBooleanKVAsync("displayFirst", isChecked)
-                                    qqVersion = qqVersion.mapIndexed { index, qqVersionBean ->
-                                        if (index == 0) qqVersionBean.copy(
-                                            displayType = if (isChecked) 1 else 0
-                                        ) else qqVersionBean
-                                    }
-                                    timVersion = timVersion.mapIndexed { index, timVersionBean ->
-                                        if (index == 0) timVersionBean.copy(
-                                            displayType = if (isChecked) 1 else 0
-                                        ) else timVersionBean
-                                    }
-                                    weixinVersion =
-                                        weixinVersion.mapIndexed { index, weixinVersionBean ->
-                                            if (index == 0) weixinVersionBean.copy(
-                                                displayType = if (isChecked) 1 else 0
-                                            ) else weixinVersionBean
-                                        }
-                                    qqVersionAdapter.submitList(qqVersion)
-                                    timVersionAdapter.submitList(timVersion)
-                                    weixinVersionAdapter.submitList(weixinVersion)
-                                }
-
-                                switchOldLoading.setOnCheckedChangeListener { isChecked ->
-                                    DataStoreUtil.putBooleanKVAsync("showOldLoading", isChecked)
-                                }
-
-                                // 下五个设置不能异步持久化存储，否则视图更新读不到更新值
-                                switchKuiklyTag.setOnCheckedChangeListener { isChecked ->
-                                    DataStoreUtil.putBooleanKV("kuiklyTag", isChecked)
-                                    qqVersionAdapter.updateItemProperty("isShowKuiklyTag")
-                                    timVersionAdapter.updateItemProperty("isShowKuiklyTag")
-                                }
-                                switchUnrealEngineTag.setOnCheckedChangeListener { isChecked ->
-                                    DataStoreUtil.putBooleanKV("unrealEngineTag", isChecked)
-                                    qqVersionAdapter.updateItemProperty("isShowUnrealEngineTag")
-                                }
-                                switchProgressSize.setOnCheckedChangeListener { isChecked ->
-                                    DataStoreUtil.putBooleanKV("progressSize", isChecked)
-                                    qqVersionAdapter.updateItemProperty("isShowProgressSize")
-                                }
-                                switchProgressSizeText.setOnCheckedChangeListener { isChecked ->
-                                    DataStoreUtil.putBooleanKV("progressSizeText", isChecked)
-                                    qqVersionAdapter.updateItemProperty("isShowProgressSizeText")
-                                }
-                                switchVersionTcloud.setOnCheckedChangeListener { isChecked ->
-                                    DataStoreUtil.putBooleanKV("versionTCloud", isChecked)
-                                    dialogPersonalization.versionTcloudThickness.setEnabled(
-                                        isChecked
-                                    )
-                                    qqVersionAdapter.updateItemProperty("isTCloud")
-                                    timVersionAdapter.updateItemProperty("isTCloud")
-                                    weixinVersionAdapter.updateItemProperty("isTCloud")
-                                }
-
-                                btnPersonalizationOk.setOnClickListener {
-                                    dialogPer.dismiss()
-                                }
-
-                                versionTcloudThickness.setLabelFormatter {
-                                    return@setLabelFormatter when (it) {
-                                        1.0f -> "Light"
-                                        2.0f -> "Regular"
-                                        3.0f -> "Bold"
-                                        else -> getString(R.string.thicknessFollowSystem)
-                                    }
-                                }
-
-                                versionTcloudThickness.addOnChangeListener { _, value, _ ->
-                                    when (value) {
-                                        1.0f -> DataStoreUtil.putStringKV(
-                                            "versionTCloudThickness", "Light"
-                                        )
-
-                                        2.0f -> DataStoreUtil.putStringKV(
-                                            "versionTCloudThickness", "Regular"
-                                        )
-
-                                        3.0f -> DataStoreUtil.putStringKV(
-                                            "versionTCloudThickness", "Bold"
-                                        )
-
-                                        else -> DataStoreUtil.putStringKV(
-                                            "versionTCloudThickness", "System"
-                                        )
-                                    }
-                                    qqVersionAdapter.updateItemProperty("isTCloud")
-                                    timVersionAdapter.updateItemProperty("isTCloud")
-                                    weixinVersionAdapter.updateItemProperty("isTCloud")
-                                }
-                            }
-                        }
-
-                        dialogPrivateTokenSetting.setOnClickListener {
-                            val dialogPrivateTokenSettingBinding =
-                                DialogPrivateTokenSettingBinding.inflate(layoutInflater)
-
-                            dialogPrivateTokenSettingBinding.root.parent?.let { parent ->
-                                if (parent is ViewGroup) {
-                                    parent.removeView(dialogPrivateTokenSettingBinding.root)
-                                }
-                            }
-
-                            val dialogPrivateTokenSetting =
-                                MaterialAlertDialogBuilder(this@MainActivity)
-                                    .setTitle(R.string.privateTokenSettings)
-                                    .setIcon(R.drawable.key_line)
-                                    .setView(dialogPrivateTokenSettingBinding.root)
-                                    .setCancelable(false)
-                                    .show()
-
-
-                            val zhipuToken = KeyStoreUtil.getStringKVwithKeyStore(ZHIPU_TOKEN)
-                            val githubToken = KeyStoreUtil.getStringKVwithKeyStore(GITHUB_TOKEN)
-                            val securityLevel = KeyStoreUtil.checkHardwareSecurity()
-
-                            dialogPrivateTokenSettingBinding.apply {
-                                viewModel.isTokenTesting.observe(this@MainActivity) {
-                                    if (it) progressIndicatorTokenSetting.show() else progressIndicatorTokenSetting.hide()
-                                }
-
-                                progressIndicatorTokenSetting.apply {
-                                    showAnimationBehavior = LinearProgressIndicator.SHOW_NONE
-                                    hideAnimationBehavior = LinearProgressIndicator.HIDE_ESCAPE
-                                }
-
-                                when (securityLevel) {
-                                    0 -> {
-                                        securityLevelLayout.isVisible = true
-                                        securityLevelText.text =
-                                            getString(R.string.SecuritySoftwareSupported)
-                                    }
-
-                                    1 -> {
-                                        securityLevelLayout.isVisible = true
-                                        securityLevelText.text = getString(R.string.TEESupported)
-                                    }
-
-                                    2 -> {
-                                        securityLevelLayout.isVisible = true
-                                        securityLevelText.text =
-                                            getString(R.string.StrongBoxSupported)
-                                    }
-
-                                    -1 -> {
-                                        securityLevelLayout.isVisible = true
-                                        securityLevelText.text =
-                                            getString(R.string.UnknownSecurityHardwareSupported)
-                                    }
-
-                                    else -> securityLevelLayout.isVisible = false
-                                }
-
-                                zhipuAiToken.editText?.setText(if (zhipuToken == null) "" else zhipuToken.toString())
-                                githubPersonalAccessToken.editText?.setText(if (githubToken == null) "" else githubToken.toString())
-
-                                btnTokenCancel.setOnClickListener {
-                                    dialogPrivateTokenSetting.dismiss()
-                                }
-
-                                btnTokenSave.setOnClickListener {
-                                    try {
-                                        KeyStoreUtil.apply {
-                                            putStringKVwithKeyStoreAsync(
-                                                ZHIPU_TOKEN, zhipuAiToken.editText?.text.toString()
-                                            )
-                                            putStringKVwithKeyStoreAsync(
-                                                GITHUB_TOKEN,
-                                                githubPersonalAccessToken.editText?.text.toString()
-                                            )
-                                        }
-                                        dialogPrivateTokenSetting.dismiss()
-                                    } catch (e: Exception) {
-                                        e.printStackTrace()
-                                        dialogError(e)
-                                    }
-                                }
-
-                                zhipuTokenTest.setOnClickListener {
-                                    try {
-                                        KeyStoreUtil.putStringKVwithKeyStore(
-                                            ZHIPU_TOKEN, zhipuAiToken.editText?.text.toString()
-                                        )
-                                        if (viewModel.isTokenTesting.value == false) {
-                                            viewModel.setTokenTesting(true)
-                                            CoroutineScope(Dispatchers.IO).launch {
-                                                try {
-                                                    val token =
-                                                        KeyStoreUtil.getStringKVwithKeyStore(
-                                                            ZHIPU_TOKEN
-                                                        )
-                                                    if (!token.isNullOrEmpty()) {
-                                                        val responseData = getZhipuWrite(
-                                                            getString(
-                                                                R.string.testZhipuTokenPrompt,
-                                                                Locale.getDefault().toString()
-                                                            ),
-                                                            getString(
-                                                                R.string.testZhipuTokenPrompt,
-                                                                Locale.getDefault().toString()
-                                                            ),
-                                                            token
-                                                        )
-                                                        val gson =
-                                                            GsonBuilder().setPrettyPrinting()
-                                                                .create()
-                                                        val responseObject = gson.fromJson(
-                                                            responseData, JsonObject::class.java
-                                                        )
-
-                                                        runOnUiThread {
-                                                            if (responseObject.getAsJsonPrimitive("code").asInt == 200) {
-                                                                val zhipuContent =
-                                                                    responseObject.getAsJsonObject("data").asJsonObject.getAsJsonArray(
-                                                                        "choices"
-                                                                    ).asJsonArray.first().asJsonObject.getAsJsonObject(
-                                                                        "message"
-                                                                    ).asJsonObject.getAsJsonPrimitive(
-                                                                        "content"
-                                                                    ).asString
-                                                                MaterialAlertDialogBuilder(this@MainActivity)
-                                                                    .setIcon(R.drawable.ai_generate_2)
-                                                                    .setTitle(R.string.zhipuTokenSuccess)
-                                                                    .setMessage(zhipuContent.pangu())
-                                                                    .setPositiveButton(R.string.ok) { _, _ -> }
-                                                                    .show()
-                                                            } else {
-                                                                MaterialAlertDialogBuilder(this@MainActivity)
-                                                                    .setIcon(R.drawable.alert_line)
-                                                                    .setTitle(R.string.backFromZhipuPlatform)
-                                                                    .setMessage(
-                                                                        responseData?.toPrettyFormat()
-                                                                    )
-                                                                    .setPositiveButton(R.string.done) { _, _ -> }
-                                                                    .setNeutralButton(
-                                                                        R.string.copy,
-                                                                        null
-                                                                    ).create().apply {
-                                                                        setOnShowListener {
-                                                                            getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener {
-                                                                                responseData?.toPrettyFormat()
-                                                                                    ?.let { it ->
-                                                                                        copyText(it)
-                                                                                    }
-                                                                            }
-                                                                        }
-                                                                        show()
-                                                                    }
-                                                            }
-                                                        }
-                                                    } else runOnUiThread { showToast(R.string.zhipuTokenIsNull) }
-                                                } catch (e: RuntimeException) {
-                                                    if (e.message?.contains("invalid apiSecretKey") == true) runOnUiThread {
-                                                        dialogError(
-                                                            Exception(getString(R.string.zhipuTokenIsInvalid)),
-                                                            true
-                                                        )
-                                                    } else {
-                                                        e.printStackTrace()
-                                                        runOnUiThread { dialogError(e) }
-                                                    }
-                                                } catch (e: Exception) {
-                                                    e.printStackTrace()
-                                                    runOnUiThread { dialogError(e) }
-                                                } finally {
-                                                    runOnUiThread { viewModel.setTokenTesting(false) }
-                                                }
-                                            }
-                                        }
-                                    } catch (e: Exception) {
-                                        e.printStackTrace()
-                                        dialogError(e)
-                                    }
-                                }
-
-                                githubPatTest.setOnClickListener {
-                                    try {
-                                        KeyStoreUtil.putStringKVwithKeyStore(
-                                            GITHUB_TOKEN,
-                                            githubPersonalAccessToken.editText?.text.toString()
-                                        )
-                                        if (viewModel.isTokenTesting.value == false) {
-                                            viewModel.setTokenTesting(true)
-                                            CoroutineScope(Dispatchers.IO).launch {
-                                                try {
-                                                    val token =
-                                                        KeyStoreUtil.getStringKVwithKeyStore(
-                                                            GITHUB_TOKEN
-                                                        )
-                                                    if (!token.isNullOrEmpty()) {
-                                                        if (checkGitHubToken()) {
-                                                            runOnUiThread { showToast(R.string.githubTokenSuccess) }
-                                                        } else {
-                                                            runOnUiThread {
-                                                                MaterialAlertDialogBuilder(this@MainActivity)
-                                                                    .setIcon(R.drawable.alert_line)
-                                                                    .setTitle(R.string.githubTokenUnavailableTitle)
-                                                                    .setMessage(R.string.githubTokenUnavailable)
-                                                                    .setPositiveButton(R.string.done) { _, _ -> }
-                                                                    .show()
-                                                            }
-                                                        }
-
-                                                    } else runOnUiThread { showToast(R.string.githubTokenIsNull) }
-                                                } catch (e: Exception) {
-                                                    e.printStackTrace()
-                                                    dialogError(e)
-                                                } finally {
-                                                    runOnUiThread { viewModel.setTokenTesting(false) }
-                                                }
-                                            }
-                                        }
-
-                                    } catch (e: Exception) {
-                                        e.printStackTrace()
-                                        dialogError(e)
-                                    }
-                                }
-                            }
-                        }
-
-                        switchGuessTestExtend.setOnCheckedChangeListener { isChecked ->
-                            DataStoreUtil.putBooleanKVAsync("guessTestExtend", isChecked)
-                        }
-                        switchAutoCheckUpdates.setOnCheckedChangeListener { isChecked ->
-                            DataStoreUtil.putBooleanKVAsync("autoCheckUpdates", isChecked)
-                        }
-                        downloadOnSystemManager.setOnCheckedChangeListener { isChecked ->
-                            DataStoreUtil.putBooleanKVAsync("downloadOnSystemManager", isChecked)
-                        }
-
-                        dialogSuffixDefineClick.setOnClickListener {
-                            val dialogSuffixDefine =
-                                DialogFormatDefineBinding.inflate(layoutInflater)
-
-                            dialogSuffixDefine.root.parent?.let { parent ->
-                                if (parent is ViewGroup) {
-                                    parent.removeView(dialogSuffixDefine.root)
-                                }
-                            }
-
-                            val dialogSuffix = MaterialAlertDialogBuilder(this@MainActivity)
-                                .setTitle(R.string.enumerateVersionsFormatSetting)
-                                .setIcon(R.drawable.settings_line)
-                                .setView(dialogSuffixDefine.root)
-                                .setCancelable(false)
-                                .create()
-
-                            dialogSuffixDefine.apply {
-                                DataStoreUtil.apply {
-                                    suffixDefineCheckbox64hb.isChecked =
-                                        getBooleanKV("suffix64HB", true)
-                                    suffixDefineCheckboxHb64.isChecked =
-                                        getBooleanKV("suffixHB64", true)
-                                    suffixDefineCheckbox64hb1.isChecked =
-                                        getBooleanKV("suffix64HB1", true)
-                                    suffixDefineCheckboxHb164.isChecked =
-                                        getBooleanKV("suffixHB164", true)
-                                    suffixDefineCheckbox64hb2.isChecked =
-                                        getBooleanKV("suffix64HB2", true)
-                                    suffixDefineCheckboxHb264.isChecked =
-                                        getBooleanKV("suffixHB264", true)
-                                    suffixDefineCheckbox64hb3.isChecked =
-                                        getBooleanKV("suffix64HB3", true)
-                                    suffixDefineCheckboxHb364.isChecked =
-                                        getBooleanKV("suffixHB364", true)
-                                    suffixDefineCheckbox64hd.isChecked =
-                                        getBooleanKV("suffix64HD", true)
-                                    suffixDefineCheckboxHd64.isChecked =
-                                        getBooleanKV("suffixHD64", true)
-                                    suffixDefineCheckbox64hd1.isChecked =
-                                        getBooleanKV("suffix64HD1", true)
-                                    suffixDefineCheckboxHd164.isChecked =
-                                        getBooleanKV("suffixHD164", true)
-                                    suffixDefineCheckbox64hd2.isChecked =
-                                        getBooleanKV("suffix64HD2", true)
-                                    suffixDefineCheckboxHd264.isChecked =
-                                        getBooleanKV("suffixHD264", true)
-                                    suffixDefineCheckbox64hd3.isChecked =
-                                        getBooleanKV("suffix64HD3", true)
-                                    suffixDefineCheckboxHd364.isChecked =
-                                        getBooleanKV("suffixHD364", true)
-                                    suffixDefineCheckbox64hd1hb.isChecked =
-                                        getBooleanKV("suffix64HD1HB", true)
-                                    suffixDefineCheckboxHd1hb64.isChecked =
-                                        getBooleanKV("suffixHD1HB64", true)
-                                    suffixDefineCheckboxTest.isChecked =
-                                        getBooleanKV("suffixTest", true)
-                                    formatDefineCheckboxQq8958.isChecked =
-                                        getBooleanKV("useQQ8958TestFormat", false)
-                                    formatDefineCheckboxQq900814600.isChecked =
-                                        getBooleanKV("useQQ900814600TestFormat", false)
-                                }
-
-                                dialogSuffix.show()
-
-                                // 异步读取字符串，防止超长字符串造成阻塞
-                                settingSuffixDefine.apply {
-                                    isEnabled = false
-                                    btnSuffixSave.isEnabled = false
-                                    lifecycleScope.launch {
-                                        val suffixDefine = withContext(Dispatchers.IO) {
-                                            DataStoreUtil.getStringKVAsync("suffixDefine", "")
-                                                .await()
-                                        }
-                                        editText?.setText(
-                                            suffixDefine
-                                        )
-                                        isEnabled = true
-                                        btnSuffixSave.isEnabled = true
-                                    }
-                                }
-
-                                btnSuffixSave.setOnClickListener {
-                                    val suffixDefine = settingSuffixDefine.editText?.text.toString()
-
-                                    val suffixDataStoreList = listOf(
-                                        mapOf(
-                                            "key" to "suffixDefine",
-                                            "value" to suffixDefine,
-                                            "type" to "String"
-                                        ), mapOf(
-                                            "key" to "suffix64HB",
-                                            "value" to suffixDefineCheckbox64hb.isChecked,
-                                            "type" to "Boolean"
-                                        ), mapOf(
-                                            "key" to "suffixHB64",
-                                            "value" to suffixDefineCheckboxHb64.isChecked,
-                                            "type" to "Boolean"
-                                        ), mapOf(
-                                            "key" to "suffix64HB1",
-                                            "value" to suffixDefineCheckbox64hb1.isChecked,
-                                            "type" to "Boolean"
-                                        ), mapOf(
-                                            "key" to "suffixHB164",
-                                            "value" to suffixDefineCheckboxHb164.isChecked,
-                                            "type" to "Boolean"
-                                        ), mapOf(
-                                            "key" to "suffix64HB2",
-                                            "value" to suffixDefineCheckbox64hb2.isChecked,
-                                            "type" to "Boolean"
-                                        ), mapOf(
-                                            "key" to "suffixHB264",
-                                            "value" to suffixDefineCheckboxHb264.isChecked,
-                                            "type" to "Boolean"
-                                        ), mapOf(
-                                            "key" to "suffix64HB3",
-                                            "value" to suffixDefineCheckbox64hb3.isChecked,
-                                            "type" to "Boolean"
-                                        ), mapOf(
-                                            "key" to "suffixHB364",
-                                            "value" to suffixDefineCheckboxHb364.isChecked,
-                                            "type" to "Boolean"
-                                        ), mapOf(
-                                            "key" to "suffix64HD",
-                                            "value" to suffixDefineCheckbox64hd.isChecked,
-                                            "type" to "Boolean"
-                                        ), mapOf(
-                                            "key" to "suffixHD64",
-                                            "value" to suffixDefineCheckboxHd64.isChecked,
-                                            "type" to "Boolean"
-                                        ), mapOf(
-                                            "key" to "suffix64HD1",
-                                            "value" to suffixDefineCheckbox64hd1.isChecked,
-                                            "type" to "Boolean"
-                                        ), mapOf(
-                                            "key" to "suffixHD164",
-                                            "value" to suffixDefineCheckboxHd164.isChecked,
-                                            "type" to "Boolean"
-                                        ), mapOf(
-                                            "key" to "suffix64HD2",
-                                            "value" to suffixDefineCheckbox64hd2.isChecked,
-                                            "type" to "Boolean"
-                                        ), mapOf(
-                                            "key" to "suffixHD264",
-                                            "value" to suffixDefineCheckboxHd264.isChecked,
-                                            "type" to "Boolean"
-                                        ), mapOf(
-                                            "key" to "suffix64HD3",
-                                            "value" to suffixDefineCheckbox64hd3.isChecked,
-                                            "type" to "Boolean"
-                                        ), mapOf(
-                                            "key" to "suffixHD364",
-                                            "value" to suffixDefineCheckboxHd364.isChecked,
-                                            "type" to "Boolean"
-                                        ), mapOf(
-                                            "key" to "suffixHD1HB64",
-                                            "value" to suffixDefineCheckboxHd1hb64.isChecked,
-                                            "type" to "Boolean"
-                                        ), mapOf(
-                                            "key" to "suffix64HD1HB",
-                                            "value" to suffixDefineCheckbox64hd1hb.isChecked,
-                                            "type" to "Boolean"
-                                        ), mapOf(
-                                            "key" to "suffixTest",
-                                            "value" to suffixDefineCheckboxTest.isChecked,
-                                            "type" to "Boolean"
-                                        ), mapOf(
-                                            "key" to "useQQ8958TestFormat",
-                                            "value" to formatDefineCheckboxQq8958.isChecked,
-                                            "type" to "Boolean"
-                                        ), mapOf(
-                                            "key" to "useQQ900814600TestFormat",
-                                            "value" to formatDefineCheckboxQq900814600.isChecked,
-                                            "type" to "Boolean"
-                                        )
-                                    )
-
-                                    DataStoreUtil.batchPutKVAsync(suffixDataStoreList)
-                                    showToast(getString(R.string.saved))
-                                    dialogSuffix.dismiss()
-                                }
-
-                                btnSuffixCancel.setOnClickListener {
-                                    dialogSuffix.dismiss()
-                                }
-                            }
-                        }
-                        switchPushNotifViaFcm.setOnCheckedChangeListener { isChecked ->
-                            if (isChecked != DataStoreUtil.getBooleanKV(
-                                    "rainbowFCMSubscribed",
-                                    false
-                                )
-                            ) {
-                                if (isChecked) {
-                                    if (!NotificationManagerCompat.from(this@MainActivity)
-                                            .areNotificationsEnabled()
-                                    ) askNotificationPermission()
-                                    if (!NotificationManagerCompat.from(this@MainActivity)
-                                            .areNotificationsEnabled()
-                                    ) switchPushNotifViaFcm.switchChecked = false
-                                    else if (!checkNotificationChannelEnabled(
-                                            getString(R.string.rainbow_notification_channel_id)
+                                    if (!DataStoreUtil.getBooleanKV(
+                                            "shiplyAdvancedConfigurations", false
                                         )
                                     ) {
-                                        switchPushNotifViaFcm.switchChecked = false
-                                        dialogError(
-                                            Exception(getString(R.string.cannotEnableFirebaseCloudMessaging)),
-                                            true, true
-                                        )
-                                    } else {
-                                        switchPushNotifViaFcm.switchEnabled = false
-                                        Firebase.analytics.setAnalyticsCollectionEnabled(true)
-                                        subscribeWithTimeout(10000L, switchPushNotifViaFcm)
-                                    }
-                                } else {
-                                    switchPushNotifViaFcm.switchEnabled = false
-                                    Firebase.analytics.setAnalyticsCollectionEnabled(true)
-                                    unsubscribeWithTimeout(10000L, switchPushNotifViaFcm)
-                                }
-                            }
-                        }
-                    }
-                    true
-                }
-
-                R.id.btn_exp_features -> {
-                    val dialogExperimentalFeaturesBinding =
-                        DialogExperimentalFeaturesBinding.inflate(layoutInflater)
-
-                    dialogExperimentalFeaturesBinding.dialogFirebase.setCellDescription(
-                        if (GoogleApiAvailability.getInstance()
-                                .isGooglePlayServicesAvailable(this@MainActivity) == ConnectionResult.SUCCESS && Firebase.messaging.isAutoInitEnabled
-                        ) getString(R.string.initializedFirebaseServiceItem) else null
-                    )
-
-                    val dialogExperimentalFeatures = MaterialAlertDialogBuilder(this)
-                        .setTitle(R.string.experimentalFeatures)
-                        .setIcon(R.drawable.flask_line)
-                        .setView(dialogExperimentalFeaturesBinding.root)
-                        .show()
-
-                    dialogExperimentalFeaturesBinding.apply {
-                        progressIndicator.apply {
-                            hide()
-                            showAnimationBehavior = LinearProgressIndicator.SHOW_NONE
-                            hideAnimationBehavior = LinearProgressIndicator.HIDE_ESCAPE
-                        }
-
-                        btnExpOk.setOnClickListener {
-                            dialogExperimentalFeatures.dismiss()
-                        }
-
-                        dialogGetWeixinAlphaNewest.setOnClickListener {
-                            progressIndicator.show()
-                            CoroutineScope(Dispatchers.IO).launch {
-                                class CustomException(message: String) :
-                                    Exception(message)
-                                try {
-                                    val okHttpClient = OkHttpClient()
-                                    val request =
-                                        Request.Builder()
-                                            .url("https://dldir1v6.qq.com/weixin/android/weixin_android_alpha_config.json")
-                                            .build()
-                                    val response = okHttpClient.newCall(request).execute()
-                                    if (!response.isSuccessful) throw CustomException(getString(R.string.getWeixinAlphaConfig404))
-                                    val responseData = response.body?.string()
-                                    if (responseData == null) throw CustomException("Response data is null.")
-                                    val start = (responseData.indexOf("cb(")) + 3
-                                    val end = responseData.indexOf(")")
-                                    val jsonString = responseData.substring(start, end)
-                                    val map = resolveWeixinAlphaConfig(jsonString)
-                                    val appSize = getFileSize(map["url"].toString())
-                                    runOnUiThread {
-                                        val applicationsConfigBackButtonBinding =
-                                            ApplicationsConfigBackButtonBinding.inflate(
-                                                layoutInflater
-                                            )
-                                        val weixinAlphaConfigBackDialog =
-                                            MaterialAlertDialogBuilder(this@MainActivity).setTitle(
-                                                if (appSize != null) R.string.successInGetting else R.string.suspectedPackageWithdrawal
-                                            ).setIcon(R.drawable.flask_line).setMessage(
-                                                "${getString(R.string.version)}${map["versionName"].toString()}\n${
-                                                    getString(
-                                                        R.string.downloadLink
-                                                    )
-                                                }${map["url"].toString()}" + (if (appSize != null) "\n\n${
-                                                    getString(
-                                                        R.string.fileSize
-                                                    )
-                                                }$appSize MB" else ("\n\n" + getString(R.string.getWeixinAlphaConfigLink404)))
-                                            ).setView(applicationsConfigBackButtonBinding.root)
-                                                .show()
-
-                                        applicationsConfigBackButtonBinding.apply {
-                                            applicationsConfigBackBtnCopy.setOnClickListener {
-                                                weixinAlphaConfigBackDialog.dismiss()
-                                                copyText(map["url"].toString())
-                                            }
-
-                                            applicationsConfigBackBtnDownload.setOnClickListener {
-                                                weixinAlphaConfigBackDialog.dismiss()
-                                                downloadFile(
-                                                    this@MainActivity, map["url"].toString()
-                                                )
-                                            }
-
-                                            applicationsConfigBackBtnJsonDetails.setOnClickListener {
-                                                showExpBackDialog(
-                                                    Gson().toJson(map),
-                                                    getString(R.string.jsonDetails)
-                                                )
-                                            }
-
-                                            applicationsConfigBackBtnShare.setOnClickListener {
-                                                weixinAlphaConfigBackDialog.dismiss()
-                                                val shareIntent = Intent(Intent.ACTION_SEND).apply {
-                                                    type = "text/plain"
-                                                    putExtra(
-                                                        Intent.EXTRA_TEXT,
-                                                        "Android 微信测试版 ${map["versionName"].toString()}" + (if (appSize != null) "（${
-                                                            getString(R.string.fileSize)
-                                                        }$appSize MB）" else "") + "\n\n${
-                                                            getString(R.string.downloadLink)
-                                                        }${map["url"].toString()}\n\n鉴于微信测试版可能存在不可预知的稳定性问题，您在下载及使用该测试版本之前，必须明确并确保自身具备足够的风险识别和承受能力。"
-                                                    )
-                                                }
-                                                startActivity(
-                                                    Intent.createChooser(
-                                                        shareIntent, getString(R.string.shareTo)
-                                                    )
-                                                )
-                                            }
-                                        }
-                                    }
-                                } catch (e: CustomException) {
-                                    dialogError(e, true)
-                                } catch (e: Exception) {
-                                    e.printStackTrace()
-                                    dialogError(e)
-                                } finally {
-                                    runOnUiThread { progressIndicator.hide() }
-                                }
-                            }
-                        }
-
-                        dialogGetWetypeLatest.setOnClickListener {
-                            progressIndicator.show()
-                            CoroutineScope(Dispatchers.IO).launch {
-                                class CustomException(message: String) :
-                                    Exception(message)
-                                try {
-                                    val okHttpClient =
-                                        OkHttpClient.Builder().followRedirects(false).build()
-                                    val request =
-                                        Request.Builder()
-                                            .url("https://z.weixin.qq.com/android/download?channel=latest")
-                                            .build()
-                                    val response = okHttpClient.newCall(request).execute()
-                                    if (!response.isSuccessful && !response.isRedirect) throw CustomException(
-                                        getString(R.string.getWeTypeLatestChannel404)
-                                    )
-                                    val url = response.header("Location")
-                                    if (url == null) throw CustomException("Response data is null.")
-                                    val appSize = getFileSize(url.toString())
-                                    runOnUiThread {
-                                        val expLinkNextButtonBinding =
-                                            ExpLinkNextButtonBinding.inflate(layoutInflater)
-                                        val weTypeLatestChannelBackDialog =
-                                            MaterialAlertDialogBuilder(this@MainActivity).setTitle(
-                                                if (appSize != null) R.string.successInGetting else R.string.suspectedPackageWithdrawal
-                                            ).setIcon(R.drawable.flask_line).setMessage(
-                                                "${
-                                                    getString(R.string.downloadLink)
-                                                }$url" + (if (appSize != null) "\n\n${
-                                                    getString(R.string.fileSize)
-                                                }$appSize MB" else "")
-                                            ).setView(expLinkNextButtonBinding.root)
-                                                .show()
-
-                                        expLinkNextButtonBinding.apply {
-                                            expNextBtnCopy.setOnClickListener {
-                                                weTypeLatestChannelBackDialog.dismiss()
-                                                copyText(url.toString())
-                                            }
-
-                                            expNextBtnDownload.setOnClickListener {
-                                                weTypeLatestChannelBackDialog.dismiss()
-                                                downloadFile(this@MainActivity, url.toString())
-                                            }
-
-                                            expNextBtnShare.setOnClickListener {
-                                                weTypeLatestChannelBackDialog.dismiss()
-                                                val shareIntent = Intent(Intent.ACTION_SEND).apply {
-                                                    type = "text/plain"
-                                                    putExtra(Intent.EXTRA_TEXT, url)
-                                                }
-                                                startActivity(
-                                                    Intent.createChooser(
-                                                        shareIntent, getString(R.string.shareTo)
-                                                    )
-                                                )
-                                            }
-                                        }
-                                    }
-                                } catch (e: CustomException) {
-                                    dialogError(e, true)
-                                } catch (e: Exception) {
-                                    e.printStackTrace()
-                                    dialogError(e)
-                                } finally {
-                                    runOnUiThread { progressIndicator.hide() }
-                                }
-                            }
-                        }
-
-                        dialogTencentAppStore.setOnClickListener {
-                            val dialogTencentAppStoreBinding =
-                                DialogTencentAppStoreBinding.inflate(layoutInflater)
-
-                            val tencentAppStoreDialog =
-                                MaterialAlertDialogBuilder(this@MainActivity)
-                                    .setTitle(R.string.getUpdateFromTencentAppStore)
-                                    .setIcon(R.drawable.flask_line)
-                                    .setView(dialogTencentAppStoreBinding.root)
-                                    .show()
-
-                            dialogTencentAppStoreBinding.apply {
-                                tencentAppStoreBack.setOnClickListener {
-                                    tencentAppStoreDialog.dismiss()
-                                }
-
-                                getQq.setOnClickListener {
-                                    tencentAppStoreStart(ANDROID_QQ_PACKAGE_NAME, getQq)
-                                }
-
-                                getTim.setOnClickListener {
-                                    tencentAppStoreStart(ANDROID_TIM_PACKAGE_NAME, getTim)
-                                }
-
-                                getWeixin.setOnClickListener {
-                                    tencentAppStoreStart(ANDROID_WECHAT_PACKAGE_NAME, getWeixin)
-                                }
-
-                                getWecom.setOnClickListener {
-                                    tencentAppStoreStart(ANDROID_WECOM_PACKAGE_NAME, getWecom)
-                                }
-
-                                getWetype.setOnClickListener {
-                                    tencentAppStoreStart(ANDROID_WETYPE_PACKAGE_NAME, getWetype)
-                                }
-
-                                getQidian.setOnClickListener {
-                                    tencentAppStoreStart(ANDROID_QIDIAN_PACKAGE_NAME, getQidian)
-                                }
-                            }
-                        }
-
-                        dialogShiply.setOnClickListener {
-                            val dialogShiplyBinding = DialogShiplyBinding.inflate(layoutInflater)
-
-                            val shiplyDialog = MaterialAlertDialogBuilder(this@MainActivity)
-                                .setTitle(R.string.getUpdateFromShiplyPlatform)
-                                .setIcon(R.drawable.flask_line)
-                                .setView(dialogShiplyBinding.root)
-                                .setCancelable(false)
-                                .show()
-
-                            dialogShiplyBinding.apply {
-                                DataStoreUtil.apply {
-                                    shiplyUin.editText?.setText(getStringKV("shiplyUin", ""))
-                                    shiplyVersion.editText?.setText(
-                                        getStringKV("shiplyVersion", "")
-                                    )
-                                    switchShiplyAdvancedConfigurations.switchChecked =
-                                        getBooleanKV("shiplyAdvancedConfigurations", false)
-
-                                    val shiplyTargetSelect = getStringKV("shiplyTargetSelect", "")
-                                    if (shiplyTargetSelect == getString(R.string.shiplyTargetAppQQ) || shiplyTargetSelect == getString(
-                                            R.string.shiplyTargetAppTIM
-                                        )
-                                    ) shiplyTarget.setText(
-                                        shiplyTargetSelect, false
-                                    ) else shiplyTarget.setText(
-                                        getString(R.string.shiplyTargetAppQQ), false
-                                    )
-                                }
-
-                                switchShiplyAdvancedConfigurations.setOnCheckedChangeListener { isChecked ->
-                                    DataStoreUtil.putBooleanKVAsync(
-                                        "shiplyAdvancedConfigurations",
-                                        isChecked
-                                    )
-                                }
-
-                                shiplyAdvancedConfigurationsClick.setOnClickListener {
-                                    ShiplyAdvancedConfigFragment().apply {
-                                        isCancelable = false
-                                        show(
-                                            supportFragmentManager,
-                                            ShiplyAdvancedConfigFragment.TAG
-                                        )
-                                    }
-                                }
-
-                                btnShiplyCancel.setOnClickListener {
-                                    shiplyDialog.dismiss()
-                                }
-
-                                shiplyTarget.addTextChangedListener(object : TextWatcher {
-                                    override fun afterTextChanged(p0: Editable?) {
-                                        val shiplyTargetSelect = shiplyTarget.text.toString()
-                                        DataStoreUtil.putStringKVAsync(
-                                            "shiplyTargetSelect", shiplyTargetSelect
-                                        )
-                                    }
-
-                                    override fun beforeTextChanged(
-                                        p0: CharSequence?, p1: Int, p2: Int, p3: Int
-                                    ) {
-                                    }
-
-                                    override fun onTextChanged(
-                                        p0: CharSequence?, p1: Int, p2: Int, p3: Int
-                                    ) {
-                                    }
-                                })
-
-                                btnShiplyStart.setOnClickListener {
-                                    shiplyUin.clearFocus()
-                                    shiplyVersion.clearFocus()
-
-                                    val imm =
-                                        getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-                                    imm.hideSoftInputFromWindow(shiplyVersion.windowToken, 0)
-
-                                    class MissingParameterException(message: String) :
-                                        Exception(message)
-
-                                    try {
-                                        val spec = CircularProgressIndicatorSpec(
-                                            this@MainActivity, null, 0,
-                                            com.google.android.material.R.style.Widget_Material3_CircularProgressIndicator_ExtraSmall
-                                        )
-                                        val progressIndicatorDrawable =
-                                            IndeterminateDrawable.createCircularDrawable(
-                                                this@MainActivity, spec
-                                            )
-
-                                        btnShiplyStart.apply {
-                                            isEnabled = false
-                                            style(com.google.android.material.R.style.Widget_Material3_Button_Icon)
-                                            icon = progressIndicatorDrawable
-                                        }
-
-                                        if (shiplyUin.editText?.text.toString()
-                                                .isEmpty()
-                                        ) throw MissingParameterException("uin 信息是用于请求 TDS 腾讯端服务 Shiply 发布平台的对象 QQ 号，缺失 uin 参数将无法获取 Shiply 平台返回数据。")
-                                        if (shiplyVersion.editText?.text.toString()
-                                                .isEmpty()
-                                        ) throw MissingParameterException("请求 TDS 腾讯端服务 Shiply 发布平台需要 QQ 版本号参数，缺失版本号参数将无法获取 Shiply 平台返回数据。")
-
-                                        if (!DataStoreUtil.getBooleanKV(
-                                                "shiplyAdvancedConfigurations", false
-                                            )
-                                        ) {
-                                            DataStoreUtil.apply {
-                                                putStringKVAsync(
-                                                    "shiplyVersion",
-                                                    shiplyVersion.editText?.text.toString()
-                                                )
-                                                putStringKVAsync(
-                                                    "shiplyUin", shiplyUin.editText?.text.toString()
-                                                )
-                                            }
-                                            tencentShiplyStart(
-                                                btnShiplyStart,
-                                                shiplyVersion.editText?.text.toString(),
-                                                shiplyUin.editText?.text.toString(),
-                                                shiplyTarget.text.toString()
-                                            )
-                                        } else DataStoreUtil.apply {
+                                        DataStoreUtil.apply {
                                             putStringKVAsync(
                                                 "shiplyVersion",
                                                 shiplyVersion.editText?.text.toString()
@@ -1448,99 +1420,112 @@ class MainActivity : AppCompatActivity() {
                                             putStringKVAsync(
                                                 "shiplyUin", shiplyUin.editText?.text.toString()
                                             )
-                                            tencentShiplyStart(btnShiplyStart,
-                                                shiplyVersion.editText?.text.toString(),
-                                                shiplyUin.editText?.text.toString(),
-                                                shiplyTarget.text.toString(),
-                                                getStringKV(
-                                                    "shiplyAppid", ""
-                                                ).ifEmpty { SHIPLY_DEFAULT_APPID },
-                                                getStringKV(
-                                                    "shiplyOsVersion", ""
-                                                ).ifEmpty { SDK_INT.toString() },
-                                                getStringKV(
-                                                    "shiplyModel", ""
-                                                ).ifEmpty { Build.MODEL.toString() },
-                                                getStringKV(
-                                                    "shiplySdkVersion", ""
-                                                ).ifEmpty { SHIPLY_DEFAULT_SDK_VERSION },
-                                                getStringKV(
-                                                    "shiplyLanguage", ""
-                                                ).ifEmpty { Locale.getDefault().language.toString() })
                                         }
-                                    } catch (e: MissingParameterException) {
-                                        dialogError(e, true)
-                                    } catch (e: Exception) {
-                                        e.printStackTrace()
-                                        dialogError(e)
-                                    }
-                                }
-                            }
-                        }
-
-                        dialogFirebase.setOnClickListener {
-                            // 必须检测 Google Play 服务是否可用，因为 Firebase 服务依赖于 Google Play 服务
-                            if (GoogleApiAvailability.getInstance()
-                                    .isGooglePlayServicesAvailable(this@MainActivity) == ConnectionResult.SUCCESS
-                            ) {
-                                if (!Firebase.messaging.isAutoInitEnabled) {
-                                    if (SDK_INT >= Build.VERSION_CODES.O) {
-                                        val channelTitle =
-                                            getString(R.string.rainbow_notification_channel_title)
-                                        val channelDescription =
-                                            getString(R.string.rainbow_notification_channel_description)
-                                        val channelId =
-                                            getString(R.string.rainbow_notification_channel_id)
-                                        val channelImportance =
-                                            NotificationManager.IMPORTANCE_DEFAULT
-                                        val notificationChannel = NotificationChannel(
-                                            channelId, channelTitle, channelImportance
+                                        tencentShiplyStart(
+                                            btnShiplyStart,
+                                            shiplyVersion.editText?.text.toString(),
+                                            shiplyUin.editText?.text.toString(),
+                                            shiplyTarget.text.toString()
                                         )
-                                        notificationChannel.description = channelDescription
-                                        val notificationManager =
-                                            getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-                                        notificationManager.createNotificationChannel(
-                                            notificationChannel
+                                    } else DataStoreUtil.apply {
+                                        putStringKVAsync(
+                                            "shiplyVersion",
+                                            shiplyVersion.editText?.text.toString()
                                         )
+                                        putStringKVAsync(
+                                            "shiplyUin", shiplyUin.editText?.text.toString()
+                                        )
+                                        tencentShiplyStart(btnShiplyStart,
+                                            shiplyVersion.editText?.text.toString(),
+                                            shiplyUin.editText?.text.toString(),
+                                            shiplyTarget.text.toString(),
+                                            getStringKV(
+                                                "shiplyAppid", ""
+                                            ).ifEmpty { SHIPLY_DEFAULT_APPID },
+                                            getStringKV(
+                                                "shiplyOsVersion", ""
+                                            ).ifEmpty { SDK_INT.toString() },
+                                            getStringKV(
+                                                "shiplyModel", ""
+                                            ).ifEmpty { Build.MODEL.toString() },
+                                            getStringKV(
+                                                "shiplySdkVersion", ""
+                                            ).ifEmpty { SHIPLY_DEFAULT_SDK_VERSION },
+                                            getStringKV(
+                                                "shiplyLanguage", ""
+                                            ).ifEmpty { Locale.getDefault().language.toString() })
                                     }
-
-                                    val dialogFirebaseFirstInfoBinding =
-                                        DialogFirebaseFirstInfoBinding.inflate(layoutInflater)
-
-                                    val dialogFirebaseInfo =
-                                        MaterialAlertDialogBuilder(this@MainActivity)
-                                            .setTitle(R.string.initFirebaseService)
-                                            .setIcon(R.drawable.flask_line)
-                                            .setView(dialogFirebaseFirstInfoBinding.root)
-                                            .show()
-
-                                    dialogFirebaseFirstInfoBinding.firebaseInfoCancel.setOnClickListener {
-                                        dialogFirebaseInfo.dismiss()
-                                    }
-
-                                    dialogFirebaseFirstInfoBinding.firebaseInfoNext.setOnClickListener {
-                                        Firebase.messaging.isAutoInitEnabled = true
-                                        Firebase.analytics.setAnalyticsCollectionEnabled(true)
-                                        dialogFirebaseInfo.dismiss()
-                                    }
-
-                                } else {
-                                    showToast(getString(R.string.initializedFirebaseService))
-                                    Firebase.analytics.setAnalyticsCollectionEnabled(true)
+                                } catch (e: MissingParameterException) {
+                                    dialogError(e, true)
+                                } catch (e: Exception) {
+                                    e.printStackTrace()
+                                    dialogError(e)
                                 }
-                            } else {
-                                dialogError(
-                                    Exception(getString(R.string.cannotFindGooglePlayServices)),
-                                    true
-                                )
                             }
                         }
                     }
-                    true
-                }
 
-                else -> false
+                    dialogFirebase.setOnClickListener {
+                        // 必须检测 Google Play 服务是否可用，因为 Firebase 服务依赖于 Google Play 服务
+                        if (GoogleApiAvailability.getInstance()
+                                .isGooglePlayServicesAvailable(this@MainActivity) == ConnectionResult.SUCCESS
+                        ) {
+                            if (!Firebase.messaging.isAutoInitEnabled) {
+                                if (SDK_INT >= Build.VERSION_CODES.O) {
+                                    val channelTitle =
+                                        getString(R.string.rainbow_notification_channel_title)
+                                    val channelDescription =
+                                        getString(R.string.rainbow_notification_channel_description)
+                                    val channelId =
+                                        getString(R.string.rainbow_notification_channel_id)
+                                    val channelImportance =
+                                        NotificationManager.IMPORTANCE_DEFAULT
+                                    val notificationChannel = NotificationChannel(
+                                        channelId, channelTitle, channelImportance
+                                    )
+                                    notificationChannel.description = channelDescription
+                                    val notificationManager =
+                                        getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+                                    notificationManager.createNotificationChannel(
+                                        notificationChannel
+                                    )
+                                }
+
+                                val dialogFirebaseFirstInfoBinding =
+                                    DialogFirebaseFirstInfoBinding.inflate(layoutInflater)
+
+                                val dialogFirebaseInfo =
+                                    MaterialAlertDialogBuilder(this@MainActivity)
+                                        .setTitle(R.string.initFirebaseService)
+                                        .setIcon(R.drawable.flask_line)
+                                        .setView(dialogFirebaseFirstInfoBinding.root)
+                                        .show()
+
+                                dialogFirebaseFirstInfoBinding.firebaseInfoCancel.setOnClickListener {
+                                    dialogFirebaseInfo.dismiss()
+                                }
+
+                                dialogFirebaseFirstInfoBinding.firebaseInfoNext.setOnClickListener {
+                                    Firebase.messaging.isAutoInitEnabled = true
+                                    Firebase.analytics.setAnalyticsCollectionEnabled(true)
+                                    dialogFirebaseInfo.dismiss()
+                                }
+
+                            } else {
+                                showToast(getString(R.string.initializedFirebaseService))
+                                Firebase.analytics.setAnalyticsCollectionEnabled(true)
+                            }
+                        } else {
+                            dialogError(
+                                Exception(getString(R.string.cannotFindGooglePlayServices)),
+                                true
+                            )
+                        }
+                    }
+                }
+                true
             }
+
         }
 
         if (intent.action == "android.intent.action.VIEW" && DataStoreUtil.getIntKV(
@@ -1550,7 +1535,6 @@ class MainActivity : AppCompatActivity() {
         binding.btnGuess.setOnClickListener {
             showGuessVersionDialog()
         }
-
     }
 
     // 下面三个函数是用于响应扫版对话框 Spinner 所选项的界面变化
@@ -1770,9 +1754,8 @@ class MainActivity : AppCompatActivity() {
 
 
     @SuppressLint("SetTextI18n", "PrivateResource")
-    private fun getData(menu: MenuItem? = null) {
+    private fun getData() {
         viewModel.setVersionListLoading(true)
-        if (menu != null) menu.isEnabled = false
         CoroutineScope(Dispatchers.IO).launch {
             val resolveLocalQQJob = CoroutineScope(Dispatchers.IO).launch {
                 try {
@@ -1963,7 +1946,6 @@ class MainActivity : AppCompatActivity() {
             joinAll(fetchWeixinLatestDownloadUrl)
             withContext(Dispatchers.Main) {
                 viewModel.setVersionListLoading(false)
-                if (menu != null) menu.isEnabled = true
             }
         }
     }
