@@ -30,7 +30,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -41,15 +40,10 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -72,6 +66,7 @@ import com.xiaoniu.qqversionlist.ui.LocalAppDetailsActivityViewModel.Companion.R
 import com.xiaoniu.qqversionlist.ui.LocalAppDetailsActivityViewModel.Companion.RULE_TYPE_OTEAM_TENCENT
 import com.xiaoniu.qqversionlist.ui.LocalAppDetailsActivityViewModel.Companion.RULE_TYPE_PRITIVE_TENCENT
 import com.xiaoniu.qqversionlist.ui.MainActivity.Companion.JUDGE_UA_TARGET
+import com.xiaoniu.qqversionlist.ui.theme.QQVersionListTheme
 import com.xiaoniu.qqversionlist.util.ClipboardUtil.copyText
 import com.xiaoniu.qqversionlist.util.DataStoreUtil
 import com.xiaoniu.qqversionlist.util.InfoUtil.dialogError
@@ -117,7 +112,7 @@ class LocalAppDetailsActivity : AppCompatActivity() {
             viewModel.apply {
                 localAppStackResults.observe(this@LocalAppDetailsActivity) { result ->
                     stackInfoList.setContent {
-                        LocalAppDetailsStackWindow(result)
+                        QQVersionListTheme { LocalAppDetailsStackWindow(result) }
                     }
                 }
                 appIconImage.observe(this@LocalAppDetailsActivity) { appIconImage ->
@@ -412,14 +407,6 @@ class LocalAppDetailsActivity : AppCompatActivity() {
     private fun LocalAppDetailsStackWindow(
         result: MutableList<LocalAppStackResult>
     ) {
-        val dynamicColor = SDK_INT >= Build.VERSION_CODES.S
-        val isSystemInDarkTheme = isSystemInDarkTheme()
-        val colorScheme = when {
-            dynamicColor && isSystemInDarkTheme -> dynamicDarkColorScheme(LocalContext.current)
-            dynamicColor && !isSystemInDarkTheme -> dynamicLightColorScheme(LocalContext.current)
-            !dynamicColor && isSystemInDarkTheme -> darkColorScheme()
-            else -> lightColorScheme()
-        }
         return Column {
             (if (result.isEmpty()) mutableListOf() else result).sortedWith(compareBy<LocalAppStackResult> {
                 if (RULES_ID_ORDER.indexOf(it.id) == -1) Int.MAX_VALUE
@@ -429,8 +416,8 @@ class LocalAppDetailsActivity : AppCompatActivity() {
                     .fillMaxWidth()
                     .padding(5.dp),
                     colors = CardDefaults.cardColors(
-                        containerColor = colorScheme.surfaceContainerLow,
-                        contentColor = colorScheme.onSurfaceVariant
+                        containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+                        contentColor = MaterialTheme.colorScheme.onSurfaceVariant
                     ),
                     onClick = {
                         when (item.id) {
@@ -596,7 +583,7 @@ class LocalAppDetailsActivity : AppCompatActivity() {
                             modifier = Modifier
                                 .size(32.dp)
                                 .padding(start = 4.dp, end = 4.dp),
-                            colorFilter = ColorFilter.tint(colorScheme.primary),
+                            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
                         )
                         Column(
                             modifier = Modifier
@@ -660,13 +647,13 @@ class LocalAppDetailsActivity : AppCompatActivity() {
                                     else -> item.id
                                 },
                                 style = MaterialTheme.typography.titleSmall,
-                                color = colorScheme.onSurface
+                                color = MaterialTheme.colorScheme.onSurface
                             )
 
                             Text(
                                 text = stringResource(id = R.string.thisVerContains, item.dex),
                                 style = MaterialTheme.typography.bodySmall,
-                                color = colorScheme.onSurfaceVariant,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier.padding(top = 4.dp)
                             )
                         }

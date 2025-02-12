@@ -22,8 +22,8 @@ plugins {
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
     id("com.google.gms.google-services")
     kotlin("plugin.serialization") version "2.1.10"
-    id("com.google.android.gms.oss-licenses-plugin")
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.aboutlibraries)
 }
 
 private fun gitCommitHash(project: Project): String {
@@ -99,6 +99,8 @@ android {
 }
 
 dependencies {
+    implementation(libs.aboutlibraries.compose.m3)
+    implementation(libs.aboutlibraries.core)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.activity.ktx)
@@ -143,11 +145,12 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.pangu)
     implementation(libs.paris)
-    implementation(libs.play.services.oss.licenses)
     implementation(libs.smali.dexlib2)
     testImplementation(libs.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
+    debugImplementation(libs.androidx.ui.test.manifest)
 }

@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.android.application) apply false
     id("org.jetbrains.kotlin.android") version "2.1.10" apply false
     alias(libs.plugins.compose.compiler) apply false
+    alias(libs.plugins.aboutlibraries) apply false
 }
 
 buildscript {
@@ -13,6 +14,5 @@ buildscript {
     dependencies {
         classpath(libs.secrets.gradle.plugin)
         classpath(libs.google.services)
-        classpath(libs.oss.licenses.plugin)
     }
 }
