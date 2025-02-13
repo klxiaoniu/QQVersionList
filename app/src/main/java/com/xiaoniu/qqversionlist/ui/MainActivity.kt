@@ -126,7 +126,6 @@ import com.xiaoniu.qqversionlist.util.StringUtil.resolveWeixinAlphaConfig
 import com.xiaoniu.qqversionlist.util.StringUtil.toPrettyFormat
 import com.xiaoniu.qqversionlist.util.StringUtil.trimSubstringAtEnd
 import com.xiaoniu.qqversionlist.util.StringUtil.trimSubstringAtStart
-import com.xiaoniu.qqversionlist.util.VersionUtil.resolveLatestWeixin
 import com.xiaoniu.qqversionlist.util.VersionUtil.resolveLocalQQ
 import com.xiaoniu.qqversionlist.util.VersionUtil.resolveLocalTIM
 import com.xiaoniu.qqversionlist.util.VersionUtil.resolveLocalWeixin
@@ -161,9 +160,6 @@ class MainActivity : AppCompatActivity() {
     lateinit var localQQAdapter: LocalQQAdapter
     lateinit var localTIMAdapter: LocalTIMAdapter
     lateinit var localWeixinAdapter: LocalWeixinAdapter
-    lateinit var qqVersion: List<QQVersionBean>
-    lateinit var timVersion: List<TIMVersionBean>
-    lateinit var weixinVersion: List<WeixinVersionBean>
     private lateinit var qqVersionListFragment: QQVersionListFragment
     private lateinit var timVersionListFragment: TIMVersionListFragment
     private lateinit var rvPagerAdapter: VersionListPagerAdapter
@@ -208,6 +204,15 @@ class MainActivity : AppCompatActivity() {
                 progressLine.hide()
                 btnGet.isEnabled = true
             }
+        })
+        viewModel.qqVersion.observe(this, Observer { qqVersion ->
+            qqVersionAdapter.submitList(qqVersion.toMutableList())
+        })
+        viewModel.timVersion.observe(this, Observer { timVersion ->
+            timVersionAdapter.submitList(timVersion.toMutableList())
+        })
+        viewModel.weixinVersion.observe(this, Observer { weixinVersion ->
+            weixinVersionAdapter.submitList(weixinVersion.toMutableList())
         })
 
         initButtons()
@@ -294,7 +299,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.apply {
-
             btnGet.setOnClickListener {
                 getData()
                 true
@@ -518,25 +522,21 @@ class MainActivity : AppCompatActivity() {
 
                             switchDisplayFirst.setOnCheckedChangeListener { isChecked ->
                                 DataStoreUtil.putBooleanKVAsync("displayFirst", isChecked)
-                                qqVersion = qqVersion.mapIndexed { index, qqVersionBean ->
+                                viewModel.setQQVersion((viewModel.qqVersion.value as MutableList<QQVersionBean>).mapIndexed { index, qqVersionBean ->
                                     if (index == 0) qqVersionBean.copy(
                                         displayType = if (isChecked) 1 else 0
                                     ) else qqVersionBean
-                                }
-                                timVersion = timVersion.mapIndexed { index, timVersionBean ->
+                                })
+                                viewModel.setTIMVersion((viewModel.timVersion.value as MutableList<TIMVersionBean>).mapIndexed { index, timVersionBean ->
                                     if (index == 0) timVersionBean.copy(
                                         displayType = if (isChecked) 1 else 0
                                     ) else timVersionBean
-                                }
-                                weixinVersion =
-                                    weixinVersion.mapIndexed { index, weixinVersionBean ->
-                                        if (index == 0) weixinVersionBean.copy(
-                                            displayType = if (isChecked) 1 else 0
-                                        ) else weixinVersionBean
-                                    }
-                                qqVersionAdapter.submitList(qqVersion)
-                                timVersionAdapter.submitList(timVersion)
-                                weixinVersionAdapter.submitList(weixinVersion)
+                                })
+                                viewModel.setWeixinVersion((viewModel.weixinVersion.value as MutableList<WeixinVersionBean>).mapIndexed { index, weixinVersionBean ->
+                                    if (index == 0) weixinVersionBean.copy(
+                                        displayType = if (isChecked) 1 else 0
+                                    ) else weixinVersionBean
+                                })
                             }
 
                             switchOldLoading.setOnCheckedChangeListener { isChecked ->
@@ -1834,9 +1834,8 @@ class MainActivity : AppCompatActivity() {
                     val response = okHttpClient.newCall(request).execute()
                     val responseData = response.body?.string()
                     if (responseData != null) {
-                        resolveQQRainbow(this@MainActivity, responseData)
                         withContext(Dispatchers.Main) {
-                            qqVersionAdapter.submitList(qqVersion)
+                            resolveQQRainbow(viewModel, responseData)
                         }
                     }
                 } catch (e: Exception) {
@@ -1864,13 +1863,9 @@ class MainActivity : AppCompatActivity() {
                         val response = okHttpClient.newCall(request).execute()
                         val responseData = response.body?.string()
                         if (responseData != null) {
-                            resolveTIMRainbow(this@MainActivity, responseData)
                             withContext(Dispatchers.Main) {
-                                timVersionAdapter.submitList(timVersion)
-                                if (!DataStoreUtil.getBooleanKV(
-                                        "closeSwipeLeftForTIM", false
-                                    )
-                                ) {
+                                resolveTIMRainbow(viewModel, responseData)
+                                if (!DataStoreUtil.getBooleanKV("closeSwipeLeftForTIM", false)) {
                                     class TipTIMSnackbarActionListener : View.OnClickListener {
                                         override fun onClick(v: View?) {
                                             DataStoreUtil.putBooleanKV(
@@ -1912,11 +1907,14 @@ class MainActivity : AppCompatActivity() {
                         .build()
                     val response = okHttpClient.newCall(request).execute()
                     val responseData = response.body?.string()
-                    if (responseData != null) {
-                        resolveWeixinHTML(this@MainActivity, responseData)
-                        withContext(Dispatchers.Main) {
-                            weixinVersionAdapter.submitList(weixinVersion)
-                        }
+                    val okHttpClient2 = OkHttpClient()
+                    val request2 = Request.Builder()
+                        .url("https://support.weixin.qq.com/update/")
+                        .build()
+                    val response2 = okHttpClient2.newCall(request2).execute()
+                    val responseData2 = response2.body?.string()
+                    if (responseData != null) withContext(Dispatchers.Main) {
+                        resolveWeixinHTML(viewModel, responseData, responseData2)
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -1924,26 +1922,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             joinAll(fetchQQVersionJob, fetchTIMVersionJob, fetchWeixinVersionJob)
-            val fetchWeixinLatestDownloadUrl = CoroutineScope(Dispatchers.IO).launch {
-                try {
-                    val okHttpClient = OkHttpClient()
-                    val request = Request.Builder()
-                        .url("https://support.weixin.qq.com/update/")
-                        .build()
-                    val response = okHttpClient.newCall(request).execute()
-                    val responseData = response.body?.string()
-                    if (responseData != null) {
-                        resolveLatestWeixin(this@MainActivity, responseData)
-                        withContext(Dispatchers.Main) {
-                            weixinVersionAdapter.submitList(weixinVersion)
-                        }
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    dialogError(e)
-                }
-            }
-            joinAll(fetchWeixinLatestDownloadUrl)
             withContext(Dispatchers.Main) {
                 viewModel.setVersionListLoading(false)
             }

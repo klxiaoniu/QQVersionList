@@ -208,7 +208,7 @@ class TIMVersionAdapter :
     }
 
     private fun bindNewestDownloadLink(button: MaterialButton, bean: TIMVersionBean) {
-        if (bean.link !== "") {
+        if (bean.link != "") {
             button.isVisible = true
             button.setOnClickListener {
                 button.isEnabled = false
@@ -361,9 +361,11 @@ class TIMVersionAdapter :
         override fun getChangePayload(
             oldItem: TIMVersionBean, newItem: TIMVersionBean
         ): Any? {
-            return if (oldItem.displayType != newItem.displayType) "displayType"
-            else if (oldItem.displayInstall != newItem.displayInstall) "displayInstall"
-            else null
+            return when {
+                oldItem.displayType != newItem.displayType -> "displayType"
+                oldItem.displayInstall != newItem.displayInstall -> "displayInstall"
+                else -> null
+            }
         }
     }
 }

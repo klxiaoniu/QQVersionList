@@ -178,8 +178,7 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
             RULE_ID_SHIPLY,
             RULE_ID_KUIKLY,
             RULE_ID_HIPPY,
-            RULE_ID_RIGHTLY,
-            RULE_ID_TENCENT_BEACON
+            RULE_ID_RIGHTLY
         )
     }
 

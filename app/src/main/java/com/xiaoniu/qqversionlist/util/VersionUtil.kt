@@ -34,7 +34,7 @@ import com.xiaoniu.qqversionlist.QverbowApplication.Companion.EARLIEST_UNREAL_EN
 import com.xiaoniu.qqversionlist.data.QQVersionBean
 import com.xiaoniu.qqversionlist.data.TIMVersionBean
 import com.xiaoniu.qqversionlist.data.WeixinVersionBean
-import com.xiaoniu.qqversionlist.ui.MainActivity
+import com.xiaoniu.qqversionlist.ui.MainActivityViewModel
 import com.xiaoniu.qqversionlist.util.StringUtil.getQua
 import com.xiaoniu.qqversionlist.util.StringUtil.jsonArrayToList
 import kotlinx.serialization.json.jsonObject
@@ -45,11 +45,12 @@ import kotlinx.serialization.json.Json as KotlinJson
 import kotlinx.serialization.json.JsonElement as KotlinJsonElement
 
 object VersionUtil {
-    fun resolveQQRainbow(thisActivity: MainActivity, responseData: String) {
+    fun resolveQQRainbow(viewModel: MainActivityViewModel, responseData: String) {
         val start = (responseData.indexOf("versions64\":[")) + 12
         val end = (responseData.indexOf(";\n" + "      typeof"))
         val totalJson = responseData.substring(start, end)
-        thisActivity.qqVersion = totalJson.split("},{").reversed().map {
+        var qqVersion: List<QQVersionBean> = mutableListOf<QQVersionBean>()
+        qqVersion = totalJson.split("},{").reversed().map {
             val pstart = it.indexOf("{\"versions")
             val pend = it.indexOf(",\"length")
             val json = it.substring(pstart, pend)
@@ -78,22 +79,18 @@ object VersionUtil {
                 }
             }
         }
-        if (DataStoreUtil.getBooleanKV(
-                "displayFirst", true
-            )
-        ) thisActivity.qqVersion[0].displayType = 1
+        if (DataStoreUtil.getBooleanKV("displayFirst", true)) qqVersion[0].displayType = 1
         // 舍弃 currentQQVersion = qqVersion.first().versionNumber
         // 大版本号也放持久化存储了，否则扫版 Shortcut 因为加载过快而获取不到东西
-        DataStoreUtil.putStringKVAsync(
-            "versionBig", thisActivity.qqVersion.first().versionNumber
-        )
+        DataStoreUtil.putStringKVAsync("versionBig", qqVersion.first().versionNumber)
+        viewModel.setQQVersion(qqVersion)
     }
 
-    fun resolveTIMRainbow(thisActivity: MainActivity, responseData: String) {
+    fun resolveTIMRainbow(viewModel: MainActivityViewModel, responseData: String) {
         val gson = Gson()
         val jsonData = gson.fromJson(responseData, JsonObject::class.java)
 
-        thisActivity.timVersion = mutableListOf()
+        var timVersion: List<TIMVersionBean> = mutableListOf<TIMVersionBean>()
 
         val androidLink = jsonData.get("download_link").asJsonObject.get("android").asString
 
@@ -110,7 +107,7 @@ object VersionUtil {
                     val fix = logItem.asJsonObject.get("fix").asJsonArray
                     val feature = logItem.asJsonObject.get("feature").asJsonArray
 
-                    (thisActivity.timVersion as MutableList<TIMVersionBean>).add(
+                    (timVersion as MutableList<TIMVersionBean>).add(
                         TIMVersionBean(
                             version = version,
                             datetime = datetime,
@@ -137,28 +134,26 @@ object VersionUtil {
             }
         }
 
-        thisActivity.timVersion[0].link = androidLink
-        thisActivity.timVersion[0].jsonString = gson.toJson(JsonObject().apply {
-            addProperty("version_code", thisActivity.timVersion[0].version)
-            addProperty("datetime", thisActivity.timVersion[0].datetime)
-            addProperty("fix", thisActivity.timVersion[0].fix.toString())
-            addProperty("feature", thisActivity.timVersion[0].feature.toString())
+        timVersion[0].link = androidLink
+        timVersion[0].jsonString = gson.toJson(JsonObject().apply {
+            addProperty("version_code", timVersion[0].version)
+            addProperty("datetime", timVersion[0].datetime)
+            addProperty("fix", timVersion[0].fix.toString())
+            addProperty("feature", timVersion[0].feature.toString())
             addProperty("link", androidLink)
         }).toString()
 
-        if (DataStoreUtil.getBooleanKV(
-                "displayFirst", true
-            )
-        ) thisActivity.timVersion[0].displayType = 1
-        DataStoreUtil.putStringKVAsync(
-            "TIMVersionBig", thisActivity.timVersion.first().version
-        )
+        if (DataStoreUtil.getBooleanKV("displayFirst", true)) timVersion[0].displayType = 1
+        DataStoreUtil.putStringKVAsync("TIMVersionBig", timVersion.first().version)
+        viewModel.setTIMVersion(timVersion)
     }
 
-    fun resolveWeixinHTML(thisActivity: MainActivity, responseData: String) {
+    fun resolveWeixinHTML(
+        viewModel: MainActivityViewModel, responseData: String, responseData2: String? = null
+    ) {
         val document = Jsoup.parse(responseData)
         val androidSection = document.selectFirst("section#android")
-        val versions = mutableListOf<WeixinVersionBean>()
+        val weixinVersion = mutableListOf<WeixinVersionBean>()
         val weixinVersionInstall = DataStoreUtil.getStringKV("WeixinVersionInstall", "")
         if (androidSection != null) {
             val versionItems = androidSection.select("li.faq_section_sublist_item")
@@ -170,7 +165,7 @@ object VersionUtil {
                 if (versionElement != null && dateElement != null) {
                     val version = versionElement.text().trim()
                     val publishDate = dateElement.text().trim().replace("(", "").replace(")", "")
-                    versions.add(
+                    weixinVersion.add(
                         WeixinVersionBean(
                             version,
                             publishDate,
@@ -181,33 +176,35 @@ object VersionUtil {
                 }
             }
         }
-        thisActivity.weixinVersion = versions
 
         if (DataStoreUtil.getBooleanKV(
                 "displayFirst", true
             )
-        ) thisActivity.weixinVersion.first().displayType = 1
-        DataStoreUtil.putStringKVAsync(
-            "WeixinVersionBig", thisActivity.weixinVersion.first().version
-        )
-    }
+        ) weixinVersion.first().displayType = 1
+        DataStoreUtil.putStringKVAsync("WeixinVersionBig", weixinVersion.first().version)
 
-    fun resolveLatestWeixin(thisActivity: MainActivity, responseData: String) {
-        val startString = "var cgiData= {\"errCode\":0,\"errMsg\":\"ok\",\"data\":"
-        val start = (responseData.indexOf(startString)) + startString.length
-        val end = (responseData.indexOf(",\"isMobile\":"))
-        val json = KotlinJson { ignoreUnknownKeys = true }
-        val jsonData: Map<String, KotlinJsonElement> =
-            json.decodeFromString(responseData.substring(start, end))
+        if (responseData2 != null) {
+            val startString = "var cgiData= {\"errCode\":0,\"errMsg\":\"ok\",\"data\":"
+            val start = (responseData2.indexOf(startString)) + startString.length
+            val end = (responseData2.indexOf(",\"isMobile\":"))
+            val json = KotlinJson { ignoreUnknownKeys = true }
+            val jsonData: Map<String, KotlinJsonElement> =
+                json.decodeFromString(responseData2.substring(start, end))
+            weixinVersion.forEach({ versionItem ->
+                val prodItems = jsonData["prodItems"]?.jsonObject
+                val andrVersion = prodItems?.get("andrVersion")?.jsonPrimitive?.content
+                if (andrVersion != null && ComparableVersion(versionItem.version) == ComparableVersion(
+                        andrVersion
+                    )
+                ) {
+                    val bit64 =
+                        prodItems["taskUrl"]?.jsonObject?.get("bit64")?.jsonPrimitive?.content
+                    if (bit64 != null) versionItem.link = bit64
+                }
+            })
+        }
 
-        thisActivity.weixinVersion.forEach({ versionItem ->
-            val prodItems = jsonData["prodItems"]?.jsonObject
-            val andrVersion = prodItems?.get("andrVersion")?.jsonPrimitive?.content
-            if (andrVersion != null && ComparableVersion(versionItem.version) == ComparableVersion(andrVersion)) {
-                val bit64 = prodItems["taskUrl"]?.jsonObject?.get("bit64")?.jsonPrimitive?.content
-                if (bit64 != null) versionItem.link = bit64
-            }
-        })
+        viewModel.setWeixinVersion(weixinVersion)
     }
 
     fun Context.resolveLocalQQ() {

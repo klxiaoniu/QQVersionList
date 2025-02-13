@@ -174,7 +174,7 @@ class WeixinVersionAdapter :
     }
 
     private fun bindNewestDownloadLink(button: MaterialButton, bean: WeixinVersionBean) {
-        if (bean.link !== "") {
+        if (bean.link != "") {
             button.isVisible = true
             button.setOnClickListener {
                 button.isEnabled = false
@@ -287,9 +287,9 @@ class WeixinVersionAdapter :
 
     class WeixinVersionDiffCallback : DiffUtil.ItemCallback<WeixinVersionBean>() {
         override fun areItemsTheSame(
-            oldItem: WeixinVersionBean, newItem: WeixinVersionBean
+            old: WeixinVersionBean, new: WeixinVersionBean
         ): Boolean {
-            return "${oldItem.version} ${oldItem.datetime}" == "${newItem.version} ${newItem.datetime}"
+            return old == new
         }
 
         override fun areContentsTheSame(
@@ -301,7 +301,12 @@ class WeixinVersionAdapter :
         override fun getChangePayload(
             oldItem: WeixinVersionBean, newItem: WeixinVersionBean
         ): Any? {
-            return if (oldItem.displayType != newItem.displayType) "displayType" else if (oldItem.displayInstall != newItem.displayInstall) "displayInstall" else if (oldItem.link != newItem.link) "downloadUrl" else null
+            return when {
+                oldItem.displayType != newItem.displayType -> "displayType"
+                oldItem.displayInstall != newItem.displayInstall -> "displayInstall"
+                oldItem.link != newItem.link -> "downloadUrl"
+                else -> null
+            }
         }
     }
 }
