@@ -30,6 +30,8 @@ import android.widget.TextView
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -47,12 +49,11 @@ import com.xiaoniu.qqversionlist.util.Extensions.dp
 import com.xiaoniu.qqversionlist.util.FileUtil.downloadFile
 import com.xiaoniu.qqversionlist.util.FileUtil.getFileSize
 import com.xiaoniu.qqversionlist.util.InfoUtil.showToast
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class WeixinVersionAdapter :
+class WeixinVersionAdapter(private val lifecycleOwner: LifecycleOwner) :
     ListAdapter<WeixinVersionBean, RecyclerView.ViewHolder>(WeixinVersionDiffCallback()) {
     private var getVersionTCloud = DataStoreUtil.getBooleanKV("versionTCloud", true)
     private var getVersionTCloudThickness =
@@ -178,7 +179,7 @@ class WeixinVersionAdapter :
             button.isVisible = true
             button.setOnClickListener {
                 button.isEnabled = false
-                CoroutineScope(Dispatchers.IO).launch {
+                lifecycleOwner.lifecycleScope.launch {
                     var appSize: String? = null
                     try {
                         appSize = getFileSize(bean.link)

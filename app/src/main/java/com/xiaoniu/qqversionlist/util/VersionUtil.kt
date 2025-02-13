@@ -185,23 +185,26 @@ object VersionUtil {
 
         if (responseData2 != null) {
             val startString = "var cgiData= {\"errCode\":0,\"errMsg\":\"ok\",\"data\":"
-            val start = (responseData2.indexOf(startString)) + startString.length
+            val startIndex = (responseData2.indexOf(startString))
             val end = (responseData2.indexOf(",\"isMobile\":"))
-            val json = KotlinJson { ignoreUnknownKeys = true }
-            val jsonData: Map<String, KotlinJsonElement> =
-                json.decodeFromString(responseData2.substring(start, end))
-            weixinVersion.forEach({ versionItem ->
-                val prodItems = jsonData["prodItems"]?.jsonObject
-                val andrVersion = prodItems?.get("andrVersion")?.jsonPrimitive?.content
-                if (andrVersion != null && ComparableVersion(versionItem.version) == ComparableVersion(
-                        andrVersion
-                    )
-                ) {
-                    val bit64 =
-                        prodItems["taskUrl"]?.jsonObject?.get("bit64")?.jsonPrimitive?.content
-                    if (bit64 != null) versionItem.link = bit64
-                }
-            })
+            if (startIndex != -1 && end != -1 && (startIndex + startString.length) < end) {
+                val json = KotlinJson { ignoreUnknownKeys = true }
+                val jsonData: Map<String, KotlinJsonElement> = json.decodeFromString(
+                    responseData2.substring(startIndex + startString.length, end)
+                )
+                weixinVersion.forEach({ versionItem ->
+                    val prodItems = jsonData["prodItems"]?.jsonObject
+                    val andrVersion = prodItems?.get("andrVersion")?.jsonPrimitive?.content
+                    if (andrVersion != null && ComparableVersion(versionItem.version) == ComparableVersion(
+                            andrVersion
+                        )
+                    ) {
+                        val bit64 =
+                            prodItems["taskUrl"]?.jsonObject?.get("bit64")?.jsonPrimitive?.content
+                        if (bit64 != null) versionItem.link = bit64
+                    }
+                })
+            }
         }
 
         viewModel.setWeixinVersion(weixinVersion)

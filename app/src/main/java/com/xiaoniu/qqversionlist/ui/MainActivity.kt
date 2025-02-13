@@ -182,8 +182,8 @@ class MainActivity : AppCompatActivity() {
             false
 
         qqVersionAdapter = QQVersionAdapter()
-        timVersionAdapter = TIMVersionAdapter()
-        weixinVersionAdapter = WeixinVersionAdapter()
+        timVersionAdapter = TIMVersionAdapter(this)
+        weixinVersionAdapter = WeixinVersionAdapter(this)
         localQQAdapter = LocalQQAdapter()
         localTIMAdapter = LocalTIMAdapter()
         localWeixinAdapter = LocalWeixinAdapter()

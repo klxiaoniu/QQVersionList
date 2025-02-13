@@ -38,10 +38,8 @@ import com.xiaoniu.qqversionlist.data.LocalAppStackResult
 import com.xiaoniu.qqversionlist.data.LocalAppStackRule
 import com.xiaoniu.qqversionlist.util.DexResolver
 import com.xiaoniu.qqversionlist.util.FileUtil.ZipFileCompat
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Semaphore
@@ -53,8 +51,6 @@ import java.nio.charset.Charset
 import kotlin.use
 
 class LocalAppDetailsActivityViewModel : ViewModel() {
-    val ioScope = CoroutineScope(Dispatchers.IO)
-
     companion object {
         const val RULE_TYPE_PRITIVE_TENCENT = "Tencent Pritive" // 腾讯私有库
         const val RULE_TYPE_PRITIVE_3RD_PARTY = "3rd Party Pritive" // 第三方私有库
@@ -371,33 +367,33 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
             }
 
             val allJobs = mutableListOf<Job>().apply {
-                add(ioScope.launch {
+                add(viewModelScope.launch(Dispatchers.IO) {
                     val baseJobs = mutableListOf<Job>().apply {
-                        add(ioScope.launch {
+                        add(viewModelScope.launch(Dispatchers.IO) {
                             val appName = getAppName(applicationInfo, activity)
                             withContext(Dispatchers.Main) {
                                 setAppName(appName)
                             }
                         })
-                        add(ioScope.launch {
+                        add(viewModelScope.launch(Dispatchers.IO) {
                             val appIconImage = getAppIconImage(applicationInfo, activity)
                             if (appIconImage != null) withContext(Dispatchers.Main) {
                                 setAppIconImage(appIconImage)
                             }
                         })
-                        add(ioScope.launch {
+                        add(viewModelScope.launch(Dispatchers.IO) {
                             val targetSDK = getTargetSDK(applicationInfo)
                             withContext(Dispatchers.Main) {
                                 setTargetSDK(targetSDK)
                             }
                         })
-                        add(ioScope.launch {
+                        add(viewModelScope.launch(Dispatchers.IO) {
                             val minSDK = getMinSDK(applicationInfo)
                             withContext(Dispatchers.Main) {
                                 setMinSDK(minSDK)
                             }
                         })
-                        add(ioScope.launch {
+                        add(viewModelScope.launch(Dispatchers.IO) {
                             val compileSDK = getCompileSDK(applicationInfo)
                             withContext(Dispatchers.Main) {
                                 if (compileSDK != null) setCompileSDK(compileSDK) else setCompileSDK(
@@ -418,7 +414,7 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
                                 ::setAppSettingParamsPad,
                                 applicationInfo
                             )
-                            add(ioScope.launch {
+                            add(viewModelScope.launch(Dispatchers.IO) {
                                 val qua = getQua(packageInfo)
                                 withContext(Dispatchers.Main) {
                                     setQua(if (qua.isNullOrEmpty()) "" else qua.replace("\n", ""))
@@ -456,11 +452,11 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
                         }
                     }
                 })
-                add(ioScope.launch {
+                add(viewModelScope.launch(Dispatchers.IO) {
                     val semaphore = Semaphore(3)
                     val dexJobs = mutableListOf<Job>()
                     DEX_PRE_RULES.forEach { rule ->
-                        dexJobs.add(ioScope.launch {
+                        dexJobs.add(viewModelScope.launch(Dispatchers.IO) {
                             semaphore.withPermit {
                                 val findDex = checkLibrary(applicationInfo.sourceDir, rule.dex)
                                 if (findDex != null) {
@@ -559,7 +555,7 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
         setProperty: (String) -> Unit,
         param: T
     ) {
-        jobs.add(ioScope.launch {
+        jobs.add(viewModelScope.launch(Dispatchers.IO) {
             val result = checkFunction(param)
             withContext(Dispatchers.Main) { setProperty(if (result.isNullOrEmpty()) "" else result) }
         })
@@ -576,10 +572,5 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
     fun cleanCache(activity: Activity) {
         val cacheDir = File(activity.cacheDir, "apkAnalysis")
         if (cacheDir.exists()) cacheDir.deleteRecursively()
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        ioScope.cancel()
     }
 }
