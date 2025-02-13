@@ -142,7 +142,7 @@
     <string name="suffixSetting">后缀设置</string>
     <string name="others">其它</string>
     <string name="ok">好</string>
-    <string name="swipeLeftForTIMVersions">左滑查看 TIM 版本列表</string>
+    <string name="swipeLeftToSeeMore">向左滑动查看更多</string>
     <string name="getUpdateFromTencentAppStore">腾讯应用宝更新获取（实验性）</string>
     <string name="experimentalFeatures">实验性功能</string>
     <string name="getQQLinkFromTencentAppStore">获取 QQ 下载直链</string>
@@ -274,4 +274,20 @@
     <string name="zhipuTokenIsInvalid">填入的 Token 被智谱 AI 开放平台大模型接口 Java SDK 判定无效。</string>
     <string name="clickHereToViewTheChangelog">点击此处查看更新日志</string>
     <string name="localWeixinVersion">本机微信：</string>
+    <string name="weixin">Weixin</string>
+    <string name="localDetailsMMKV">MMKV</string>
+    <string name="localDetailsMMKVDesc">MMKV 是微信中的一个高效、小巧、易用的移动的键值对存储框架，可在 Android、iOS/macOS、Windows、POSIX 和 HarmonyOS NEXT 上使用。</string>
+    <string name="localDetailsWCDB">WCDB</string>
+    <string name="localDetailsWCDBDesc">WCDB 是一个易用、高效、完整的移动数据库框架，它基于 SQLite 和 SQLCipher 开发，在微信中应用广泛，且支持在 C++、Java、Kotlin、Swift、Objc 五种语言环境中使用。</string>
+    <string name="localDetailsTinker">Tinker</string>
+    <string name="localDetailsTinkerDesc">Tinker 是微信官方的 Android 热补丁解决方案，它支持动态下发代码、So 库以及资源，让应用能够在不需要重新安装的情况下实现更新。</string>
+    <string name="localDetailsMars">Mars</string>
+    <string name="localDetailsMarsDesc">Mars 是微信官方的跨平台跨业务的终端基础组件。</string>
+    <string name="localDetailsMatrix">Matrix</string>
+    <string name="localDetailsMatrixDesc">Matrix 是一款微信研发并日常使用的应用性能接入框架，支持 iOS, macOS 和 Android。 Matrix 通过接入各种性能监控方案，对性能监控项的异常数据进行采集和分析，输出相应的问题分析、定位与优化建议，从而帮助开发者开发出更高质量的应用。</string>
+    <string name="localWeixinVersionDetails">本机微信版本详情</string>
+    <string name="localDetailsReactNativeDesc">React Native 将 React 的声明式 UI 框架引入 iOS 和 Android。使用 React Native，您可以直接使用原生 UI 控件，并拥有对原生平台的完整访问权限。</string>
+    <string name="localDetailsReactNative">React Native</string>
+    <string name="localDetailsTBSDesc">腾讯浏览服务（Tencent Browsing Service，简称 TBS）属于 PCG 事业群，QQ 浏览器团队。QQ 浏览器作为一个平台化的产品，不论是网页的打开还是文档能力的打开，都需要一个强大的自研引擎做支撑，而引擎研发团队，一直深耕引擎底层技术 10 余年，积累了丰富的业务经验，将引擎技术从产品独立出来为 SDK，并不断演进成一个平台化的引擎产品，成立腾讯浏览服务，为腾讯公司内外产品提供强大的引擎技术支持和技术服务支持，覆盖了近十万家产品接入，并支持数亿级的网页浏览体验。</string>
+    <string name="localDetailsTBS">腾讯浏览服务</string>
 </resources>

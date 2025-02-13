@@ -333,6 +333,7 @@ QQ 版本列表实用工具的诞生离不开以下开源项目，感谢以下�
 - [Java API for GitHub（Kohsuke Kawaguchi）](https://github.com/hub4j/github-api)，Licensed under [MIT License](https://github.com/hub4j/github-api/blob/main/LICENSE.txt)
 - [jsoup: Java HTML Parser](https://jsoup.org/)，Licensed under [MIT License](https://jsoup.org/license)
 - [Pangu.java](https://github.com/vinta/pangu.java)，Licensed under [MIT License](https://github.com/vinta/pangu.java/blob/master/LICENSE)
+- [AboutLibraries（Mike Penz）](https://github.com/mikepenz/AboutLibraries)，Licensed under [Apache License Version 2.0](https://github.com/mikepenz/AboutLibraries/blob/develop/LICENSE)
 
 ## 商业服务鸣谢
 

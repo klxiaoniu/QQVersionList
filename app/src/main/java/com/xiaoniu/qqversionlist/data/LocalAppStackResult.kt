@@ -18,12 +18,7 @@
 
 package com.xiaoniu.qqversionlist.data
 
-data class WeixinVersionBean(
-    val version: String,
-    val datetime: String,
-
-    val isAlpha: Boolean = false,
-    var displayInstall: Boolean = false, // false 为不展示
-    var displayType: Int = 0, // 0为收起
-    var link: String = "",
+data class LocalAppStackResult(
+    val id: String,
+    val dex: String
 )

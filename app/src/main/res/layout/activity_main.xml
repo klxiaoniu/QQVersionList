@@ -57,26 +57,66 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-
-    <com.google.android.material.bottomappbar.BottomAppBar
-        android:id="@+id/bottom_app_bar"
-        style="@style/Widget.Material3.BottomAppBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:fitsSystemWindows="true"
-        app:hideOnScroll="true"
-        app:menu="@menu/bottom_app_bar" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btn_guess"
+    <com.google.android.material.floatingtoolbar.FloatingToolbarLayout
+        android:id="@+id/floating_toolbar"
+        style="?attr/floatingToolbarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="@string/enumerateVersionsFAB"
-        android:minWidth="0dp"
-        app:layout_anchor="@id/bottom_app_bar"
-        app:removeEmbeddedFabElevation="true"
-        app:srcCompat="@drawable/scan_line" />
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:elevation="6dp"
+        android:fitsSystemWindows="true"
+        app:layout_behavior="com.google.android.material.behavior.HideViewOnScrollBehavior">
+
+        <LinearLayout
+            android:id="@+id/floating_toolbar_child"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_about"
+                style="?attr/materialIconButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/about"
+                app:icon="@drawable/information_line" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_setting"
+                style="?attr/materialIconButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/setting"
+                app:icon="@drawable/settings_line" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_get"
+                style="?attr/materialIconButtonFilledTonalStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/refresh"
+                app:icon="@drawable/refresh_line" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_exp_features"
+                style="?attr/materialIconButtonFilledTonalStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/experimentalFeatures"
+                app:icon="@drawable/flask_line" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_guess"
+                style="?attr/materialIconButtonFilledTonalStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/enumerateVersionsFAB"
+                app:icon="@drawable/scan_line" />
+        </LinearLayout>
+
+    </com.google.android.material.floatingtoolbar.FloatingToolbarLayout>
 
     <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/progress_line"

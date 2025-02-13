@@ -29,16 +29,21 @@ import android.os.Build.VERSION.SDK_INT
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.xiaoniu.qqversionlist.QverbowApplication.Companion.ANDROID_QQ_PACKAGE_NAME
 import com.xiaoniu.qqversionlist.QverbowApplication.Companion.ANDROID_TIM_PACKAGE_NAME
+import com.xiaoniu.qqversionlist.QverbowApplication.Companion.ANDROID_WECHAT_PACKAGE_NAME
 import com.xiaoniu.qqversionlist.R
+import com.xiaoniu.qqversionlist.data.LocalAppStackResult
+import com.xiaoniu.qqversionlist.data.LocalAppStackRule
 import com.xiaoniu.qqversionlist.util.DexResolver
 import com.xiaoniu.qqversionlist.util.FileUtil.ZipFileCompat
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Semaphore
+import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
 import org.apache.commons.io.IOUtils
 import java.io.File
@@ -47,6 +52,30 @@ import kotlin.use
 
 class LocalAppDetailsActivityViewModel : ViewModel() {
     companion object {
+        const val RULE_TYPE_PRIVATE_TENCENT = "Tencent Private" // 腾讯私有库
+        const val RULE_TYPE_PRIVATE_3RD_PARTY = "3rd Party Private" // 第三方私有库
+        const val RULE_TYPE_OTEAM_TENCENT = "Tencent Oteam" // 腾讯开源协同
+        const val RULE_TYPE_OPEN_SOURCE_3RD_PARTY = "3rd Party Open Source" // 第三方开源库
+
+        const val RULE_ID_QQNT = "QQNT"
+        const val RULE_ID_BUGLY = "Bugly"
+        const val RULE_ID_SHIPLY = "Shiply"
+        const val RULE_ID_KUIKLY = "Kuikly"
+        const val RULE_ID_HIPPY = "Hippy"
+        const val RULE_ID_RIGHTLY = "Rightly"
+        const val RULE_ID_UE_LIBRARY = "UELibrary"
+        const val RULE_ID_TENCENT_BEACON = "腾讯灯塔"
+        const val RULE_ID_JETPACK_COMPOSE = "Jetpack Compose"
+        const val RULE_ID_COMPOSE_MULTIPLATFORM = "Compose Multiplatform"
+        const val RULE_ID_FLUTTER = "Flutter"
+        const val RULE_ID_MMKV = "MMKV"
+        const val RULE_ID_WCDB = "WCDB"
+        const val RULE_ID_MARS = "Mars"
+        const val RULE_ID_MATRIX = "Matrix"
+        const val RULE_ID_TINKER = "Tinker"
+        const val RULE_ID_REACT_NATIVE = "React Native"
+        const val RULE_ID_TENCENT_BROWSING_SERVICE = "腾讯浏览服务"
+
         val DEX_QQNT = arrayOf("com.tencent.qqnt")
         val DEX_BUGLY = arrayOf("com.tencent.bugly")
         val DEX_SHIPLY = arrayOf("com.tencent.rdelivery")
@@ -58,6 +87,95 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
         val DEX_JETPACK_COMPOSE = arrayOf("androidx.compose")
         val DEX_COMPOSE_MULTIPLATFORM = arrayOf("org.jetbrains.compose")
         val DEX_FLUTTER = arrayOf("io.flutter")
+        val DEX_MMKV = arrayOf("com.tencent.mmkv")
+        val DEX_WCDB = arrayOf("com.tencent.wcdb")
+        val DEX_MARS = arrayOf("com.tencent.mars")
+        val DEX_MATRIX = arrayOf("com.tencent.matrix")
+        val DEX_TINKER = arrayOf("com.tencent.tinker")
+        val DEX_REACT_NATIVE = arrayOf("com.facebook.react")
+        val DEX_TENCENT_BROWSING_SERVICE = arrayOf("com.tencent.tbs")
+
+        const val URL_BUGLY = "https://bugly.tds.qq.com/v2/index/tds-main"
+        const val URL_UE_LIBRARY =
+            "https://dev.epicgames.com/documentation/unreal-engine/building-unreal-engine-as-a-library"
+        const val URL_HIPPY = "https://openhippy.com/"
+        const val URL_SHIPLY = "https://shiply.tds.qq.com/"
+        const val URL_RIGHTLY = "https://rightly.tds.qq.com/"
+        const val URL_TENCENT_BEACON = "https://beacon.qq.com/"
+        const val URL_JETPACK_COMPOSE = "https://developer.android.com/compose"
+        const val URL_COMPOSE_MULTIPLATFORM = "https://www.jetbrains.com/compose-multiplatform/"
+        const val URL_FLUTTER = "https://flutter.dev/"
+        const val URL_MMKV = "https://github.com/Tencent/MMKV"
+        const val URL_WCDB = "https://github.com/Tencent/wcdb"
+        const val URL_MARS = "https://github.com/Tencent/Mars"
+        const val URL_MATRIX = "https://github.com/Tencent/matrix"
+        const val URL_TINKER = "https://github.com/Tencent/tinker"
+        const val URL_REACT_NATIVE = "https://reactnative.dev/"
+        const val URL_TENCENT_BROWSING_SERVICE = "https://x5.tencent.com/"
+
+        val DEX_PRE_RULES = listOf<LocalAppStackRule>(
+            LocalAppStackRule(RULE_ID_QQNT, DEX_QQNT, RULE_TYPE_PRIVATE_TENCENT),
+            LocalAppStackRule(RULE_ID_BUGLY, DEX_BUGLY, RULE_TYPE_PRIVATE_TENCENT, URL_BUGLY),
+            LocalAppStackRule(RULE_ID_SHIPLY, DEX_SHIPLY, RULE_TYPE_PRIVATE_TENCENT, URL_SHIPLY),
+            LocalAppStackRule(RULE_ID_KUIKLY, DEX_KUIKLY, RULE_TYPE_PRIVATE_TENCENT),
+            LocalAppStackRule(RULE_ID_HIPPY, DEX_HIPPY, RULE_TYPE_PRIVATE_TENCENT, URL_HIPPY),
+            LocalAppStackRule(RULE_ID_RIGHTLY, DEX_RIGHTLY, RULE_TYPE_PRIVATE_TENCENT, URL_RIGHTLY),
+            LocalAppStackRule(
+                RULE_ID_UE_LIBRARY, DEX_UE_LIBRARY, RULE_TYPE_PRIVATE_3RD_PARTY, URL_UE_LIBRARY
+            ),
+            LocalAppStackRule(
+                RULE_ID_TENCENT_BEACON,
+                DEX_TENCENT_BEACON,
+                RULE_TYPE_PRIVATE_TENCENT,
+                URL_TENCENT_BEACON
+            ),
+            LocalAppStackRule(
+                RULE_ID_JETPACK_COMPOSE,
+                DEX_JETPACK_COMPOSE,
+                RULE_TYPE_OPEN_SOURCE_3RD_PARTY,
+                URL_JETPACK_COMPOSE
+            ),
+            LocalAppStackRule(
+                RULE_ID_COMPOSE_MULTIPLATFORM,
+                DEX_COMPOSE_MULTIPLATFORM,
+                RULE_TYPE_OPEN_SOURCE_3RD_PARTY,
+                URL_COMPOSE_MULTIPLATFORM
+            ),
+            LocalAppStackRule(
+                RULE_ID_FLUTTER, DEX_FLUTTER, RULE_TYPE_OPEN_SOURCE_3RD_PARTY, URL_FLUTTER
+            ),
+            LocalAppStackRule(RULE_ID_MMKV, DEX_MMKV, RULE_TYPE_OTEAM_TENCENT, URL_MMKV),
+            LocalAppStackRule(RULE_ID_WCDB, DEX_WCDB, RULE_TYPE_OTEAM_TENCENT, URL_WCDB),
+            LocalAppStackRule(RULE_ID_MARS, DEX_MARS, RULE_TYPE_OTEAM_TENCENT, URL_MARS),
+            LocalAppStackRule(RULE_ID_MATRIX, DEX_MATRIX, RULE_TYPE_OTEAM_TENCENT, URL_MATRIX),
+            LocalAppStackRule(RULE_ID_TINKER, DEX_TINKER, RULE_TYPE_OTEAM_TENCENT, URL_TINKER),
+            LocalAppStackRule(
+                RULE_ID_REACT_NATIVE,
+                DEX_REACT_NATIVE,
+                RULE_TYPE_OPEN_SOURCE_3RD_PARTY,
+                URL_REACT_NATIVE
+            ),
+            LocalAppStackRule(
+                RULE_ID_TENCENT_BROWSING_SERVICE,
+                DEX_TENCENT_BROWSING_SERVICE,
+                RULE_TYPE_PRIVATE_TENCENT,
+                URL_TENCENT_BROWSING_SERVICE
+            )
+        )
+
+        val RULES_ID_ORDER = listOf(
+            RULE_ID_QQNT,
+            RULE_ID_COMPOSE_MULTIPLATFORM,
+            RULE_ID_JETPACK_COMPOSE,
+            RULE_ID_FLUTTER,
+            RULE_ID_REACT_NATIVE,
+            RULE_ID_UE_LIBRARY,
+            RULE_ID_BUGLY,
+            RULE_ID_SHIPLY,
+            RULE_ID_KUIKLY,
+            RULE_ID_HIPPY,
+            RULE_ID_RIGHTLY
+        )
     }
 
     private val _isLoading = MutableLiveData<Boolean>().apply { value = false }
@@ -75,77 +193,14 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
     private val _localSDKText = MutableLiveData<String>().apply { value = "" }
     val localSDKText: LiveData<String> = _localSDKText
 
-    private val _hasQQNT = MutableLiveData<Boolean>().apply { value = false }
-    val hasQQNT: LiveData<Boolean> = _hasQQNT
-
-    private val _hasQQNTDesc = MutableLiveData<String>().apply { value = "" }
-    val hasQQNTDesc: LiveData<String> = _hasQQNTDesc
-
-    private val _hasUELibrary = MutableLiveData<Boolean>().apply { value = false }
-    val hasUELibrary: LiveData<Boolean> = _hasUELibrary
-
-    private val _hasUELibraryDesc = MutableLiveData<String>().apply { value = "" }
-    val hasUELibraryDesc: LiveData<String> = _hasUELibraryDesc
-
-    private val _hasBugly = MutableLiveData<Boolean>().apply { value = false }
-    val hasBugly: LiveData<Boolean> = _hasBugly
-
-    private val _hasBuglyDesc = MutableLiveData<String>().apply { value = "" }
-    val hasBuglyDesc: LiveData<String> = _hasBuglyDesc
-
-    private val _hasShiply = MutableLiveData<Boolean>().apply { value = false }
-    val hasShiply: LiveData<Boolean> = _hasShiply
-
-    private val _hasShiplyDesc = MutableLiveData<String>().apply { value = "" }
-    val hasShiplyDesc: LiveData<String> = _hasShiplyDesc
-
-    private val _hasKuikly = MutableLiveData<Boolean>().apply { value = false }
-    val hasKuikly: LiveData<Boolean> = _hasKuikly
-
-    private val _hasKuiklyDesc = MutableLiveData<String>().apply { value = "" }
-    val hasKuiklyDesc: LiveData<String> = _hasKuiklyDesc
-
-    private val _hasHippy = MutableLiveData<Boolean>().apply { value = false }
-    val hasHippy: LiveData<Boolean> = _hasHippy
-
-    private val _hasHippyDesc = MutableLiveData<String>().apply { value = "" }
-    val hasHippyDesc: LiveData<String> = _hasHippyDesc
-
-    private val _hasRightly = MutableLiveData<Boolean>().apply { value = false }
-    val hasRightly: LiveData<Boolean> = _hasRightly
-
-    private val _hasRightlyDesc = MutableLiveData<String>().apply { value = "" }
-    val hasRightlyDesc: LiveData<String> = _hasRightlyDesc
-
-    private val _hasTencentBeacon = MutableLiveData<Boolean>().apply { value = false }
-    val hasTencentBeacon: LiveData<Boolean> = _hasTencentBeacon
-
-    private val _hasTencentBeaconDesc = MutableLiveData<String>().apply { value = "" }
-    val hasTencentBeaconDesc: LiveData<String> = _hasTencentBeaconDesc
-
-    private val _hasJetpackCompose = MutableLiveData<Boolean>().apply { value = false }
-    val hasJetpackCompose: LiveData<Boolean> = _hasJetpackCompose
-
-    private val _hasJetpackComposeDesc = MutableLiveData<String>().apply { value = "" }
-    val hasJetpackComposeDesc: LiveData<String> = _hasJetpackComposeDesc
-
-    private val _hasComposeMultiplatform = MutableLiveData<Boolean>().apply { value = false }
-    val hasComposeMultiplatform: LiveData<Boolean> = _hasComposeMultiplatform
-
-    private val _hasComposeMultiplatformDesc = MutableLiveData<String>().apply { value = "" }
-    val hasComposeMultiplatformDesc: LiveData<String> = _hasComposeMultiplatformDesc
-
-    private val _hasFlutter = MutableLiveData<Boolean>().apply { value = false }
-    val hasFlutter: LiveData<Boolean> = _hasFlutter
-
-    private val _hasFlutterDesc = MutableLiveData<String>().apply { value = "" }
-    val hasFlutterDesc: LiveData<String> = _hasFlutterDesc
-
     private val _isTIM = MutableLiveData<Boolean>().apply { value = false }
     val isTIM: LiveData<Boolean> = _isTIM
 
     private val _timBasedVer = MutableLiveData<String>().apply { value = "" }
     val timBasedVer: LiveData<String> = _timBasedVer
+
+    private val _isWeixin = MutableLiveData<Boolean>().apply { value = false }
+    val isWeixin: LiveData<Boolean> = _isWeixin
 
     // 基础信息
     private val _appName = MutableLiveData<String>().apply { value = "" }
@@ -181,6 +236,11 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
     private val _qua = MutableLiveData<String>().apply { value = "" }
     val qua: LiveData<String> = _qua
 
+    // 栈信息检查结果
+    private val _localAppStackResults =
+        MutableLiveData<MutableList<LocalAppStackResult>>().apply { value = mutableListOf() }
+    val localAppStackResults: LiveData<MutableList<LocalAppStackResult>> = _localAppStackResults
+
     fun setLoading(isLoading: Boolean) {
         _isLoading.value = isLoading
     }
@@ -201,100 +261,16 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
         _localSDKText.value = text
     }
 
-    fun setHasQQNT(hasQQNT: Boolean) {
-        _hasQQNT.value = hasQQNT
-    }
-
-    fun setHasQQNTDesc(context: Context, dex: String) {
-        _hasQQNTDesc.value = context.getString(R.string.thisVerContains, dex)
-    }
-
-    fun setHasUELibrary(hasUELibrary: Boolean) {
-        _hasUELibrary.value = hasUELibrary
-    }
-
-    fun setHasUELibraryDesc(context: Context, dex: String) {
-        _hasUELibraryDesc.value = context.getString(R.string.thisVerContains, dex)
-    }
-
-    fun setHasBugly(hasBugly: Boolean) {
-        _hasBugly.value = hasBugly
-    }
-
-    fun setHasBuglyDesc(context: Context, dex: String) {
-        _hasBuglyDesc.value = context.getString(R.string.thisVerContains, dex)
-    }
-
-    fun setHasShiply(hasShiply: Boolean) {
-        _hasShiply.value = hasShiply
-    }
-
-    fun setHasShiplyDesc(context: Context, dex: String) {
-        _hasShiplyDesc.value = context.getString(R.string.thisVerContains, dex)
-    }
-
-    fun setHasKuikly(hasKuikly: Boolean) {
-        _hasKuikly.value = hasKuikly
-    }
-
-    fun setHasKuiklyDesc(context: Context, dex: String) {
-        _hasKuiklyDesc.value = context.getString(R.string.thisVerContains, dex)
-    }
-
-    fun setHasHippy(hasHippy: Boolean) {
-        _hasHippy.value = hasHippy
-    }
-
-    fun setHasHippyDesc(context: Context, dex: String) {
-        _hasHippyDesc.value = context.getString(R.string.thisVerContains, dex)
-    }
-
-    fun setHasRightly(hasRightly: Boolean) {
-        _hasRightly.value = hasRightly
-    }
-
-    fun setHasRightlyDesc(context: Context, dex: String) {
-        _hasRightlyDesc.value = context.getString(R.string.thisVerContains, dex)
-    }
-
-    fun setHasTencentBeacon(hasTencentBeacon: Boolean) {
-        _hasTencentBeacon.value = hasTencentBeacon
-    }
-
-    fun setHasTencentBeaconDesc(context: Context, dex: String) {
-        _hasTencentBeaconDesc.value = context.getString(R.string.thisVerContains, dex)
-    }
-
-    fun setHasJetpackCompose(hasCompose: Boolean) {
-        _hasJetpackCompose.value = hasCompose
-    }
-
-    fun setHasJetpackComposeDesc(context: Context, dex: String) {
-        _hasJetpackComposeDesc.value = context.getString(R.string.thisVerContains, dex)
-    }
-
-    fun setHasComposeMultiplatform(hasComposeMultiplatform: Boolean) {
-        _hasComposeMultiplatform.value = hasComposeMultiplatform
-    }
-
-    fun setHasComposeMultiplatformDesc(context: Context, dex: String) {
-        _hasComposeMultiplatformDesc.value = context.getString(R.string.thisVerContains, dex)
-    }
-
-    fun setHasFlutter(hasFlutter: Boolean) {
-        _hasFlutter.value = hasFlutter
-    }
-
-    fun setHasFlutterDesc(context: Context, dex: String) {
-        _hasFlutterDesc.value = context.getString(R.string.thisVerContains, dex)
-    }
-
     fun setIsTIM(isTIM: Boolean) {
         _isTIM.value = isTIM
     }
 
     fun setTIMBasedVer(context: Context, ver: String) {
         _timBasedVer.value = context.getString(R.string.basedOnQQVer, ver)
+    }
+
+    fun setIsWeixin(isWeixin: Boolean) {
+        _isWeixin.value = isWeixin
     }
 
     fun setAppName(appName: String) {
@@ -341,6 +317,10 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
         _qua.value = qua
     }
 
+    fun setLocalAppStackResults(result: MutableList<LocalAppStackResult>) {
+        _localAppStackResults.value = result
+    }
+
     fun getInfo(activity: Activity, type: String, appPath: String? = null) {
         setLoading(true)
         var packageInfo: PackageInfo? = null
@@ -356,185 +336,156 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
             }
         } else {
             setIsTIM(type == "TIM")
+            setIsWeixin(type == "Weixin")
             packageInfo = activity.packageManager.getPackageInfo(
-                if (type == "TIM") ANDROID_TIM_PACKAGE_NAME else ANDROID_QQ_PACKAGE_NAME, 0
+                when (type) {
+                    "TIM" -> ANDROID_TIM_PACKAGE_NAME
+                    "Weixin" -> ANDROID_WECHAT_PACKAGE_NAME
+                    else -> ANDROID_QQ_PACKAGE_NAME
+                }, 0
             )
             applicationInfo = activity.packageManager.getApplicationInfo(
-                if (type == "TIM") ANDROID_TIM_PACKAGE_NAME else ANDROID_QQ_PACKAGE_NAME,
-                PackageManager.GET_META_DATA
+                when (type) {
+                    "TIM" -> ANDROID_TIM_PACKAGE_NAME
+                    "Weixin" -> ANDROID_WECHAT_PACKAGE_NAME
+                    else -> ANDROID_QQ_PACKAGE_NAME
+                }, PackageManager.GET_META_DATA
             )
         }
         if (packageInfo == null || applicationInfo == null) {
-            setLoading(false)
+            setErr(true)
             setAppName(activity.getString(R.string.unknownErr))
             cleanCache(activity)
-            setErr(true)
+            setLoading(false)
             return
         }
         val packageName = getAppPackageName(applicationInfo)
-        if (packageName == ANDROID_QQ_PACKAGE_NAME || packageName == ANDROID_TIM_PACKAGE_NAME) {
-            if (packageName == ANDROID_TIM_PACKAGE_NAME) setIsTIM(true)
-            val jobs = mutableListOf<Job>().apply {
-                add(CoroutineScope(Dispatchers.IO).launch {
-                    val appName = getAppName(applicationInfo, activity)
-                    withContext(Dispatchers.Main) {
-                        setAppName(appName)
-                    }
-                })
-                add(CoroutineScope(Dispatchers.IO).launch {
-                    val appIconImage = getAppIconImage(applicationInfo, activity)
-                    if (appIconImage != null) withContext(Dispatchers.Main) {
-                        setAppIconImage(appIconImage)
-                    }
-                })
-                add(CoroutineScope(Dispatchers.IO).launch {
-                    val targetSDK = getTargetSDK(applicationInfo)
-                    withContext(Dispatchers.Main) {
-                        setTargetSDK(targetSDK)
-                    }
-                })
-                add(CoroutineScope(Dispatchers.IO).launch {
-                    val minSDK = getMinSDK(applicationInfo)
-                    withContext(Dispatchers.Main) {
-                        setMinSDK(minSDK)
-                    }
-                })
-                add(CoroutineScope(Dispatchers.IO).launch {
-                    val compileSDK = getCompileSDK(applicationInfo)
-                    withContext(Dispatchers.Main) {
-                        if (compileSDK != null) setCompileSDK(compileSDK) else setCompileSDK(0)
-                    }
-                })
-                checkAndSetProperty(this, ::getVersionName, ::setVersionName, packageInfo)
-                checkAndSetProperty(this, ::getRdmUUID, ::setRdmUUID, applicationInfo)
-                checkAndSetProperty(this, ::getVersionCode, ::setVersionCode, packageInfo)
-                checkAndSetProperty(
-                    this, ::getAppSettingParams, ::setAppSettingParams, applicationInfo
-                )
-                checkAndSetProperty(
-                    this, ::getAppSettingParamsPad, ::setAppSettingParamsPad, applicationInfo
-                )
-                add(CoroutineScope(Dispatchers.IO).launch {
-                    val qua = getQua(packageInfo)
-                    withContext(Dispatchers.Main) {
-                        setQua(if (qua.isNullOrEmpty()) "" else qua.replace("\n", ""))
-                    }
-                })
-                checkAndSetLibrary(
-                    this,
-                    ::checkQQNT,
-                    ::setHasQQNT,
-                    ::setHasQQNTDesc,
-                    activity,
-                    applicationInfo.sourceDir
-                )
-                checkAndSetLibrary(
-                    this,
-                    ::checkUELibrary,
-                    ::setHasUELibrary,
-                    ::setHasUELibraryDesc,
-                    activity,
-                    applicationInfo.sourceDir
-                )
-                checkAndSetLibrary(
-                    this,
-                    ::checkBugly,
-                    ::setHasBugly,
-                    ::setHasBuglyDesc,
-                    activity,
-                    applicationInfo.sourceDir
-                )
-                checkAndSetLibrary(
-                    this,
-                    ::checkShiply,
-                    ::setHasShiply,
-                    ::setHasShiplyDesc,
-                    activity,
-                    applicationInfo.sourceDir
-                )
-                checkAndSetLibrary(
-                    this,
-                    ::checkKuikly,
-                    ::setHasKuikly,
-                    ::setHasKuiklyDesc,
-                    activity,
-                    applicationInfo.sourceDir
-                )
-                checkAndSetLibrary(
-                    this,
-                    ::checkHippy,
-                    ::setHasHippy,
-                    ::setHasHippyDesc,
-                    activity,
-                    applicationInfo.sourceDir
-                )
-                checkAndSetLibrary(
-                    this,
-                    ::checkRightly,
-                    ::setHasRightly,
-                    ::setHasRightlyDesc,
-                    activity,
-                    applicationInfo.sourceDir
-                )
-                checkAndSetLibrary(
-                    this,
-                    ::checkTencentBeacon,
-                    ::setHasTencentBeacon,
-                    ::setHasTencentBeaconDesc,
-                    activity,
-                    applicationInfo.sourceDir
-                )
-                checkAndSetLibrary(
-                    this,
-                    ::checkJetpackCompose,
-                    ::setHasJetpackCompose,
-                    ::setHasJetpackComposeDesc,
-                    activity,
-                    applicationInfo.sourceDir
-                )
-                checkAndSetLibrary(
-                    this,
-                    ::checkComposeMultiplatform,
-                    ::setHasComposeMultiplatform,
-                    ::setHasComposeMultiplatformDesc,
-                    activity,
-                    applicationInfo.sourceDir
-                )
-                checkAndSetLibrary(
-                    this,
-                    ::checkFlutter,
-                    ::setHasFlutter,
-                    ::setHasFlutterDesc,
-                    activity,
-                    applicationInfo.sourceDir
-                )
+        if (packageName == ANDROID_QQ_PACKAGE_NAME || packageName == ANDROID_TIM_PACKAGE_NAME || packageName == ANDROID_WECHAT_PACKAGE_NAME) {
+            when (packageName) {
+                ANDROID_TIM_PACKAGE_NAME -> setIsTIM(true)
+                ANDROID_WECHAT_PACKAGE_NAME -> setIsWeixin(true)
             }
-            CoroutineScope(Dispatchers.Main).launch {
-                jobs.joinAll()
+
+            val allJobs = mutableListOf<Job>().apply {
+                add(viewModelScope.launch(Dispatchers.IO) {
+                    val baseJobs = mutableListOf<Job>().apply {
+                        add(viewModelScope.launch(Dispatchers.IO) {
+                            val appName = getAppName(applicationInfo, activity)
+                            withContext(Dispatchers.Main) {
+                                setAppName(appName)
+                            }
+                        })
+                        add(viewModelScope.launch(Dispatchers.IO) {
+                            val appIconImage = getAppIconImage(applicationInfo, activity)
+                            if (appIconImage != null) withContext(Dispatchers.Main) {
+                                setAppIconImage(appIconImage)
+                            }
+                        })
+                        add(viewModelScope.launch(Dispatchers.IO) {
+                            val targetSDK = getTargetSDK(applicationInfo)
+                            withContext(Dispatchers.Main) {
+                                setTargetSDK(targetSDK)
+                            }
+                        })
+                        add(viewModelScope.launch(Dispatchers.IO) {
+                            val minSDK = getMinSDK(applicationInfo)
+                            withContext(Dispatchers.Main) {
+                                setMinSDK(minSDK)
+                            }
+                        })
+                        add(viewModelScope.launch(Dispatchers.IO) {
+                            val compileSDK = getCompileSDK(applicationInfo)
+                            withContext(Dispatchers.Main) {
+                                if (compileSDK != null) setCompileSDK(compileSDK) else setCompileSDK(
+                                    0
+                                )
+                            }
+                        })
+                        checkAndSetProperty(this, ::getVersionName, ::setVersionName, packageInfo)
+                        checkAndSetProperty(this, ::getVersionCode, ::setVersionCode, packageInfo)
+                        if (isWeixin.value == false) {
+                            checkAndSetProperty(this, ::getRdmUUID, ::setRdmUUID, applicationInfo)
+                            checkAndSetProperty(
+                                this, ::getAppSettingParams, ::setAppSettingParams, applicationInfo
+                            )
+                            checkAndSetProperty(
+                                this,
+                                ::getAppSettingParamsPad,
+                                ::setAppSettingParamsPad,
+                                applicationInfo
+                            )
+                            add(viewModelScope.launch(Dispatchers.IO) {
+                                val qua = getQua(packageInfo)
+                                withContext(Dispatchers.Main) {
+                                    setQua(if (qua.isNullOrEmpty()) "" else qua.replace("\n", ""))
+                                }
+                            })
+                        }
+                    }
+                    baseJobs.joinAll()
+                    withContext(Dispatchers.Main) {
+                        compileSDK.value?.let { sdkVersion ->
+                            if (sdkVersion != 0) setLocalSDKText("Target ${targetSDK.value} | Min ${minSDK.value} | Compile $sdkVersion") else setLocalSDKText(
+                                "Target ${targetSDK.value} | Min ${minSDK.value}"
+                            )
+                        }
+                        if (isWeixin.value == true) {
+                            setLocalVersion("${versionName.value} (${versionCode.value})")
+                        } else {
+                            versionCode.value?.let { versionCode ->
+                                rdmUUID.value?.let { rdmUUID ->
+                                    setLocalVersion("${versionName.value}.${rdmUUID.split("_")[0]} ($versionCode)")
+                                } ?: setLocalVersion(
+                                    "${versionName.value}.${rdmUUID.value!!.split("_")[0]}"
+                                )
+                            }
+                                ?: setLocalVersion("${versionName.value}.${rdmUUID.value!!.split("_")[0]}")
+                            appSettingParams.value?.let { appSettingParams ->
+                                val parts = appSettingParams.split("#")
+                                if (parts.size > 3) setChannelText(parts[3]) else setChannelText("")
+                            } ?: setChannelText("")
+                            if (isTIM.value == true) qua.value?.let { qua ->
+                                setTIMBasedVer(
+                                    activity, if (qua.length > 3) qua.split("_")[3] else ""
+                                )
+                            }
+                        }
+                    }
+                })
+                add(viewModelScope.launch(Dispatchers.IO) {
+                    val semaphore = Semaphore(3)
+                    val dexJobs = mutableListOf<Job>()
+                    DEX_PRE_RULES.forEach { rule ->
+                        dexJobs.add(viewModelScope.launch(Dispatchers.IO) {
+                            semaphore.withPermit {
+                                val findDex = checkLibrary(applicationInfo.sourceDir, rule.dex)
+                                if (findDex != null) {
+                                    withContext(Dispatchers.Main) {
+                                        val oldList = localAppStackResults.value
+                                        val newList =
+                                            (if (oldList.isNullOrEmpty()) mutableListOf() else oldList).apply {
+                                                if (!this.any { it.id == rule.id }) {
+                                                    this.add(LocalAppStackResult(rule.id, findDex))
+                                                }
+                                            }
+                                        setLocalAppStackResults(newList.toMutableList())
+                                    }
+                                }
+                            }
+                        })
+                    }
+                    dexJobs.joinAll()
+                })
+            }
+            viewModelScope.launch {
+                allJobs.joinAll()
                 setLoading(false)
-                compileSDK.value?.let { sdkVersion ->
-                    if (sdkVersion != 0) setLocalSDKText("Target ${targetSDK.value} | Min ${minSDK.value} | Compile $sdkVersion") else setLocalSDKText(
-                        "Target ${targetSDK.value} | Min ${minSDK.value}"
-                    )
-                }
-                versionCode.value?.let { versionCode ->
-                    rdmUUID.value?.let { rdmUUID ->
-                        setLocalVersion("${versionName.value}.${rdmUUID.split("_")[0]} ($versionCode)")
-                    } ?: setLocalVersion("${versionName.value}.${rdmUUID.value!!.split("_")[0]}")
-                } ?: setLocalVersion("${versionName.value}.${rdmUUID.value!!.split("_")[0]}")
-                appSettingParams.value?.let { appSettingParams ->
-                    val parts = appSettingParams.split("#")
-                    if (parts.size > 3) setChannelText(parts[3]) else setChannelText("")
-                } ?: setChannelText("")
-                if (isTIM.value == true) qua.value?.let { qua ->
-                    setTIMBasedVer(activity, if (qua.length > 3) qua.split("_")[3] else "")
-                }
                 cleanCache(activity)
             }
         } else {
+            setErr(true)
             setAppName(activity.getString(R.string.packageNameIsErr))
             setLoading(false)
-            setErr(true)
             cleanCache(activity)
             return
         }
@@ -598,23 +549,17 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
         }.getOrElse { exception -> throw Exception(exception) }
     }
 
-    private fun checkQQNT(appPath: String): String? = checkLibrary(appPath, DEX_QQNT)
-    private fun checkUELibrary(appPath: String): String? = checkLibrary(appPath, DEX_UE_LIBRARY)
-    private fun checkBugly(appPath: String): String? = checkLibrary(appPath, DEX_BUGLY)
-    private fun checkShiply(appPath: String): String? = checkLibrary(appPath, DEX_SHIPLY)
-    private fun checkKuikly(appPath: String): String? = checkLibrary(appPath, DEX_KUIKLY)
-    private fun checkHippy(appPath: String): String? = checkLibrary(appPath, DEX_HIPPY)
-    private fun checkRightly(appPath: String): String? = checkLibrary(appPath, DEX_RIGHTLY)
-    private fun checkTencentBeacon(appPath: String): String? =
-        checkLibrary(appPath, DEX_TENCENT_BEACON)
-
-    private fun checkJetpackCompose(appPath: String): String? =
-        checkLibrary(appPath, DEX_JETPACK_COMPOSE)
-
-    private fun checkComposeMultiplatform(appPath: String): String? =
-        checkLibrary(appPath, DEX_COMPOSE_MULTIPLATFORM)
-
-    private fun checkFlutter(appPath: String): String? = checkLibrary(appPath, DEX_FLUTTER)
+    private fun <T> checkAndSetProperty(
+        jobs: MutableList<Job>,
+        checkFunction: (T) -> String?,
+        setProperty: (String) -> Unit,
+        param: T
+    ) {
+        jobs.add(viewModelScope.launch(Dispatchers.IO) {
+            val result = checkFunction(param)
+            withContext(Dispatchers.Main) { setProperty(if (result.isNullOrEmpty()) "" else result) }
+        })
+    }
 
     private fun checkLibrary(appPath: String, dexList: Array<String>): String? {
         dexList.forEach { dex ->
@@ -624,38 +569,7 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
         return null
     }
 
-    private fun <T> checkAndSetProperty(
-        jobs: MutableList<Job>,
-        checkFunction: (T) -> String?,
-        setProperty: (String) -> Unit,
-        param: T
-    ) {
-        jobs.add(CoroutineScope(Dispatchers.IO).launch {
-            val result = checkFunction(param)
-            withContext(Dispatchers.Main) { setProperty(if (result.isNullOrEmpty()) "" else result) }
-        })
-    }
-
-    private fun checkAndSetLibrary(
-        jobs: MutableList<Job>,
-        checkFunction: (String) -> String?,
-        setHasLibrary: (Boolean) -> Unit,
-        setHasLibraryDesc: (Activity, String) -> Unit,
-        activity: Activity,
-        sourceDir: String
-    ) {
-        jobs.add(CoroutineScope(Dispatchers.IO).launch {
-            val result = checkFunction(sourceDir)
-            withContext(Dispatchers.Main) {
-                if (result != null) {
-                    setHasLibrary(true)
-                    setHasLibraryDesc(activity, result)
-                } else setHasLibrary(false)
-            }
-        })
-    }
-
-    private fun cleanCache(activity: Activity) {
+    fun cleanCache(activity: Activity) {
         val cacheDir = File(activity.cacheDir, "apkAnalysis")
         if (cacheDir.exists()) cacheDir.deleteRecursively()
     }

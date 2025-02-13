@@ -1,4 +1,5 @@
 [versions]
+aboutlibraries = "11.5.0"
 activityKtxVersion = "1.10.0"
 activityVersion = "1.10.0"
 androidGradlePlugin = "8.7.3"
@@ -7,12 +8,13 @@ browserVersion = "1.8.0"
 coilVersion = "3.0.4"
 commonsCompressVersion = "1.27.1"
 commonsIoVersion = "2.18.0"
+composeBomVersion = "2025.01.01"
 constraintlayout = "2.2.0"
 coreKtx = "1.15.0"
 coreSplashscreen = "1.1.0-rc01"
 datastorePreferences = "1.1.2"
 espressoCore = "3.6.1"
-firebaseBom = "33.8.0"
+firebaseBom = "33.9.0"
 fragmentKtx = "1.8.5"
 githubApiVersion = "1.326"
 googleServices = "4.4.2"
@@ -28,22 +30,28 @@ kotlinxSerializationJson = "1.8.0"
 library = "1.3.0"
 lifecycleRuntimeKtx = "2.8.7"
 material = "1.13.0-alpha10"
+material3Version = "1.4.0-alpha07"
 mavenArtifact = "3.9.9"
 oapiJavaSdkVersion = "release-V4-2.3.3"
 okhttp = "4.12.0"
-ossLicensesPluginVersion = "0.10.6"
 panguVersion = "1.1.0"
 paris = "2.0.2"
-playServicesOssLicensesVersion = "17.1.0"
 recyclerview = "1.4.0"
+runtimeLivedataVersion = "1.7.7"
 secretsGradlePlugin = "2.0.1"
 smaliDexlib2Version = "3.0.9"
+uiGraphicsVersion = "1.7.7"
+uiVersion = "1.7.7"
 viewpager2 = "1.1.0"
 
 [libraries]
+aboutlibraries-compose-m3 = { module = "com.mikepenz:aboutlibraries-compose-m3", version.ref = "aboutlibraries" }
+aboutlibraries-core = { module = "com.mikepenz:aboutlibraries-core", version.ref = "aboutlibraries" }
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityKtxVersion" }
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activityKtxVersion" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 androidx-browser = { module = "androidx.browser:browser", version.ref = "browserVersion" }
+androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBomVersion" }
 androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraintlayout" }
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
@@ -53,8 +61,16 @@ androidx-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref
 androidx-junit = { module = "androidx.test.ext:junit", version.ref = "junitVersion" }
 androidx-lifecycle-livedata-ktx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "lifecycleRuntimeKtx" }
 androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
+androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleRuntimeKtx" }
 androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleRuntimeKtx" }
+androidx-material3 = { module = "androidx.compose.material3:material3", version.ref = "material3Version" }
+androidx-material3-window-sizeclass = { module = "androidx.compose.material3:material3-window-size-class", version.ref = "material3Version" }
 androidx-recyclerview = { module = "androidx.recyclerview:recyclerview", version.ref = "recyclerview" }
+androidx-runtime-livedata = { module = "androidx.compose.runtime:runtime-livedata", version.ref = "runtimeLivedataVersion" }
+androidx-ui = { module = "androidx.compose.ui:ui", version.ref = "uiVersion" }
+androidx-ui-graphics = { module = "androidx.compose.ui:ui-graphics", version.ref = "uiGraphicsVersion" }
+androidx-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "uiVersion" }
+androidx-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "uiVersion" }
 androidx-viewpager2 = { module = "androidx.viewpager2:viewpager2", version.ref = "viewpager2" }
 coil = { module = "io.coil-kt.coil3:coil", version.ref = "coilVersion" }
 coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coilVersion" }
@@ -77,14 +93,16 @@ material = { module = "com.google.android.material:material", version.ref = "mat
 maven-artifact = { module = "org.apache.maven:maven-artifact", version.ref = "mavenArtifact" }
 oapi-java-sdk = { module = "cn.bigmodel.openapi:oapi-java-sdk", version.ref = "oapiJavaSdkVersion" }
 okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
-oss-licenses-plugin = { module = "com.google.android.gms:oss-licenses-plugin", version.ref = "ossLicensesPluginVersion" }
 pangu = { module = "ws.vinta:pangu", version.ref = "panguVersion" }
 paris = { module = "com.airbnb.android:paris", version.ref = "paris" }
-play-services-oss-licenses = { module = "com.google.android.gms:play-services-oss-licenses", version.ref = "playServicesOssLicensesVersion" }
 secrets-gradle-plugin = { module = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin", version.ref = "secretsGradlePlugin" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activityVersion" }
 smali-dexlib2 = { module = "com.android.tools.smali:smali-dexlib2", version.ref = "smaliDexlib2Version" }
+androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 
 [plugins]
+aboutlibraries = { id = "com.mikepenz.aboutlibraries.plugin", version.ref = "aboutlibraries" }
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlinVersion" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlinVersion" }

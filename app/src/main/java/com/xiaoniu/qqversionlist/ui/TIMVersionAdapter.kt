@@ -30,6 +30,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -48,12 +50,11 @@ import com.xiaoniu.qqversionlist.util.FileUtil.downloadFile
 import com.xiaoniu.qqversionlist.util.FileUtil.getFileSize
 import com.xiaoniu.qqversionlist.util.InfoUtil.showToast
 import com.xiaoniu.qqversionlist.util.StringUtil.toPrettyFormat
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class TIMVersionAdapter :
+class TIMVersionAdapter(private val lifecycleOwner: LifecycleOwner):
     ListAdapter<TIMVersionBean, RecyclerView.ViewHolder>(TIMVersionDiffCallback()) {
     private var getVersionTCloud = DataStoreUtil.getBooleanKV("versionTCloud", true)
     private var getVersionTCloudThickness =
@@ -208,11 +209,11 @@ class TIMVersionAdapter :
     }
 
     private fun bindNewestDownloadLink(button: MaterialButton, bean: TIMVersionBean) {
-        if (bean.link !== "") {
+        if (bean.link != "") {
             button.isVisible = true
             button.setOnClickListener {
                 button.isEnabled = false
-                CoroutineScope(Dispatchers.IO).launch {
+                lifecycleOwner.lifecycleScope.launch {
                     var appSize: String? = null
                     try {
                         appSize = getFileSize(bean.link)
@@ -361,9 +362,11 @@ class TIMVersionAdapter :
         override fun getChangePayload(
             oldItem: TIMVersionBean, newItem: TIMVersionBean
         ): Any? {
-            return if (oldItem.displayType != newItem.displayType) "displayType"
-            else if (oldItem.displayInstall != newItem.displayInstall) "displayInstall"
-            else null
+            return when {
+                oldItem.displayType != newItem.displayType -> "displayType"
+                oldItem.displayInstall != newItem.displayInstall -> "displayInstall"
+                else -> null
+            }
         }
     }
 }

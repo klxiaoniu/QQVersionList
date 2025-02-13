@@ -142,7 +142,7 @@
     <string name="suffixSetting">後綴設定</string>
     <string name="others">其它</string>
     <string name="ok">好</string>
-    <string name="swipeLeftForTIMVersions">左滑查看 TIM 版本列表</string>
+    <string name="swipeLeftToSeeMore">向左滑動查看更多</string>
     <string name="getUpdateFromTencentAppStore">騰訊應用寶更新取得（實驗性）</string>
     <string name="experimentalFeatures">實驗性功能</string>
     <string name="getQQLinkFromTencentAppStore">取得 QQ 下載直鏈</string>
@@ -273,5 +273,21 @@
     <string name="zhipuTokenHelperText">預設僅請求智譜免費模型 GLM-4-Flash</string>
     <string name="zhipuTokenIsInvalid">填入的 Token 被智譜 AI 開放平台大模型接口 Java SDK 判定無效。</string>
     <string name="clickHereToViewTheChangelog">點擊此處查看更新日誌</string>
-    <string name="localWeixinVersion">本機微信/WeChat</string>
+    <string name="localWeixinVersion">本機微信/WeChat：</string>
+    <string name="weixin">微信</string>
+    <string name="localDetailsMMKV">MMKV</string>
+    <string name="localDetailsMMKVDesc">MMKV 是微信中的一個高效、小巧、易用的移動鍵值對存儲框架，可在 Android、iOS/macOS、Windows、POSIX 和 HarmonyOS NEXT 上使用。</string>
+    <string name="localDetailsWCDB">WCDB</string>
+    <string name="localDetailsWCDBDesc">WCDB 是一個易用、高效、完整的移動數據庫框架，它基於 SQLite 和 SQLCipher 開發，在微信中應用廣泛，且支持在 C++、Java、Kotlin、Swift、Objc 五種語言環境中使用。</string>
+    <string name="localDetailsTinker">Tinker</string>
+    <string name="localDetailsTinkerDesc">Tinker 是微信官方的 Android 熱補丁解決方案，它支持動態下发代碼、So 庫以及資源，讓應用能夠在不需要重新安裝的情況下實現更新。</string>
+    <string name="localDetailsMars">Mars</string>
+    <string name="localDetailsMarsDesc">Mars 是微信官方的跨平台跨業務的終端基礎組件。</string>
+    <string name="localDetailsMatrix">Matrix</string>
+    <string name="localDetailsMatrixDesc">Matrix 是一款微信研發並日常使用的應用性能接入框架，支持 iOS、macOS 和 Android。Matrix 通過接入各種性能監控方案，對性能監控項的異常數據進行采集和分析，輸出相應的問題分析、定位與優化建議，從而幫助開發者開發出更高質量的應用。</string>
+    <string name="localWeixinVersionDetails">本機微信/WeChat 版本詳情</string>
+    <string name="localDetailsReactNativeDesc">React Native 將 React 的宣告式 UI 框架引入 iOS 和 Android。使用 React Native，您可以直接使用原生 UI 控制項，並擁有對原生平台的完整存取權限。</string>
+    <string name="localDetailsReactNative">React Native</string>
+    <string name="localDetailsTBSDesc">騰訊瀏覽服務（Tencent Browsing Service，簡稱 TBS）屬於 PCG 事業群，QQ 瀏覽器團隊。QQ 瀏覽器作為一個平台化的產品，無論是網頁的打開還是文檔能力的打開，都需要一個強大的自研引擎做支撐，而引擎研發團隊一直深耕引擎底層技術十多年，積累了豐富的業務經驗，將引擎技術從產品獨立出來為 SDK，並不斷演進成一個平台化的引擎產品，成立騰訊瀏覽服務，為騰訊公司內外產品提供強大的引擎技術支持和技術服務支持，覆蓋了近十萬家產品接入，並支持數億級的網頁瀏覽體驗。</string>
+    <string name="localDetailsTBS">騰訊瀏覽服務</string>
 </resources>

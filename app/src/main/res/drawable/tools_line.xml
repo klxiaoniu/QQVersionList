@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+   Copyright 2018 Remix-Design
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="?attr/colorControlNormal"
+        android:pathData="M5.329,3.272C6.563,2.833 7.992,3.107 8.979,4.094C10.1,5.215 10.302,6.907 9.584,8.234L20.293,18.944L18.879,20.358L8.17,9.649C6.843,10.367 5.151,10.165 4.03,9.044C3.042,8.057 2.768,6.627 3.207,5.393L5.444,7.63C6.03,8.216 6.979,8.216 7.565,7.63C8.151,7.044 8.151,6.094 7.565,5.509L5.329,3.272ZM15.697,5.155L18.879,3.387L20.293,4.802L18.525,7.984L16.757,8.337L14.636,10.458L13.222,9.044L15.343,6.923L15.697,5.155ZM8.979,13.287L10.394,14.701L5.09,20.004C4.7,20.395 4.066,20.395 3.676,20.004C3.313,19.642 3.287,19.07 3.598,18.677L3.676,18.59L8.979,13.287Z" />
+</vector>

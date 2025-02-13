@@ -387,7 +387,7 @@ class QQVersionAdapter :
         override fun areItemsTheSame(
             oldItem: QQVersionBean, newItem: QQVersionBean
         ): Boolean {
-            return oldItem.versions == newItem.versions
+            return oldItem.jsonString == newItem.jsonString
         }
 
         override fun areContentsTheSame(
@@ -399,9 +399,11 @@ class QQVersionAdapter :
         override fun getChangePayload(
             oldItem: QQVersionBean, newItem: QQVersionBean
         ): Any? {
-            return if (oldItem.displayType != newItem.displayType) "displayType"
-            else if (oldItem.displayInstall != newItem.displayInstall) "displayInstall"
-            else null
+            return when {
+                oldItem.displayType != newItem.displayType -> "displayType"
+                oldItem.displayInstall != newItem.displayInstall -> "displayInstall"
+                else -> null
+            }
         }
     }
 }
