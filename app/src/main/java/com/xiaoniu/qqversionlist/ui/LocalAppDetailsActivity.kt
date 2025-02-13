@@ -64,7 +64,7 @@ import com.xiaoniu.qqversionlist.ui.LocalAppDetailsActivityViewModel.Companion.D
 import com.xiaoniu.qqversionlist.ui.LocalAppDetailsActivityViewModel.Companion.RULES_ID_ORDER
 import com.xiaoniu.qqversionlist.ui.LocalAppDetailsActivityViewModel.Companion.RULE_TYPE_OPEN_SOURCE_3RD_PARTY
 import com.xiaoniu.qqversionlist.ui.LocalAppDetailsActivityViewModel.Companion.RULE_TYPE_OTEAM_TENCENT
-import com.xiaoniu.qqversionlist.ui.LocalAppDetailsActivityViewModel.Companion.RULE_TYPE_PRITIVE_TENCENT
+import com.xiaoniu.qqversionlist.ui.LocalAppDetailsActivityViewModel.Companion.RULE_TYPE_PRIVATE_TENCENT
 import com.xiaoniu.qqversionlist.ui.MainActivity.Companion.JUDGE_UA_TARGET
 import com.xiaoniu.qqversionlist.ui.theme.QQVersionListTheme
 import com.xiaoniu.qqversionlist.util.ClipboardUtil.copyText
@@ -572,7 +572,7 @@ class LocalAppDetailsActivity : AppCompatActivity() {
                                     LocalAppDetailsActivityViewModel.RULE_ID_FLUTTER -> R.drawable.flutter_line
                                     LocalAppDetailsActivityViewModel.RULE_ID_REACT_NATIVE -> R.drawable.reactjs_line
                                     else -> when (DEX_PRE_RULES.find { it.id == item.id }?.type) {
-                                        RULE_TYPE_PRITIVE_TENCENT -> R.drawable.tencent_logo
+                                        RULE_TYPE_PRIVATE_TENCENT -> R.drawable.tencent_logo
                                         RULE_TYPE_OPEN_SOURCE_3RD_PARTY -> R.drawable.open_source_line
                                         RULE_TYPE_OTEAM_TENCENT -> R.drawable.oteam_official
                                         else -> R.drawable.tools_line

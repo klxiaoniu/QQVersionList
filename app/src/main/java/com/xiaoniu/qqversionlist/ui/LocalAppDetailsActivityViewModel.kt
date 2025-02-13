@@ -52,8 +52,8 @@ import kotlin.use
 
 class LocalAppDetailsActivityViewModel : ViewModel() {
     companion object {
-        const val RULE_TYPE_PRITIVE_TENCENT = "Tencent Pritive" // 腾讯私有库
-        const val RULE_TYPE_PRITIVE_3RD_PARTY = "3rd Party Pritive" // 第三方私有库
+        const val RULE_TYPE_PRIVATE_TENCENT = "Tencent Private" // 腾讯私有库
+        const val RULE_TYPE_PRIVATE_3RD_PARTY = "3rd Party Private" // 第三方私有库
         const val RULE_TYPE_OTEAM_TENCENT = "Tencent Oteam" // 腾讯开源协同
         const val RULE_TYPE_OPEN_SOURCE_3RD_PARTY = "3rd Party Open Source" // 第三方开源库
 
@@ -114,19 +114,19 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
         const val URL_TENCENT_BROWSING_SERVICE = "https://x5.tencent.com/"
 
         val DEX_PRE_RULES = listOf<LocalAppStackRule>(
-            LocalAppStackRule(RULE_ID_QQNT, DEX_QQNT, RULE_TYPE_PRITIVE_TENCENT),
-            LocalAppStackRule(RULE_ID_BUGLY, DEX_BUGLY, RULE_TYPE_PRITIVE_TENCENT, URL_BUGLY),
-            LocalAppStackRule(RULE_ID_SHIPLY, DEX_SHIPLY, RULE_TYPE_PRITIVE_TENCENT, URL_SHIPLY),
-            LocalAppStackRule(RULE_ID_KUIKLY, DEX_KUIKLY, RULE_TYPE_PRITIVE_TENCENT),
-            LocalAppStackRule(RULE_ID_HIPPY, DEX_HIPPY, RULE_TYPE_PRITIVE_TENCENT, URL_HIPPY),
-            LocalAppStackRule(RULE_ID_RIGHTLY, DEX_RIGHTLY, RULE_TYPE_PRITIVE_TENCENT, URL_RIGHTLY),
+            LocalAppStackRule(RULE_ID_QQNT, DEX_QQNT, RULE_TYPE_PRIVATE_TENCENT),
+            LocalAppStackRule(RULE_ID_BUGLY, DEX_BUGLY, RULE_TYPE_PRIVATE_TENCENT, URL_BUGLY),
+            LocalAppStackRule(RULE_ID_SHIPLY, DEX_SHIPLY, RULE_TYPE_PRIVATE_TENCENT, URL_SHIPLY),
+            LocalAppStackRule(RULE_ID_KUIKLY, DEX_KUIKLY, RULE_TYPE_PRIVATE_TENCENT),
+            LocalAppStackRule(RULE_ID_HIPPY, DEX_HIPPY, RULE_TYPE_PRIVATE_TENCENT, URL_HIPPY),
+            LocalAppStackRule(RULE_ID_RIGHTLY, DEX_RIGHTLY, RULE_TYPE_PRIVATE_TENCENT, URL_RIGHTLY),
             LocalAppStackRule(
-                RULE_ID_UE_LIBRARY, DEX_UE_LIBRARY, RULE_TYPE_PRITIVE_3RD_PARTY, URL_UE_LIBRARY
+                RULE_ID_UE_LIBRARY, DEX_UE_LIBRARY, RULE_TYPE_PRIVATE_3RD_PARTY, URL_UE_LIBRARY
             ),
             LocalAppStackRule(
                 RULE_ID_TENCENT_BEACON,
                 DEX_TENCENT_BEACON,
-                RULE_TYPE_PRITIVE_TENCENT,
+                RULE_TYPE_PRIVATE_TENCENT,
                 URL_TENCENT_BEACON
             ),
             LocalAppStackRule(
@@ -158,7 +158,7 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
             LocalAppStackRule(
                 RULE_ID_TENCENT_BROWSING_SERVICE,
                 DEX_TENCENT_BROWSING_SERVICE,
-                RULE_TYPE_PRITIVE_TENCENT,
+                RULE_TYPE_PRIVATE_TENCENT,
                 URL_TENCENT_BROWSING_SERVICE
             )
         )
