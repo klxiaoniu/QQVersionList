@@ -43,6 +43,10 @@ import android.view.inputmethod.InputMethodManager
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.biometric.BiometricManager
+import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG
+import androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL
+import androidx.biometric.BiometricPrompt
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.app.NotificationManagerCompat
@@ -109,7 +113,7 @@ import com.xiaoniu.qqversionlist.databinding.UserAgreementBinding
 import com.xiaoniu.qqversionlist.ui.components.cell.CellSingleSwitch
 import com.xiaoniu.qqversionlist.util.ClipboardUtil.copyText
 import com.xiaoniu.qqversionlist.util.DataStoreUtil
-import com.xiaoniu.qqversionlist.util.Extensions.dp
+import com.xiaoniu.qqversionlist.util.Extensions.dpToPx
 import com.xiaoniu.qqversionlist.util.FileUtil.downloadFile
 import com.xiaoniu.qqversionlist.util.FileUtil.getFileSize
 import com.xiaoniu.qqversionlist.util.GitHubRestApiUtil.checkGitHubToken
@@ -610,229 +614,265 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     dialogPrivateTokenSetting.setOnClickListener {
-                        val dialogPrivateTokenSettingBinding =
-                            DialogPrivateTokenSettingBinding.inflate(layoutInflater)
+                        fun showDialogPrivateTokenSetting() {
+                            val dialogPrivateTokenSettingBinding =
+                                DialogPrivateTokenSettingBinding.inflate(layoutInflater)
 
-                        dialogPrivateTokenSettingBinding.root.parent?.let { parent ->
-                            if (parent is ViewGroup) {
-                                parent.removeView(dialogPrivateTokenSettingBinding.root)
-                            }
-                        }
-
-                        val dialogPrivateTokenSetting =
-                            MaterialAlertDialogBuilder(this@MainActivity)
-                                .setTitle(R.string.privateTokenSettings)
-                                .setIcon(R.drawable.key_line)
-                                .setView(dialogPrivateTokenSettingBinding.root)
-                                .setCancelable(false)
-                                .show()
-
-
-                        val zhipuToken = KeyStoreUtil.getStringKVwithKeyStore(ZHIPU_TOKEN)
-                        val githubToken = KeyStoreUtil.getStringKVwithKeyStore(GITHUB_TOKEN)
-                        val securityLevel = KeyStoreUtil.checkHardwareSecurity()
-
-                        dialogPrivateTokenSettingBinding.apply {
-                            viewModel.isTokenTesting.observe(this@MainActivity) {
-                                if (it) progressIndicatorTokenSetting.show() else progressIndicatorTokenSetting.hide()
+                            dialogPrivateTokenSettingBinding.root.parent?.let { parent ->
+                                if (parent is ViewGroup) {
+                                    parent.removeView(dialogPrivateTokenSettingBinding.root)
+                                }
                             }
 
-                            progressIndicatorTokenSetting.apply {
-                                showAnimationBehavior = LinearProgressIndicator.SHOW_NONE
-                                hideAnimationBehavior = LinearProgressIndicator.HIDE_ESCAPE
-                            }
+                            val dialogPrivateTokenSetting =
+                                MaterialAlertDialogBuilder(this@MainActivity)
+                                    .setTitle(R.string.privateTokenSettings)
+                                    .setIcon(R.drawable.key_line)
+                                    .setView(dialogPrivateTokenSettingBinding.root)
+                                    .setCancelable(false)
+                                    .show()
 
-                            when (securityLevel) {
-                                0 -> {
-                                    securityLevelLayout.isVisible = true
-                                    securityLevelText.text =
-                                        getString(R.string.SecuritySoftwareSupported)
+
+                            val zhipuToken = KeyStoreUtil.getStringKVwithKeyStore(ZHIPU_TOKEN)
+                            val githubToken = KeyStoreUtil.getStringKVwithKeyStore(GITHUB_TOKEN)
+                            val securityLevel = KeyStoreUtil.checkHardwareSecurity()
+
+                            dialogPrivateTokenSettingBinding.apply {
+                                viewModel.isTokenTesting.observe(this@MainActivity) {
+                                    if (it) progressIndicatorTokenSetting.show() else progressIndicatorTokenSetting.hide()
                                 }
 
-                                1 -> {
-                                    securityLevelLayout.isVisible = true
-                                    securityLevelText.text = getString(R.string.TEESupported)
+                                progressIndicatorTokenSetting.apply {
+                                    showAnimationBehavior = LinearProgressIndicator.SHOW_NONE
+                                    hideAnimationBehavior = LinearProgressIndicator.HIDE_ESCAPE
                                 }
 
-                                2 -> {
-                                    securityLevelLayout.isVisible = true
-                                    securityLevelText.text =
-                                        getString(R.string.StrongBoxSupported)
+                                when (securityLevel) {
+                                    0 -> {
+                                        securityLevelLayout.isVisible = true
+                                        securityLevelText.text =
+                                            getString(R.string.SecuritySoftwareSupported)
+                                    }
+
+                                    1 -> {
+                                        securityLevelLayout.isVisible = true
+                                        securityLevelText.text = getString(R.string.TEESupported)
+                                    }
+
+                                    2 -> {
+                                        securityLevelLayout.isVisible = true
+                                        securityLevelText.text =
+                                            getString(R.string.StrongBoxSupported)
+                                    }
+
+                                    -1 -> {
+                                        securityLevelLayout.isVisible = true
+                                        securityLevelText.text =
+                                            getString(R.string.UnknownSecurityHardwareSupported)
+                                    }
+
+                                    else -> securityLevelLayout.isVisible = false
                                 }
 
-                                -1 -> {
-                                    securityLevelLayout.isVisible = true
-                                    securityLevelText.text =
-                                        getString(R.string.UnknownSecurityHardwareSupported)
+                                zhipuAiToken.editText?.setText(if (zhipuToken == null) "" else zhipuToken.toString())
+                                githubPersonalAccessToken.editText?.setText(if (githubToken == null) "" else githubToken.toString())
+
+                                btnTokenCancel.setOnClickListener {
+                                    dialogPrivateTokenSetting.dismiss()
                                 }
 
-                                else -> securityLevelLayout.isVisible = false
-                            }
+                                btnTokenSave.setOnClickListener {
+                                    try {
+                                        KeyStoreUtil.apply {
+                                            putStringKVwithKeyStoreAsync(
+                                                ZHIPU_TOKEN, zhipuAiToken.editText?.text.toString()
+                                            )
+                                            putStringKVwithKeyStoreAsync(
+                                                GITHUB_TOKEN,
+                                                githubPersonalAccessToken.editText?.text.toString()
+                                            )
+                                        }
+                                        dialogPrivateTokenSetting.dismiss()
+                                    } catch (e: Exception) {
+                                        e.printStackTrace()
+                                        dialogError(e)
+                                    }
+                                }
 
-                            zhipuAiToken.editText?.setText(if (zhipuToken == null) "" else zhipuToken.toString())
-                            githubPersonalAccessToken.editText?.setText(if (githubToken == null) "" else githubToken.toString())
-
-                            btnTokenCancel.setOnClickListener {
-                                dialogPrivateTokenSetting.dismiss()
-                            }
-
-                            btnTokenSave.setOnClickListener {
-                                try {
-                                    KeyStoreUtil.apply {
-                                        putStringKVwithKeyStoreAsync(
+                                zhipuTokenTest.setOnClickListener {
+                                    try {
+                                        KeyStoreUtil.putStringKVwithKeyStore(
                                             ZHIPU_TOKEN, zhipuAiToken.editText?.text.toString()
                                         )
-                                        putStringKVwithKeyStoreAsync(
+                                        if (viewModel.isTokenTesting.value == false) {
+                                            viewModel.setTokenTesting(true)
+                                            CoroutineScope(Dispatchers.IO).launch {
+                                                try {
+                                                    val token =
+                                                        KeyStoreUtil.getStringKVwithKeyStore(
+                                                            ZHIPU_TOKEN
+                                                        )
+                                                    if (!token.isNullOrEmpty()) {
+                                                        val responseData = getZhipuWrite(
+                                                            getString(
+                                                                R.string.testZhipuTokenPrompt,
+                                                                Locale.getDefault().toString()
+                                                            ),
+                                                            getString(
+                                                                R.string.testZhipuTokenPrompt,
+                                                                Locale.getDefault().toString()
+                                                            ),
+                                                            token
+                                                        )
+                                                        val gson =
+                                                            GsonBuilder().setPrettyPrinting()
+                                                                .create()
+                                                        val responseObject = gson.fromJson(
+                                                            responseData, JsonObject::class.java
+                                                        )
+
+                                                        runOnUiThread {
+                                                            if (responseObject.getAsJsonPrimitive("code").asInt == 200) {
+                                                                val zhipuContent =
+                                                                    responseObject.getAsJsonObject("data").asJsonObject.getAsJsonArray(
+                                                                        "choices"
+                                                                    ).asJsonArray.first().asJsonObject.getAsJsonObject(
+                                                                        "message"
+                                                                    ).asJsonObject.getAsJsonPrimitive(
+                                                                        "content"
+                                                                    ).asString
+                                                                MaterialAlertDialogBuilder(this@MainActivity)
+                                                                    .setIcon(R.drawable.ai_generate_2)
+                                                                    .setTitle(R.string.zhipuTokenSuccess)
+                                                                    .setMessage(zhipuContent.pangu())
+                                                                    .setPositiveButton(R.string.ok) { _, _ -> }
+                                                                    .show()
+                                                            } else {
+                                                                MaterialAlertDialogBuilder(this@MainActivity)
+                                                                    .setIcon(R.drawable.alert_line)
+                                                                    .setTitle(R.string.backFromZhipuPlatform)
+                                                                    .setMessage(
+                                                                        responseData?.toPrettyFormat()
+                                                                    )
+                                                                    .setPositiveButton(R.string.done) { _, _ -> }
+                                                                    .setNeutralButton(
+                                                                        R.string.copy,
+                                                                        null
+                                                                    ).create().apply {
+                                                                        setOnShowListener {
+                                                                            getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener {
+                                                                                responseData?.toPrettyFormat()
+                                                                                    ?.let { it ->
+                                                                                        copyText(it)
+                                                                                    }
+                                                                            }
+                                                                        }
+                                                                        show()
+                                                                    }
+                                                            }
+                                                        }
+                                                    } else runOnUiThread { showToast(R.string.zhipuTokenIsNull) }
+                                                } catch (e: RuntimeException) {
+                                                    if (e.message?.contains("invalid apiSecretKey") == true) runOnUiThread {
+                                                        dialogError(
+                                                            Exception(getString(R.string.zhipuTokenIsInvalid)),
+                                                            true
+                                                        )
+                                                    } else {
+                                                        e.printStackTrace()
+                                                        runOnUiThread { dialogError(e) }
+                                                    }
+                                                } catch (e: Exception) {
+                                                    e.printStackTrace()
+                                                    runOnUiThread { dialogError(e) }
+                                                } finally {
+                                                    runOnUiThread { viewModel.setTokenTesting(false) }
+                                                }
+                                            }
+                                        }
+                                    } catch (e: Exception) {
+                                        e.printStackTrace()
+                                        dialogError(e)
+                                    }
+                                }
+
+                                githubPatTest.setOnClickListener {
+                                    try {
+                                        KeyStoreUtil.putStringKVwithKeyStore(
                                             GITHUB_TOKEN,
                                             githubPersonalAccessToken.editText?.text.toString()
                                         )
-                                    }
-                                    dialogPrivateTokenSetting.dismiss()
-                                } catch (e: Exception) {
-                                    e.printStackTrace()
-                                    dialogError(e)
-                                }
-                            }
-
-                            zhipuTokenTest.setOnClickListener {
-                                try {
-                                    KeyStoreUtil.putStringKVwithKeyStore(
-                                        ZHIPU_TOKEN, zhipuAiToken.editText?.text.toString()
-                                    )
-                                    if (viewModel.isTokenTesting.value == false) {
-                                        viewModel.setTokenTesting(true)
-                                        CoroutineScope(Dispatchers.IO).launch {
-                                            try {
-                                                val token =
-                                                    KeyStoreUtil.getStringKVwithKeyStore(
-                                                        ZHIPU_TOKEN
-                                                    )
-                                                if (!token.isNullOrEmpty()) {
-                                                    val responseData = getZhipuWrite(
-                                                        getString(
-                                                            R.string.testZhipuTokenPrompt,
-                                                            Locale.getDefault().toString()
-                                                        ),
-                                                        getString(
-                                                            R.string.testZhipuTokenPrompt,
-                                                            Locale.getDefault().toString()
-                                                        ),
-                                                        token
-                                                    )
-                                                    val gson =
-                                                        GsonBuilder().setPrettyPrinting()
-                                                            .create()
-                                                    val responseObject = gson.fromJson(
-                                                        responseData, JsonObject::class.java
-                                                    )
-
-                                                    runOnUiThread {
-                                                        if (responseObject.getAsJsonPrimitive("code").asInt == 200) {
-                                                            val zhipuContent =
-                                                                responseObject.getAsJsonObject("data").asJsonObject.getAsJsonArray(
-                                                                    "choices"
-                                                                ).asJsonArray.first().asJsonObject.getAsJsonObject(
-                                                                    "message"
-                                                                ).asJsonObject.getAsJsonPrimitive(
-                                                                    "content"
-                                                                ).asString
-                                                            MaterialAlertDialogBuilder(this@MainActivity)
-                                                                .setIcon(R.drawable.ai_generate_2)
-                                                                .setTitle(R.string.zhipuTokenSuccess)
-                                                                .setMessage(zhipuContent.pangu())
-                                                                .setPositiveButton(R.string.ok) { _, _ -> }
-                                                                .show()
+                                        if (viewModel.isTokenTesting.value == false) {
+                                            viewModel.setTokenTesting(true)
+                                            CoroutineScope(Dispatchers.IO).launch {
+                                                try {
+                                                    val token =
+                                                        KeyStoreUtil.getStringKVwithKeyStore(
+                                                            GITHUB_TOKEN
+                                                        )
+                                                    if (!token.isNullOrEmpty()) {
+                                                        if (checkGitHubToken()) {
+                                                            runOnUiThread { showToast(R.string.githubTokenSuccess) }
                                                         } else {
-                                                            MaterialAlertDialogBuilder(this@MainActivity)
-                                                                .setIcon(R.drawable.alert_line)
-                                                                .setTitle(R.string.backFromZhipuPlatform)
-                                                                .setMessage(
-                                                                    responseData?.toPrettyFormat()
-                                                                )
-                                                                .setPositiveButton(R.string.done) { _, _ -> }
-                                                                .setNeutralButton(
-                                                                    R.string.copy,
-                                                                    null
-                                                                ).create().apply {
-                                                                    setOnShowListener {
-                                                                        getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener {
-                                                                            responseData?.toPrettyFormat()
-                                                                                ?.let { it ->
-                                                                                    copyText(it)
-                                                                                }
-                                                                        }
-                                                                    }
-                                                                    show()
-                                                                }
+                                                            runOnUiThread {
+                                                                MaterialAlertDialogBuilder(this@MainActivity)
+                                                                    .setIcon(R.drawable.alert_line)
+                                                                    .setTitle(R.string.githubTokenUnavailableTitle)
+                                                                    .setMessage(R.string.githubTokenUnavailable)
+                                                                    .setPositiveButton(R.string.done) { _, _ -> }
+                                                                    .show()
+                                                            }
                                                         }
-                                                    }
-                                                } else runOnUiThread { showToast(R.string.zhipuTokenIsNull) }
-                                            } catch (e: RuntimeException) {
-                                                if (e.message?.contains("invalid apiSecretKey") == true) runOnUiThread {
-                                                    dialogError(
-                                                        Exception(getString(R.string.zhipuTokenIsInvalid)),
-                                                        true
-                                                    )
-                                                } else {
+
+                                                    } else runOnUiThread { showToast(R.string.githubTokenIsNull) }
+                                                } catch (e: Exception) {
                                                     e.printStackTrace()
-                                                    runOnUiThread { dialogError(e) }
+                                                    dialogError(e)
+                                                } finally {
+                                                    runOnUiThread { viewModel.setTokenTesting(false) }
                                                 }
-                                            } catch (e: Exception) {
-                                                e.printStackTrace()
-                                                runOnUiThread { dialogError(e) }
-                                            } finally {
-                                                runOnUiThread { viewModel.setTokenTesting(false) }
                                             }
                                         }
+
+                                    } catch (e: Exception) {
+                                        e.printStackTrace()
+                                        dialogError(e)
                                     }
-                                } catch (e: Exception) {
-                                    e.printStackTrace()
-                                    dialogError(e)
                                 }
                             }
+                        }
 
-                            githubPatTest.setOnClickListener {
-                                try {
-                                    KeyStoreUtil.putStringKVwithKeyStore(
-                                        GITHUB_TOKEN,
-                                        githubPersonalAccessToken.editText?.text.toString()
-                                    )
-                                    if (viewModel.isTokenTesting.value == false) {
-                                        viewModel.setTokenTesting(true)
-                                        CoroutineScope(Dispatchers.IO).launch {
-                                            try {
-                                                val token =
-                                                    KeyStoreUtil.getStringKVwithKeyStore(
-                                                        GITHUB_TOKEN
-                                                    )
-                                                if (!token.isNullOrEmpty()) {
-                                                    if (checkGitHubToken()) {
-                                                        runOnUiThread { showToast(R.string.githubTokenSuccess) }
-                                                    } else {
-                                                        runOnUiThread {
-                                                            MaterialAlertDialogBuilder(this@MainActivity)
-                                                                .setIcon(R.drawable.alert_line)
-                                                                .setTitle(R.string.githubTokenUnavailableTitle)
-                                                                .setMessage(R.string.githubTokenUnavailable)
-                                                                .setPositiveButton(R.string.done) { _, _ -> }
-                                                                .show()
-                                                        }
-                                                    }
-
-                                                } else runOnUiThread { showToast(R.string.githubTokenIsNull) }
-                                            } catch (e: Exception) {
-                                                e.printStackTrace()
-                                                dialogError(e)
-                                            } finally {
-                                                runOnUiThread { viewModel.setTokenTesting(false) }
-                                            }
+                        val biometricManager = BiometricManager.from(this@MainActivity)
+                        when (biometricManager.canAuthenticate(BIOMETRIC_STRONG or DEVICE_CREDENTIAL)) {
+                            BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED -> showDialogPrivateTokenSetting()
+                            else -> {
+                                val executor = ContextCompat.getMainExecutor(this@MainActivity)
+                                val biometricPrompt = BiometricPrompt(this@MainActivity, executor,
+                                    object : BiometricPrompt.AuthenticationCallback() {
+                                        override fun onAuthenticationError(
+                                            errorCode: Int, errString: CharSequence
+                                        ) {
+                                            super.onAuthenticationError(errorCode, errString)
                                         }
-                                    }
 
-                                } catch (e: Exception) {
-                                    e.printStackTrace()
-                                    dialogError(e)
-                                }
+                                        override fun onAuthenticationSucceeded(
+                                            result: BiometricPrompt.AuthenticationResult
+                                        ) {
+                                            super.onAuthenticationSucceeded(result)
+                                            showDialogPrivateTokenSetting()
+                                        }
+
+                                        override fun onAuthenticationFailed() {
+                                            super.onAuthenticationFailed()
+                                        }
+                                    })
+                                val promptInfo = BiometricPrompt.PromptInfo.Builder()
+                                    .setTitle(getString(R.string.biometricLoginTitle))
+                                    .setSubtitle(getString(R.string.biometricLoginSubtitle))
+                                    .setAllowedAuthenticators(BIOMETRIC_STRONG or DEVICE_CREDENTIAL)
+                                    .setConfirmationRequired(false)
+                                    .build()
+                                biometricPrompt.authenticate(promptInfo)
                             }
                         }
                     }
@@ -2375,7 +2415,7 @@ class MainActivity : AppCompatActivity() {
                     expBackText.text =
                         sourceDataJson.toPrettyFormat()
                     FastScrollerBuilder(dialogExpBackBinding.expBackTextScroll).useMd2Style()
-                        .setPadding(0, 0, 0, 32.dp).build()
+                        .setPadding(0, 0, 0, 32.dpToPx).build()
                 }
         }
     }

@@ -9,6 +9,9 @@ updates:
     directory: /
     schedule:
       interval: monthly
+    ignore:
+      - dependency-name: cn.bigmodel.openapi:oapi-java-sdk
+      - dependency-name: androidx.core:core-splashscreen
     groups:
       maven-dependencies:
         patterns:

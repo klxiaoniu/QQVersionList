@@ -290,4 +290,6 @@
     <string name="localDetailsReactNative">React Native</string>
     <string name="localDetailsTBSDesc">腾讯浏览服务（Tencent Browsing Service，简称 TBS）属于 PCG 事业群，QQ 浏览器团队。QQ 浏览器作为一个平台化的产品，不论是网页的打开还是文档能力的打开，都需要一个强大的自研引擎做支撑，而引擎研发团队，一直深耕引擎底层技术 10 余年，积累了丰富的业务经验，将引擎技术从产品独立出来为 SDK，并不断演进成一个平台化的引擎产品，成立腾讯浏览服务，为腾讯公司内外产品提供强大的引擎技术支持和技术服务支持，覆盖了近十万家产品接入，并支持数亿级的网页浏览体验。</string>
     <string name="localDetailsTBS">腾讯浏览服务</string>
+    <string name="biometricLoginTitle">验证您的身份</string>
+    <string name="biometricLoginSubtitle">验证您的身份以进一步操作</string>
 </resources>

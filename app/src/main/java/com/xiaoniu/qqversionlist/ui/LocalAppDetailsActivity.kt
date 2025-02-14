@@ -477,14 +477,14 @@ class LocalAppDetailsActivity : AppCompatActivity() {
                                 R.drawable.beacon_official
                             )
 
-                            LocalAppDetailsActivityViewModel.RULE_ID_JETPACK_COMPOSE -> showStackDescDialog(
+                            LocalAppDetailsActivityViewModel.RULE_ID_COMPOSE_MULTIPLATFORM -> showStackDescDialog(
                                 R.string.localDetailsComposeMultiplatform,
                                 R.string.localDetailsComposeMultiplatformDesc,
                                 DEX_PRE_RULES.find { it.id == item.id }?.url,
                                 R.drawable.compose
                             )
 
-                            LocalAppDetailsActivityViewModel.RULE_ID_COMPOSE_MULTIPLATFORM -> showStackDescDialog(
+                            LocalAppDetailsActivityViewModel.RULE_ID_JETPACK_COMPOSE -> showStackDescDialog(
                                 R.string.localDetailsJetpackCompose,
                                 R.string.localDetailsJetpackComposeDesc,
                                 DEX_PRE_RULES.find { it.id == item.id }?.url,

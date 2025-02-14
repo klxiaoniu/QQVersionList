@@ -45,7 +45,7 @@ import com.xiaoniu.qqversionlist.data.QQVersionBean
 import com.xiaoniu.qqversionlist.databinding.ItemQqVersionBinding
 import com.xiaoniu.qqversionlist.databinding.ItemQqVersionDetailBinding
 import com.xiaoniu.qqversionlist.util.DataStoreUtil
-import com.xiaoniu.qqversionlist.util.Extensions.dp
+import com.xiaoniu.qqversionlist.util.Extensions.dpToPx
 import com.xiaoniu.qqversionlist.util.InfoUtil.showToast
 import com.xiaoniu.qqversionlist.util.StringUtil.toPrettyFormat
 
@@ -132,15 +132,15 @@ class QQVersionAdapter :
                     linearImages.removeAllViews()
                     bean.imgs.forEachIndexed { index, s ->
                         val iv = ImageView(holder.itemView.context).apply {
-                            setPadding(0, 0, if (index == bean.imgs.size - 1) 0 else 4.dp, 0)
+                            setPadding(0, 0, if (index == bean.imgs.size - 1) 0 else 4.dpToPx, 0)
                             layoutParams = LinearLayout.LayoutParams(
-                                LinearLayout.LayoutParams.WRAP_CONTENT, 150.dp
+                                LinearLayout.LayoutParams.WRAP_CONTENT, 150.dpToPx
                             )
                         }
                         linearImages.addView(iv)
                         iv.load(s) {
                             crossfade(true)
-                            transformations(RoundedCornersTransformation(2.dp.toFloat()))
+                            transformations(RoundedCornersTransformation(2.dpToPx.toFloat()))
                         }
                     }
                     tvOldVersion.text = bean.versionNumber
@@ -194,23 +194,21 @@ class QQVersionAdapter :
         tvPerSizeCard.isVisible = getProgressSizeText
 
         val layoutParams = tvSizeCard.layoutParams as? ViewGroup.MarginLayoutParams ?: return
-        layoutParams.marginEnd = if (getProgressSizeText) 6.dp else 0
+        layoutParams.marginEnd = if (getProgressSizeText) 6.dpToPx else 0
         tvSizeCard.layoutParams = layoutParams
 
         if (getProgressSize || getProgressSizeText) {
-            val listMaxSize =
-                currentList.maxByOrNull { it.size.toFloat() }?.size?.toFloat() ?: 0f
+            val listMaxSize = currentList.maxByOrNull { it.size.toFloat() }?.size?.toFloat() ?: 0f
 
-            tvPerSize?.text =
-                "${
-                    tvPerSizeCard.context.getString(
-                        R.string.currentSizeVsLargestHistoricalPackage, "$listMaxSize MB"
-                    )
-                }${
-                    ("%.2f".format(bean.size.toFloat() / listMaxSize * 100)).replace(
-                        "100.00", "100"
-                    )
-                }%"
+            tvPerSize?.text = "${
+                tvPerSizeCard.context.getString(
+                    R.string.currentSizeVsLargestHistoricalPackage, "$listMaxSize MB"
+                )
+            }${
+                ("%.2f".format(bean.size.toFloat() / listMaxSize * 100)).replace(
+                    "100.00", "100"
+                )
+            }%"
             tvPerSizeText.text = "${
                 ("%.2f".format(bean.size.toFloat() / listMaxSize * 100)).replace(
                     "100.00", "100"
@@ -236,7 +234,7 @@ class QQVersionAdapter :
             tvInstall.text = tvInstall.context.getString(R.string.installed)
             val marginLayoutParams = tvInstallCard.layoutParams as ViewGroup.MarginLayoutParams
             marginLayoutParams.marginStart =
-                if (bean.isAccessibility || bean.isQQNTFramework || (getShowKuiklyTag && bean.isKuiklyInside)) 3.dp else 6.dp
+                if (bean.isAccessibility || bean.isQQNTFramework || (getShowKuiklyTag && bean.isKuiklyInside)) 3.dpToPx else 6.dpToPx
             tvInstallCard.layoutParams = marginLayoutParams
         } else tvInstallCard.isVisible = false
     }
@@ -263,7 +261,7 @@ class QQVersionAdapter :
     }
 
     private fun bindKuiklyTag(kuikly: ImageView, bean: QQVersionBean) {
-        kuikly.isVisible = (getShowKuiklyTag&&bean.isKuiklyInside)
+        kuikly.isVisible = (getShowKuiklyTag && bean.isKuiklyInside)
     }
 
     private fun bindVersionTCloud(tvVersion: TextView, context: Context) {
@@ -331,9 +329,7 @@ class QQVersionAdapter :
                 } else if (holder is ViewHolderDetail) {
                     bindUnrealEngineTag(holder.binding.ueOldTag, bean)
                     bindDisplayInstall(
-                        holder.binding.tvOldInstall,
-                        holder.binding.tvOldInstallCard,
-                        bean
+                        holder.binding.tvOldInstall, holder.binding.tvOldInstallCard, bean
                     )
                 }
 
@@ -343,9 +339,7 @@ class QQVersionAdapter :
                 } else if (holder is ViewHolderDetail) {
                     bindKuiklyTag(holder.binding.kuiklyOldTag, bean)
                     bindDisplayInstall(
-                        holder.binding.tvOldInstall,
-                        holder.binding.tvOldInstallCard,
-                        bean
+                        holder.binding.tvOldInstall, holder.binding.tvOldInstallCard, bean
                     )
                 }
             }

@@ -45,7 +45,7 @@ import com.xiaoniu.qqversionlist.databinding.ItemWeixinVersionBinding
 import com.xiaoniu.qqversionlist.databinding.ItemWeixinVersionDetailBinding
 import com.xiaoniu.qqversionlist.util.ClipboardUtil.copyText
 import com.xiaoniu.qqversionlist.util.DataStoreUtil
-import com.xiaoniu.qqversionlist.util.Extensions.dp
+import com.xiaoniu.qqversionlist.util.Extensions.dpToPx
 import com.xiaoniu.qqversionlist.util.FileUtil.downloadFile
 import com.xiaoniu.qqversionlist.util.FileUtil.getFileSize
 import com.xiaoniu.qqversionlist.util.InfoUtil.showToast
@@ -157,7 +157,7 @@ class WeixinVersionAdapter(private val lifecycleOwner: LifecycleOwner) :
             tvInstallCard.isVisible = true
             tvInstall.text = tvInstall.context.getString(R.string.installed)
             val marginLayoutParams = tvInstallCard.layoutParams as ViewGroup.MarginLayoutParams
-            marginLayoutParams.marginStart = 6.dp
+            marginLayoutParams.marginStart = 6.dpToPx
             tvInstallCard.layoutParams = marginLayoutParams
         } else tvInstallCard.isVisible = false
     }

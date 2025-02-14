@@ -21,6 +21,6 @@ package com.xiaoniu.qqversionlist.util
 import android.content.res.Resources
 
 object Extensions {
-    val Number.dp get() = (toFloat() * Resources.getSystem().displayMetrics.density).toInt()
+    val Number.dpToPx get() = (toFloat() * Resources.getSystem().displayMetrics.density).toInt()
     val Number.pxToDp get() = (toFloat() / Resources.getSystem().displayMetrics.density).toInt()
 }

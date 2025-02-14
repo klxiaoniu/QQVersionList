@@ -105,6 +105,7 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.biometric)
     implementation(libs.androidx.browser)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.constraintlayout)
