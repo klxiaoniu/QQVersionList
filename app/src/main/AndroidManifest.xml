@@ -30,7 +30,7 @@
         <activity
             android:name=".ui.OSSLicensesActivity"
             android:exported="false"
-            android:label="@string/title_activity_osslicenses"
+            android:label="@string/openSourceLicenseTitle"
             android:theme="@style/Theme.QQVersionList" />
         <activity
             android:name=".ui.OSSLicensesMenuActivity"
