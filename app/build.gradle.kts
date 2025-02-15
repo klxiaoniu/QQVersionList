@@ -98,8 +98,11 @@ android {
     }
 }
 
+aboutLibraries {
+    mapLicensesToSpdx = false
+}
+
 dependencies {
-    implementation(libs.aboutlibraries.compose.m3)
     implementation(libs.aboutlibraries.core)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.activity.compose)

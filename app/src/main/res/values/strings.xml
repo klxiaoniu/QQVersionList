@@ -291,4 +291,5 @@
     <string name="localDetailsTBS">腾讯浏览服务</string>
     <string name="biometricLoginTitle">验证您的身份</string>
     <string name="biometricLoginSubtitle">验证您的身份以进一步操作</string>
+    <string name="title_activity_osslicenses">OSSLicensesActivity</string>
 </resources>

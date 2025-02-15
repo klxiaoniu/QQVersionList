@@ -1,5 +1,5 @@
 [versions]
-aboutlibraries = "11.5.0"
+aboutlibraries = "11.6.0"
 activityKtxVersion = "1.10.0"
 activityVersion = "1.10.0"
 androidGradlePlugin = "8.8.1"
@@ -46,7 +46,6 @@ uiVersion = "1.7.8"
 viewpager2 = "1.1.0"
 
 [libraries]
-aboutlibraries-compose-m3 = { module = "com.mikepenz:aboutlibraries-compose-m3", version.ref = "aboutlibraries" }
 aboutlibraries-core = { module = "com.mikepenz:aboutlibraries-core", version.ref = "aboutlibraries" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityKtxVersion" }
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activityKtxVersion" }
