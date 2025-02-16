@@ -65,7 +65,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mikepenz.aboutlibraries.entity.Library
 import com.xiaoniu.qqversionlist.R
-import com.xiaoniu.qqversionlist.ui.ui.theme.QQVersionListTheme
+import com.xiaoniu.qqversionlist.ui.theme.QQVersionListTheme
 import com.xiaoniu.qqversionlist.util.InfoUtil.openUrlWithChromeCustomTab
 import com.xiaoniu.qqversionlist.util.OSSLicensesObject
 import java.net.URL

@@ -39,11 +39,13 @@ import android.os.Environment
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Base64
+import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.ScrollView
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -491,11 +493,39 @@ class MainActivity : AppCompatActivity() {
                                     }
                                 }
 
+                                val gestureDetector = GestureDetector(
+                                    context,
+                                    object : GestureDetector.SimpleOnGestureListener() {
+                                        override fun onFling(
+                                            e1: MotionEvent?,
+                                            e2: MotionEvent,
+                                            velocityX: Float,
+                                            velocityY: Float
+                                        ): Boolean {
+                                            if (abs(velocityY) > abs(velocityX)) {
+                                                personalizationScroll.fling(-velocityY.toInt())
+                                                return true
+                                            }
+                                            return false
+                                        }
+
+                                        override fun onScroll(
+                                            e1: MotionEvent?,
+                                            e2: MotionEvent,
+                                            distanceX: Float,
+                                            distanceY: Float
+                                        ): Boolean {
+                                            return super.onScroll(e1, e2, distanceX, distanceY)
+                                        }
+                                    })
+
                                 versionTcloudThickness.setOnTouchListener { view, event ->
                                     val slop = ViewConfiguration.get(context).scaledTouchSlop
                                     var initialX = 0f
                                     var initialY = 0f
                                     var isHorizontalScroll = false
+
+                                    gestureDetector.onTouchEvent(event)
 
                                     when (event.action) {
                                         MotionEvent.ACTION_DOWN -> {
