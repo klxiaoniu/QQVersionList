@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 /*
     Qverbow Util
     Copyright (C) 2023 klxiaoniu
@@ -47,7 +49,6 @@ import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG
 import androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL
 import androidx.biometric.BiometricPrompt
-import androidx.browser.customtabs.CustomTabsIntent
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
@@ -120,6 +121,7 @@ import com.xiaoniu.qqversionlist.util.GitHubRestApiUtil.checkGitHubToken
 import com.xiaoniu.qqversionlist.util.GitHubRestApiUtil.getQverbowRelease
 import com.xiaoniu.qqversionlist.util.InfoUtil.dialogError
 import com.xiaoniu.qqversionlist.util.InfoUtil.getQverbowSM3
+import com.xiaoniu.qqversionlist.util.InfoUtil.openUrlWithChromeCustomTab
 import com.xiaoniu.qqversionlist.util.InfoUtil.qverbowAboutText
 import com.xiaoniu.qqversionlist.util.InfoUtil.showToast
 import com.xiaoniu.qqversionlist.util.KeyStoreUtil
@@ -339,8 +341,7 @@ class MainActivity : AppCompatActivity() {
                     btnAboutSharedList.setOnClickListener {
                         val url =
                             "https://raw.githubusercontent.com/klxiaoniu/QQVersionList/refs/heads/master/DataListShared.md"
-                        val intent = CustomTabsIntent.Builder().build()
-                        intent.launchUrl(this@MainActivity, Uri.parse(url))
+                        openUrlWithChromeCustomTab(url)
                     }
 
                     btnAboutUpdate.setOnClickListener {

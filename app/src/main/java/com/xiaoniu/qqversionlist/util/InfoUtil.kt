@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 /*
     Qverbow Util
     Copyright (C) 2023 klxiaoniu
@@ -30,6 +32,7 @@ import android.text.SpannableString
 import android.text.style.URLSpan
 import android.widget.Toast
 import androidx.annotation.StringRes
+import androidx.browser.customtabs.CustomTabsIntent
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.xiaoniu.qqversionlist.BuildConfig
 import com.xiaoniu.qqversionlist.QverbowApplication
@@ -171,9 +174,7 @@ object InfoUtil {
     fun Context.findActivity(): Activity? {
         var context = this
         while (context is ContextWrapper) {
-            if (context is Activity) {
-                return context
-            }
+            if (context is Activity) return context
             context = context.baseContext
         }
         return null
@@ -196,5 +197,18 @@ object InfoUtil {
             buffer, 0, bytesRead
         )
         return messageDigest.digest().joinToString("") { "%02X".format(it) }
+    }
+
+    /**
+     * 使用 Chrome 自定义标签页打开URL
+     *
+     * 此函数构建一个 Chrome 自定义标签页的意图，并使用它来打开给定的URL
+     * 它利用 Android 的 CustomTabsIntent 功能来实现这一点
+     *
+     * @param url 要打开的 URL 字符串
+     */
+    fun Context.openUrlWithChromeCustomTab(url: String){
+        val intent = CustomTabsIntent.Builder().build()
+        intent.launchUrl(this, Uri.parse(url))
     }
 }
