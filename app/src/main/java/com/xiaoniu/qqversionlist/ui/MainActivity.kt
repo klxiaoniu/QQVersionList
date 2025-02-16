@@ -39,7 +39,9 @@ import android.os.Environment
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Base64
+import android.view.MotionEvent
 import android.view.View
+import android.view.ViewConfiguration
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.enableEdgeToEdge
@@ -157,6 +159,7 @@ import java.io.InputStreamReader
 import java.lang.Thread.sleep
 import java.util.Locale
 import java.util.zip.GZIPInputStream
+import kotlin.math.abs
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
@@ -485,6 +488,53 @@ class MainActivity : AppCompatActivity() {
                                 root.parent?.let { parent ->
                                     if (parent is ViewGroup) {
                                         parent.removeView(root)
+                                    }
+                                }
+
+                                versionTcloudThickness.setOnTouchListener { view, event ->
+                                    val slop = ViewConfiguration.get(context).scaledTouchSlop
+                                    var initialX = 0f
+                                    var initialY = 0f
+                                    var isHorizontalScroll = false
+
+                                    when (event.action) {
+                                        MotionEvent.ACTION_DOWN -> {
+                                            initialX = event.x
+                                            initialY = event.y
+                                            view.parent.requestDisallowInterceptTouchEvent(true)
+                                            true
+                                        }
+
+                                        MotionEvent.ACTION_MOVE -> {
+                                            if (!isHorizontalScroll) {
+                                                val dx = event.x - initialX
+                                                val dy = event.y - initialY
+
+                                                if (abs(dx) > slop || abs(dy) > slop) {
+                                                    if (abs(dx) > abs(dy)) {
+                                                        isHorizontalScroll = true
+                                                        view.parent.requestDisallowInterceptTouchEvent(
+                                                            true
+                                                        )
+                                                        false
+                                                    } else {
+                                                        view.parent.requestDisallowInterceptTouchEvent(
+                                                            false
+                                                        )
+                                                        true
+                                                    }
+                                                } else true
+                                            } else false
+                                        }
+
+                                        MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                                            view.performClick()
+                                            view.parent.requestDisallowInterceptTouchEvent(false)
+                                            isHorizontalScroll = false
+                                            false
+                                        }
+
+                                        else -> false
                                     }
                                 }
 
