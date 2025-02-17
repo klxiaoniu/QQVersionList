@@ -53,13 +53,18 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import coil3.load
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.progressindicator.LinearProgressIndicator
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonObject
+import com.xiaoniu.qqversionlist.QverbowApplication.Companion.ZHIPU_TOKEN
 import com.xiaoniu.qqversionlist.R
 import com.xiaoniu.qqversionlist.data.LocalAppStackResult
 import com.xiaoniu.qqversionlist.databinding.ActivityLocalAppDetailsBinding
+import com.xiaoniu.qqversionlist.databinding.DialogChangesLlmInferenceBinding
 import com.xiaoniu.qqversionlist.databinding.DialogLocalQqTimInfoBinding
 import com.xiaoniu.qqversionlist.ui.LocalAppDetailsActivityViewModel.Companion.DEX_PRE_RULES
 import com.xiaoniu.qqversionlist.ui.LocalAppDetailsActivityViewModel.Companion.RULES_ID_ORDER
@@ -73,9 +78,17 @@ import com.xiaoniu.qqversionlist.util.DataStoreUtil
 import com.xiaoniu.qqversionlist.util.InfoUtil.dialogError
 import com.xiaoniu.qqversionlist.util.InfoUtil.openUrlWithChromeCustomTab
 import com.xiaoniu.qqversionlist.util.InfoUtil.showToast
+import com.xiaoniu.qqversionlist.util.KeyStoreUtil
+import com.xiaoniu.qqversionlist.util.StringUtil.pangu
+import com.xiaoniu.qqversionlist.util.ZhipuSDKUtil.getZhipuWrite
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.apache.commons.io.FileUtils
 import java.io.File
+import java.net.SocketTimeoutException
 import java.nio.file.FileSystems
+import java.util.Locale
 import kotlin.collections.sortedWith
 
 class LocalAppDetailsActivity : AppCompatActivity() {
@@ -100,6 +113,7 @@ class LocalAppDetailsActivity : AppCompatActivity() {
             finish()
         }
         binding = ActivityLocalAppDetailsBinding.inflate(layoutInflater)
+        val localInterChangesLlmGen = DataStoreUtil.getBooleanKV("localInterChangesLlmGen", false)
         val viewRoot = binding.root
         setContentView(viewRoot)
         viewModel = ViewModelProvider(this)[LocalAppDetailsActivityViewModel::class.java]
@@ -112,6 +126,119 @@ class LocalAppDetailsActivity : AppCompatActivity() {
                 hideAnimationBehavior = LinearProgressIndicator.HIDE_ESCAPE
             }
             viewModel.apply {
+                isAIShowing.observe(this@LocalAppDetailsActivity) { isAIShowing ->
+                    if (isAIShowing && localInterChangesLlmGen) {
+                        floatingActionButtonLlm.isVisible = true
+                        floatingActionButtonLlm.show()
+                        floatingActionButtonLlm.setOnClickListener {
+                            val dialogChangesLlmInferenceBinding =
+                                DialogChangesLlmInferenceBinding.inflate(
+                                    layoutInflater
+                                )
+
+                            val changeText =
+                                activityDiff.value + "\n\n" + serviceDiff.value + "\n\n" + receiverDiff.value + "\n\n" + providerDiff.value + "\n\n" + permissionDiff.value
+                            val versionChange =
+                                "${appName.value} ${localVersionNameWithInter.value} → ${versionName.value}"
+
+                            CoroutineScope(
+                                Dispatchers.IO
+                            ).launch {
+                                try {
+                                    val token = KeyStoreUtil.getStringKVwithKeyStore(ZHIPU_TOKEN)
+                                    val tokenIsNullOrEmpty = token.isNullOrEmpty()
+                                    if (!tokenIsNullOrEmpty) {
+                                        runOnUiThread { viewModel.setChangesBackLLMWorking(true) }
+                                        val llmResponse = getZhipuWrite(
+                                            getString(
+                                                R.string.llmInferenceLocalChangesPrompt,
+                                                appName.value,
+                                                Locale.getDefault().toString()
+                                            ),
+                                            changeText,
+                                            token
+                                        )
+                                        val gson = GsonBuilder().setPrettyPrinting().create()
+                                        val responseObject = gson.fromJson(
+                                            llmResponse, JsonObject::class.java
+                                        )
+
+                                        runOnUiThread {
+                                            if (responseObject.getAsJsonPrimitive("code").asInt == 200) {
+                                                val zhipuContent =
+                                                    responseObject.getAsJsonObject("data").asJsonObject.getAsJsonArray(
+                                                        "choices"
+                                                    ).asJsonArray.first().asJsonObject.getAsJsonObject(
+                                                        "message"
+                                                    ).asJsonObject.getAsJsonPrimitive(
+                                                        "content"
+                                                    ).asString
+                                                viewModel.setChangesBackLLMGenText(zhipuContent.pangu())
+                                            } else {
+                                                val zhipuContent =
+                                                    responseObject.getAsJsonPrimitive("msg").asString + getString(
+                                                        R.string.colon
+                                                    ) + responseObject.getAsJsonObject("error").asJsonObject.getAsJsonPrimitive(
+                                                        "message"
+                                                    ).asString
+                                                viewModel.setChangesBackLLMGenText(zhipuContent)
+                                            }
+                                            viewModel.setChangesBackLLMWorking(false)
+                                        }
+                                    } else runOnUiThread {
+                                        viewModel.setChangesBackLLMWorking(false)
+                                        viewModel.setChangesBackLLMGenText(getString(R.string.zhipuTokenIsNull))
+                                    }
+                                } catch (_: SocketTimeoutException) {
+                                    runOnUiThread {
+                                        viewModel.setChangesBackLLMWorking(false)
+                                        viewModel.setChangesBackLLMGenText(getString(R.string.timeout))
+                                    }
+                                } catch (e: Exception) {
+                                    runOnUiThread {
+                                        e.printStackTrace()
+                                        dialogError(e)
+                                    }
+                                }
+                            }
+
+                            val dialogChangesLlmInference =
+                                MaterialAlertDialogBuilder(this@LocalAppDetailsActivity).setTitle(R.string.llmInferenceLocalChanges)
+                                    .setView(dialogChangesLlmInferenceBinding.root)
+                                    .setIcon(R.drawable.ai_generate_2).show()
+
+                            dialogChangesLlmInferenceBinding.versionChangeInfo?.text = versionChange
+
+                            viewModel.isChangesBackLLMWorking.observe(this@LocalAppDetailsActivity,
+                                Observer { isWorking ->
+                                    if (DataStoreUtil.getBooleanKV("updateLogLlmGen", false)) {
+                                        dialogChangesLlmInferenceBinding.llmGenCard.isVisible =
+                                            !isWorking && viewModel.changesBackLLMGenText.value.toString()
+                                                .isNotEmpty()
+                                        dialogChangesLlmInferenceBinding.progressIndicator.isVisible =
+                                            isWorking
+                                    } else {
+                                        dialogChangesLlmInferenceBinding.llmGenCard.isVisible =
+                                            false
+                                        dialogChangesLlmInferenceBinding.progressIndicator.isVisible =
+                                            false
+                                    }
+                                })
+                            viewModel.changesBackLLMGenText.observe(this@LocalAppDetailsActivity,
+                                Observer { text ->
+                                    dialogChangesLlmInferenceBinding.llmGenText.text = text
+                                })
+
+                            dialogChangesLlmInferenceBinding.btnOk.setOnClickListener {
+                                dialogChangesLlmInference.dismiss()
+                            }
+                        }
+                    } else {
+                        floatingActionButtonLlm.hide()
+                        floatingActionButtonLlm.isVisible = false
+                        floatingActionButtonLlm.setOnClickListener(null)
+                    }
+                }
                 localAppStackResults.observe(this@LocalAppDetailsActivity) { result ->
                     stackInfoList.setContent {
                         QQVersionListTheme { LocalAppDetailsStackWindow(result) }

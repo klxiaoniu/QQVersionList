@@ -22,9 +22,13 @@ package com.xiaoniu.qqversionlist.ui
 
 import android.app.Activity
 import android.content.Context
+import android.content.pm.ActivityInfo
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
+import android.content.pm.PermissionInfo
+import android.content.pm.ProviderInfo
+import android.content.pm.ServiceInfo
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Build.VERSION.SDK_INT
@@ -49,7 +53,9 @@ import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
 import org.apache.commons.io.IOUtils
 import java.io.File
+import java.io.FileInputStream
 import java.nio.charset.Charset
+import java.security.MessageDigest
 import kotlin.use
 
 class LocalAppDetailsActivityViewModel : ViewModel() {
@@ -186,6 +192,18 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
     private val _isErr = MutableLiveData<Boolean>().apply { value = false }
     val isErr: LiveData<Boolean> = _isErr
 
+    private val _isAIShowing = MutableLiveData<Boolean>().apply { value = false }
+    val isAIShowing: LiveData<Boolean> = _isAIShowing
+
+    private val _localSM3 = MutableLiveData<String>().apply { value = "" }
+    val localSM3: LiveData<String> = _localSM3
+
+    private val _interSM3 = MutableLiveData<String>().apply { value = "" }
+    val interSM3: LiveData<String> = _interSM3
+
+    private val _localVersionNameWithInter = MutableLiveData<String>().apply { value = "" }
+    val localVersionNameWithInter: LiveData<String> = _localVersionNameWithInter
+
     private val _localVersion = MutableLiveData<String>().apply { value = "" }
     val localVersion: LiveData<String> = _localVersion
 
@@ -243,12 +261,49 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
         MutableLiveData<MutableList<LocalAppStackResult>>().apply { value = mutableListOf() }
     val localAppStackResults: LiveData<MutableList<LocalAppStackResult>> = _localAppStackResults
 
+    private val _activityDiff = MutableLiveData<String>().apply { value = "" }
+    val activityDiff: LiveData<String> = _activityDiff
+
+    private val _serviceDiff = MutableLiveData<String>().apply { value = "" }
+    val serviceDiff: LiveData<String> = _serviceDiff
+
+    private val _providerDiff = MutableLiveData<String>().apply { value = "" }
+    val providerDiff: LiveData<String> = _providerDiff
+
+    private val _receiverDiff = MutableLiveData<String>().apply { value = "" }
+    val receiverDiff: LiveData<String> = _receiverDiff
+
+    private val _permissionDiff = MutableLiveData<String>().apply { value = "" }
+    val permissionDiff: LiveData<String> = _permissionDiff
+
+    private val _isChangesBackLLMWorking = MutableLiveData<Boolean>().apply { value = false }
+    val isChangesBackLLMWorking: LiveData<Boolean> = _isChangesBackLLMWorking
+
+    private val _changesBackLLMGenText = MutableLiveData<String>().apply { value = "" }
+    val changesBackLLMGenText: LiveData<String> = _changesBackLLMGenText
+
     fun setLoading(isLoading: Boolean) {
         _isLoading.value = isLoading
     }
 
     fun setErr(isErr: Boolean) {
         _isErr.value = isErr
+    }
+
+    fun setAIShowing(isAIShowing: Boolean) {
+        _isAIShowing.value = isAIShowing
+    }
+
+    fun setLocalSM3(sm3: String) {
+        _localSM3.value = sm3
+    }
+
+    fun setInterSM3(sm3: String) {
+        _interSM3.value = sm3
+    }
+
+    fun setLocalVersionNameWithInter(versionName: String) {
+        _localVersionNameWithInter.value = versionName
     }
 
     fun setLocalVersion(version: String) {
@@ -323,13 +378,42 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
         _localAppStackResults.value = result
     }
 
+    fun setActivityDiff(diff: String) {
+        _activityDiff.value = diff
+    }
+
+    fun setServiceDiff(diff: String) {
+        _serviceDiff.value = diff
+    }
+
+    fun setProviderDiff(diff: String) {
+        _providerDiff.value = diff
+    }
+
+    fun setReceiverDiff(diff: String) {
+        _receiverDiff.value = diff
+    }
+
+    fun setPermissionDiff(diff: String) {
+        _permissionDiff.value = diff
+    }
+
+    fun setChangesBackLLMWorking(isWorking: Boolean) {
+        _isChangesBackLLMWorking.value = isWorking
+    }
+
+    fun setChangesBackLLMGenText(text: String) {
+        _changesBackLLMGenText.value = text
+    }
+
     fun getInfo(activity: Activity, type: String, appPath: String? = null) {
         setLoading(true)
         var packageInfo: PackageInfo? = null
         var applicationInfo: ApplicationInfo? = null
         if (type == "inter") {
             val packageInfoPre = activity.packageManager.getPackageArchiveInfo(
-                appPath!!, PackageManager.GET_META_DATA
+                appPath!!,
+                PackageManager.GET_META_DATA or PackageManager.GET_ACTIVITIES or PackageManager.GET_SERVICES or PackageManager.GET_RECEIVERS or PackageManager.GET_PROVIDERS or PackageManager.GET_PERMISSIONS
             )
             val applicationInfoPre = packageInfoPre?.applicationInfo
             if (packageInfoPre != null && applicationInfoPre != null) {
@@ -425,6 +509,71 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
                         }
                     }
                     baseJobs.joinAll()
+                    val checkIsSamePackageJobs = mutableListOf<Job>().apply {
+                        add(viewModelScope.launch(Dispatchers.IO) {
+                            if (type == "inter") {
+                                val interSM3 = getSM3(applicationInfo)
+                                withContext(Dispatchers.Main) {
+                                    setInterSM3(interSM3)
+                                }
+                            }
+                        })
+                        add(viewModelScope.launch(Dispatchers.IO) {
+                            try {
+                                val applicationInfo = activity.packageManager.getApplicationInfo(
+                                    packageName, PackageManager.GET_META_DATA
+                                )
+                                val packageInfo = activity.packageManager.getPackageInfo(
+                                    packageName, 0
+                                )
+                                val localSM3 = getSM3(applicationInfo)
+                                val localVersionName = getVersionName(packageInfo)
+                                withContext(Dispatchers.Main) {
+                                    setLocalSM3(localSM3)
+                                    if (localVersionName != null) setLocalVersionNameWithInter(
+                                        localVersionName
+                                    )
+                                }
+                            } catch (_: Exception) {
+                                withContext(Dispatchers.Main) { setLocalSM3("") }
+                            }
+                        })
+                    }
+                    checkIsSamePackageJobs.joinAll()
+                    val isSamePackage = localSM3.value == interSM3.value
+                    val diffPackagesJob = mutableListOf<Job>().apply {
+                        add(viewModelScope.launch(Dispatchers.IO) {
+                            if (type == "inter" && !isSamePackage && localSM3.value != "" && SDK_INT >= Build.VERSION_CODES.P) {
+                                val localPackageInfo = activity.packageManager.getPackageInfo(
+                                    packageName,
+                                    PackageManager.GET_ACTIVITIES or PackageManager.GET_SERVICES or PackageManager.GET_RECEIVERS or PackageManager.GET_PROVIDERS or PackageManager.GET_PERMISSIONS
+                                )
+                                val interPackageInfo = packageInfo
+                                val localVersionCode = getVersionCode(localPackageInfo)
+                                val interVersionCode = getVersionCode(interPackageInfo)
+                                if (localVersionCode != null && interVersionCode != null) withContext(
+                                    Dispatchers.Main
+                                ) {
+                                    compareActivities(
+                                        localPackageInfo.activities, interPackageInfo.activities
+                                    )
+                                    compareServices(
+                                        localPackageInfo.services, interPackageInfo.services
+                                    )
+                                    compareReceivers(
+                                        localPackageInfo.receivers, interPackageInfo.receivers
+                                    )
+                                    compareProviders(
+                                        localPackageInfo.providers, interPackageInfo.providers
+                                    )
+                                    comparePermissions(
+                                        localPackageInfo.permissions, interPackageInfo.permissions
+                                    )
+                                }
+                            }
+                        })
+                    }
+                    diffPackagesJob.joinAll()
                     withContext(Dispatchers.Main) {
                         compileSDK.value?.let { sdkVersion ->
                             if (sdkVersion != 0) setLocalSDKText("Target ${targetSDK.value} | Min ${minSDK.value} | Compile $sdkVersion") else setLocalSDKText(
@@ -452,6 +601,9 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
                                 )
                             }
                         }
+                        if (type == "inter" && !isSamePackage && localSM3.value != "" && SDK_INT >= Build.VERSION_CODES.P) setAIShowing(
+                            true
+                        )
                     }
                 })
                 add(viewModelScope.launch(Dispatchers.IO) {
@@ -491,6 +643,18 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
             cleanCache(activity)
             return
         }
+    }
+
+    private fun getSM3(applicationInfo: ApplicationInfo): String {
+        val appSourceDir = applicationInfo.sourceDir
+        val messageDigest = MessageDigest.getInstance("SM3")
+        val fileInputStream = FileInputStream(appSourceDir)
+        val buffer = ByteArray(8192)
+        var bytesRead: Int
+        while (fileInputStream.read(buffer).also { bytesRead = it } != -1) messageDigest.update(
+            buffer, 0, bytesRead
+        )
+        return messageDigest.digest().joinToString("") { "%02X".format(it) }
     }
 
     private fun getAppPackageName(applicationInfo: ApplicationInfo): String {
@@ -569,6 +733,101 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
             if (findResult.getOrDefault(false) == true) return dex
         }
         return null
+    }
+
+    private fun compareActivities(
+        components1: Array<ActivityInfo>?, components2: Array<ActivityInfo>?
+    ) {
+        val set1 = components1?.map { it.name }?.toSet() ?: emptySet()
+        val set2 = components2?.map { it.name }?.toSet() ?: emptySet()
+
+        val added = set2 - set1
+        val removed = set1 - set2
+
+        val result = StringBuilder()
+
+        if (added.isNotEmpty()) result.append("Added activities: ").append(added.joinToString(", "))
+            .append("\n")
+        if (removed.isNotEmpty()) result.append("Removed activities: ")
+            .append(removed.joinToString(", ")).append("\n")
+
+        setActivityDiff(result.toString())
+    }
+
+    private fun compareServices(
+        components1: Array<ServiceInfo>?, components2: Array<ServiceInfo>?
+    ) {
+        val set1 = components1?.map { it.name }?.toSet() ?: emptySet()
+        val set2 = components2?.map { it.name }?.toSet() ?: emptySet()
+
+        val added = set2 - set1
+        val removed = set1 - set2
+
+        val result = StringBuilder()
+
+        if (added.isNotEmpty()) result.append("Added services: ").append(added.joinToString(", "))
+            .append("\n")
+        if (removed.isNotEmpty()) result.append("Removed services: ")
+            .append(removed.joinToString(", ")).append("\n")
+
+        setServiceDiff(result.toString())
+    }
+
+    private fun compareReceivers(
+        components1: Array<ActivityInfo>?, components2: Array<ActivityInfo>?
+    ) {
+        val set1 = components1?.map { it.name }?.toSet() ?: emptySet()
+        val set2 = components2?.map { it.name }?.toSet() ?: emptySet()
+
+        val added = set2 - set1
+        val removed = set1 - set2
+
+        val result = StringBuilder()
+
+        if (added.isNotEmpty()) result.append("Added receivers: ").append(added.joinToString(", "))
+            .append("\n")
+        if (removed.isNotEmpty()) result.append("Removed receivers: ")
+            .append(removed.joinToString(", ")).append("\n")
+
+        setReceiverDiff(result.toString())
+    }
+
+    private fun compareProviders(
+        components1: Array<ProviderInfo>?, components2: Array<ProviderInfo>?
+    ) {
+        val set1 = components1?.map { it.name }?.toSet() ?: emptySet()
+        val set2 = components2?.map { it.name }?.toSet() ?: emptySet()
+
+        val added = set2 - set1
+        val removed = set1 - set2
+
+        val result = StringBuilder()
+
+        if (added.isNotEmpty()) result.append("Added providers: ").append(added.joinToString(", "))
+            .append("\n")
+        if (removed.isNotEmpty()) result.append("Removed providers: ")
+            .append(removed.joinToString(", ")).append("\n")
+
+        setProviderDiff(result.toString())
+    }
+
+    private fun comparePermissions(
+        permissions1: Array<PermissionInfo>?, permissions2: Array<PermissionInfo>?
+    ) {
+        val set1 = permissions1?.map { it.name }?.toSet() ?: emptySet()
+        val set2 = permissions2?.map { it.name }?.toSet() ?: emptySet()
+
+        val added = set2 - set1
+        val removed = set1 - set2
+
+        val result = StringBuilder()
+
+        if (added.isNotEmpty()) result.append("Added permissions: ")
+            .append(added.joinToString(", ")).append("\n")
+        if (removed.isNotEmpty()) result.append("Removed permissions: ")
+            .append(removed.joinToString(", ")).append("\n")
+
+        setPermissionDiff(result.toString())
     }
 
     fun cleanCache(activity: Activity) {

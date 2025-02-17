@@ -291,4 +291,9 @@
     <string name="localDetailsTBS">腾讯浏览服务</string>
     <string name="biometricLoginTitle">验证您的身份</string>
     <string name="biometricLoginSubtitle">验证您的身份以进一步操作</string>
+    <string name="llmInferenceLocalChanges">应用更改推测</string>
+    <string name="genByAITips">内容由 AI 生成，可能存在不准确的信息。</string>
+    <string name="llmInferenceLocalChangesDesc">应用包分析外部应用时可以使用 LLM 推测外部应用与本机应用的功能变更，需要在“私有 Token 管理”填入智谱 Token</string>
+    <string name="llmInferenceLocalChangesPrompt">用户收到了一个 %1$s 安装包，用户已经得出该安装包的四大组件（activity、service、content provider、broadcast receiver）与权限和用户本地已安装应用之间的差异。请根据用户传入的上述差异的文本，以清晰简洁的 %2$s 语言分析推测该差异可能存在的应用变更，要求：1) 提取核心功能优化和关键问题修复，忽略技术细节 2) 采用 Pangu 格式化文本，确保中英文/数字间自动空格 3) 用连贯段落呈现，严格控制在 300 字内。输出需突出用户感知明显的改进点，使用规范化表述，禁止列表格式且不使用 Markdown。</string>
+    <string name="timeout">连接超时</string>
 </resources>

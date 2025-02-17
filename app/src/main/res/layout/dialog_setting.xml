@@ -104,12 +104,19 @@
                 android:textSize="11sp"
                 android:textStyle="bold" />
 
-            <com.xiaoniu.qqversionlist.ui.components.cell.CellSingleSwitch
+            <com.xiaoniu.qqversionlist.ui.components.cell.CellTopSwitch
                 android:id="@+id/switch_update_log_llm_gen"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cellDescription="@string/qverbowUpdateLogLLMIntelligentDesc"
                 app:cellTitle="@string/qverbowUpdateLogLLMIntelligent" />
+
+            <com.xiaoniu.qqversionlist.ui.components.cell.CellBottomSwitch
+                android:id="@+id/switch_local_inter_changes_llm_gen"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cellDescription="@string/llmInferenceLocalChangesDesc"
+                app:cellTitle="@string/llmInferenceLocalChanges" />
 
             <TextView
                 android:layout_width="match_parent"

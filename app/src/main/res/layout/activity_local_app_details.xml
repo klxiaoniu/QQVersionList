@@ -219,4 +219,13 @@
         app:layout_anchor="@id/topAppBar"
         app:layout_anchorGravity="bottom" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floating_action_button_llm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:contentDescription="@string/llmInferenceLocalChanges"
+        app:srcCompat="@drawable/ai_generate_2"/>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

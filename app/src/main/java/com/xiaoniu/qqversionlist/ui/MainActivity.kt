@@ -45,7 +45,6 @@ import android.view.View
 import android.view.ViewConfiguration
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.ScrollView
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -448,6 +447,8 @@ class MainActivity : AppCompatActivity() {
                     guessNot5.switchChecked = DataStoreUtil.getBooleanKV("guessNot5", false)
                     switchUpdateLogLlmGen.switchChecked =
                         DataStoreUtil.getBooleanKV("updateLogLlmGen", false)
+                    switchLocalInterChangesLlmGen.switchChecked =
+                        DataStoreUtil.getBooleanKV("localInterChangesLlmGen", false)
                     switchGuessTestExtend.switchChecked =
                         DataStoreUtil.getBooleanKV("guessTestExtend", false) // 扩展测试版扫版格式
                     downloadOnSystemManager.switchChecked =
@@ -484,13 +485,14 @@ class MainActivity : AppCompatActivity() {
                     switchUpdateLogLlmGen.setOnCheckedChangeListener { isChecked ->
                         DataStoreUtil.putBooleanKVAsync("updateLogLlmGen", isChecked)
                     }
+                    switchLocalInterChangesLlmGen.setOnCheckedChangeListener { isChecked ->
+                        DataStoreUtil.putBooleanKVAsync("localInterChangesLlmGen", isChecked)
+                    }
                     dialogPersonalization.setOnClickListener {
                         val dialogPersonalization =
                             DialogPersonalizationBinding.inflate(layoutInflater).apply {
                                 root.parent?.let { parent ->
-                                    if (parent is ViewGroup) {
-                                        parent.removeView(root)
-                                    }
+                                    if (parent is ViewGroup) parent.removeView(root)
                                 }
 
                                 val gestureDetector = GestureDetector(
@@ -2755,7 +2757,7 @@ class MainActivity : AppCompatActivity() {
                             if (!tokenIsNullOrEmpty) {
                                 runOnUiThread { viewModel.setUpdateBackLLMWorking(true) }
                                 val qverbowResponse = getZhipuWrite(
-                                    getString(R.string.updateLogPrompt),
+                                    getString(R.string.updateLogPrompt, Locale.getDefault().toString()),
                                     latestQverbowBody,
                                     token
                                 )
