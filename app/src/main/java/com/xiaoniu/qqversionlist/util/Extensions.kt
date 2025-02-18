@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 /*
     Qverbow Util
     Copyright (C) 2023 klxiaoniu
@@ -21,6 +23,6 @@ package com.xiaoniu.qqversionlist.util
 import android.content.res.Resources
 
 object Extensions {
-    val Number.dp get() = (toFloat() * Resources.getSystem().displayMetrics.density).toInt()
+    val Number.dpToPx get() = (toFloat() * Resources.getSystem().displayMetrics.density).toInt()
     val Number.pxToDp get() = (toFloat() / Resources.getSystem().displayMetrics.density).toInt()
 }

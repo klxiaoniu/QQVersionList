@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 /*
     Qverbow Util
     Copyright (C) 2023 klxiaoniu
@@ -98,13 +100,17 @@ android {
     }
 }
 
+aboutLibraries {
+    mapLicensesToSpdx = false
+}
+
 dependencies {
-    implementation(libs.aboutlibraries.compose.m3)
     implementation(libs.aboutlibraries.core)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.biometric)
     implementation(libs.androidx.browser)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.constraintlayout)

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 /*
     Qverbow Util
     Copyright (C) 2023 klxiaoniu
@@ -22,12 +24,10 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.graphics.Typeface
-import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.LifecycleOwner
@@ -45,9 +45,10 @@ import com.xiaoniu.qqversionlist.databinding.ItemWeixinVersionBinding
 import com.xiaoniu.qqversionlist.databinding.ItemWeixinVersionDetailBinding
 import com.xiaoniu.qqversionlist.util.ClipboardUtil.copyText
 import com.xiaoniu.qqversionlist.util.DataStoreUtil
-import com.xiaoniu.qqversionlist.util.Extensions.dp
+import com.xiaoniu.qqversionlist.util.Extensions.dpToPx
 import com.xiaoniu.qqversionlist.util.FileUtil.downloadFile
 import com.xiaoniu.qqversionlist.util.FileUtil.getFileSize
+import com.xiaoniu.qqversionlist.util.InfoUtil.openUrlWithChromeCustomTab
 import com.xiaoniu.qqversionlist.util.InfoUtil.showToast
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -131,10 +132,9 @@ class WeixinVersionAdapter(private val lifecycleOwner: LifecycleOwner) :
                     bindVersionTCloud(tvWeixinOldVersion, holder.context)
                     bindNewestDownloadLink(ibWeixinOldLink, bean)
                     tvWeixinCatalogLink.setOnClickListener {
-                        val uri =
-                            Uri.parse("https://weixin.qq.com/updates?platform=android&version=${bean.version}")
-                        val customTabsIntent = CustomTabsIntent.Builder().build()
-                        customTabsIntent.launchUrl(it.context, uri)
+                        val url =
+                            "https://weixin.qq.com/updates?platform=android&version=${bean.version}"
+                        it.context.openUrlWithChromeCustomTab(url)
                     }
                 }
             }
@@ -143,10 +143,9 @@ class WeixinVersionAdapter(private val lifecycleOwner: LifecycleOwner) :
 
     private fun longPressCard(bindingAdapterPosition: Int, it: View) {
         if (DataStoreUtil.getBooleanKV("longPressCard", true)) {
-            val uri =
-                Uri.parse("https://weixin.qq.com/updates?platform=android&version=${currentList[bindingAdapterPosition].version}")
-            val customTabsIntent = CustomTabsIntent.Builder().build()
-            customTabsIntent.launchUrl(it.context, uri)
+            val url =
+                "https://weixin.qq.com/updates?platform=android&version=${currentList[bindingAdapterPosition].version}"
+            it.context.openUrlWithChromeCustomTab(url)
         } else showToast(R.string.longPressToViewSourceDetailsIsDisabled)
     }
 
@@ -157,7 +156,7 @@ class WeixinVersionAdapter(private val lifecycleOwner: LifecycleOwner) :
             tvInstallCard.isVisible = true
             tvInstall.text = tvInstall.context.getString(R.string.installed)
             val marginLayoutParams = tvInstallCard.layoutParams as ViewGroup.MarginLayoutParams
-            marginLayoutParams.marginStart = 6.dp
+            marginLayoutParams.marginStart = 6.dpToPx
             tvInstallCard.layoutParams = marginLayoutParams
         } else tvInstallCard.isVisible = false
     }

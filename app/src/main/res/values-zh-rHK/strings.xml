@@ -290,4 +290,13 @@
     <string name="localDetailsReactNative">React Native</string>
     <string name="localDetailsTBSDesc">騰訊瀏覽服務（Tencent Browsing Service，簡稱 TBS）屬於 PCG 事業群，QQ 瀏覽器團隊。QQ 瀏覽器作為一個平台化的產品，無論是網頁的打開還是文檔能力的打開，都需要一個強大的自研引擎做支撐，而引擎研發團隊一直深耕引擎底層技術十多年，積累了豐富的業務經驗，將引擎技術從產品獨立出來為 SDK，並不斷演進成一個平台化的引擎產品，成立騰訊瀏覽服務，為騰訊公司內外產品提供強大的引擎技術支持和技術服務支持，覆蓋了近十萬家產品接入，並支持數億級的網頁瀏覽體驗。</string>
     <string name="localDetailsTBS">騰訊瀏覽服務</string>
+    <string name="biometricLoginTitle">驗證您的身份</string>
+    <string name="biometricLoginSubtitle">驗證您的身份以進行下一步操作</string>
+    <string name="llmInferenceLocalChanges">應用程式更改推測</string>
+    <string name="genByAITips">內容由 AI 生成，可能包含不準確的資訊。</string>
+    <string name="llmInferenceLocalChangesDesc">應用包分析外部應用時可以使用 LLM 推測外部應用與本機應用的功能變更，需要在“私有 Token 管理”填入智譜 Token。</string>
+    <string name="llmInferenceLocalChangesPrompt">用戶本地已經安裝了 %1$s %2$s，今天用戶收到了一個 %1$s %3$s 安裝包。用戶已經得出收到的 %1$s %3$s 安裝包的四大組件（activity、service、content provider、broadcast receiver）與權限和用戶本地已安裝的 %1$s %2$s 之間的差異。請根據用戶傳入的上述差異的文本，以清晰簡潔的 %4$s 語言分析推測該差異可能存在應用變更，要求：1) 提取核心功能優化和關鍵問題修復，忽略技術細節 2) 采用 Pangu 格式化文本，確保中英文/數字間自動空格 3) 用連貫段落呈現，嚴格控制在 300 字內。輸出需突出用戶感知明顯的改進點，使用規範化表述，禁止列表格式且不使用 Markdown。</string>
+    <string name="timeout">連接超時</string>
+    <string name="localDetailsSkylineRenderingEngine">Skyline 渲染引擎</string>
+    <string name="localDetailsSkylineRenderingEngineDesc">为了进一步优化小程序性能，提供更为接近原生的使用者体验，微信團隊在 WebView 渲染之外新增了一個渲染引擎 Skyline，其使用更精簡高效的渲染管線，並帶來諸多增強特性，讓 Skyline 擁有更接近原生渲染的性能體驗。</string>
 </resources>

@@ -18,20 +18,17 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-package com.xiaoniu.qqversionlist.data
+package com.xiaoniu.qqversionlist.util
 
-import java.util.Date
+import com.mikepenz.aboutlibraries.Libs
 
-data class QverbowRelease(
-    val tagName: String,
-    val name: String?,
-    val body: String?,
-    val createdAt: Date,
-    val htmlUrl: String,
-    val zipballUrl: String?,
-    val tarballUrl: String?,
-    val isDraft: Boolean,
-    val isPrerelease: Boolean,
-    val assets: List<QverbowReleaseAssets>?
-)
+object OSSLicensesObject {
+    @Volatile
+    private var _libs: Libs? = null
 
+    var libs: Libs?
+        get() = _libs
+        set(value) {
+            _libs = value
+        }
+}

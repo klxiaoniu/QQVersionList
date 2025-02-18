@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 /*
     Qverbow Util
     Copyright (C) 2023 klxiaoniu
@@ -41,7 +43,7 @@ object ZhipuSDKUtil {
      * @return Zhipu API 返回的回答内容的字符串表示，如果请求失败则可能返回 null
      */
     fun getZhipuWrite(systemPrompt: String, question: String, token: String): String? {
-        val client = ClientV4.Builder(token).networkConfig(30, 10, 10, 10, TimeUnit.SECONDS)
+        val client = ClientV4.Builder(token).networkConfig(300, 100, 100, 100, TimeUnit.SECONDS)
             .connectionPool(ConnectionPool(8, 1, TimeUnit.SECONDS)).build()
 
         val messages = ArrayList<ChatMessage>()

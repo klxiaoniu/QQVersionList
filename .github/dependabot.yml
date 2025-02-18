@@ -8,7 +8,10 @@ updates:
   - package-ecosystem: gradle
     directory: /
     schedule:
-      interval: monthly
+      interval: daily
+    ignore:
+      - dependency-name: cn.bigmodel.openapi:oapi-java-sdk
+      - dependency-name: androidx.core:core-splashscreen
     groups:
       maven-dependencies:
         patterns:
@@ -17,7 +20,7 @@ updates:
   - package-ecosystem: github-actions
     directory: /
     schedule:
-      interval: monthly
+      interval: daily
     groups:
       action-dependencies:
         patterns:

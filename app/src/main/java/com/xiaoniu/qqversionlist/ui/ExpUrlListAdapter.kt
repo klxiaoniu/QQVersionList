@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 /*
     Qverbow Util
     Copyright (C) 2023 klxiaoniu
