@@ -153,9 +153,11 @@ class LocalAppDetailsActivity : AppCompatActivity() {
                                             getString(
                                                 R.string.llmInferenceLocalChangesPrompt,
                                                 appName.value,
+                                                localVersionNameWithInter.value,
+                                                versionName.value,
                                                 Locale.getDefault().toString()
                                             ),
-                                            changeText,
+                                            versionChange + "\n\n" + changeText,
                                             token
                                         )
                                         val gson = GsonBuilder().setPrettyPrinting().create()
@@ -207,7 +209,7 @@ class LocalAppDetailsActivity : AppCompatActivity() {
                                     .setView(dialogChangesLlmInferenceBinding.root)
                                     .setIcon(R.drawable.ai_generate_2).show()
 
-                            dialogChangesLlmInferenceBinding.versionChangeInfo?.text = versionChange
+                            dialogChangesLlmInferenceBinding.versionChangeInfo.text = versionChange
 
                             viewModel.isChangesBackLLMWorking.observe(this@LocalAppDetailsActivity,
                                 Observer { isWorking ->
@@ -217,11 +219,25 @@ class LocalAppDetailsActivity : AppCompatActivity() {
                                                 .isNotEmpty()
                                         dialogChangesLlmInferenceBinding.progressIndicator.isVisible =
                                             isWorking
+                                        dialogChangesLlmInferenceBinding.btnCopy.isVisible =
+                                            !isWorking && viewModel.changesBackLLMGenText.value.toString()
+                                                .isNotEmpty()
+                                        dialogChangesLlmInferenceBinding.btnCopy.setOnClickListener {
+                                            copyText(
+                                                viewModel.changesBackLLMGenText.value.toString() + "\n\n" + getString(
+                                                    R.string.genByAITips
+                                                )
+                                            )
+                                        }
                                     } else {
                                         dialogChangesLlmInferenceBinding.llmGenCard.isVisible =
                                             false
                                         dialogChangesLlmInferenceBinding.progressIndicator.isVisible =
                                             false
+                                        dialogChangesLlmInferenceBinding.btnCopy.isVisible = false
+                                        dialogChangesLlmInferenceBinding.btnCopy.setOnClickListener(
+                                            null
+                                        )
                                     }
                                 })
                             viewModel.changesBackLLMGenText.observe(this@LocalAppDetailsActivity,
@@ -679,6 +695,13 @@ class LocalAppDetailsActivity : AppCompatActivity() {
                     R.drawable.tencent_logo
                 )
 
+                LocalAppDetailsActivityViewModel.RULE_ID_SKYLINE_RENDERING_ENGINE -> showStackDescDialog(
+                    R.string.localDetailsSkylineRenderingEngine,
+                    R.string.localDetailsSkylineRenderingEngineDesc,
+                    DEX_PRE_RULES.find { it.id == item.id }?.url,
+                    R.drawable.mini_program_line
+                )
+
                 else -> null
             }
         }) {
@@ -741,6 +764,7 @@ class LocalAppDetailsActivity : AppCompatActivity() {
             LocalAppDetailsActivityViewModel.RULE_ID_FLUTTER -> R.drawable.flutter_line
             LocalAppDetailsActivityViewModel.RULE_ID_REACT_NATIVE -> R.drawable.reactjs_line
             LocalAppDetailsActivityViewModel.RULE_ID_TENCENT_BROWSING_SERVICE -> R.drawable.tencent_logo
+            LocalAppDetailsActivityViewModel.RULE_ID_SKYLINE_RENDERING_ENGINE -> R.drawable.mini_program_line
             else -> when (DEX_PRE_RULES.find { it.id == id }?.type) {
                 RULE_TYPE_PRIVATE_TENCENT -> R.drawable.tencent_logo
                 RULE_TYPE_OPEN_SOURCE_3RD_PARTY -> R.drawable.open_source_line
@@ -766,6 +790,7 @@ class LocalAppDetailsActivity : AppCompatActivity() {
             LocalAppDetailsActivityViewModel.RULE_ID_FLUTTER -> stringResource(R.string.localDetailsFlutter)
             LocalAppDetailsActivityViewModel.RULE_ID_REACT_NATIVE -> stringResource(R.string.localDetailsReactNative)
             LocalAppDetailsActivityViewModel.RULE_ID_TENCENT_BROWSING_SERVICE -> stringResource(R.string.localDetailsTBS)
+            LocalAppDetailsActivityViewModel.RULE_ID_SKYLINE_RENDERING_ENGINE -> stringResource(R.string.localDetailsSkylineRenderingEngine)
             else -> id
         }
     }

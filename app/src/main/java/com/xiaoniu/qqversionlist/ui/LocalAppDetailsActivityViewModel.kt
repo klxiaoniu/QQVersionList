@@ -83,6 +83,7 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
         const val RULE_ID_TINKER = "Tinker"
         const val RULE_ID_REACT_NATIVE = "React Native"
         const val RULE_ID_TENCENT_BROWSING_SERVICE = "腾讯浏览服务"
+        const val RULE_ID_SKYLINE_RENDERING_ENGINE = "Skyline 渲染引擎"
 
         val DEX_QQNT = arrayOf("com.tencent.qqnt")
         val DEX_BUGLY = arrayOf("com.tencent.bugly")
@@ -102,6 +103,7 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
         val DEX_TINKER = arrayOf("com.tencent.tinker")
         val DEX_REACT_NATIVE = arrayOf("com.facebook.react")
         val DEX_TENCENT_BROWSING_SERVICE = arrayOf("com.tencent.tbs")
+        val DEX_SKYLINE_RENDERING_ENGINE = arrayOf("com.tencent.skyline", "com.tencent.luggage.skyline")
 
         const val URL_BUGLY = "https://bugly.tds.qq.com/v2/index/tds-main"
         const val URL_UE_LIBRARY =
@@ -120,6 +122,7 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
         const val URL_TINKER = "https://github.com/Tencent/tinker"
         const val URL_REACT_NATIVE = "https://reactnative.dev/"
         const val URL_TENCENT_BROWSING_SERVICE = "https://x5.tencent.com/"
+        const val URL_SKYLINE_RENDERING_ENGINE = "https://developers.weixin.qq.com/miniprogram/dev/framework/runtime/skyline/introduction.html"
 
         val DEX_PRE_RULES = listOf<LocalAppStackRule>(
             LocalAppStackRule(RULE_ID_QQNT, DEX_QQNT, RULE_TYPE_PRIVATE_TENCENT),
@@ -168,6 +171,12 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
                 DEX_TENCENT_BROWSING_SERVICE,
                 RULE_TYPE_PRIVATE_TENCENT,
                 URL_TENCENT_BROWSING_SERVICE
+            ),
+            LocalAppStackRule(
+                RULE_ID_SKYLINE_RENDERING_ENGINE,
+                DEX_SKYLINE_RENDERING_ENGINE,
+                RULE_TYPE_PRIVATE_TENCENT,
+                URL_SKYLINE_RENDERING_ENGINE
             )
         )
 

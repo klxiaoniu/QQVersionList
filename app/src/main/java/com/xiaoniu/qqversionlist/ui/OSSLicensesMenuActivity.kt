@@ -217,7 +217,7 @@ class OSSLicensesMenuActivity : ComponentActivity() {
             verticalArrangement = Arrangement.spacedBy(7.dp),
         ) {
             Card(
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerHigh),
                 shape = RoundedCornerShape(4.dp)
             ) {
                 Text(
