@@ -100,20 +100,20 @@
                 app:icon="@drawable/flask_line" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_get"
-                style="?attr/materialIconButtonFilledTonalStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="@string/refresh"
-                app:icon="@drawable/refresh_line" />
-
-            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_guess"
                 style="?attr/materialIconButtonFilledTonalStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/enumerateVersionsFAB"
                 app:icon="@drawable/scan_line" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_get"
+                style="?attr/materialIconButtonFilledTonalStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/refresh"
+                app:icon="@drawable/refresh_line" />
         </LinearLayout>
 
     </com.google.android.material.floatingtoolbar.FloatingToolbarLayout>
