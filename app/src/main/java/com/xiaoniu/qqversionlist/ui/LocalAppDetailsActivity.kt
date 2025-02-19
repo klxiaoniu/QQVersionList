@@ -128,8 +128,6 @@ class LocalAppDetailsActivity : AppCompatActivity() {
             viewModel.apply {
                 isAIShowing.observe(this@LocalAppDetailsActivity) { isAIShowing ->
                     if (isAIShowing && localInterChangesLlmGen) {
-                        floatingActionButtonLlm.isVisible = true
-                        floatingActionButtonLlm.show()
                         floatingActionButtonLlm.setOnClickListener {
                             val dialogChangesLlmInferenceBinding =
                                 DialogChangesLlmInferenceBinding.inflate(
@@ -249,10 +247,10 @@ class LocalAppDetailsActivity : AppCompatActivity() {
                                 dialogChangesLlmInference.dismiss()
                             }
                         }
+                        floatingActionButtonLlm.show()
                     } else {
-                        floatingActionButtonLlm.hide()
-                        floatingActionButtonLlm.isVisible = false
                         floatingActionButtonLlm.setOnClickListener(null)
+                        floatingActionButtonLlm.hide()
                     }
                 }
                 localAppStackResults.observe(this@LocalAppDetailsActivity) { result ->
