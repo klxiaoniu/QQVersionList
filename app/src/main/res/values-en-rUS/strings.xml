@@ -100,7 +100,7 @@
     <string name="uinHelpText">Enter the target QQ account number, used for requesting the Shiply Platform.</string>
     <string name="shiplyWarning">Tencent QQ/TIM utilizes the Tencent Device-oriented Service (TDS) Shiply Containing and Distributing Platform to distribute limited-scale gray testing packages based on the QQ account number (uin) and its terminal information. This feature does not guarantee successful retrieval of update data with each request; failure to obtain update data indicates that the entered parameters fall outside the recognized and distributed scope of the Shiply Platform. The Qverbow Util makes no warranty regarding the reliability of this feature or any consequences thereof. Please ensure that you have a clear understanding and sufficient capability to bear the associated risks.</string>
     <string name="defaultDisplayOfFirstListItemDetails">Default display of first version list item details</string>
-    <string name="versionNumberFontUsesTCloudNumber">Uses TCloudNumber font</string>
+    <string name="versionNumberFontUseTCloudNumber">Use TCloudNumber font</string>
     <string name="versionCardsDisplaysPackageSizeIndicator">Display the ratio of current package size to the historical maximum package size indicator</string>
     <string name="customVersionEnumSuffix">Custom Version Enum. Suffix</string>
     <string name="customVersionEnumSuffixHelpText">Please separate using \&quot;, \&quot; (comma + space).</string>
@@ -299,4 +299,5 @@
     <string name="timeout">Connection Timeout</string>
     <string name="localDetailsSkylineRenderingEngine">Skyline Rendering Engine</string>
     <string name="localDetailsSkylineRenderingEngineDesc">为了进一步优化小程序性能，提供更为接近原生的用户体验，微信团队在 WebView 渲染之外新增了一个渲染引擎 Skyline，其使用更精简高效的渲染管线，并带来诸多增强特性，让 Skyline 拥有更接近原生渲染的性能体验。</string>
+    <string name="versionNumberFontUseTCloudNumberDesc">You can adjust the font weight of TCloudNumber font below.</string>
 </resources>
