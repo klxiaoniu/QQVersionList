@@ -2326,7 +2326,7 @@ class MainActivity : AppCompatActivity() {
                                         putExtra(
                                             Intent.EXTRA_TEXT, when (mode) {
                                                 MODE_OFFICIAL -> {
-                                                    val hdVersions = listOf(
+                                                    val hdVersions = setOf(
                                                         "_64_HD", "_64_HD1", "_64_HD2", "_64_HD3",
                                                         "_HD_64", "_HD1_64", "_HD2_64", "_HD3_64"
                                                     )
