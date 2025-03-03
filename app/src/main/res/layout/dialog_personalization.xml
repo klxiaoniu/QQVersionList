@@ -103,7 +103,8 @@
                 android:id="@+id/switch_version_tcloud"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cellTitle="@string/versionNumberFontUsesTCloudNumber" />
+                app:cellDescription="@string/versionNumberFontUseTCloudNumberDesc"
+                app:cellTitle="@string/versionNumberFontUseTCloudNumber" />
 
             <com.google.android.material.slider.Slider
                 android:id="@+id/version_tcloud_thickness"

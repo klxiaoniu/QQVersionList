@@ -2213,7 +2213,9 @@ class MainActivity : AppCompatActivity() {
                             MODE_OFFICIAL -> {
                                 val soListPre = listOf(
                                     "_64", "_64_HB", "_64_HB1", "_64_HB2", "_64_HB3", "_HB_64",
-                                    "_HB1_64", "_HB2_64", "_HB3_64", "_64_BBPJ", "_BBPJ_64"
+                                    "_HB1_64", "_HB2_64", "_HB3_64", "_64_BBPJ", "_BBPJ_64",
+                                    "_64_HD", "_64_HD1", "_64_HD2", "_64_HD3", "_HD_64",
+                                    "_HD1_64", "_HD2_64", "_HD3_64"
                                 )
                                 val soList =
                                     if (defineSufList != listOf("")) soListPre + defineSufList else soListPre
@@ -2323,36 +2325,36 @@ class MainActivity : AppCompatActivity() {
                                         type = "text/plain"
                                         putExtra(
                                             Intent.EXTRA_TEXT, when (mode) {
-                                                MODE_OFFICIAL -> "Android QQ $versionBig ${
-                                                    getString(
-                                                        R.string.stableVersion
+                                                MODE_OFFICIAL -> {
+                                                    val hdVersions = listOf(
+                                                        "_64_HD", "_64_HD1", "_64_HD2", "_64_HD3",
+                                                        "_HD_64", "_HD1_64", "_HD2_64", "_HD3_64"
                                                     )
-                                                }（${getString(R.string.fileSize)}$appSize MB）\n\n${
-                                                    getString(
-                                                        R.string.downloadLink
-                                                    )
-                                                }$link"
+                                                    val isHDVersion =
+                                                        hdVersions.any { link.contains(it) }
+                                                    if (isHDVersion) "Android QQ $versionBig ${
+                                                        getString(R.string.previewVersion)
+                                                    }（${getString(R.string.fileSize)}$appSize MB）\n\n${
+                                                        getString(R.string.downloadLink)
+                                                    }$link\n\n鉴于 QQ 测试版可能存在不可预知的稳定性问题，您在下载及使用该测试版本之前，必须明确并确保自身具备足够的风险识别和承受能力。" else "Android QQ $versionBig ${
+                                                        getString(R.string.stableVersion)
+                                                    }（${getString(R.string.fileSize)}$appSize MB）\n\n${
+                                                        getString(R.string.downloadLink)
+                                                    }$link"
+                                                }
 
                                                 MODE_WECHAT -> "Android 微信 $versionBig（$versionTrue）（${
-                                                    getString(
-                                                        R.string.fileSize
-                                                    )
+                                                    getString(R.string.fileSize)
                                                 }$appSize MB）\n\n${getString(R.string.downloadLink)}$link"
 
                                                 MODE_TIM -> "Android TIM $versionBig.$vSmall（${
-                                                    getString(
-                                                        R.string.fileSize
-                                                    )
+                                                    getString(R.string.fileSize)
                                                 }$appSize MB）\n\n${getString(R.string.downloadLink)}$link"
 
                                                 else -> "Android QQ $versionBig.$vSmall ${
-                                                    getString(
-                                                        R.string.previewVersion
-                                                    )
+                                                    getString(R.string.previewVersion)
                                                 }（${getString(R.string.fileSize)}$appSize MB）\n\n${
-                                                    getString(
-                                                        R.string.downloadLink
-                                                    )
+                                                    getString(R.string.downloadLink)
                                                 }$link\n\n鉴于 QQ 测试版可能存在不可预知的稳定性问题，您在下载及使用该测试版本之前，必须明确并确保自身具备足够的风险识别和承受能力。"
                                             }
                                         )
@@ -2757,7 +2759,10 @@ class MainActivity : AppCompatActivity() {
                             if (!tokenIsNullOrEmpty) {
                                 runOnUiThread { viewModel.setUpdateBackLLMWorking(true) }
                                 val qverbowResponse = getZhipuWrite(
-                                    getString(R.string.updateLogPrompt, Locale.getDefault().toString()),
+                                    getString(
+                                        R.string.updateLogPrompt,
+                                        Locale.getDefault().toString()
+                                    ),
                                     latestQverbowBody,
                                     token
                                 )
