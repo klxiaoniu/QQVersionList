@@ -10,8 +10,12 @@ updates:
     schedule:
       interval: daily
     ignore:
+      # 智谱 AI 开放平台 Java SDK 版本号不是语义版本号 SemVer，会被 Maven 或 GitHub Dependabot 误判，因此需要手动忽略。
       - dependency-name: cn.bigmodel.openapi:oapi-java-sdk
       - dependency-name: androidx.core:core-splashscreen
+      # MDC 1.13.0-alpha11 的 Floating Toolbar 边距存在重复触发时会累积边距，导致无限增加底部边距的问题，需要等待 MDC 上游修复。
+      # 因此暂时忽略 MDC 依赖更新。
+      - dependency-name: com.google.android.material:material
     groups:
       maven-dependencies:
         patterns:
