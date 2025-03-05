@@ -2,7 +2,7 @@
 aboutlibraries = "11.6.3"
 activityKtxVersion = "1.10.1"
 activityVersion = "1.10.1"
-androidGradlePlugin = "8.8.2"
+androidGradlePlugin = "8.9.0"
 appcompat = "1.7.0"
 biometric = "1.4.0-alpha02"
 browserVersion = "1.8.0"
