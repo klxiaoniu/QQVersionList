@@ -45,12 +45,12 @@ val gitCommitHash = gitCommitHash(project)
 
 android {
     namespace = "com.xiaoniu.qqversionlist"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.xiaoniu.qqversionlist"
         minSdk = 24
-        targetSdk = 35
+        targetSdk = 36
         versionCode = gitCommitCount
         versionName = "1.5.2-$gitCommitHash"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
