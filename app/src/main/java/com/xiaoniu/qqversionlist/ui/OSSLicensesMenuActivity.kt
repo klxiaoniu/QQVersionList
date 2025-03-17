@@ -58,7 +58,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -99,7 +98,6 @@ class OSSLicensesMenuActivity : ComponentActivity() {
         if (libs == null) libs =
             Libs.Builder().withJson(readRawResource(this, R.raw.aboutlibraries)).build() else lib
         OSSLicensesObject.libs = libs
-        LocalDensity.current
         val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
         Scaffold(
             topBar = {
