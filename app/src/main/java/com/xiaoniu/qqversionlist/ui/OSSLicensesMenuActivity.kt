@@ -58,12 +58,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
 import com.mikepenz.aboutlibraries.Libs
 import com.mikepenz.aboutlibraries.entity.Developer
@@ -74,7 +72,6 @@ import com.xiaoniu.qqversionlist.util.InfoUtil.openUrlWithChromeCustomTab
 import com.xiaoniu.qqversionlist.util.OSSLicensesObject
 import org.apache.commons.io.IOUtils
 import java.nio.charset.StandardCharsets
-import kotlin.toString
 
 class OSSLicensesMenuActivity : ComponentActivity() {
 
@@ -101,20 +98,20 @@ class OSSLicensesMenuActivity : ComponentActivity() {
         if (libs == null) libs =
             Libs.Builder().withJson(readRawResource(this, R.raw.aboutlibraries)).build() else lib
         OSSLicensesObject.libs = libs
-        val density = LocalDensity.current
         val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
         Scaffold(
             topBar = {
-                TopAppBar(title = {
-                    Text(stringResource(id = R.string.openSourceLicenseTitle))
-                }, navigationIcon = {
-                    IconButton(onClick = { finish() }) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.arrow_left_line),
-                            contentDescription = stringResource(id = R.string.back)
-                        )
-                    }
-                }, scrollBehavior = scrollBehavior
+                TopAppBar(
+                    title = {
+                        Text(stringResource(id = R.string.openSourceLicenseTitle))
+                    }, navigationIcon = {
+                        IconButton(onClick = { finish() }) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.arrow_left_line),
+                                contentDescription = stringResource(id = R.string.back)
+                            )
+                        }
+                    }, scrollBehavior = scrollBehavior
                 )
             },
         ) { innerPadding ->
@@ -126,7 +123,7 @@ class OSSLicensesMenuActivity : ComponentActivity() {
             ) {
                 libs.libraries.forEach { library ->
                     item {
-                        LibraryItem(library = library, density = density)
+                        LibraryItem(library = library)
                         HorizontalDivider(thickness = 1.dp)
                     }
                 }
@@ -136,7 +133,7 @@ class OSSLicensesMenuActivity : ComponentActivity() {
 
     @OptIn(ExperimentalLayoutApi::class)
     @Composable
-    private fun LibraryItem(library: Library, density: Density) {
+    private fun LibraryItem(library: Library) {
         val version = library.artifactVersion
         Box(
             modifier = Modifier.clickable(onClick = {
@@ -151,16 +148,30 @@ class OSSLicensesMenuActivity : ComponentActivity() {
         ) {
             Box(modifier = Modifier.padding(16.dp, 12.dp, 16.dp, 16.dp)) {
                 Column {
-                    Text(
-                        modifier = Modifier.padding(0.dp, 2.dp, 0.dp, 2.dp),
-                        text = library.name, style = typography.titleMedium,
-                    )
+                    RenderName(library.name)
+                    RenderUniqueID(library.uniqueId)
                     RenderDevelopers(library.developers)
                     RenderDescription(library.description)
                     RenderVersionAndLicenses(library, version)
                 }
             }
         }
+    }
+
+    @Composable
+    private fun RenderName(name: String) {
+        return Text(
+            modifier = Modifier.padding(0.dp, 2.dp, 0.dp, 0.dp),
+            text = name, style = typography.titleMedium
+        )
+    }
+
+    @Composable
+    private fun RenderUniqueID(uniqueID: String) {
+        return Text(
+            modifier = Modifier.padding(0.dp, 0.dp, 0.dp, 2.dp),
+            text = uniqueID, style = typography.labelSmall
+        )
     }
 
     @OptIn(ExperimentalLayoutApi::class)
@@ -181,7 +192,8 @@ class OSSLicensesMenuActivity : ComponentActivity() {
                         style = typography.bodyMedium.copy(
                             textDecoration = TextDecoration.Underline
                         ),
-                        modifier = Modifier.clickable(indication = null,
+                        modifier = Modifier.clickable(
+                            indication = null,
                             interactionSource = remember { MutableInteractionSource() },
                             onClick = { openUrlWithChromeCustomTab(developer.organisationUrl.toString()) }),
                         color = colorScheme.primary

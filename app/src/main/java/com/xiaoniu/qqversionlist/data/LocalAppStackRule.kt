@@ -26,4 +26,28 @@ data class LocalAppStackRule(
     val type: String,
     val url: String? = null,
     val desc: String? = null
-)
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as LocalAppStackRule
+
+        if (id != other.id) return false
+        if (!dex.contentEquals(other.dex)) return false
+        if (type != other.type) return false
+        if (url != other.url) return false
+        if (desc != other.desc) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = id.hashCode()
+        result = 31 * result + dex.contentHashCode()
+        result = 31 * result + type.hashCode()
+        result = 31 * result + (url?.hashCode() ?: 0)
+        result = 31 * result + (desc?.hashCode() ?: 0)
+        return result
+    }
+}
