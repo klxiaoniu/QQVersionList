@@ -57,10 +57,6 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!--
-        MDC 上游在 1.13.0-alpha11 为 Floating Toolbar 添加了底部间距
-        因此 MDC 升级到 1.13.0-alpha11 及以上版本后，需要去掉下面的 marginBottom
-    -->
     <com.google.android.material.floatingtoolbar.FloatingToolbarLayout
         android:id="@+id/floating_toolbar"
         style="?attr/floatingToolbarStyle"

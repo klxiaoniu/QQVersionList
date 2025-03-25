@@ -52,7 +52,7 @@ android {
         minSdk = 24
         targetSdk = 36
         versionCode = gitCommitCount
-        versionName = "1.5.2-$gitCommitHash"
+        versionName = "1.5.3-$gitCommitHash"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
             cmake {
