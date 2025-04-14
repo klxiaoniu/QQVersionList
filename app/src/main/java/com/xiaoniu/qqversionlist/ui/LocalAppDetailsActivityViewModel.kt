@@ -88,7 +88,7 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
         val DEX_QQNT = arrayOf("com.tencent.qqnt")
         val DEX_BUGLY = arrayOf("com.tencent.bugly")
         val DEX_SHIPLY = arrayOf("com.tencent.rdelivery")
-        val DEX_KUIKLY = arrayOf("com.tencent.kuikly", "kuikly.com.tencent")
+        val DEX_KUIKLY = arrayOf("com.tencent.kuikly","com.tencent.kuikly-open", "kuikly.com.tencent")
         val DEX_HIPPY = arrayOf("com.tencent.hippy")
         val DEX_RIGHTLY = arrayOf("com.tdsrightly", "com.tencent.rightly", "com.tds.rightly")
         val DEX_UE_LIBRARY = arrayOf("com.epicgames.ue4", "com.epicgames.ue5")
