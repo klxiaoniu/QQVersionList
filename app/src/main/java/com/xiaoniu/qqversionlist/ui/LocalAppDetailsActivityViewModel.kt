@@ -108,7 +108,8 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
         const val URL_BUGLY = "https://bugly.tds.qq.com/v2/index/tds-main"
         const val URL_UE_LIBRARY =
             "https://dev.epicgames.com/documentation/unreal-engine/building-unreal-engine-as-a-library"
-        const val URL_HIPPY = "https://openhippy.com/"
+        const val URL_KUIKLY = "https://kuikly.tds.qq.com/"
+        const val URL_HIPPY = "https://hippy.tds.qq.com/"
         const val URL_SHIPLY = "https://shiply.tds.qq.com/"
         const val URL_RIGHTLY = "https://rightly.tds.qq.com/"
         const val URL_TENCENT_BEACON = "https://beacon.qq.com/"
@@ -128,7 +129,7 @@ class LocalAppDetailsActivityViewModel : ViewModel() {
             LocalAppStackRule(RULE_ID_QQNT, DEX_QQNT, RULE_TYPE_PRIVATE_TENCENT),
             LocalAppStackRule(RULE_ID_BUGLY, DEX_BUGLY, RULE_TYPE_PRIVATE_TENCENT, URL_BUGLY),
             LocalAppStackRule(RULE_ID_SHIPLY, DEX_SHIPLY, RULE_TYPE_PRIVATE_TENCENT, URL_SHIPLY),
-            LocalAppStackRule(RULE_ID_KUIKLY, DEX_KUIKLY, RULE_TYPE_PRIVATE_TENCENT),
+            LocalAppStackRule(RULE_ID_KUIKLY, DEX_KUIKLY, RULE_TYPE_PRIVATE_TENCENT, URL_KUIKLY),
             LocalAppStackRule(RULE_ID_HIPPY, DEX_HIPPY, RULE_TYPE_PRIVATE_TENCENT, URL_HIPPY),
             LocalAppStackRule(RULE_ID_RIGHTLY, DEX_RIGHTLY, RULE_TYPE_PRIVATE_TENCENT, URL_RIGHTLY),
             LocalAppStackRule(

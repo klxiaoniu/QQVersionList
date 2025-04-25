@@ -83,9 +83,9 @@ object StringUtil {
      */
     private fun formatJsonElement(element: JsonElement): JsonElement {
         return when (element) {
-            is JsonObject -> JsonObject(element.entries.map { (key, value) ->
+            is JsonObject -> JsonObject(element.entries.associate { (key, value) ->
                 key to formatJsonElement(value)
-            }.toMap())
+            })
 
             is JsonArray -> JsonArray(element.map { formatJsonElement(it) })
             is JsonPrimitive -> {

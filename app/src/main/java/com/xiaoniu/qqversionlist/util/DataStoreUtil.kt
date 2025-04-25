@@ -131,7 +131,8 @@ object DataStoreUtil {
                 dataStoreList.forEach { dataMap ->
                     val key = dataMap["key"] as? String ?: return@forEach
                     val value = dataMap["value"]
-                    when (val type = dataMap["type"] as? String) {
+                    val type = dataMap["type"] as? String
+                    when (type) {
                         "Int", "int" -> preferences[intPreferencesKey(key)] =
                             value as? Int ?: return@forEach
 
@@ -234,7 +235,8 @@ object DataStoreUtil {
                 dataStoreList.forEach { dataMap ->
                     val key = dataMap["key"] as? String ?: return@forEach
                     val value = dataMap["value"]
-                    when (val type = dataMap["type"] as? String) {
+                    val type = dataMap["type"] as? String
+                    when (type) {
                         "Int", "int" -> preferences[intPreferencesKey(key)] =
                             value as? Int ?: return@forEach
 

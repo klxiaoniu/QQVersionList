@@ -101,7 +101,7 @@ android {
 }
 
 aboutLibraries {
-    mapLicensesToSpdx = false
+    license.mapLicensesToSpdx = false
 }
 
 dependencies {
