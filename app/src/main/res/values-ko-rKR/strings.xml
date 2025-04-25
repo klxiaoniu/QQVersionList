@@ -223,7 +223,7 @@
     <string name="localDetailsShiplyDesc">Shiply，全称 TDS 腾讯端服务 Shiply 容器与发布，属于 TDS 腾讯端服务系列产品的子产品之一，是源于腾讯内部 App 的一站式容器与发布解决方案。Shiply 提供了一套规则灵活、发布安全、高效分发的终端基础通用发布系统，功能包括：配置与开关、资源发布、应用升级，移动端热修复、Flutter 动态化、跨端开发框架等相关能力和分发支持，帮助产品和技术团队提高研效能力和决策力。</string>
     <string name="localDetailsHippyDesc">Hippy 是 TDF 腾讯端框架（Tencent Device-oriented Framework）下的开源跨平台应用开发解决方案。Hippy 从底层做了大量工作，抹平了 iOS、Android、OpenHarmony 三端差异，提供了接近 Web 的开发体验，目前上层支持了 React 和 Vue 两套界面框架，前端开发人员可以通过它，将前端代码转换为终端的原生指令，进行原生终端 APP 的开发。同时，Hippy 从底层进行了大量优化，在启动速度、渲染性能、动画速度、内存占用、包体积等方面都提供了业内顶尖的性能表现。</string>
     <string name="localDetailsRightlyDesc">Rightly 是面向移动端的全流程合规解决方案，集「合规管控」和「合规测评」为一体，为 APP 提供运行全周期数据安全与合规保护解决方案，也为 APP 提供个人信息风险审查与合规性检测服务，覆盖多项隐私安全指标。Rightly 能够助力业务提高合规效率，降低违规风险。</string>
-    <string name="localDetailsKuiklyDesc">Kuikly（Kotlin UI Kit）跨端开发框架，是 TDF 腾讯端框架（Tencent Device-oriented Framework）的一部分。Kuikly 通过自研 Kotlin MultiPlatform 逻辑与终端界面原生控件渲染映射协议层，并采用声明式与响应式设计，使采用 Kuikly 的 Kotlin 开发者能拥有原生高效的 Android 开发体验并构建具有原生性能的跨平台应用。Kuikly 更可依托于 TDS 腾讯端服务 Shiply 容器与发布平台，实现按页颗粒度的完备客户端界面动态化能力。</string>
+    <string name="localDetailsKuiklyDesc">Kuikly（Kotlin UI Kit）跨端开发框架，是 TDF 腾讯端框架（Tencent Device-oriented Framework）的一部分。Kuikly 通过自研 Kotlin Multiplatform 逻辑与终端界面原生控件渲染映射协议层，并采用声明式与响应式设计，使采用 Kuikly 的 Kotlin 开发者能拥有原生高效的 Android 开发体验并构建具有原生性能的跨平台应用。Kuikly 更可依托于 TDS 腾讯端服务 Shiply 容器与发布平台，实现按页颗粒度的完备客户端界面动态化能力。</string>
     <string name="localDetailsQQNTDesc">QQNT 技术架构是腾讯 QQ 客户端全新的跨平台技术架构体系。QQNT 技术架构将 QQ 客户端核心功能——如核心登录、消息系统、关系链、富媒体、长连接、数据库等——下沉至 QQNT 内核层，使用 C++ 抽象逻辑封装为原生库并提供多平台多语言一致性接口，以实现 QQ 客户端核心逻辑代码跨平台与程序高性能运作。</string>
     <string name="localDetailsMsg">详细信息</string>
     <string name="stackInfo">技术栈信息</string>
