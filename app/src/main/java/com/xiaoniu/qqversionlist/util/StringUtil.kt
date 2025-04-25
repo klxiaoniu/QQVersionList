@@ -88,16 +88,9 @@ object StringUtil {
             })
 
             is JsonArray -> JsonArray(element.map { formatJsonElement(it) })
-            is JsonPrimitive -> {
-                if (element.isString && element.content.isJson()) formatJsonElement(
-                    Json.parseToJsonElement(
-                        element.content
-                    )
-                )
-                else element
-            }
-
-            else -> element
+            is JsonPrimitive -> if (element.isString && element.content.isJson()) formatJsonElement(
+                Json.parseToJsonElement(element.content)
+            ) else element
         }
     }
 
@@ -191,8 +184,7 @@ object StringUtil {
             "version" to version,
             "direct" to direct,
             "textList" to textList.map { it.asString },
-            "recentList" to recentList.map { it.asString }
-        )
+            "recentList" to recentList.map { it.asString })
     }
 
     /**
