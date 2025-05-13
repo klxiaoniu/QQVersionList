@@ -8,7 +8,7 @@ updates:
   - package-ecosystem: gradle
     directory: /
     schedule:
-      interval: daily
+      interval: monthly
     ignore:
       # 智谱 AI 开放平台 Java SDK 版本号不是语义版本号 SemVer，会被 Maven 或 GitHub Dependabot 误判，因此需要手动忽略。
       - dependency-name: cn.bigmodel.openapi:oapi-java-sdk
