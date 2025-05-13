@@ -23,7 +23,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
     id("com.google.gms.google-services")
-    kotlin("plugin.serialization") version "2.1.20"
+    kotlin("plugin.serialization") version "2.1.21"
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.aboutlibraries)
 }
