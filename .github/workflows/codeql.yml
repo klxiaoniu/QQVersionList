@@ -47,7 +47,7 @@ jobs:
     if: ${{ github.event_name != 'pull_request' && (github.repository == 'klxiaoniu/QQVersionList' || github.repository == 'ArcticFoxPro/QQVersionList') }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup local.properties
         run: echo "" > local.properties
