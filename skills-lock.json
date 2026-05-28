@@ -1,0 +1,113 @@
+{
+  "version": 1,
+  "skills": {
+    "adaptive": {
+      "source": "android/skills",
+      "sourceType": "github",
+      "skillPath": "jetpack-compose/adaptive/SKILL.md",
+      "computedHash": "e80617b3557067f21df3ea49aaa0a6873ef3e5bb6c93651a8171419f8cbeb2a1"
+    },
+    "android-cli": {
+      "source": "android/skills",
+      "sourceType": "github",
+      "skillPath": "devtools/android-cli/SKILL.md",
+      "computedHash": "748fe6ba3464ad368697d931001a04b72cd8ad79f6ff01890cca337e09f2c468"
+    },
+    "appfunctions": {
+      "source": "android/skills",
+      "sourceType": "github",
+      "skillPath": "device-ai/appfunctions/SKILL.md",
+      "computedHash": "256eaf8ebe01cc976d466d4248a39db22a54f3e8305393bdd0c5f0da07c38e64"
+    },
+    "camera1-to-camerax": {
+      "source": "android/skills",
+      "sourceType": "github",
+      "skillPath": "camera/camera1-to-camerax/SKILL.md",
+      "computedHash": "1559345f7509cb06cc79559950b14e84f8845e211129080e8a965cbac39fd671"
+    },
+    "display-glasses-with-jetpack-compose-glimmer": {
+      "source": "android/skills",
+      "sourceType": "github",
+      "skillPath": "xr/display-glasses-with-jetpack-compose-glimmer/SKILL.md",
+      "computedHash": "6ad6128d4d7c4400509312164b6dd9c24d3c9f9e2b449be959eccd5e37b8289b"
+    },
+    "edge-to-edge": {
+      "source": "android/skills",
+      "sourceType": "github",
+      "skillPath": "system/edge-to-edge/SKILL.md",
+      "computedHash": "28bedc928e6ca09caf03c36b926dd3cc4ba27010690c5518c2cc80b0f321f1dd"
+    },
+    "engage-sdk-integration": {
+      "source": "android/skills",
+      "sourceType": "github",
+      "skillPath": "play/engage-sdk-integration/SKILL.md",
+      "computedHash": "207496ae33a6a2ca987eaab13970bef6d75ef66c78fb8abc9fd85204c3f61028"
+    },
+    "jetpack-compose-m3": {
+      "source": "android/skills",
+      "sourceType": "github",
+      "skillPath": "wear/jetpack-compose-m3/SKILL.md",
+      "computedHash": "b9b16b9df2e71705324025f2f1c302308b4cfc5d86ca9f7e415c68f1e574727a"
+    },
+    "kotlin-tooling-agp9-migration": {
+      "source": "Kotlin/kotlin-agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/kotlin-tooling-agp9-migration/SKILL.md",
+      "computedHash": "0d1198cb007e6238f7fc8b3d2999ad0186cabf057950a3b21b6f5c19559a735e"
+    },
+    "migrate-xml-views-to-jetpack-compose": {
+      "source": "android/skills",
+      "sourceType": "github",
+      "skillPath": "jetpack-compose/migration/migrate-xml-views-to-jetpack-compose/SKILL.md",
+      "computedHash": "7eb3b740be14ee734dafacd980911df07f680b0a668bd16b4b85c3fb92f2a426"
+    },
+    "navigation-3": {
+      "source": "android/skills",
+      "sourceType": "github",
+      "skillPath": "navigation/navigation-3/SKILL.md",
+      "computedHash": "1f1a026517ab93fdecfe7ec982f6f8d962ed9bb066866268cc27745fe5fa20f6"
+    },
+    "perfetto-sql": {
+      "source": "android/skills",
+      "sourceType": "github",
+      "skillPath": "profilers/perfetto-sql/SKILL.md",
+      "computedHash": "63497d743c80edd89a0d98df22dea74abd1d45e4b8bf81c05708d35d219c8bf3"
+    },
+    "perfetto-trace-analysis": {
+      "source": "android/skills",
+      "sourceType": "github",
+      "skillPath": "profilers/perfetto-trace-analysis/SKILL.md",
+      "computedHash": "66540572d23a47ad9785f707793433e90b2da94a53a792821b117ca34de30a05"
+    },
+    "play-billing-library-version-upgrade": {
+      "source": "android/skills",
+      "sourceType": "github",
+      "skillPath": "play/play-billing-library-version-upgrade/SKILL.md",
+      "computedHash": "005c483b886ad585702fd25ee79ad0f5289e8dbec9ac8fd6ccd3e12487c74659"
+    },
+    "r8-analyzer": {
+      "source": "android/skills",
+      "sourceType": "github",
+      "skillPath": "performance/r8-analyzer/SKILL.md",
+      "computedHash": "e8f7a507a49c709e58a89d55b229f036356cfdba7c3d89c6a0dd7a41b7f746dd"
+    },
+    "styles": {
+      "source": "android/skills",
+      "sourceType": "github",
+      "skillPath": "jetpack-compose/theming/styles/SKILL.md",
+      "computedHash": "9ed7317bca7732ee617b1e4953b34e50c0749e993f4bb8f14d59de84817e2e79"
+    },
+    "testing-setup": {
+      "source": "android/skills",
+      "sourceType": "github",
+      "skillPath": "testing/testing-setup/SKILL.md",
+      "computedHash": "67a251a744d5108646b7b4a3461dc09b4de9290e05c939c9512d6b1b2f0ed808"
+    },
+    "verified-email": {
+      "source": "android/skills",
+      "sourceType": "github",
+      "skillPath": "identity/verified-email/SKILL.md",
+      "computedHash": "dd8f94d8c0161791445638b9c84ddd44aa0a94fb2af177e5f45081ab35c1fab8"
+    }
+  }
+}
