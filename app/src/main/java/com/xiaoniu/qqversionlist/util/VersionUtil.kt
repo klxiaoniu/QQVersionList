@@ -48,7 +48,7 @@ import kotlinx.serialization.json.JsonElement as KotlinJsonElement
 
 object VersionUtil {
     fun resolveQQRainbow(viewModel: MainActivityViewModel, responseData: String) {
-        val start = (responseData.indexOf("versions64\":[")) + 12
+        val start = (responseData.indexOf("{\"versions64\":["))
         val end = (responseData.indexOf(";\n" + "      typeof"))
         val totalJson = responseData.substring(start, end)
         var qqVersion: List<QQVersionBean> = mutableListOf<QQVersionBean>()
