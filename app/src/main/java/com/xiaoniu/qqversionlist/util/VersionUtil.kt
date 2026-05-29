@@ -23,6 +23,7 @@ package com.xiaoniu.qqversionlist.util
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
+import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.xiaoniu.qqversionlist.QverbowApplication.Companion.ANDROID_QQ_PACKAGE_NAME
@@ -51,14 +52,12 @@ object VersionUtil {
         val start = (responseData.indexOf("{\"versions64\":["))
         val end = (responseData.indexOf(";\n" + "      typeof"))
         val totalJson = responseData.substring(start, end)
-        var qqVersion: List<QQVersionBean> = mutableListOf<QQVersionBean>()
-        qqVersion = totalJson.split("},{").reversed().map {
-            val pstart = it.indexOf("{\"versions")
-            val pend = it.indexOf(",\"length")
-            val json = it.substring(pstart, pend)
+        val totalObject = Gson().fromJson(totalJson, JsonObject::class.java)
+        val jsonParser = KotlinJson { ignoreUnknownKeys = true }
+        val qqVersion: List<QQVersionBean> = totalObject.getAsJsonArray("versions64").reversed().map { json ->
             val qqVersionInstall = DataStoreUtil.getStringKV("QQVersionInstall", "")
-            KotlinJson.decodeFromString<QQVersionBean>(json).apply {
-                jsonString = json
+            jsonParser.decodeFromString<QQVersionBean>(json.toString()).apply {
+                jsonString = json.toString()
                 // 标记本机 Android QQ 版本
                 this.apply {
                     displayInstall =
