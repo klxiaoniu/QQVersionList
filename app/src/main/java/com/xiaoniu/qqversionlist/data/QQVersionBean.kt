@@ -38,12 +38,12 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class QQVersionBean(
-    val versions: String,
-    val versionNumber: String,
-    val size: String,
-    val featureTitle: String,
-    val imgs: List<String>,
-    val summary: List<String>,
+    val versions: String = "",
+    val versionNumber: String = "",
+    val size: String = "",
+    val featureTitle: String = "",
+    val imgs: List<String> = emptyList(),
+    val summary: List<String> = emptyList(),
 
     var jsonString: String = "",
     var displayType: Int = 0, // 0为收起
