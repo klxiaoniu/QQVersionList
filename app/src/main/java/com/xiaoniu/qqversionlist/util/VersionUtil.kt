@@ -54,8 +54,8 @@ object VersionUtil {
         val totalJson = responseData.substring(start, end)
         val totalObject = Gson().fromJson(totalJson, JsonObject::class.java)
         val jsonParser = KotlinJson { ignoreUnknownKeys = true }
+        val qqVersionInstall = DataStoreUtil.getStringKV("QQVersionInstall", "")
         val qqVersion: List<QQVersionBean> = totalObject.getAsJsonArray("versions64").reversed().map { json ->
-            val qqVersionInstall = DataStoreUtil.getStringKV("QQVersionInstall", "")
             jsonParser.decodeFromString<QQVersionBean>(json.toString()).apply {
                 jsonString = json.toString()
                 // 标记本机 Android QQ 版本
@@ -97,10 +97,10 @@ object VersionUtil {
 
         // 从 `version_history` 项中获取 Android 版本
         val history = jsonData.getAsJsonArray("version_history")
+        val timVersionInstall = DataStoreUtil.getStringKV("TIMVersionInstall", "")
         history.forEach { versionItem ->
             val version = versionItem.asJsonObject.get("version_code").asString
             val logs = versionItem.asJsonObject.getAsJsonArray("logs")
-            val timVersionInstall = DataStoreUtil.getStringKV("TIMVersionInstall", "")
             logs.forEach { logItem ->
                 val platform = logItem.asJsonObject.get("platform").asString
                 if (platform == "android") {
