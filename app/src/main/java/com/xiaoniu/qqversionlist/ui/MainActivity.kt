@@ -1952,7 +1952,7 @@ class MainActivity : AppCompatActivity() {
                 try {
                     val okHttpClient = OkHttpClient()
                     val request = Request.Builder()
-                        .url("https://im.qq.com/rainbow/androidQQVersionList")
+                        .url("https://cdn-go.cn/qq-web/im.qq.com_new/latest/rainbow/androidNewVersion.js")
                         .build()
                     val response = okHttpClient.newCall(request).execute()
                     val responseData = response.body?.string()
