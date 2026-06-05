@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 /*
@@ -19,6 +17,8 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
     You should have received a copy of the GNU Affero General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
+
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.android.application)
@@ -54,7 +54,7 @@ android {
         minSdk = 24
         targetSdk = 36
         versionCode = gitCommitCount
-        versionName = "1.5.3-$gitCommitHash"
+        versionName = "1.5.4-$gitCommitHash"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
             cmake {
@@ -77,6 +77,7 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )

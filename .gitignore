@@ -8,6 +8,7 @@
 .cxx
 local.properties
 /app/release
-/.idea
+.idea
 /app/debug
-app/google-services.json
+google-services.json
+.kotlin
