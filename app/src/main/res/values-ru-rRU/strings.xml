@@ -48,7 +48,7 @@
     <string name="shareTo">Поделиться в</string>
     <string name="jsonDetails">Сведения о JSON</string>
     <string name="stableVersion">Стабильная</string>
-    <string name="previewVersion">Предпросмотр</string>
+    <string name="previewVersion">Тестовая версия</string>
     <string name="spaceEnumerateVersion">Перечисление, содержащее пробелы</string>
     <string name="weixinEnumerateVersion">Weixin</string>
     <string name="aboutAppName">Утилита Qverbow для Android™</string>
@@ -74,7 +74,7 @@
     <string name="saved">Сохранено.</string>
     <string name="enumQQPreviewWarning">Принимая во внимание, что предварительная версия QQ может иметь непредсказуемые проблемы со стабильностью, перед скачиванием и использованием данной бета-версии вы должны ясно осознавать и подтверждать, что обладаете достаточным пониманием рисков и готовностью их принять. В соответствии с соответствующими условиями, при использовании данного программного обеспечения вы должны осознавать и соглашаться с тем, что любые прямые или косвенные убытки, ущерб и иные неблагоприятные последствия, возникшие в результате скачивания или использования предварительной версии QQ, полностью возлагаются на вас.</string>
     <string name="enumQQMajorVersionHelpText">Формат: x.y.z</string>
-    <string name="enumWeixinMajorVersionHelpText">Скрыть десятичную точку</string>
+    <string name="enumWeixinMajorVersionHelpText">Десятичную точку вводить не нужно</string>
     <string name="enumWeixinWarning">Функция перечисления версий Weixin — экспериментальная функция в составе «Утилиты Qverbow», которая может вызывать непредсказуемые сбои. Пожалуйста, убедитесь, что вы полностью осознаёте риски и готовы их принять.</string>
     <string name="enumHasBeenStopped">Перечисление остановлено.</string>
     <string name="missingCipherWarning">Платформа распространения и хранения Shiply от Tencent TDS не включает пару ключ-значение «cipher_text» в возвращаемом содержимом JSON.</string>
